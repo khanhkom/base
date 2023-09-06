@@ -1,0 +1,57 @@
+{
+  // "presets": ["react-native"],
+  "presets": ["module:metro-react-native-babel-preset"],
+  "plugins": [
+    [
+      "module-resolver",
+      {
+        "cwd": "babelrc",
+        "root": ["./"],
+        "extensions": [
+          ".ios.ts",
+          ".android.ts",
+          ".ts",
+          ".ios.tsx",
+          ".android.tsx",
+          ".tsx",
+          ".jsx",
+          ".js",
+          ".json"
+        ],
+        "alias": {
+          "@app/assets/*": "./app/assets/*",
+          "@app/assets": "./app/assets",
+          "@app/common/*": "./app/common/*",
+          "@app/common": "./app/common",
+          "@app/context": "./app/context",
+          "@app/components/*": "./app/components/*",
+          "@app/components": "./app/components",
+          "@app/config/*": "./app/config/*",
+          "@app/config": "./app/config",
+          "@app/i18n/*": "./app/i18n/*",
+          "@app/i18n": "./app/i18n",
+          "@app/interface/*": "./app/interface/*",
+          "@app/interface": "./app/interface",
+          "@app/library/*": "./app/library/*",
+          "@app/library": "./app/library",
+          "@app/navigators/*": "./app/navigators/*",
+          "@app/navigators": "./app/navigators",
+          "@app/redux/*": "./app/redux/*",
+          "@app/redux": "./app/redux",
+          "@app/sagas/*": "./app/sagas/*",
+          "@app/sagas": "./app/sagas",
+          "@app/screens/*": "./app/screens/*",
+          "@app/screens": "./app/screens",
+          "@app/services/*": "./app/services/*",
+          "@app/services": "./app/services",
+          "@app/theme/*": "./app/theme/*",
+          "@app/theme": "./app/theme",
+          "@app/utils/*": "./app/utils/*",
+          "@app/utils": "./app/utils",
+          "@app/hooks/*": "./app/hooks/*",
+          "@app/hooks": "./app/hooks",
+        }
+      }
+    ]
+  ]
+}

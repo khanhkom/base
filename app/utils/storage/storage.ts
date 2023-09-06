@@ -77,3 +77,10 @@ export async function clear(): Promise<void> {
     await AsyncStorage.clear()
   } catch {}
 }
+export const KEYSTORAGE = {
+  USER_DATA: "USER_DATA",
+  LANGUAGE: "@LANGUAGE",
+  INIT_STORGE: "@ACCOUNT",
+  DATA_DARKMODE: "@DARK_MODE",
+  SOURCE_COLOR: "@SOURCE_COLOR",
+}

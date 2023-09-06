@@ -6,6 +6,7 @@ import { I18nManager } from "react-native"
 import en, { Translations } from "./en"
 import ar from "./ar"
 import ko from "./ko"
+import { KEYSTORAGE, load } from "app/utils/storage"
 
 i18n.fallbacks = true
 /**
@@ -44,3 +45,11 @@ type RecursiveKeyOfHandleValue<TValue, Text extends string> = TValue extends any
   : TValue extends object
   ? Text | `${Text}${RecursiveKeyOfInner<TValue>}`
   : Text
+export const setLangInApp = async () => {
+  const lang: any = await load(KEYSTORAGE.LANGUAGE)
+  if (lang && lang?.local) {
+    i18n.locale = lang?.local ?? "vi"
+  } else {
+    i18n.locale = "vi"
+  }
+}

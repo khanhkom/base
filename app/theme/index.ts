@@ -1,4 +1,5 @@
 export * from "./colors"
+export * from "./colors/colors"
 export * from "./spacing"
 export * from "./typography"
 export * from "./timing"

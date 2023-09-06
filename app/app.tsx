@@ -19,17 +19,28 @@ if (__DEV__) {
 import "./i18n"
 import "./utils/ignoreWarnings"
 import { useFonts } from "expo-font"
-import React from "react"
+import React, { useEffect } from "react"
 import { initialWindowMetrics, SafeAreaProvider } from "react-native-safe-area-context"
+import { Appearance } from "react-native"
 import * as Linking from "expo-linking"
 import { useInitialRootStore } from "./models"
 import { AppNavigator, useNavigationPersistence } from "./navigators"
-import { ErrorBoundary } from "./screens/ErrorScreen/ErrorBoundary"
 import * as storage from "./utils/storage"
 import { customFontsToLoad } from "./theme"
 import Config from "./config"
-
+import { setLangInApp } from "./i18n"
+import { PreferencesContext } from "./context/themeContext"
+import { PaperProvider } from "react-native-paper"
+import { colorExpandDark, colorExpandLight, darkTheme, lightTheme } from "./theme/colors/index"
+import { createThemeFromSourceColor } from "./utils/m3/createMaterial3Theme"
+import { GestureHandlerRootView } from "react-native-gesture-handler"
+import { Provider } from "react-redux"
+import { applyMiddleware, createStore } from "redux"
+import createSagaMiddleware from "redux-saga"
+import rootReducers from "./redux/reducers"
 export const NAVIGATION_PERSISTENCE_KEY = "NAVIGATION_STATE"
+const sagaMiddleware = createSagaMiddleware()
+const store = createStore(rootReducers, applyMiddleware(sagaMiddleware))
 
 // Web linking configuration
 const prefix = Linking.createURL("/")
@@ -68,7 +79,61 @@ function App(props: AppProps) {
   } = useNavigationPersistence(storage, NAVIGATION_PERSISTENCE_KEY)
 
   const [areFontsLoaded] = useFonts(customFontsToLoad)
+  const [isThemeDark, setIsThemeDark] = React.useState(true)
+  const [sourceColor, setSourceColor] = React.useState("#006A6A")
+  const [isDefaultSystem, setIsDefaultSystem] = React.useState(false)
+  const setDefaultSystem = React.useCallback(
+    (value: boolean) => {
+      return setIsDefaultSystem(value)
+    },
+    [isDefaultSystem],
+  )
+  const setSourceColorM3 = React.useCallback(
+    (value: string) => {
+      return setSourceColor(value)
+    },
+    [isDefaultSystem],
+  )
+  const toggleTheme = React.useCallback(
+    (value: boolean) => {
+      return setIsThemeDark(value)
+    },
+    [isThemeDark],
+  )
+  const getDataDarkMode = async () => {
+    const dataDarkMode: any = await storage.load(storage.KEYSTORAGE.DATA_DARKMODE)
+    const dataSourceColor = await storage.load(storage.KEYSTORAGE.SOURCE_COLOR)
+    if (dataSourceColor !== null) {
+      setSourceColor(dataSourceColor)
+    }
+    if (!dataDarkMode || (dataDarkMode && dataDarkMode?.isDefaultSystem)) {
+      setDefaultSystem(true)
+      const colorScheme = Appearance.getColorScheme()
+      if (colorScheme === "dark") {
+        toggleTheme(true)
+      } else toggleTheme(false)
+    } else {
+      if (dataDarkMode && dataDarkMode?.isThemeDark) {
+        toggleTheme(true)
+      } else toggleTheme(false)
+    }
+  }
 
+  useEffect(() => {
+    setLangInApp()
+    getDataDarkMode()
+  }, [])
+  const preferences = React.useMemo(
+    () => ({
+      toggleTheme,
+      isThemeDark,
+      setDefaultSystem,
+      isDefaultSystem,
+      setSourceColorM3,
+      sourceColor,
+    }),
+    [toggleTheme, isThemeDark, isDefaultSystem, setDefaultSystem, sourceColor, setSourceColorM3],
+  )
   const { rehydrated } = useInitialRootStore(() => {
     // This runs after the root store has been initialized and rehydrated.
 
@@ -91,17 +156,27 @@ function App(props: AppProps) {
     prefixes: [prefix],
     config,
   }
+  const customTheme = createThemeFromSourceColor(sourceColor)
 
+  const theme = isThemeDark
+    ? { ...darkTheme, colors: { ...customTheme.dark, ...colorExpandDark } }
+    : { ...lightTheme, colors: { ...customTheme.light, ...colorExpandLight } }
   // otherwise, we're ready to render the app
   return (
     <SafeAreaProvider initialMetrics={initialWindowMetrics}>
-      <ErrorBoundary catchErrors={Config.catchErrors}>
-        <AppNavigator
-          linking={linking}
-          initialState={initialNavigationState}
-          onStateChange={onNavigationStateChange}
-        />
-      </ErrorBoundary>
+      <PreferencesContext.Provider value={preferences}>
+        <Provider store={store}>
+          <PaperProvider theme={theme}>
+            <GestureHandlerRootView style={{ flex: 1 }}>
+              <AppNavigator
+                linking={linking}
+                initialState={initialNavigationState}
+                onStateChange={onNavigationStateChange}
+              />
+            </GestureHandlerRootView>
+          </PaperProvider>
+        </Provider>
+      </PreferencesContext.Provider>
     </SafeAreaProvider>
   )
 }
