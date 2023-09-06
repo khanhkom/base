@@ -10,6 +10,7 @@ import { navigationRef, useBackButtonHandler } from "./navigationUtilities"
 import { colors } from "@app/theme/colors/colors"
 import { LoginScreen } from "../screens"
 import DetailSick from "@app/screens/DetailSick"
+import Login from "@app/screens/Auth/Login"
 
 export type AppStackParamList = {
   TabNavigator: undefined
@@ -49,7 +50,7 @@ const AppStack = observer(function AppStack() {
       initialRouteName={isAuthenticated ? "TabNavigator" : "Login"} // @demo remove-current-line
     >
       <Stack.Screen name="TabNavigator" component={TabNavigator} />
-      <Stack.Screen name="Login" component={LoginScreen} />
+      <Stack.Screen name="Login" component={Login} />
       <Stack.Screen name="DetailSick" component={DetailSick} />
     </Stack.Navigator>
   )

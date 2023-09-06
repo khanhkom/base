@@ -80,7 +80,7 @@ function App(props: AppProps) {
 
   const [areFontsLoaded] = useFonts(customFontsToLoad)
   const [isThemeDark, setIsThemeDark] = React.useState(true)
-  const [sourceColor, setSourceColor] = React.useState("#006A6A")
+  const [sourceColor, setSourceColor] = React.useState("#183E9F")
   const [isDefaultSystem, setIsDefaultSystem] = React.useState(false)
   const setDefaultSystem = React.useCallback(
     (value: boolean) => {

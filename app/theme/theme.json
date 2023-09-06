@@ -2,14 +2,14 @@
   "seed": "#13C2C2",
   "description": "TYPE: CUSTOM",
   "coreColors": {
-    "primary": "#13C2C2",
+    "primary": "#183E9F",
     "secondary": "#118AB2",
     "tertiary": "#7D92B1",
     "error": "#FF3141"
   },
   "schemes": {
     "light": {
-      "primary": "#006A6A",
+      "primary": "#183E9F",
       "onPrimary": "#FFFFFF",
       "primaryContainer": "#68F7F7",
       "onPrimaryContainer": "#002020",
