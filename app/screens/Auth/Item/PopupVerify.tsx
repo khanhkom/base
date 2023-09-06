@@ -4,20 +4,15 @@ import { Button, Modal } from "react-native-paper"
 import { HEIGHT, WIDTH } from "@app/config/functions"
 import colors from "@app/assets/colors"
 import { spacing } from "@app/theme/spacing"
+import { navigate } from "@app/navigators/navigationUtilities"
 
 export default function PopupVerify({ visible, setVisible }) {
   const hideModal = () => setVisible(false)
   return (
     <Modal visible={visible} onDismiss={hideModal} contentContainerStyle={styles.containerStyle}>
-      <Text
-        style={{
-          paddingHorizontal: WIDTH(spacing.md),
-          marginTop: HEIGHT(spacing.md),
-          textAlign: "center",
-        }}
-      >
-        Số điện thoại <Text style={{ color: colors.black, fontWeight: "500" }}>0123456789</Text> đã
-        tồn tại trong hệ thống của chúng tôi!
+      <Text style={styles.textTitle}>
+        Số điện thoại <Text style={styles.textPhone}>0123456789</Text> đã tồn tại trong hệ thống của
+        chúng tôi!
       </Text>
       <View style={styles.bottomView}>
         <Button
@@ -28,7 +23,14 @@ export default function PopupVerify({ visible, setVisible }) {
         >
           Đóng
         </Button>
-        <Button onPress={hideModal} mode="contained" style={styles.buttonRight}>
+        <Button
+          onPress={() => {
+            hideModal()
+            navigate("VerifyOTP")
+          }}
+          mode="contained"
+          style={styles.buttonRight}
+        >
           Đăng nhập
         </Button>
       </View>
@@ -43,6 +45,12 @@ const styles = StyleSheet.create({
     marginLeft: WIDTH(spacing.md),
     borderRadius: 16,
   },
+  textTitle: {
+    paddingHorizontal: WIDTH(spacing.md),
+    marginTop: HEIGHT(spacing.md),
+    textAlign: "center",
+  },
+  textPhone: { color: colors.black, fontWeight: "500" },
   buttonLeft: {
     flex: 1,
     borderRadius: 0,

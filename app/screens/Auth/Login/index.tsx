@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from "react-native"
+import { StyleSheet, View } from "react-native"
 import React, { useState } from "react"
 import { Screen } from "@app/components/Screen"
 import HeaderLogin from "../Item/HeaderLogin"
@@ -12,11 +12,12 @@ import colors from "@app/assets/colors"
 import FooterLogin from "../Item/FooterLogin"
 import PopupVerify from "../Item/PopupVerify"
 import { Button } from "react-native-paper"
+import { Text } from "@app/components/Text"
 
 export default function Login() {
   const [indexTab, setIndexTab] = useState(0)
   const [phoneNumber, setPhoneNumber] = useState("")
-  const [visible, setVisible] = React.useState(true)
+  const [visible, setVisible] = React.useState(false)
   const showModal = () => setVisible(true)
   const hideModal = () => setVisible(false)
   const onSubmit = () => {
@@ -26,9 +27,7 @@ export default function Login() {
     <Screen preset="auto" safeAreaEdges={["bottom"]} contentContainerStyle={{ flex: 1 }}>
       <HeaderLogin />
       <View style={styles.body}>
-        <TextPaper variant="headlineSmall" color="onSurface">
-          Chào mừng bạn,
-        </TextPaper>
+        <Text preset="xxxlsemibold">Chào mừng bạn,</Text>
         <View style={styles.tab}>
           <ButtonTab
             text="ĐĂNG KÝ"
@@ -54,13 +53,13 @@ export default function Login() {
         >
           Tiếp tục
         </Button>
-        <TextPaper style={{ marginTop: HEIGHT(spacing.lg) }}>
+        <Text preset="baRegular" style={{ marginTop: HEIGHT(spacing.lg) }}>
           Bằng việc tiếp tục, bạn sẽ đồng ý với{" "}
-          <TextPaper style={{ color: colors.primary, fontWeight: "700" }}>
+          <Text preset="baSemibold" style={{ color: colors.primary }}>
             Điều khoản dịch vụ và Chính sách bảo mật
-          </TextPaper>{" "}
+          </Text>{" "}
           của SDoctor
-        </TextPaper>
+        </Text>
       </View>
       <FooterLogin />
       <PopupVerify visible={visible} setVisible={setVisible} />
@@ -87,5 +86,6 @@ const styles = StyleSheet.create({
   buttonNext: {
     width: WIDTH(343),
     borderRadius: 8,
+    marginTop: HEIGHT(spacing.md),
   },
 })

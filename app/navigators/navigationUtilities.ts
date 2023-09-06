@@ -20,7 +20,8 @@ type Storage = typeof storage
  * The types on this reference will only let you reference top level navigators. If you have
  * nested navigators, you'll need to use the `useNavigation` with the stack navigator's ParamList type.
  */
-export const navigationRef = createNavigationContainerRef<AppStackParamList>()
+// export const navigationRef = createNavigationContainerRef<AppStackParamList>()
+export const navigationRef = createNavigationContainerRef()
 
 /**
  * Gets the current screen from any navigation state.
@@ -152,12 +153,14 @@ export function useNavigationPersistence(storage: Storage, persistenceKey: strin
  * prop. If you have access to the navigation prop, do not use this.
  * @see https://reactnavigation.org/docs/navigating-without-navigation-prop/
  */
-export function navigate(...args: Parameters<typeof navigationRef.navigate>) {
-  if (navigationRef.isReady()) {
-    navigationRef.navigate(...args)
-  }
+// export function navigate(...args: Parameters<typeof navigationRef.navigate>) {
+//   if (navigationRef.isReady()) {
+//     navigationRef.navigate(...args)
+//   }
+// }
+export function navigate(name: string, params = {}): void {
+  navigationRef?.navigate(name, params)
 }
-
 /**
  * This function is used to go back in a navigation stack, if it's possible to go back.
  * If the navigation stack can't go back, nothing happens.

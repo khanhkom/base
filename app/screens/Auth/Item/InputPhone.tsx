@@ -9,12 +9,13 @@ import colors from "@app/assets/colors"
 import { spacing } from "@app/theme/spacing"
 import { TextPaper } from "@app/components/text-paper"
 import { Icon } from "@app/components/Icon"
+import { Text } from "@app/components/Text"
 export default function InputPhone({ setPhoneNumber, phoneNumber }) {
   const [show, setShow] = useState(false)
+  const [focus, setFocus] = useState(false)
   const [countryCode, setCountryCode] = useState("")
   const [isKeyboardVisible, setKeyboardVisible] = useState(false)
 
-  const phoneInput = useRef<PhoneInput>(null)
   useEffect(() => {
     const keyboardDidShowListener = Keyboard.addListener("keyboardDidShow", () => {
       setKeyboardVisible(true) // or some other action
@@ -30,7 +31,7 @@ export default function InputPhone({ setPhoneNumber, phoneNumber }) {
   }, [])
   return (
     <>
-      <View style={styles.wrapperInput}>
+      <View style={[styles.wrapperInput, focus && { borderColor: colors.primary }]}>
         <Pressable style={styles.buttonCode} onPress={() => setShow((val) => !val)}>
           <TextPaper style={{ marginRight: WIDTH(spacing.xxs) }}>+84</TextPaper>
           <Icon icon="arrow_down" size={16} />
@@ -40,6 +41,12 @@ export default function InputPhone({ setPhoneNumber, phoneNumber }) {
           placeholder="Nhập số điện thoại"
           style={styles.textInput}
           keyboardType="numeric"
+          onFocus={() => {
+            setFocus(true)
+          }}
+          onBlur={() => {
+            setFocus(false)
+          }}
           phoneNumber={phoneNumber}
           onChangeText={(val) => setPhoneNumber(val)}
         />
@@ -86,6 +93,9 @@ export default function InputPhone({ setPhoneNumber, phoneNumber }) {
           },
         }}
       />
+      <Text preset="smRegular" style={{ marginTop: HEIGHT(spacing.xs), color: colors.red_5 }}>
+        Vui lòng kiểm tra lại số điện thoại!
+      </Text>
     </>
   )
 }
@@ -97,7 +107,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: colors.gray_3,
     paddingVertical: HEIGHT(spacing.sm),
-    marginVertical: HEIGHT(spacing.md),
+    marginTop: HEIGHT(spacing.md),
     flexDirection: "row",
     alignItems: "center",
   },

@@ -1,4 +1,4 @@
-import React, { ComponentType, forwardRef, Ref, useImperativeHandle, useRef } from "react"
+import React, { ComponentType, forwardRef, Ref, useImperativeHandle, useRef, useState } from "react"
 import {
   StyleProp,
   TextInput,
@@ -11,7 +11,7 @@ import {
 import { isRTL, translate } from "../i18n"
 import { colors, spacing, typography } from "../theme"
 import { Text, TextProps } from "./Text"
-
+import R from "@app/assets"
 export interface TextFieldAccessoryProps {
   style: StyleProp<any>
   status: TextFieldProps["status"]
@@ -28,6 +28,7 @@ export interface TextFieldProps extends Omit<TextInputProps, "ref"> {
    * The label text to display if not using `labelTx`.
    */
   label?: TextProps["text"]
+  require?: boolean
   /**
    * Label text which is looked up via i18n.
    */
@@ -106,6 +107,7 @@ export const TextField = forwardRef(function TextField(props: TextFieldProps, re
   const {
     labelTx,
     label,
+    require,
     labelTxOptions,
     placeholderTx,
     placeholder,
@@ -124,6 +126,7 @@ export const TextField = forwardRef(function TextField(props: TextFieldProps, re
     ...TextInputProps
   } = props
   const input = useRef<TextInput>()
+  const [focus, setFocus] = useState(false)
 
   const disabled = TextInputProps.editable === false || status === "disabled"
 
@@ -138,6 +141,7 @@ export const TextField = forwardRef(function TextField(props: TextFieldProps, re
   const $inputWrapperStyles = [
     $inputWrapperStyle,
     status === "error" && { borderColor: colors.error },
+    focus && { borderColor: R.colors.primary },
     TextInputProps.multiline && { minHeight: 112 },
     LeftAccessory && { paddingStart: 0 },
     RightAccessory && { paddingEnd: 0 },
@@ -174,14 +178,20 @@ export const TextField = forwardRef(function TextField(props: TextFieldProps, re
       accessibilityState={{ disabled }}
     >
       {!!(label || labelTx) && (
-        <Text
-          preset="formLabel"
-          text={label}
-          tx={labelTx}
-          txOptions={labelTxOptions}
-          {...LabelTextProps}
-          style={$labelStyles}
-        />
+        <Text style={$labelStyles}>
+          <Text
+            preset="formLabel"
+            text={label}
+            tx={labelTx}
+            txOptions={labelTxOptions}
+            {...LabelTextProps}
+          />
+          {require && (
+            <Text preset="formLabel" style={{ color: colors.error }}>
+              *
+            </Text>
+          )}
+        </Text>
       )}
 
       <View style={$inputWrapperStyles}>
@@ -200,6 +210,8 @@ export const TextField = forwardRef(function TextField(props: TextFieldProps, re
           textAlignVertical="top"
           placeholder={placeholderContent}
           placeholderTextColor={colors.textDim}
+          onFocus={() => setFocus(true)}
+          onBlur={() => setFocus(false)}
           {...TextInputProps}
           editable={!disabled}
           style={$inputStyles}
@@ -237,8 +249,9 @@ const $inputWrapperStyle: ViewStyle = {
   flexDirection: "row",
   alignItems: "flex-start",
   borderWidth: 1,
-  borderRadius: 4,
-  backgroundColor: colors.palette.neutral200,
+  paddingVertical: 2,
+  borderRadius: 8,
+  backgroundColor: colors.palette.neutral100,
   borderColor: colors.palette.neutral400,
   overflow: "hidden",
 }

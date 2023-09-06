@@ -73,13 +73,16 @@ export function Text(props: TextProps) {
 }
 
 const $sizeStyles = {
-  xxl: { fontSize: 36, lineHeight: 44 } satisfies TextStyle,
-  xl: { fontSize: 24, lineHeight: 34 } satisfies TextStyle,
-  lg: { fontSize: 20, lineHeight: 32 } satisfies TextStyle,
-  md: { fontSize: 18, lineHeight: 26 } satisfies TextStyle,
-  sm: { fontSize: 16, lineHeight: 24 } satisfies TextStyle,
-  xs: { fontSize: 14, lineHeight: 21 } satisfies TextStyle,
-  xxs: { fontSize: 12, lineHeight: 18 } satisfies TextStyle,
+  xxxxxl: { fontSize: 40, lineHeight: 60 } satisfies TextStyle,
+  xxxxl: { fontSize: 32, lineHeight: 48 } satisfies TextStyle,
+  xxxl: { fontSize: 24, lineHeight: 36 } satisfies TextStyle,
+  xxl: { fontSize: 20, lineHeight: 30 } satisfies TextStyle,
+  xl: { fontSize: 18, lineHeight: 26 } satisfies TextStyle,
+  md: { fontSize: 16, lineHeight: 24 } satisfies TextStyle,
+  ba: { fontSize: 14, lineHeight: 21 } satisfies TextStyle,
+  sm: { fontSize: 12, lineHeight: 18 } satisfies TextStyle,
+  xs: { fontSize: 10, lineHeight: 15 } satisfies TextStyle,
+  // xxs: { fontSize: 12, lineHeight: 18 } satisfies TextStyle,
 }
 
 const $fontWeightStyles = Object.entries(typography.primary).reduce((acc, [weight, fontFamily]) => {
@@ -96,10 +99,17 @@ const $presets = {
   default: $baseStyle,
 
   bold: [$baseStyle, $fontWeightStyles.bold] as StyleProp<TextStyle>,
+  xxxlsemibold: [$baseStyle, $sizeStyles.xxxl, $fontWeightStyles.semiBold] as StyleProp<TextStyle>,
 
   heading: [$baseStyle, $sizeStyles.xxl, $fontWeightStyles.bold] as StyleProp<TextStyle>,
+  mdRegular: [$baseStyle, $sizeStyles.md, $fontWeightStyles.normal] as StyleProp<TextStyle>,
+  mdMedium: [$baseStyle, $sizeStyles.md, $fontWeightStyles.medium] as StyleProp<TextStyle>,
+  baMedium: [$baseStyle, $sizeStyles.ba, $fontWeightStyles.medium] as StyleProp<TextStyle>,
+  baRegular: [$baseStyle, $sizeStyles.ba, $fontWeightStyles.normal] as StyleProp<TextStyle>,
+  baSemibold: [$baseStyle, $sizeStyles.ba, $fontWeightStyles.semiBold] as StyleProp<TextStyle>,
+  smRegular: [$baseStyle, $sizeStyles.sm, $fontWeightStyles.normal] as StyleProp<TextStyle>,
 
-  subheading: [$baseStyle, $sizeStyles.lg, $fontWeightStyles.medium] as StyleProp<TextStyle>,
+  subheading: [$baseStyle, $sizeStyles.xl, $fontWeightStyles.medium] as StyleProp<TextStyle>,
 
   formLabel: [$baseStyle, $fontWeightStyles.medium] as StyleProp<TextStyle>,
 

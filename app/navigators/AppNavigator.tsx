@@ -11,6 +11,9 @@ import { colors } from "@app/theme/colors/colors"
 import { LoginScreen } from "../screens"
 import DetailSick from "@app/screens/DetailSick"
 import Login from "@app/screens/Auth/Login"
+import VerifyOTP from "@app/screens/Auth/Register/VerifyOTP"
+import ConfirmName from "@app/screens/Auth/Register/ConfirmName"
+import CreateProfile from "@app/screens/Auth/Register/CreateProfile"
 
 export type AppStackParamList = {
   TabNavigator: undefined
@@ -19,6 +22,9 @@ export type AppStackParamList = {
   History: undefined
   Login: undefined
   DetailSick: undefined
+  VerifyOTP: undefined
+  ConfirmName: undefined
+  CreateProfile: undefined
   // 🔥 Your screens go here
   // IGNITE_GENERATOR_ANCHOR_APP_STACK_PARAM_LIST
 }
@@ -47,11 +53,16 @@ const AppStack = observer(function AppStack() {
   return (
     <Stack.Navigator
       screenOptions={{ headerShown: false, navigationBarColor: colors.background }}
-      initialRouteName={isAuthenticated ? "TabNavigator" : "Login"} // @demo remove-current-line
+      // initialRouteName={isAuthenticated ? "TabNavigator" : "Login"} // @demo remove-current-line
+
+      initialRouteName={"Login"} // @demo remove-current-line
     >
       <Stack.Screen name="TabNavigator" component={TabNavigator} />
       <Stack.Screen name="Login" component={Login} />
       <Stack.Screen name="DetailSick" component={DetailSick} />
+      <Stack.Screen name="VerifyOTP" component={VerifyOTP} />
+      <Stack.Screen name="ConfirmName" component={ConfirmName} />
+      <Stack.Screen name="CreateProfile" component={CreateProfile} />
     </Stack.Navigator>
   )
 })

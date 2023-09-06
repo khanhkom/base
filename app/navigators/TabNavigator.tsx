@@ -11,6 +11,7 @@ import Home from "@app/screens/Home"
 import Profile from "@app/screens/Profile"
 import Video from "@app/screens/Video"
 import History from "@app/screens/History"
+import { navigate } from "./navigationUtilities"
 
 export type DemoTabParamList = {
   Home: undefined
@@ -33,7 +34,7 @@ const Tab = createBottomTabNavigator<DemoTabParamList>()
 
 export function TabNavigator() {
   const { bottom } = useSafeAreaInsets()
-
+  // navigate("Login")
   return (
     <Tab.Navigator
       screenOptions={{

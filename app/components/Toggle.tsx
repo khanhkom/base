@@ -16,7 +16,7 @@ import Animated, { useAnimatedStyle, withTiming } from "react-native-reanimated"
 import { colors, spacing } from "../theme"
 import { iconRegistry, IconTypes } from "./Icon"
 import { Text, TextProps } from "./Text"
-
+import R from "@app/assets"
 type Variants = "checkbox" | "switch" | "radio"
 
 interface BaseToggleProps extends Omit<TouchableOpacityProps, "style"> {
@@ -326,8 +326,8 @@ function Radio(props: ToggleInputProps) {
   const outerBorderColor = [
     disabled && colors.palette.neutral400,
     status === "error" && colors.error,
-    !on && colors.palette.neutral800,
-    colors.palette.secondary500,
+    !on && R.colors.gray_5,
+    R.colors.primary,
   ].filter(Boolean)[0]
 
   const onBackgroundColor = [
@@ -339,7 +339,7 @@ function Radio(props: ToggleInputProps) {
   const dotBackgroundColor = [
     disabled && colors.palette.neutral600,
     status === "error" && colors.error,
-    colors.palette.secondary500,
+    R.colors.primary,
   ].filter(Boolean)[0]
 
   return (
