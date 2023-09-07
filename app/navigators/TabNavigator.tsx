@@ -1,9 +1,9 @@
 import { BottomTabScreenProps, createBottomTabNavigator } from "@react-navigation/bottom-tabs"
-import { CompositeScreenProps } from "@react-navigation/native"
+import { CommonActions, CompositeScreenProps } from "@react-navigation/native"
 import React from "react"
-import { TextStyle, ViewStyle } from "react-native"
+import { Platform, TextStyle, ViewStyle } from "react-native"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
-import { Icon } from "../components"
+import { Icon, Text } from "../components"
 import { translate } from "../i18n"
 import { colors, spacing, typography } from "../theme"
 import { AppStackParamList, AppStackScreenProps } from "./AppNavigator"
@@ -12,6 +12,8 @@ import Profile from "@app/screens/Profile"
 import Video from "@app/screens/Video"
 import History from "@app/screens/History"
 import { navigate } from "./navigationUtilities"
+import { BottomNavigation } from "react-native-paper"
+import { HEIGHT } from "@app/config/functions"
 
 export type DemoTabParamList = {
   Home: undefined
@@ -45,15 +47,64 @@ export function TabNavigator() {
         tabBarInactiveTintColor: colors.text,
         tabBarLabelStyle: $tabBarLabel,
         tabBarItemStyle: $tabBarItem,
+        tabBarShowLabel: false,
       }}
+      tabBar={({ navigation, state, descriptors, insets }) => (
+        <BottomNavigation.Bar
+          navigationState={state}
+          safeAreaInsets={insets}
+          onTabPress={({ route, preventDefault }) => {
+            const event = navigation.emit({
+              type: "tabPress",
+              target: route.key,
+              canPreventDefault: true,
+            })
+
+            if (event.defaultPrevented) {
+              preventDefault()
+            } else {
+              navigation.dispatch({
+                ...CommonActions.navigate(route.name, route.params),
+                target: state.key,
+              })
+            }
+          }}
+          renderIcon={({ route, focused, color }) => {
+            const { options } = descriptors[route.key]
+            if (options.tabBarIcon) {
+              return options.tabBarIcon({ focused, color, size: 24 })
+            }
+
+            return null
+          }}
+          style={[
+            { backgroundColor: colors.background },
+            Platform.OS === "ios" && {
+              height: HEIGHT(80),
+            },
+          ]}
+          getLabelText={({ route }) => {
+            const { options } = descriptors[route.key]
+            const label =
+              options.tabBarLabel !== undefined
+                ? options.tabBarLabel
+                : options.title !== undefined
+                ? options.title
+                : route.title
+
+            return label
+          }}
+        />
+      )}
     >
       <Tab.Screen
         name="Home"
         component={Home}
         options={{
-          tabBarLabel: translate("demoNavigator.componentsTab"),
+          tabBarShowLabel: false,
+          tabBarLabel: "Home",
           tabBarIcon: ({ focused }) => (
-            <Icon icon="components" color={focused && colors.tint} size={30} />
+            <Icon icon="ic_home" color={focused && colors.tint} size={24} />
           ),
         }}
       />
@@ -62,9 +113,10 @@ export function TabNavigator() {
         name="Profile"
         component={Profile}
         options={{
-          tabBarLabel: translate("demoNavigator.communityTab"),
+          tabBarShowLabel: false,
+          tabBarLabel: "Calendar",
           tabBarIcon: ({ focused }) => (
-            <Icon icon="community" color={focused && colors.tint} size={30} />
+            <Icon icon="ic_calendar" color={focused && colors.tint} size={24} />
           ),
         }}
       />
@@ -73,10 +125,11 @@ export function TabNavigator() {
         name="Video"
         component={Video}
         options={{
+          tabBarShowLabel: false,
           tabBarAccessibilityLabel: translate("demoNavigator.podcastListTab"),
-          tabBarLabel: translate("demoNavigator.podcastListTab"),
+          tabBarLabel: "Chat",
           tabBarIcon: ({ focused }) => (
-            <Icon icon="podcast" color={focused && colors.tint} size={30} />
+            <Icon icon="ic_chat" color={focused && colors.tint} size={24} />
           ),
         }}
       />
@@ -85,9 +138,10 @@ export function TabNavigator() {
         name="History"
         component={History}
         options={{
-          tabBarLabel: translate("demoNavigator.debugTab"),
+          tabBarShowLabel: false,
+          tabBarLabel: "Profile",
           tabBarIcon: ({ focused }) => (
-            <Icon icon="debug" color={focused && colors.tint} size={30} />
+            <Icon icon="ic_profile" color={focused && colors.tint} size={24} />
           ),
         }}
       />

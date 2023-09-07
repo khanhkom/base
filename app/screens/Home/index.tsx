@@ -1,76 +1,30 @@
-import { View, StyleSheet, FlatList } from "react-native"
-import React, { useState } from "react"
-import { useSelector } from "@app/redux/reducers"
-import { List, Searchbar } from "react-native-paper"
+import { ScrollView, StyleSheet, Text, View } from "react-native"
+import React from "react"
+import HeaderHome from "./Item/Header"
 import { Screen } from "@app/components/Screen"
-import { spacing } from "@app/theme/spacing"
-import { searchClient } from "@app/utils/algolia"
-import { TextPaper } from "@app/components/text-paper"
-import Highlight from "./Highlight"
-import { navigate } from "@app/navigators/navigationUtilities"
-const limit = 10
+import ItemUtilities from "./Item/ItemUtilities"
+import BannerCarousel from "./Item/BannerCarousel"
+import TopDocter from "./Item/TopDocter"
+import TopPackage from "./Item/TopPackage"
+import HotNews from "./Item/HotNews"
+import colors from "@app/assets/colors"
 
-export default function Home() {
-  const user = useSelector((state) => state.userReducers)
-  const [searchQuery, setSearchQuery] = React.useState("")
-  const [loading, setLoading] = useState<boolean>(true)
-  const indexSearch = searchClient.initIndex("y_khoa")
-  const [pageList, setPageList] = useState<number>(0)
-  const [hits, setHits] = useState([])
-
-  const onChangeSearch = async (query) => {
-    const body = {
-      page: pageList,
-      hitsPerPage: limit,
-    }
-    setSearchQuery(query)
-    const response = await indexSearch.search(query, body)
-    if (response?.hits) {
-      setLoading(false)
-      const data = response?.hits
-      setHits(data)
-      console.log("AAAAAAAAAAAA", data)
-    }
-  }
-  console.log("user_user", hits)
+export default function HomeScreen() {
   return (
-    <Screen style={{ flex: 1, paddingTop: 40, paddingHorizontal: spacing.md }}>
-      <Searchbar placeholder="Search" onChangeText={onChangeSearch} value={searchQuery} />
-      <FlatList
-        data={hits}
-        extraData={hits}
-        ListHeaderComponent={() => (
-          <TextPaper style={{ marginTop: spacing.sm }}>Kết quả:</TextPaper>
-        )}
-        keyExtractor={(item) => item.objectID}
-        renderItem={({ item, index }) => {
-          return (
-            <List.Item
-              onPress={() => {
-                navigate("DetailSick", {
-                  item,
-                })
-              }}
-              title={() => (
-                <View>
-                  <TextPaper
-                    color="onSurface"
-                    variant="bodyLarge"
-                    style={{ marginBottom: spacing.xxs }}
-                  >
-                    {item.name}
-                  </TextPaper>
-                  <TextPaper color="onSurfaceVariant" variant="bodySmall">
-                    <Highlight hit={item} />
-                  </TextPaper>
-                </View>
-              )}
-            />
-          )
-        }}
-      />
+    <Screen preset="scroll" style={styles.container}>
+      <HeaderHome />
+      <ItemUtilities />
+      <BannerCarousel />
+      <TopDocter />
+      <TopPackage />
+      <HotNews />
     </Screen>
   )
 }
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: colors.gray_1,
+  },
+})

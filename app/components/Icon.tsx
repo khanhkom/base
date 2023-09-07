@@ -111,6 +111,14 @@ export const iconRegistry = {
   arrow_left: require("./icons/arrow-left.png"),
   calendar: require("./icons/calendar.png"),
   arrow_right: require("./icons/arrow-right.png"),
+  ic_noti: require("./icons/ic_noti.png"),
+  arrow_circle_right: require("./icons/arrow-circle-right.png"),
+  add_circle: require("./icons/add-circle.png"),
+  ic_start: require("./icons/ic_start.png"),
+  ic_home: require("./icons/ic_home.png"),
+  ic_chat: require("./icons/ic_chat.png"),
+  ic_calendar: require("./icons/ic_calendar.png"),
+  ic_profile: require("./icons/ic_profile.png"),
 }
 const $imageStyle: ImageStyle = {
   resizeMode: "contain",

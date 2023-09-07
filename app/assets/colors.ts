@@ -1,16 +1,22 @@
 const colors = {
   primary: "#183E9F",
+  primary_2: "#BAC5E2",
+
   black: "#000000",
   white: "#ffffff",
+  white_1: "rgba(255, 255, 255, .1)",
   gray_5: "#ADB5BD",
+  gray_6: "##868E96",
   gray_7: "#495057",
   gray_9: "#212529",
   gray_3: "#DEE2E6",
   gray_1: "#F1F3F5",
+  gray_0: "#F8F9FA",
   background: "#F5F7FA",
   main_7: "#3154B0",
   main_6: "#4665B2",
   red_5: "#FF6B6B",
   blue_6: "#228BE6",
+  yellow_0: "#FFF9DB",
 }
 export default colors

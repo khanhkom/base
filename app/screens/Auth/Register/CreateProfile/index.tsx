@@ -10,6 +10,7 @@ import { TextField } from "@app/components/TextField"
 import { Toggle } from "@app/components/Toggle"
 import SelectBirthday from "./Item/SelectBirthday"
 import LocationPicker from "@app/components/LocationPicker/LocationPicker"
+import { navigate } from "@app/navigators/navigationUtilities"
 
 export default function CreateProfile() {
   const [gender, setGender] = useState(0)
@@ -97,7 +98,13 @@ export default function CreateProfile() {
             placeholder="Ví dụ: Số nhà, đường, ..."
             containerStyle={{ marginTop: HEIGHT(spacing.md) }}
           ></TextField>
-          <Button mode="contained" style={styles.button}>
+          <Button
+            mode="contained"
+            style={styles.button}
+            onPress={() => {
+              navigate("TabNavigator")
+            }}
+          >
             Lưu
           </Button>
         </View>
