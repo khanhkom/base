@@ -63,6 +63,8 @@ export interface TextFieldProps extends Omit<TextInputProps, "ref"> {
    * The placeholder text to display if not using `placeholderTx`.
    */
   placeholder?: TextProps["text"]
+
+  placeholderTextColor?: string
   /**
    * Placeholder text which is looked up via i18n.
    */
@@ -110,6 +112,7 @@ export const TextField = forwardRef(function TextField(props: TextFieldProps, re
     require,
     labelTxOptions,
     placeholderTx,
+    placeholderTextColor,
     placeholder,
     placeholderTxOptions,
     helper,
@@ -209,7 +212,7 @@ export const TextField = forwardRef(function TextField(props: TextFieldProps, re
           underlineColorAndroid={colors.transparent}
           textAlignVertical="top"
           placeholder={placeholderContent}
-          placeholderTextColor={colors.textDim}
+          placeholderTextColor={placeholderTextColor || colors.textDim}
           onFocus={() => setFocus(true)}
           onBlur={() => setFocus(false)}
           {...TextInputProps}

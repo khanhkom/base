@@ -4,22 +4,21 @@ import { Text } from "@app/components/Text"
 import colors from "@app/assets/colors"
 import { HEIGHT, WIDTH } from "@app/config/functions"
 import { spacing } from "@app/theme/spacing"
-import DatePicker from "react-native-date-picker"
 import { TextField } from "@app/components/TextField"
 import { Icon } from "@app/components/Icon"
 import moment from "moment"
 import { isToday } from "date-fns"
-export default function SelectBirthday() {
+import ModalAdress from "./ModalAdress"
+interface ItemProps {
+  title: string
+  placeholder: string
+}
+export default function LocationPicker({ title, placeholder }: ItemProps) {
   const [date, setDate] = useState(new Date())
   const [open, setOpen] = useState(false)
   return (
     <View style={styles.container}>
-      <Text preset="formLabel">
-        Ngày sinh
-        <Text preset="formLabel" style={{ color: colors.red_5 }}>
-          *
-        </Text>
-      </Text>
+      <Text preset="formLabel">{title}</Text>
       <Pressable
         onPress={() => {
           setOpen(true)
@@ -27,38 +26,26 @@ export default function SelectBirthday() {
         style={{ marginTop: HEIGHT(spacing.xs) }}
       >
         <TextField
-          placeholder="dd/mm/yyyy"
+          placeholder={placeholder}
+          placeholderTextColor={colors.gray_9}
           value={!isToday(date) ? moment(date).format("DD/MM/YYYY") : ""}
           editable={false}
           RightAccessory={() => (
             <Icon
-              icon="calendar"
+              icon="arrow_right"
               size={20}
               style={{ marginTop: HEIGHT(10), marginRight: WIDTH(12) }}
             />
           )}
         />
       </Pressable>
-      <DatePicker
-        modal
-        open={open}
-        date={date}
-        onConfirm={(date) => {
-          setOpen(false)
-          setDate(date)
-        }}
-        mode="date"
-        title="Chọn ngày sinh"
-        onCancel={() => {
-          setOpen(false)
-        }}
-      />
+      <ModalAdress visible={open} setVisible={setOpen} />
     </View>
   )
 }
 
 const styles = StyleSheet.create({
   container: {
-    marginVertical: HEIGHT(spacing.md),
+    marginTop: HEIGHT(spacing.md),
   },
 })

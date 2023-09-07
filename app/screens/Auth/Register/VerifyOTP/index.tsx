@@ -39,6 +39,7 @@ export default function VerifyOTP() {
         <Text preset="mdMedium">0123456789</Text>
       </Text>
       <SmoothPinCodeInput
+        autoFocus
         ref={pinInput}
         mask="﹡"
         placeholder="•"

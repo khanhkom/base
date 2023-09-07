@@ -1,16 +1,18 @@
 import { ScrollView, StyleSheet, View } from "react-native"
-import React from "react"
+import React, { useState } from "react"
 import { Header } from "@app/components/Header"
 import colors from "@app/assets/colors"
-import { Card } from "react-native-paper"
+import { Button, Card } from "react-native-paper"
 import { Text } from "@app/components/Text"
 import { HEIGHT, WIDTH } from "@app/config/functions"
 import { spacing } from "@app/theme/spacing"
 import { TextField } from "@app/components/TextField"
 import { Toggle } from "@app/components/Toggle"
 import SelectBirthday from "./Item/SelectBirthday"
+import LocationPicker from "@app/components/LocationPicker/LocationPicker"
 
 export default function CreateProfile() {
+  const [gender, setGender] = useState(0)
   return (
     <View style={styles.container}>
       <Header
@@ -66,15 +68,18 @@ export default function CreateProfile() {
           </Text>
           <View style={styles.flexGender}>
             <Toggle
-              containerStyle={{ flexDirection: "row" }}
+              containerStyle={styles.flexRow}
               variant="radio"
+              onPress={() => setGender(0)}
               label="Nam"
               labelPosition="right"
-              value={true}
+              value={gender === 0}
             />
             <Toggle
-              containerStyle={{ flexDirection: "row" }}
+              containerStyle={styles.flexRow}
               variant="radio"
+              onPress={() => setGender(1)}
+              value={gender === 1}
               label="Nữ"
               labelPosition="right"
             />
@@ -84,11 +89,17 @@ export default function CreateProfile() {
             placeholder="Nhập địa chỉ email"
             containerStyle={{ marginTop: HEIGHT(spacing.md) }}
           ></TextField>
+          <LocationPicker title="Tỉnh/ Thành phố" placeholder="Chọn Tỉnh/ Thành phố" />
+          <LocationPicker title="Quận/ Huyện" placeholder="Chọn Quận/ Huyện" />
+          <LocationPicker title="Phường/ Xã" placeholder="Chọn Phường/Xã" />
           <TextField
             label="Địa chỉ chi tiết"
             placeholder="Ví dụ: Số nhà, đường, ..."
             containerStyle={{ marginTop: HEIGHT(spacing.md) }}
           ></TextField>
+          <Button mode="contained" style={styles.button}>
+            Lưu
+          </Button>
         </View>
       </ScrollView>
     </View>
@@ -96,19 +107,28 @@ export default function CreateProfile() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: colors.white,
-  },
   body: {
+    paddingBottom: HEIGHT(100),
     paddingHorizontal: WIDTH(spacing.md),
   },
+  container: {
+    backgroundColor: colors.white,
+    flex: 1,
+  },
   flexGender: {
-    flexDirection: "row",
     alignItems: "center",
-    width: WIDTH(150),
+    flexDirection: "row",
     justifyContent: "space-between",
-    paddingVertical: HEIGHT(spacing.md),
     paddingLeft: WIDTH(spacing.xs),
+    paddingVertical: HEIGHT(spacing.md),
+    width: WIDTH(150),
+  },
+  flexRow: {
+    flexDirection: "row",
+  },
+  button: {
+    width: WIDTH(343),
+    marginTop: HEIGHT(28),
+    borderRadius: 8,
   },
 })

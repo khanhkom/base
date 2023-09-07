@@ -1,4 +1,11 @@
-import { KeyboardAvoidingView, ScrollView, StyleSheet, Text, View } from "react-native"
+import {
+  KeyboardAvoidingView,
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native"
 import React from "react"
 import { Header } from "@app/components/Header"
 import { Button, TextInput } from "react-native-paper"
@@ -11,7 +18,7 @@ export default function ConfirmName() {
   const [text, setText] = React.useState("")
 
   return (
-    <KeyboardAvoidingView style={styles.container}>
+    <View style={styles.container}>
       <Header leftIcon="arrow_left" title="Xác nhận họ tên" backgroundColor={colors.white} />
       <TextInput
         mode="outlined"
@@ -33,7 +40,7 @@ export default function ConfirmName() {
       >
         Tiếp tục
       </Button>
-    </KeyboardAvoidingView>
+    </View>
   )
 }
 
@@ -47,5 +54,6 @@ const styles = StyleSheet.create({
     position: "absolute",
     bottom: HEIGHT(spacing.md),
     marginLeft: WIDTH(spacing.md),
+    borderRadius: 8,
   },
 })

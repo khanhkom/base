@@ -12,6 +12,7 @@ import { colors, spacing } from "../theme"
 import { ExtendedEdge, useSafeAreaInsetsStyle } from "../utils/useSafeAreaInsetsStyle"
 import { Icon, IconTypes } from "./Icon"
 import { Text, TextProps } from "./Text"
+import { goBack } from "../navigators"
 
 export interface HeaderProps {
   /**
@@ -182,7 +183,7 @@ export function Header(props: HeaderProps) {
           text={leftText}
           icon={leftIcon}
           iconColor={leftIconColor}
-          onPress={onLeftPress}
+          onPress={onLeftPress || goBack}
           txOptions={leftTxOptions}
           backgroundColor={backgroundColor}
           ActionComponent={LeftActionComponent}

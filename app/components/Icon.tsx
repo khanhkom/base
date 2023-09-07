@@ -110,6 +110,7 @@ export const iconRegistry = {
   arrow_down: require("./icons/arrow-down.png"),
   arrow_left: require("./icons/arrow-left.png"),
   calendar: require("./icons/calendar.png"),
+  arrow_right: require("./icons/arrow-right.png"),
 }
 const $imageStyle: ImageStyle = {
   resizeMode: "contain",

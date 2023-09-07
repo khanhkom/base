@@ -320,7 +320,7 @@ function Radio(props: ToggleInputProps) {
   const offBackgroundColor = [
     disabled && colors.palette.neutral400,
     status === "error" && colors.errorBackground,
-    colors.palette.neutral200,
+    colors.palette.neutral100,
   ].filter(Boolean)[0]
 
   const outerBorderColor = [
