@@ -10,10 +10,15 @@ import { spacing } from "@app/theme/spacing"
 import { TextPaper } from "@app/components/text-paper"
 import { Icon } from "@app/components/Icon"
 import { Text } from "@app/components/Text"
-export default function InputPhone({ setPhoneNumber, phoneNumber }) {
+interface ItemProps {
+  setPhoneNumber: (val: string) => void
+  phoneNumber: string
+  setCountryCode: (val: string) => void
+}
+export default function InputPhone({ setPhoneNumber, phoneNumber, setCountryCode }: ItemProps) {
   const [show, setShow] = useState(false)
   const [focus, setFocus] = useState(false)
-  const [countryCode, setCountryCode] = useState("")
+  // const [countryCode, setCountryCode] = useState("")
   const [isKeyboardVisible, setKeyboardVisible] = useState(false)
 
   useEffect(() => {
@@ -93,9 +98,9 @@ export default function InputPhone({ setPhoneNumber, phoneNumber }) {
           },
         }}
       />
-      <Text preset="smRegular" style={{ marginTop: HEIGHT(spacing.xs), color: colors.red_5 }}>
+      {/* <Text preset="smRegular" style={{ marginTop: HEIGHT(spacing.xs), color: colors.red_5 }}>
         Vui lòng kiểm tra lại số điện thoại!
-      </Text>
+      </Text> */}
     </>
   )
 }

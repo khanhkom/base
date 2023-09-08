@@ -14,7 +14,7 @@ import History from "@app/screens/History"
 import { navigate } from "./navigationUtilities"
 import { BottomNavigation } from "react-native-paper"
 import { HEIGHT } from "@app/config/functions"
-
+import R from "@app/assets"
 export type DemoTabParamList = {
   Home: undefined
   Profile: undefined
@@ -78,7 +78,7 @@ export function TabNavigator() {
             return null
           }}
           style={[
-            { backgroundColor: colors.background },
+            { backgroundColor: R.colors.white },
             Platform.OS === "ios" && {
               height: HEIGHT(80),
             },
@@ -110,8 +110,8 @@ export function TabNavigator() {
       />
 
       <Tab.Screen
-        name="Profile"
-        component={Profile}
+        name="History"
+        component={History}
         options={{
           tabBarShowLabel: false,
           tabBarLabel: "Calendar",
@@ -135,8 +135,8 @@ export function TabNavigator() {
       />
 
       <Tab.Screen
-        name="History"
-        component={History}
+        name="Profile"
+        component={Profile}
         options={{
           tabBarShowLabel: false,
           tabBarLabel: "Profile",

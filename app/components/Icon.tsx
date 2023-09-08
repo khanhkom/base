@@ -119,6 +119,13 @@ export const iconRegistry = {
   ic_chat: require("./icons/ic_chat.png"),
   ic_calendar: require("./icons/ic_calendar.png"),
   ic_profile: require("./icons/ic_profile.png"),
+  call: require("./icons/call.png"),
+  "call-end": require("./icons/call-end.png"),
+  "mic-off": require("./icons/mic-off.png"),
+  videocam: require("./icons/videocam.png"),
+  "videocam-off": require("./icons/videocam-off.png"),
+  "volume-off": require("./icons/volume-off.png"),
+  "volume-up": require("./icons/volume-up.png"),
 }
 const $imageStyle: ImageStyle = {
   resizeMode: "contain",

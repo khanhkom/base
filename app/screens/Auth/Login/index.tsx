@@ -13,15 +13,54 @@ import FooterLogin from "../Item/FooterLogin"
 import PopupVerify from "../Item/PopupVerify"
 import { Button } from "react-native-paper"
 import { Text } from "@app/components/Text"
+import { TextField } from "@app/components/TextField"
+import { EToastType, showToastMessage } from "@app/utils/library"
+import { login } from "@app/services/api/functions/users"
+import { LoadingOpacity } from "@app/components/loading/LoadingOpacity"
+import { KEYSTORAGE, save } from "@app/utils/storage"
+import { api } from "@app/services/api"
+import { navigate } from "@app/navigators/navigationUtilities"
+import { useDispatch } from "react-redux"
+import { getStringeeToken } from "@app/redux/actions/stringee"
 
 export default function Login() {
   const [indexTab, setIndexTab] = useState(0)
+  const [countryCode, setCountryCode] = useState("84")
   const [phoneNumber, setPhoneNumber] = useState("")
+  const [password, setPassword] = useState("")
+  const [loading, setLoading] = useState(false)
   const [visible, setVisible] = React.useState(false)
   const showModal = () => setVisible(true)
   const hideModal = () => setVisible(false)
-  const onSubmit = () => {
-    showModal()
+  const dispatch = useDispatch()
+  const onSubmit = async () => {
+    // showModal()
+    if (phoneNumber === "" || password === "") {
+      showToastMessage("Vui lòng nhập đủ thông tin!", EToastType.ERROR)
+    } else {
+      try {
+        let body = {
+          password: password,
+          phone: countryCode + phoneNumber,
+        }
+        setLoading(true)
+        let resLogin = await login(body)
+        if (resLogin?.data?.accessToken) {
+          const dataLogin = resLogin?.data
+          api.apisauce.setHeader("access-token", dataLogin?.accessToken)
+          save(KEYSTORAGE.LOGIN_DATA, dataLogin)
+          dispatch(getStringeeToken())
+          navigate("TabNavigator")
+        } else {
+          showToastMessage("Thông tin không chính xác!", EToastType.ERROR)
+        }
+        console.log("resLogin_resLogin", body, resLogin?.data)
+        setLoading(false)
+      } catch (error) {
+        showToastMessage("Thông tin không chính xác!", EToastType.ERROR)
+        setLoading(false)
+      }
+    }
   }
   return (
     <Screen preset="auto" safeAreaEdges={["bottom"]} contentContainerStyle={{ flex: 1 }}>
@@ -44,7 +83,20 @@ export default function Login() {
             }}
           />
         </View>
-        <InputPhone phoneNumber={phoneNumber} setPhoneNumber={setPhoneNumber} />
+        <InputPhone
+          phoneNumber={phoneNumber}
+          setPhoneNumber={setPhoneNumber}
+          setCountryCode={setCountryCode}
+        />
+        {indexTab === 1 && (
+          <TextField
+            label="Mật khẩu"
+            containerStyle={{ marginTop: 16 }}
+            value={password}
+            onChangeText={setPassword}
+            secureTextEntry
+          />
+        )}
         <Button
           mode="contained"
           style={styles.buttonNext}
@@ -63,6 +115,7 @@ export default function Login() {
       </View>
       <FooterLogin />
       <PopupVerify visible={visible} setVisible={setVisible} />
+      {loading && <LoadingOpacity />}
     </Screen>
   )
 }

@@ -1,4 +1,4 @@
-import { StyleSheet, Image, View, ImageBackground, StatusBar } from "react-native"
+import { StyleSheet, Image, View, ImageBackground } from "react-native"
 import React, { useState } from "react"
 import { HEIGHT, WIDTH, getWidth } from "@app/config/functions"
 import R from "@app/assets"
@@ -9,7 +9,8 @@ import colors from "@app/assets/colors"
 export default function HeaderHome() {
   const [keyword, setKeyword] = useState("")
   return (
-    <ImageBackground source={R.images.header_bgr} style={styles.imageBGR} resizeMode="contain">
+    <View style={styles.imageBGR} resizeMode="contain">
+      <View style={styles.bgr} />
       <View style={styles.flexRow}>
         <Image source={R.images.heart} style={styles.icHeart} />
         <Image source={R.images.textsdocter} style={styles.logoText} />
@@ -23,7 +24,7 @@ export default function HeaderHome() {
         placeholderTextColor={colors.primary_2}
         placeholder="Tìm kiếm"
       />
-    </ImageBackground>
+    </View>
   )
 }
 
@@ -49,14 +50,24 @@ const styles = StyleSheet.create({
   },
   imageBGR: {
     height: HEIGHT(320),
-    width: getWidth(),
-    marginTop: -HEIGHT(40),
-    paddingTop: HEIGHT(40),
+    width: "100%",
+    marginTop: -HEIGHT(30),
+    paddingTop: HEIGHT(50),
   },
   searchBar: {
     borderRadius: 8,
     marginHorizontal: WIDTH(spacing.md),
     marginTop: HEIGHT(20),
     backgroundColor: colors.white_1,
+  },
+  bgr: {
+    position: "absolute",
+    height: HEIGHT(1000),
+    top: -HEIGHT(680),
+    left: "-50%",
+    width: "200%",
+    backgroundColor: colors.primary,
+    borderRadius: 250,
+    // transform: [{ rotate: "20deg" }],
   },
 })

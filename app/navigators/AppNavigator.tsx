@@ -1,8 +1,8 @@
 import { DarkTheme, DefaultTheme, NavigationContainer } from "@react-navigation/native"
 import { createNativeStackNavigator, NativeStackScreenProps } from "@react-navigation/native-stack"
 import { observer } from "mobx-react-lite"
-import React from "react"
-import { useColorScheme } from "react-native"
+import React, { useEffect, useState } from "react"
+import { ActivityIndicator, View, useColorScheme } from "react-native"
 import Config from "../config"
 import { useStores } from "../models" // @demo remove-current-line
 import { TabNavigator } from "./TabNavigator" // @demo remove-current-line
@@ -14,7 +14,15 @@ import Login from "@app/screens/Auth/Login"
 import VerifyOTP from "@app/screens/Auth/Register/VerifyOTP"
 import ConfirmName from "@app/screens/Auth/Register/ConfirmName"
 import CreateProfile from "@app/screens/Auth/Register/CreateProfile"
-
+import Call2Screen from "@app/screens/Demo/Call2Screen"
+import R from "@app/assets"
+import { KEYSTORAGE, load } from "@app/utils/storage"
+import { setLoginedApp } from "@app/redux/actions"
+import { useDispatch } from "react-redux"
+import { useSelector } from "@app/redux/reducers"
+import { api } from "@app/services/api"
+import CallScreen from "@app/screens/Demo/CallScreen"
+import ChatScreen from "@app/screens/Demo/ChatScreen"
 export type AppStackParamList = {
   TabNavigator: undefined
   Profile: undefined
@@ -25,6 +33,10 @@ export type AppStackParamList = {
   VerifyOTP: undefined
   ConfirmName: undefined
   CreateProfile: undefined
+  Call2Screen: undefined
+  CallScreen: undefined
+
+  ChatScreen: undefined
   // 🔥 Your screens go here
   // IGNITE_GENERATOR_ANCHOR_APP_STACK_PARAM_LIST
 }
@@ -48,6 +60,7 @@ const AppStack = observer(function AppStack() {
   const {
     authenticationStore: { isAuthenticated },
   } = useStores()
+  const isLoggedIn = useSelector((state) => state.appReducers.isLoggedIn)
 
   // @demo remove-block-end
   return (
@@ -55,7 +68,7 @@ const AppStack = observer(function AppStack() {
       screenOptions={{ headerShown: false, navigationBarColor: colors.background }}
       // initialRouteName={isAuthenticated ? "TabNavigator" : "Login"} // @demo remove-current-line
 
-      initialRouteName={"Login"} // @demo remove-current-line
+      initialRouteName={isLoggedIn ? "TabNavigator" : "Login"} // @demo remove-current-line
     >
       <Stack.Screen name="TabNavigator" component={TabNavigator} />
       <Stack.Screen name="Login" component={Login} />
@@ -63,6 +76,9 @@ const AppStack = observer(function AppStack() {
       <Stack.Screen name="VerifyOTP" component={VerifyOTP} />
       <Stack.Screen name="ConfirmName" component={ConfirmName} />
       <Stack.Screen name="CreateProfile" component={CreateProfile} />
+      <Stack.Screen name="Call2Screen" component={Call2Screen} />
+      <Stack.Screen name="CallScreen" component={CallScreen} />
+      <Stack.Screen name="ChatScreen" component={ChatScreen} />
     </Stack.Navigator>
   )
 })
@@ -72,8 +88,33 @@ export interface NavigationProps
 
 export const AppNavigator = observer(function AppNavigator(props: NavigationProps) {
   const colorScheme = useColorScheme()
-
+  const [loadToken, setLoadToken] = useState(true)
+  const dispatch = useDispatch()
   useBackButtonHandler((routeName) => exitRoutes.includes(routeName))
+  useEffect(() => {
+    async function loadDataLocal() {
+      const dataTokenLocal = await load(KEYSTORAGE.LOGIN_DATA)
+      console.log("dataTokenLocal", dataTokenLocal)
+      if (dataTokenLocal !== null) {
+        console.log("dataTokenLocal", dataTokenLocal)
+        api.apisauce.setHeader("access-token", dataTokenLocal?.accessToken)
+        dispatch(setLoginedApp(true))
+        setLoadToken(false)
+      } else {
+        dispatch(setLoginedApp(false))
+        setLoadToken(false)
+      }
+    }
+    loadDataLocal()
+  }, [])
+
+  if (loadToken) {
+    return (
+      <View style={{ flex: 1, backgroundColor: colors.background }}>
+        <ActivityIndicator color={R.colors.primary} size="small" />
+      </View>
+    )
+  }
 
   return (
     <NavigationContainer

@@ -1,4 +1,4 @@
-import { ScrollView, StyleSheet, Text, View } from "react-native"
+import { ScrollView, StatusBar, StyleSheet, Text, View } from "react-native"
 import React from "react"
 import HeaderHome from "./Item/Header"
 import { Screen } from "@app/components/Screen"
@@ -24,7 +24,7 @@ export default function HomeScreen() {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     backgroundColor: colors.gray_1,
+    flex: 1,
   },
 })

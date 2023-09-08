@@ -38,9 +38,13 @@ import { Provider } from "react-redux"
 import { applyMiddleware, createStore } from "redux"
 import createSagaMiddleware from "redux-saga"
 import rootReducers from "./redux/reducers"
+import Toast from "react-native-toast-message"
+import rootSaga from "@app/redux/sagas"
+
 export const NAVIGATION_PERSISTENCE_KEY = "NAVIGATION_STATE"
 const sagaMiddleware = createSagaMiddleware()
 const store = createStore(rootReducers, applyMiddleware(sagaMiddleware))
+sagaMiddleware.run(rootSaga)
 
 // Web linking configuration
 const prefix = Linking.createURL("/")
@@ -173,6 +177,7 @@ function App(props: AppProps) {
                 initialState={initialNavigationState}
                 onStateChange={onNavigationStateChange}
               />
+              <Toast />
             </GestureHandlerRootView>
           </PaperProvider>
         </Provider>

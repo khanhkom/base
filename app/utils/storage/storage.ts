@@ -79,6 +79,7 @@ export async function clear(): Promise<void> {
 }
 export const KEYSTORAGE = {
   USER_DATA: "USER_DATA",
+  LOGIN_DATA: "@LOGIN_DATA",
   LANGUAGE: "@LANGUAGE",
   INIT_STORGE: "@ACCOUNT",
   DATA_DARKMODE: "@DARK_MODE",
