@@ -3,11 +3,13 @@ import React from "react"
 import { Button } from "react-native-paper"
 import { navigate } from "@app/navigators/navigationUtilities"
 import { useSelector } from "@app/redux/reducers"
+import { KEYSTORAGE, remove } from "@app/utils/storage"
 
 export default function Profile() {
   const session = useSelector((state) => state.stringeeReducers.session)
   console.log("session_session", session)
   const onLogout = () => {
+    remove(KEYSTORAGE.LOGIN_DATA)
     navigate("Login")
   }
   return (

@@ -1,4 +1,4 @@
-import { PermissionsAndroid, Platform, StyleSheet, Text, View } from "react-native"
+import { PermissionsAndroid, Platform, StyleSheet, Clipboard, View } from "react-native"
 import React, { useEffect, useState } from "react"
 import { Header } from "@app/components/Header"
 import { Button, List, Menu, TextInput } from "react-native-paper"
@@ -11,6 +11,7 @@ import { navigate } from "@app/navigators/navigationUtilities"
 import { getStringeeToken } from "@app/redux/actions/stringee"
 import { useDispatch } from "react-redux"
 import { useSelector } from "@app/redux/reducers"
+import { EToastType, showToastMessage } from "@app/utils/library"
 
 export default function Video({ route }) {
   const [callData, setCallData] = useState({
@@ -205,6 +206,18 @@ export default function Video({ route }) {
   return (
     <View>
       <Header leftIcon="menu" />
+      <Button
+        onPress={() => {
+          Clipboard.setString(callData?.userId)
+          // showToastMessage({
+          //   customMessage: "Coppy mã thành công!",
+          // })
+          showToastMessage("Coppy thành công!", EToastType.INFO)
+        }}
+      >
+        {" "}
+        Coppy User ID: {callData?.userId}
+      </Button>
       <TextInput
         mode="outlined"
         label={"Target user id"}
@@ -243,14 +256,19 @@ export default function Video({ route }) {
         title="Call phone"
         style={styles.item}
         onPress={() => {
-          navigate("CallScreen", {
-            callId: "",
-            clientId: client?.current?.getId?.(),
-            isVideoCall: false,
-            from: callData.userId,
-            to: callData.to,
-            isIncoming: false,
-          })
+          if (callData.to?.length !== 11) {
+            showToastMessage("Số phải có dạng 84123456789", EToastType.ERROR)
+          } else {
+            navigate("CallScreen", {
+              callId: "",
+              clientId: client?.current?.getId?.(),
+              isVideoCall: false,
+              from: callData.userId,
+              to: callData.to,
+              isIncoming: false,
+              isCall: true,
+            })
+          }
         }}
         right={() => {
           return <Icon icon="arrow_right" size={20} />

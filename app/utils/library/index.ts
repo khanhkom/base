@@ -14,7 +14,7 @@ export const showToastMessage = (
     type: type,
     position: position || "top",
     [`text${value}`]: message,
-    visibilityTime: 1000,
+    visibilityTime: 3000,
     autoHide: true,
     topOffset: 50,
     bottomOffset: 40,

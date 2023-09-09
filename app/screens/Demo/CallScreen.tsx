@@ -49,18 +49,21 @@ export default class CallScreen extends Component {
     }
     // Make new call
     else {
-      // const callParams = JSON.stringify({
-      //   from: this.state.from,
-      //   to: this.state.to,
-      //   isVideoCall: this.state.isVideoCall,
-      //   videoResolution: "NORMAL",
-      // })
-      const callParams = JSON.stringify({
-        from: "842873030638",
-        to: "84332274040",
-        isVideoCall: false,
+      let callParams = JSON.stringify({
+        from: this.state.from,
+        to: this.state.to,
+        isVideoCall: this.state.isVideoCall,
         videoResolution: "NORMAL",
       })
+      if (this.props?.route?.params?.isCall) {
+        callParams = JSON.stringify({
+          from: "842873030638",
+          to: this.state.to,
+          isVideoCall: false,
+          videoResolution: "NORMAL",
+        })
+      }
+
       this.call.current.makeCall(callParams, (status, code, message, callId) => {
         console.log(
           "status-" + status + " code-" + code + " message-" + message + " callId-" + callId,
