@@ -296,7 +296,7 @@ export default function Video({ route }) {
         title="Chat"
         style={styles.item}
         onPress={() => {
-          navigate("ChatScreen", {
+          navigate("Conversations", {
             token: session?.access_token,
           })
         }}

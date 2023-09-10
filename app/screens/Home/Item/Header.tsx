@@ -52,7 +52,7 @@ const styles = StyleSheet.create({
     height: HEIGHT(320),
     width: "100%",
     marginTop: -HEIGHT(30),
-    paddingTop: HEIGHT(50),
+    paddingTop: HEIGHT(60),
   },
   searchBar: {
     borderRadius: 8,

@@ -126,6 +126,7 @@ export const iconRegistry = {
   "videocam-off": require("./icons/videocam-off.png"),
   "volume-off": require("./icons/volume-off.png"),
   "volume-up": require("./icons/volume-up.png"),
+  delete: require("./icons/delete.png"),
 }
 const $imageStyle: ImageStyle = {
   resizeMode: "contain",

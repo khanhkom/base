@@ -1,0 +1,26 @@
+let data= [
+    {
+        "create_user": "newpasoketu+1@gmail.com",
+        "plan_id": 0,
+    },
+    {
+        "create_user": "newpasoketu+2@gmail.com",
+        "plan_id": 472,
+    },
+    {
+        "create_user": "newpasoketu+3@gmail.com",
+        "plan_id": 472,
+    },
+    {
+        "create_user": "newpasoketu+4@gmail.com",
+        "plan_id": 472,
+    },
+    {
+        "create_user": "newpasoketu+5@gmail.com",
+        "plan_id": 0,
+    },
+    {
+        "create_user": "newpasoketu+6@gmail.com",
+        "plan_id": 0,
+    }
+]

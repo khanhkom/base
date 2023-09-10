@@ -23,6 +23,8 @@ import { useSelector } from "@app/redux/reducers"
 import { api } from "@app/services/api"
 import CallScreen from "@app/screens/Demo/CallScreen"
 import ChatScreen from "@app/screens/Demo/ChatScreen"
+import Conversations from "@app/screens/Demo/Conversations"
+import ChatDetail from "@app/screens/Demo/ChatDetail"
 export type AppStackParamList = {
   TabNavigator: undefined
   Profile: undefined
@@ -37,6 +39,8 @@ export type AppStackParamList = {
   CallScreen: undefined
 
   ChatScreen: undefined
+  Conversations: undefined
+  ChatDetail: undefined
   // 🔥 Your screens go here
   // IGNITE_GENERATOR_ANCHOR_APP_STACK_PARAM_LIST
 }
@@ -79,6 +83,8 @@ const AppStack = observer(function AppStack() {
       <Stack.Screen name="Call2Screen" component={Call2Screen} />
       <Stack.Screen name="CallScreen" component={CallScreen} />
       <Stack.Screen name="ChatScreen" component={ChatScreen} />
+      <Stack.Screen name="Conversations" component={Conversations} />
+      <Stack.Screen name="ChatDetail" component={ChatDetail} />
     </Stack.Navigator>
   )
 })
