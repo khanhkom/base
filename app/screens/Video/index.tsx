@@ -12,7 +12,7 @@ import { getStringeeToken } from "@app/redux/actions/stringee"
 import { useDispatch } from "react-redux"
 import { useSelector } from "@app/redux/reducers"
 import { EToastType, showToastMessage } from "@app/utils/library"
-
+import messaging from "@react-native-firebase/messaging"
 export default function Video({ route }) {
   const [callData, setCallData] = useState({
     userId: "",
@@ -199,7 +199,25 @@ export default function Video({ route }) {
   const clientReceiveCustomMessage = ({ data }) => {
     console.log("_clientReceiveCustomMessage: " + data)
   }
-
+  useEffect(() => {
+    async function updateTokenFi() {
+      const token = await messaging().getToken()
+      console.log("AAAAA", token)
+      client?.current?.registerPush(
+        token,
+        false, // only for iOS
+        false, // only for iOS
+        (status, code, message) => {
+          console.log(message)
+        },
+      )
+    }
+    if (session?.access_token !== "") {
+      setTimeout(() => {
+        updateTokenFi()
+      }, 500)
+    }
+  }, [session?.access_token])
   const openMenu = () => setVisible(true)
 
   const closeMenu = () => setVisible(false)

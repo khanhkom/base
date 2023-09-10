@@ -40,6 +40,8 @@ import createSagaMiddleware from "redux-saga"
 import rootReducers from "./redux/reducers"
 import Toast from "react-native-toast-message"
 import rootSaga from "@app/redux/sagas"
+import notifee from "@notifee/react-native"
+import messaging from "@react-native-firebase/messaging"
 
 export const NAVIGATION_PERSISTENCE_KEY = "NAVIGATION_STATE"
 const sagaMiddleware = createSagaMiddleware()
@@ -147,7 +149,37 @@ function App(props: AppProps) {
     // Note: (vanilla iOS) You might notice the splash-screen logo change size. This happens in debug/development mode. Try building the app for release.
     setTimeout(hideSplashScreen, 500)
   })
-
+  async function onMessageReceived(message) {
+    const data = JSON.parse(message.data.data)
+    const callStatus = data.callStatus
+    const from = data.from.number
+    const notificationId = "11111" // YOUR_NOTIFICATION_ID
+    console.log("data: " + callStatus)
+    const channelId = await notifee.createChannel({
+      id: "sdocter",
+      name: "sdocter",
+      vibration: true,
+    })
+    switch (callStatus) {
+      case "started":
+        await notifee.displayNotification({
+          id: notificationId,
+          title: "Incoming Call",
+          body: "Call from " + from,
+          android: {
+            channelId,
+            pressAction: {
+              id: "default",
+              mainComponent: "SDocter",
+            },
+          },
+        })
+        break
+      case "ended":
+        break
+    }
+  }
+  messaging().setBackgroundMessageHandler(onMessageReceived)
   // Before we show the app, we have to wait for our state to be ready.
   // In the meantime, don't render anything. This will be the background
   // color set in native by rootView's background color.
