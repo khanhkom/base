@@ -25,6 +25,10 @@ import CallScreen from "@app/screens/Demo/CallScreen"
 import ChatScreen from "@app/screens/Demo/ChatScreen"
 import Conversations from "@app/screens/Demo/Conversations"
 import ChatDetail from "@app/screens/Demo/ChatDetail"
+import CousultOnline from "@app/screens/Booking/CousultOnline"
+import ConsultNow from "@app/screens/Booking/ConsultNow"
+import DocterInformation from "@app/screens/Docter/DocterInformation"
+import SelectCalendar from "@app/screens/Booking/MakeBooking/SelectCalendar"
 export type AppStackParamList = {
   TabNavigator: undefined
   Profile: undefined
@@ -41,6 +45,11 @@ export type AppStackParamList = {
   ChatScreen: undefined
   Conversations: undefined
   ChatDetail: undefined
+  CousultOnline: undefined
+  ConsultNow: undefined
+  DocterInformation: undefined
+
+  SelectCalendar: undefined
   // 🔥 Your screens go here
   // IGNITE_GENERATOR_ANCHOR_APP_STACK_PARAM_LIST
 }
@@ -85,6 +94,10 @@ const AppStack = observer(function AppStack() {
       <Stack.Screen name="ChatScreen" component={ChatScreen} />
       <Stack.Screen name="Conversations" component={Conversations} />
       <Stack.Screen name="ChatDetail" component={ChatDetail} />
+      <Stack.Screen name="CousultOnline" component={CousultOnline} />
+      <Stack.Screen name="ConsultNow" component={ConsultNow} />
+      <Stack.Screen name="DocterInformation" component={DocterInformation} />
+      <Stack.Screen name="SelectCalendar" component={SelectCalendar} />
     </Stack.Navigator>
   )
 })

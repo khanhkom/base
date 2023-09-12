@@ -127,6 +127,13 @@ export const iconRegistry = {
   "volume-off": require("./icons/volume-off.png"),
   "volume-up": require("./icons/volume-up.png"),
   delete: require("./icons/delete.png"),
+  filter: require("./icons/filter.png"),
+  user_search: require("./icons/user_search.png"),
+  department: require("./icons/department.png"),
+  briefcase: require("./icons/briefcase.png"),
+  award: require("./icons/award.png"),
+  navigate_before: require("./icons/navigate_before.png"),
+  navigate_next: require("./icons/navigate_next.png"),
 }
 const $imageStyle: ImageStyle = {
   resizeMode: "contain",

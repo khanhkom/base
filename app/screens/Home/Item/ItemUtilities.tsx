@@ -1,4 +1,4 @@
-import { StyleSheet, Image, View, FlatList } from "react-native"
+import { StyleSheet, Image, View, FlatList, Pressable } from "react-native"
 import React from "react"
 import R from "@app/assets"
 import { HEIGHT, WIDTH } from "@app/config/functions"
@@ -6,56 +6,75 @@ import { Text } from "@app/components/Text"
 import { Card } from "react-native-paper"
 import { spacing } from "@app/theme/spacing"
 import colors from "@app/assets/colors"
+import { navigate } from "@app/navigators/navigationUtilities"
+const TYPE_FEATURES = {
+  DATLICH: 0,
+  TUVAN: 1,
+  HOIDAP: 2,
+  KETQUA: 3,
+  NHATHUOC: 4,
+  KIENTHUC: 5,
+}
 const DATA_FEATURES = [
   {
-    id: 0,
+    id: TYPE_FEATURES.DATLICH,
     title: "Đặt khám tại phòng khám",
     image: R.images.ic_khamlai,
   },
   {
-    id: 1,
+    id: TYPE_FEATURES.TUVAN,
     title: " Tư vấn trực tuyến ",
     image: R.images.ic_tuvan,
   },
   {
-    id: 2,
+    id: TYPE_FEATURES.HOIDAP,
     title: "Hỏi đáp cộng đồng",
     image: R.images.ic_hoidap,
   },
   {
-    id: 3,
+    id: TYPE_FEATURES.KETQUA,
     title: "Kết quả khám bệnh",
     image: R.images.ic_ketqua,
   },
   {
-    id: 4,
+    id: TYPE_FEATURES.NHATHUOC,
     title: "Nhà thuốc",
     image: R.images.ic_nhathuoc,
   },
   {
-    id: 5,
+    id: TYPE_FEATURES.KIENTHUC,
     title: "Kiến thức sơ cấp cứu",
     image: R.images.ic_kienthuc,
   },
 ]
-const Item = ({ item, index }) => {
+const Item = ({ item, index, onPress }) => {
   return (
-    <View style={styles.item}>
+    <Pressable onPress={onPress} style={styles.item}>
       <Image source={item.image} style={styles.icFeature} />
       <Text weight="normal" size="sm" style={{ width: WIDTH(96), textAlign: "center" }}>
         {item.title}
       </Text>
-    </View>
+    </Pressable>
   )
 }
 export default function ItemUtilities() {
+  const onPresItem = (index) => {
+    switch (index) {
+      case TYPE_FEATURES.TUVAN:
+        navigate("CousultOnline")
+        break
+
+      default:
+        break
+    }
+  }
   return (
     <Card style={styles.card}>
       <FlatList
         data={DATA_FEATURES}
         numColumns={3}
         renderItem={({ item, index }) => {
-          return <Item item={item} index={index} />
+          return <Item item={item} index={index} onPress={() => onPresItem(index)} />
         }}
         ItemSeparatorComponent={() => <View style={{ height: HEIGHT(spacing.md) }} />}
       />
