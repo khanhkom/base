@@ -29,6 +29,11 @@ import CousultOnline from "@app/screens/Booking/CousultOnline"
 import ConsultNow from "@app/screens/Booking/ConsultNow"
 import DocterInformation from "@app/screens/Docter/DocterInformation"
 import SelectCalendar from "@app/screens/Booking/MakeBooking/SelectCalendar"
+import SelectTimeBooking from "@app/screens/Booking/MakeBooking/SelectTimeBooking"
+import CreateMedicalRecord from "@app/screens/Booking/MakeBooking/CreateMedicalRecord"
+import BookingSuccess from "@app/screens/Booking/BookingSuccess"
+import SelectPatientRecord from "@app/screens/Booking/MakeBooking/SelectPatientRecord"
+import SelectSpecialist from "@app/screens/Booking/MakeBooking/SelectSpecialist"
 export type AppStackParamList = {
   TabNavigator: undefined
   Profile: undefined
@@ -50,6 +55,11 @@ export type AppStackParamList = {
   DocterInformation: undefined
 
   SelectCalendar: undefined
+  SelectTimeBooking: undefined
+  CreateMedicalRecord: undefined
+  BookingSuccess: undefined
+  SelectPatientRecord: undefined
+  SelectSpecialist: undefined
   // 🔥 Your screens go here
   // IGNITE_GENERATOR_ANCHOR_APP_STACK_PARAM_LIST
 }
@@ -98,6 +108,11 @@ const AppStack = observer(function AppStack() {
       <Stack.Screen name="ConsultNow" component={ConsultNow} />
       <Stack.Screen name="DocterInformation" component={DocterInformation} />
       <Stack.Screen name="SelectCalendar" component={SelectCalendar} />
+      <Stack.Screen name="SelectTimeBooking" component={SelectTimeBooking} />
+      <Stack.Screen name="CreateMedicalRecord" component={CreateMedicalRecord} />
+      <Stack.Screen name="BookingSuccess" component={BookingSuccess} />
+      <Stack.Screen name="SelectPatientRecord" component={SelectPatientRecord} />
+      <Stack.Screen name="SelectSpecialist" component={SelectSpecialist} />
     </Stack.Navigator>
   )
 })

@@ -134,6 +134,11 @@ export const iconRegistry = {
   award: require("./icons/award.png"),
   navigate_before: require("./icons/navigate_before.png"),
   navigate_next: require("./icons/navigate_next.png"),
+  personalcard: require("./icons/personalcard.png"),
+  directbox_send: require("./icons/directbox-send.png"),
+  note: require("./icons/note.png"),
+  ask: require("./icons/ask.png"),
+  folder_add: require("./icons/folder-add.png"),
 }
 const $imageStyle: ImageStyle = {
   resizeMode: "contain",
