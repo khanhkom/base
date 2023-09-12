@@ -327,7 +327,7 @@ function Radio(props: ToggleInputProps) {
     disabled && colors.palette.neutral400,
     status === "error" && colors.error,
     !on && R.colors.gray_5,
-    R.colors.primary,
+    R.colors.green_8,
   ].filter(Boolean)[0]
 
   const onBackgroundColor = [
@@ -339,7 +339,7 @@ function Radio(props: ToggleInputProps) {
   const dotBackgroundColor = [
     disabled && colors.palette.neutral600,
     status === "error" && colors.error,
-    R.colors.primary,
+    R.colors.green_8,
   ].filter(Boolean)[0]
 
   return (
@@ -551,8 +551,8 @@ const $inputWrapper: ViewStyle = {
 }
 
 const $inputOuterBase: ViewStyle = {
-  height: 24,
-  width: 24,
+  height: 20,
+  width: 20,
   borderWidth: 2,
   alignItems: "center",
   overflow: "hidden",

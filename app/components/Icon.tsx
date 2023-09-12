@@ -139,6 +139,7 @@ export const iconRegistry = {
   note: require("./icons/note.png"),
   ask: require("./icons/ask.png"),
   folder_add: require("./icons/folder-add.png"),
+  rotate_left: require("./icons/rotate-left.png"),
 }
 const $imageStyle: ImageStyle = {
   resizeMode: "contain",

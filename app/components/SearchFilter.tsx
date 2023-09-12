@@ -6,7 +6,7 @@ import colors from "@app/assets/colors"
 import { IconButton, Searchbar } from "react-native-paper"
 import { iconRegistry } from "./Icon"
 import R from "@app/assets"
-export default function SearchFilter() {
+export default function SearchFilter({ onPressFilter }) {
   const [keyword, setKeyword] = useState("")
   const [height, setHeight] = useState(WIDTH(48))
   const onLayout = (event: LayoutChangeEvent) => {
@@ -28,6 +28,7 @@ export default function SearchFilter() {
       />
       <IconButton
         icon={iconRegistry.filter}
+        onPress={onPressFilter}
         style={[
           styles.buttonFilter,
           {

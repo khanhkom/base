@@ -6,9 +6,6 @@ import { HEIGHT, WIDTH } from "@app/config/functions"
 import { spacing } from "@app/theme/spacing"
 import { TextField } from "@app/components/TextField"
 import { Icon } from "@app/components/Icon"
-import moment from "moment"
-import { isToday } from "date-fns"
-import ModalAdress from "./ModalAdress"
 interface ItemProps {
   title: string
   placeholder: string

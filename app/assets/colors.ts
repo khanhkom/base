@@ -21,5 +21,6 @@ const colors = {
   blue_6: "#228BE6",
   yellow_0: "#FFF9DB",
   yellow_6: "#FCC419",
+  green_8: "#2F9E44",
 }
 export default colors

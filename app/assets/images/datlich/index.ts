@@ -7,6 +7,9 @@ const IMAGE_DATLICH = {
   ic_datlich_3: require("./ic_datlich_3.png"),
   ic_datlich_4: require("./ic_datlich_4.png"),
   datlich_success: require("./datlich_success.png"),
+  features_1: require("./features_1.png"),
+  features_2: require("./features_2.png"),
+  features_3: require("./features_3.png"),
 }
 
 export default IMAGE_DATLICH
