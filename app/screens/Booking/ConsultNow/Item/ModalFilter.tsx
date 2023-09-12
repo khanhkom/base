@@ -134,5 +134,6 @@ const styles = StyleSheet.create({
     paddingTop: HEIGHT(spacing.sm),
     paddingHorizontal: WIDTH(spacing.md),
     paddingBottom: HEIGHT(spacing.md),
+    backgroundColor: colors.white,
   },
 })

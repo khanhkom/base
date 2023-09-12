@@ -3,10 +3,11 @@ import React from "react"
 import R from "@app/assets"
 import { HEIGHT, WIDTH } from "@app/config/functions"
 import { Text } from "@app/components/Text"
-import { Card } from "react-native-paper"
+import { Card, List } from "react-native-paper"
 import { spacing } from "@app/theme/spacing"
 import colors from "@app/assets/colors"
 import { navigate } from "@app/navigators/navigationUtilities"
+import { Icon } from "@app/components/Icon"
 const TYPE_FEATURES = {
   DATLICH: 0,
   TUVAN: 1,
@@ -78,6 +79,27 @@ export default function ItemUtilities() {
         }}
         ItemSeparatorComponent={() => <View style={{ height: HEIGHT(spacing.md) }} />}
       />
+      <List.Item
+        style={styles.itemRemind}
+        onPress={() => {
+          navigate("DetailBooking")
+        }}
+        title={() => {
+          return (
+            <Text size="sm" weight="medium" style={{ color: colors.white }}>
+              Đã đến giờ khám bệnh, vào khám
+            </Text>
+          )
+        }}
+        left={() => {
+          return (
+            <Image source={R.images.call_reminder} style={styles.iconRemind} resizeMode="contain" />
+          )
+        }}
+        right={() => {
+          return <Icon icon="arrow_right_full" size={WIDTH(28)} />
+        }}
+      />
     </Card>
   )
 }
@@ -100,5 +122,16 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+  },
+  iconRemind: {
+    height: HEIGHT(32),
+    width: WIDTH(44),
+  },
+  itemRemind: {
+    backgroundColor: colors.main_7,
+    borderRadius: 12,
+    paddingLeft: WIDTH(spacing.sm),
+    paddingRight: WIDTH(8),
+    marginTop: HEIGHT(spacing.md),
   },
 })

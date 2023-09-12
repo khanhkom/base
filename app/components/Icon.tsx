@@ -140,6 +140,13 @@ export const iconRegistry = {
   ask: require("./icons/ask.png"),
   folder_add: require("./icons/folder-add.png"),
   rotate_left: require("./icons/rotate-left.png"),
+  arrow_right_full: require("./icons/arrow-circle-right-full.png"),
+  message_filled: require("./icons/message-filled.png"),
+  microphone_2: require("./icons/microphone-2.png"),
+  ic_call: require("./icons/ic_call.png"),
+  ic_chat_filled: require("./icons/ic_chat_filled.png"),
+  ic_call_video: require("./icons/ic_call_video.png"),
+  switch_camera: require("./icons/switch_camera.png"),
 }
 const $imageStyle: ImageStyle = {
   resizeMode: "contain",

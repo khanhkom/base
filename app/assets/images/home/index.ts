@@ -15,5 +15,6 @@ const HOME_IMAGES = {
   package_2: require("./package_2.png"),
   textsdocter: require("./textsdocter.png"),
   search_normal: require("./search-normal.png"),
+  call_reminder: require("./call_reminder.png"),
 }
 export default HOME_IMAGES
