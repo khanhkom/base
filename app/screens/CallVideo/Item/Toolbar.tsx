@@ -1,22 +1,23 @@
 /* eslint-disable react-native/no-color-literals */
-import { StyleSheet, Text, View } from "react-native"
+import { Pressable, StyleSheet, Text, View } from "react-native"
 import React from "react"
 import { HEIGHT, WIDTH } from "@app/config/functions"
 import { spacing } from "@app/theme/spacing"
 import { Icon } from "@app/components/Icon"
 import colors from "@app/assets/colors"
+import { goBack, navigate } from "@app/navigators/navigationUtilities"
 const LIST_ACTION = [
   {
     active: "microphone_2",
   },
   {
-    active: "microphone_2",
+    active: "ic_call_video",
   },
   {
-    active: "microphone_2",
+    active: "ic_chat_filled",
   },
   {
-    active: "microphone_2",
+    active: "ic_call",
   },
 ]
 export default function Toolbar() {
@@ -24,12 +25,15 @@ export default function Toolbar() {
     <View style={styles.container}>
       {LIST_ACTION.map((item, index) => {
         return (
-          <View
+          <Pressable
+            onPress={() => {
+              navigate("RatingDocter")
+            }}
             style={[styles.boxIcon, index === 3 && { backgroundColor: colors.red_5 }]}
             key={index}
           >
             <Icon icon={item.active} size={WIDTH(28)} />
-          </View>
+          </Pressable>
         )
       })}
     </View>

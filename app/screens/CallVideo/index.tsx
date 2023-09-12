@@ -41,10 +41,10 @@ const styles = StyleSheet.create({
     marginTop: -WIDTH(18),
   },
   userTarget: {
-    width: WIDTH(96),
-    height: WIDTH(128),
+    width: WIDTH(100),
+    height: WIDTH(132),
     borderRadius: 24,
-    borderWidth: 2,
+    borderWidth: 3,
     borderColor: colors.white,
   },
 })

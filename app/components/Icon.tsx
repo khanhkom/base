@@ -144,7 +144,7 @@ export const iconRegistry = {
   message_filled: require("./icons/message-filled.png"),
   microphone_2: require("./icons/microphone-2.png"),
   ic_call: require("./icons/ic_call.png"),
-  ic_chat_filled: require("./icons/ic_chat_filled.png"),
+  ic_chat_filled: require("./icons/message-filled.png"),
   ic_call_video: require("./icons/ic_call_video.png"),
   switch_camera: require("./icons/switch_camera.png"),
 }
