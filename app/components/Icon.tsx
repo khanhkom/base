@@ -147,6 +147,12 @@ export const iconRegistry = {
   ic_chat_filled: require("./icons/message-filled.png"),
   ic_call_video: require("./icons/ic_call_video.png"),
   switch_camera: require("./icons/switch_camera.png"),
+  ic_home_active: require("./icons/ic_home_active.png"),
+  ic_calendar_active: require("./icons/ic_calendar_active.png"),
+  ic_status_booked: require("./icons/ic_status_booked.png"),
+  tick_circle: require("./icons/tick-circle.png"),
+  refresh: require("./icons/refresh.png"),
+  document_text: require("./icons/document-text.png"),
 }
 const $imageStyle: ImageStyle = {
   resizeMode: "contain",

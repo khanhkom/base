@@ -13,7 +13,7 @@ export default function HeaderHome() {
       <View style={styles.bgr} />
       <View style={styles.flexRow}>
         <Image source={R.images.heart} style={styles.icHeart} />
-        <Image source={R.images.textsdocter} style={styles.logoText} />
+        <Image source={R.images.textsdocter} style={styles.logoText} resizeMode="contain" />
         <Icon icon="ic_noti" style={styles.icBard} />
       </View>
       <Searchbar

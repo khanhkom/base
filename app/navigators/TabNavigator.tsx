@@ -102,9 +102,13 @@ export function TabNavigator() {
         component={Home}
         options={{
           tabBarShowLabel: false,
-          tabBarLabel: "Home",
+          tabBarLabel: "Trang chủ",
           tabBarIcon: ({ focused }) => (
-            <Icon icon="ic_home" color={focused && colors.tint} size={24} />
+            <Icon
+              icon={focused ? "ic_home_active" : "ic_home"}
+              color={focused && colors.tint}
+              size={24}
+            />
           ),
         }}
       />
@@ -114,9 +118,13 @@ export function TabNavigator() {
         component={History}
         options={{
           tabBarShowLabel: false,
-          tabBarLabel: "Calendar",
+          tabBarLabel: "Lịch",
           tabBarIcon: ({ focused }) => (
-            <Icon icon="ic_calendar" color={focused && colors.tint} size={24} />
+            <Icon
+              icon={focused ? "ic_calendar_active" : "ic_calendar"}
+              color={focused && colors.tint}
+              size={24}
+            />
           ),
         }}
       />
@@ -129,7 +137,11 @@ export function TabNavigator() {
           tabBarAccessibilityLabel: translate("demoNavigator.podcastListTab"),
           tabBarLabel: "Chat",
           tabBarIcon: ({ focused }) => (
-            <Icon icon="ic_chat" color={focused && colors.tint} size={24} />
+            <Icon
+              icon={focused ? "ic_chat_filled" : "ic_chat"}
+              color={focused && colors.tint}
+              size={24}
+            />
           ),
         }}
       />
@@ -141,7 +153,11 @@ export function TabNavigator() {
           tabBarShowLabel: false,
           tabBarLabel: "Profile",
           tabBarIcon: ({ focused }) => (
-            <Icon icon="ic_profile" color={focused && colors.tint} size={24} />
+            <Icon
+              icon={focused ? "ic_profile" : "ic_profile"}
+              color={focused && colors.tint}
+              size={24}
+            />
           ),
         }}
       />

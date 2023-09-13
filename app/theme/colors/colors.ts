@@ -1,5 +1,5 @@
 // TODO: write documentation for colors and palette in own markdown file and add links from here
-
+import R from "@app/assets"
 const palette = {
   neutral100: "#FFFFFF",
   neutral200: "#F4F2F1",
@@ -67,7 +67,7 @@ export const colors = {
   /**
    * The main tinting color.
    */
-  tint: palette.primary500,
+  tint: R.colors.primary,
   /**
    * A subtle color used for lines.
    */

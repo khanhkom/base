@@ -5,6 +5,7 @@ import { Header, Icon } from "@app/components/index"
 import { navigate } from "@app/navigators/navigationUtilities"
 import ItemBookInformation from "./Item/ItemBookInformation"
 import BottonButton from "./Item/BottonButton"
+import FileAttachment from "./Item/FileAttachment"
 const DATA_BOOK = [
   {
     icon: "calendar",
@@ -77,7 +78,7 @@ export default function DetailBooking() {
         renderItem={({ item, index }) => {
           return <ItemBookInformation item={item} />
         }}
-        ListFooterComponent={() => <View style={{ height: 16 }} />}
+        ListFooterComponent={() => <FileAttachment />}
       />
       <BottonButton />
     </View>

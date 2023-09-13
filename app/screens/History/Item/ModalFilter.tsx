@@ -1,4 +1,4 @@
-import { FlatList, KeyboardAvoidingView, Platform, StyleSheet, View } from "react-native"
+import { StyleSheet, View } from "react-native"
 import React, { forwardRef, useImperativeHandle, useState } from "react"
 import Modal from "react-native-modal"
 import { HEIGHT, WIDTH, getHeight } from "@app/config/functions"
@@ -8,33 +8,27 @@ import { spacing } from "@app/theme/spacing"
 import { Text } from "@app/components/Text"
 import { Toggle } from "@app/components/Toggle"
 import { iconRegistry } from "@app/components/Icon"
+import ItemDatePicker from "./ItemDatePicker"
 
 type Props = {
   onPress: () => void
 }
-const LIST_SPECIALIST = ["Tất cả", "Nhi khoa", "Tai mũi họng"]
-const GENDER = ["Nam", "Nữ"]
-const SORTBY = ["Đánh giá từ cao đến thấp", "Đánh giá từ thấp đến cao"]
+const LIST_SPECIALIST = ["Tất cả", "Đã đặt khám", "Đã khám", "Đã hủy"]
+const SORTBY = ["Hôm nay", "Tuần này", "Tháng này", "Chọn thời gian"]
 const DATA_SESSION = [
   {
-    title: "Chuyên khoa",
+    title: "Trạng thái lịch khám",
     data: LIST_SPECIALIST,
   },
   {
-    title: "Giới tính",
-    data: GENDER,
-  },
-  {
-    title: "Sắp xếp theo",
+    title: "Thời gian",
     data: SORTBY,
   },
 ]
 const ModalFilter = forwardRef((props: Props, ref) => {
   const [visible, setVisible] = useState(false)
-  const hide = () => {
-    setVisible(false)
-  }
-
+  const [statusFilter, setStatusFilter] = useState(0)
+  const [timeFilter, setTimeFilter] = useState(0)
   useImperativeHandle(ref, () => ({
     show() {
       setVisible(true)
@@ -43,7 +37,9 @@ const ModalFilter = forwardRef((props: Props, ref) => {
       setVisible(false)
     },
   }))
-
+  const hide = () => {
+    setVisible(false)
+  }
   return (
     <Modal
       isVisible={visible}
@@ -58,7 +54,7 @@ const ModalFilter = forwardRef((props: Props, ref) => {
         alignItems: "flex-end",
         margin: 0,
       }}
-      coverScreen={false}
+      coverScreen={true}
       onBackdropPress={() => {
         setVisible(false)
       }}
@@ -69,34 +65,54 @@ const ModalFilter = forwardRef((props: Props, ref) => {
             Bộ lọc
           </Text>
         </View>
-        {DATA_SESSION.map((item, index) => {
+        {DATA_SESSION.map((item, id) => {
           return (
-            <View key={index}>
+            <View key={id}>
               <View style={styles.session}>
                 <Text size="md" weight="medium" style={{ color: colors.gray_9 }}>
                   {item.title}:
                 </Text>
                 {item.data.map((item, index) => {
+                  const isActive = id === 0 ? statusFilter === index : timeFilter === index
                   return (
                     <Toggle
+                      onPress={() => {
+                        if (id === 0) {
+                          setStatusFilter(index)
+                        } else {
+                          setTimeFilter(index)
+                        }
+                      }}
                       key={index}
                       variant="radio"
                       label={item}
-                      value={index === 0}
+                      value={isActive}
                       containerStyle={{ marginTop: HEIGHT(12) }}
                     />
                   )
                 })}
               </View>
-              <Divider />
+              {id === 0 && <Divider />}
             </View>
           )
         })}
+        {timeFilter === 3 && (
+          <View>
+            <ItemDatePicker title="Từ ngày" />
+            <ItemDatePicker title="Đến ngày" />
+          </View>
+        )}
+
         <View style={styles.bottomButton}>
           <Button textColor={colors.gray_7} icon={iconRegistry.rotate_left}>
             Đặt lại
           </Button>
-          <Button mode="contained" icon={iconRegistry.rotate_left} style={{ borderRadius: 8 }}>
+          <Button
+            onPress={hide}
+            mode="contained"
+            icon={iconRegistry.rotate_left}
+            style={{ borderRadius: 8 }}
+          >
             Áp dụng
           </Button>
         </View>
@@ -113,7 +129,6 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white,
     height: getHeight(),
     flex: 1,
-    marginRight: -WIDTH(32),
   },
   head: {
     backgroundColor: colors.gray_0,

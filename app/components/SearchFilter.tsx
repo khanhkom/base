@@ -6,7 +6,11 @@ import colors from "@app/assets/colors"
 import { IconButton, Searchbar } from "react-native-paper"
 import { iconRegistry } from "./Icon"
 import R from "@app/assets"
-export default function SearchFilter({ onPressFilter }) {
+interface ItemProps {
+  placeholder?: string
+  onPressFilter: () => void
+}
+export default function SearchFilter({ onPressFilter, placeholder }: ItemProps) {
   const [keyword, setKeyword] = useState("")
   const [height, setHeight] = useState(WIDTH(48))
   const onLayout = (event: LayoutChangeEvent) => {
@@ -22,7 +26,7 @@ export default function SearchFilter({ onPressFilter }) {
         iconColor={colors.gray_5}
         style={[styles.searchContainer, { width: getWidth() - height - WIDTH(44) }]}
         value={keyword}
-        placeholder="Tìm kiếm bác sĩ"
+        placeholder={placeholder || "Tìm kiếm bác sĩ"}
         placeholderTextColor={colors.gray_6}
         onChangeText={setKeyword}
       />
