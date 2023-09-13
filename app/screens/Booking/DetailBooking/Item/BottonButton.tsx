@@ -5,31 +5,77 @@ import { HEIGHT, WIDTH } from "@app/config/functions"
 import { spacing } from "@app/theme/spacing"
 import colors from "@app/assets/colors"
 import { navigate } from "@app/navigators/navigationUtilities"
+const TYPE_SCHEDULE = {
+  BOOKED: 0,
+  READY: 1,
+  COMPLETE: 2,
+  CANCEL: 3,
+}
 
-export default function BottonButton() {
-  return (
-    <View style={styles.container}>
-      <Button
-        mode="contained"
-        style={styles.buttonHome}
-        textColor={colors.primary}
-        onPress={() => {
-          navigate("Home")
-        }}
-      >
-        Nhắn tin
-      </Button>
-      <Button
-        onPress={() => {
-          navigate("CallVideo")
-        }}
-        mode="contained"
-        style={styles.button}
-      >
-        Vào cuộc gọi
-      </Button>
-    </View>
-  )
+export default function BottonButton({ status }) {
+  if (status === TYPE_SCHEDULE.BOOKED)
+    return (
+      <View style={styles.container}>
+        <Button
+          mode="contained"
+          style={[styles.buttonHome, { backgroundColor: colors.red_0 }]}
+          textColor={colors.red_5}
+          onPress={() => {
+            navigate("CancelBooking")
+          }}
+        >
+          Hủy
+        </Button>
+        <Button
+          onPress={() => {
+            navigate("CreateMedicalRecord")
+          }}
+          mode="contained"
+          style={styles.button}
+        >
+          Đổi lịch khám
+        </Button>
+      </View>
+    )
+  if (status === TYPE_SCHEDULE.READY)
+    return (
+      <View style={styles.container}>
+        <Button
+          mode="contained"
+          style={styles.buttonHome}
+          textColor={colors.primary}
+          onPress={() => {
+            navigate("Home")
+          }}
+        >
+          Nhắn tin
+        </Button>
+        <Button
+          onPress={() => {
+            navigate("CallVideo")
+          }}
+          mode="contained"
+          style={styles.button}
+        >
+          Vào cuộc gọi
+        </Button>
+      </View>
+    )
+  if (status === TYPE_SCHEDULE.COMPLETE)
+    return (
+      <View style={styles.container}>
+        <Button
+          onPress={() => {
+            navigate("CallVideo")
+          }}
+          mode="contained"
+          style={styles.button}
+        >
+          Xem kết quả khám
+        </Button>
+      </View>
+    )
+  else return null
 }
 
 const styles = StyleSheet.create({

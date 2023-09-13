@@ -18,6 +18,7 @@ const colors = {
   main_7: "#3154B0",
   main_6: "#4665B2",
   red_5: "#FF6B6B",
+  red_6: "#FA5252",
   red_0: "#FFF5F5",
   blue_0: "#E7F5FF",
   blue_6: "#228BE6",

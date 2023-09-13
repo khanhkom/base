@@ -38,6 +38,7 @@ import DocterReviews from "@app/screens/Docter/DocterReviews"
 import DetailBooking from "@app/screens/Booking/DetailBooking"
 import CallVideo from "@app/screens/CallVideo"
 import RatingDocter from "@app/screens/Docter/RatingDocter"
+import CancelBooking from "@app/screens/Booking/CancelBooking"
 export type AppStackParamList = {
   TabNavigator: undefined
   Profile: undefined
@@ -68,6 +69,7 @@ export type AppStackParamList = {
   DetailBooking: undefined
   CallVideo: undefined
   RatingDocter: undefined
+  CancelBooking: undefined
   // 🔥 Your screens go here
   // IGNITE_GENERATOR_ANCHOR_APP_STACK_PARAM_LIST
 }
@@ -125,6 +127,7 @@ const AppStack = observer(function AppStack() {
       <Stack.Screen name="DetailBooking" component={DetailBooking} />
       <Stack.Screen name="CallVideo" component={CallVideo} />
       <Stack.Screen name="RatingDocter" component={RatingDocter} />
+      <Stack.Screen name="CancelBooking" component={CancelBooking} />
     </Stack.Navigator>
   )
 })

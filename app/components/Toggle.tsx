@@ -591,8 +591,8 @@ const $radioInner: ViewStyle = {
 }
 
 const $radioDetail: ViewStyle = {
-  width: 12,
-  height: 12,
+  width: 8,
+  height: 8,
   borderRadius: 6,
 }
 

@@ -40,6 +40,12 @@ const LIST_ICON_BY_STATUS = [
     backgroundColor: colors.blue_0,
   },
   {
+    title: "Sẵn sàng khám",
+    icon: "ic_status_booked",
+    color: colors.primary,
+    backgroundColor: colors.blue_0,
+  },
+  {
     title: "Đã khám",
     icon: "tick_circle",
     color: colors.green_7,
@@ -53,17 +59,25 @@ const LIST_ICON_BY_STATUS = [
   },
 ]
 interface ItemProps {
-  item: number
+  item: {
+    docter: string
+    time: string
+    specialist: string
+    patient: string
+    status: number
+  }
 }
 export default function ItemSchedule({ item }: ItemProps) {
-  const itemData = LIST_ICON_BY_STATUS[item]
-  const isDoneSchedule = item === 1
+  const itemData = LIST_ICON_BY_STATUS[item.status]
+  const isDoneSchedule = item?.status === 2
   return (
     <Card
       style={styles.card}
       mode="contained"
       onPress={() => {
-        navigate("DetailBooking")
+        navigate("DetailBooking", {
+          status: item.status,
+        })
       }}
     >
       <List.Item
@@ -77,7 +91,7 @@ export default function ItemSchedule({ item }: ItemProps) {
         title={() => {
           return (
             <Text size="md" weight="medium" style={{ color: colors.gray_9 }}>
-              {LIST_ICON_BY_STATUS[item].title}
+              {LIST_ICON_BY_STATUS[item.status].title}
             </Text>
           )
         }}

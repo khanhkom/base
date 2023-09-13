@@ -1,11 +1,14 @@
 import { StyleSheet, Image, View, FlatList } from "react-native"
 import React from "react"
 import colors from "@app/assets/colors"
-import { Header, Icon } from "@app/components/index"
+import { Header, Icon, Text } from "@app/components/index"
 import { navigate } from "@app/navigators/navigationUtilities"
 import ItemBookInformation from "./Item/ItemBookInformation"
 import BottonButton from "./Item/BottonButton"
 import FileAttachment from "./Item/FileAttachment"
+import { HEIGHT, WIDTH } from "@app/config/functions"
+import { spacing } from "@app/theme/spacing"
+import { List } from "react-native-paper"
 const DATA_BOOK = [
   {
     icon: "calendar",
@@ -68,7 +71,9 @@ const DATA_BOOK = [
     ],
   },
 ]
-export default function DetailBooking() {
+export default function DetailBooking({ route }) {
+  const status = route?.params?.status
+  console.log("AAAAAAAAAA", status)
   return (
     <View style={styles.container}>
       <Header leftIcon="arrow_left" title="Chi tiết lịch khám" />
@@ -79,8 +84,35 @@ export default function DetailBooking() {
           return <ItemBookInformation item={item} />
         }}
         ListFooterComponent={() => <FileAttachment />}
+        ListHeaderComponent={() => {
+          if (status === 3)
+            return (
+              <List.Item
+                style={{
+                  backgroundColor: colors.red_6,
+                  paddingLeft: WIDTH(spacing.md),
+                  marginBottom: HEIGHT(spacing.md),
+                }}
+                left={() => {
+                  return (
+                    <View style={{ alignSelf: "center" }}>
+                      <Icon icon="refresh" size={WIDTH(20)} color={colors.white} />
+                    </View>
+                  )
+                }}
+                title={() => {
+                  return (
+                    <Text size="ba" weight="normal" style={{ color: colors.white }}>
+                      Lý do hủy: Không có nhu cầu khám
+                    </Text>
+                  )
+                }}
+              />
+            )
+          return <View style={{ height: HEIGHT(spacing.md) }} />
+        }}
       />
-      <BottonButton />
+      <BottonButton status={status} />
     </View>
   )
 }

@@ -7,10 +7,11 @@ import ItemSchedule from "./Item/ItemSchedule"
 import { HEIGHT } from "@app/config/functions"
 import { spacing } from "@app/theme/spacing"
 import ModalFilter from "./Item/ModalFilter"
+import { useSelector } from "@app/redux/reducers"
 
 export default function History() {
   const refModal = useRef(null)
-
+  const history = useSelector((state) => state.bookingHistoryReducers.history)
   return (
     <View style={styles.container}>
       <Header
@@ -25,7 +26,7 @@ export default function History() {
         placeholder="Tìm tên bệnh nhân, bác sĩ"
       />
       <FlatList
-        data={[0, 1, 2]}
+        data={history}
         style={{ marginTop: HEIGHT(spacing.sm) }}
         renderItem={({ item, index }) => {
           return <ItemSchedule item={item} />
