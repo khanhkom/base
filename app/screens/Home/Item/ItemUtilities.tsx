@@ -64,6 +64,9 @@ export default function ItemUtilities() {
       case TYPE_FEATURES.TUVAN:
         navigate("CousultOnline")
         break
+      case TYPE_FEATURES.KETQUA:
+        navigate("ExaminationResults")
+        break
 
       default:
         break

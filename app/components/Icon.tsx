@@ -153,6 +153,7 @@ export const iconRegistry = {
   tick_circle: require("./icons/tick-circle.png"),
   refresh: require("./icons/refresh.png"),
   document_text: require("./icons/document-text.png"),
+  edit: require("./icons/edit.png"),
 }
 const $imageStyle: ImageStyle = {
   resizeMode: "contain",

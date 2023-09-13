@@ -9,8 +9,23 @@ import { Button, Card } from "react-native-paper"
 import { navigate } from "@app/navigators/navigationUtilities"
 interface ItemProps {
   onPress: () => void
+  index: number
 }
-export default function ItemRecord({ onPress }: ItemProps) {
+const DATA = [
+  {
+    title: "Răng Hàm Mặt",
+    icon: R.images.features_1,
+  },
+  {
+    title: "Nhi khoa",
+    icon: R.images.features_2,
+  },
+  {
+    title: "Da liễu",
+    icon: R.images.features_3,
+  },
+]
+export default function ItemHistory({ onPress, index }: ItemProps) {
   return (
     <Card
       mode="contained"
@@ -20,16 +35,16 @@ export default function ItemRecord({ onPress }: ItemProps) {
         onPress && onPress()
       }}
     >
-      <Image source={R.images.avatar_patient} style={styles.avatar} resizeMode="center" />
+      <Image source={DATA[index].icon} style={styles.avatar} resizeMode="center" />
       <View>
         <Text weight="medium" size="md" style={styles.textName}>
-          Nguyễn Văn A
+          B.s Nguyễn Văn B
         </Text>
         <Text weight="normal" size="sm" style={styles.textDes}>
-          Ngày sinh: <Text style={{ color: colors.gray_9 }}>27/02/2006</Text>
+          Thời gian khám: <Text style={{ color: colors.gray_9 }}>27/02/2006</Text>
         </Text>
         <Text weight="normal" size="sm" style={styles.textDes}>
-          Giới tính: <Text style={{ color: colors.gray_9 }}>Nam</Text>
+          Chẩn đoán: <Text style={{ color: colors.gray_9 }}>Kích ứng da do thời tiết</Text>
         </Text>
       </View>
     </Card>
@@ -46,14 +61,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: WIDTH(spacing.sm),
   },
   avatar: {
-    width: WIDTH(72),
-    height: HEIGHT(72),
-    alignSelf: "center",
+    width: WIDTH(32),
+    height: HEIGHT(32),
     marginRight: WIDTH(spacing.sm),
   },
   textName: {
     color: colors.gray_9,
-    marginTop: HEIGHT(8),
     marginBottom: HEIGHT(2),
   },
   textDes: { color: colors.gray_6, marginTop: 2 },
