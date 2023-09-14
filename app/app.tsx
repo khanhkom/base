@@ -204,9 +204,10 @@ function App(props: AppProps) {
   }
   const customTheme = createThemeFromSourceColor(sourceColor)
 
-  const theme = isThemeDark
-    ? { ...darkTheme, colors: { ...customTheme.dark, ...colorExpandDark } }
-    : { ...lightTheme, colors: { ...customTheme.light, ...colorExpandLight } }
+  // const theme = isThemeDark
+  //   ? { ...darkTheme, colors: { ...customTheme.dark, ...colorExpandDark } }
+  //   : { ...lightTheme, colors: { ...customTheme.light, ...colorExpandLight } }
+   const theme = { ...lightTheme, colors: { ...customTheme.light, ...colorExpandLight } }
   // otherwise, we're ready to render the app
   return (
     <SafeAreaProvider initialMetrics={initialWindowMetrics}>

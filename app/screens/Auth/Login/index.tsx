@@ -2,7 +2,7 @@ import { StyleSheet, View } from "react-native"
 import React, { useState } from "react"
 import { Screen } from "@app/components/Screen"
 import HeaderLogin from "../Item/HeaderLogin"
-import { HEIGHT, WIDTH, getWidth } from "@app/config/functions"
+import { HEIGHT, WIDTH, getHeight, getWidth } from "@app/config/functions"
 import R from "@app/assets"
 import { TextPaper } from "@app/components/text-paper"
 import { spacing } from "@app/theme/spacing"
@@ -63,7 +63,7 @@ export default function Login() {
     }
   }
   return (
-    <Screen preset="auto" safeAreaEdges={["bottom"]} contentContainerStyle={{ flex: 1 }}>
+    <Screen preset="auto" safeAreaEdges={["bottom"]} contentContainerStyle={{ height: getHeight() }}>
       <HeaderLogin />
       <View style={styles.body}>
         <Text preset="xxxlsemibold">Chào mừng bạn,</Text>
