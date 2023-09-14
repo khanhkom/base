@@ -106,7 +106,7 @@ export default function Conversations({ route }) {
     const count = 10
     const isAscending = true
 
-    client.current.getLastConversations(
+    client?.current?.getLastConversations(
       count,
       isAscending,
       (status, code, message, conversations) => {
@@ -130,7 +130,9 @@ export default function Conversations({ route }) {
   useEffect(() => {
     const token = route.params.token
     client.current.connect(token)
-    getLastConversations()
+    setTimeout(()=>{
+      getLastConversations()
+    },1000)
   }, [])
   return (
     <View style={{ flex: 1 }}>
