@@ -114,7 +114,7 @@ export default function ChatDetail({ route }) {
         JSON.stringify(objectChanges),
     )
     const lastMsg = objectChanges[0]?.lastMessage
-    if (lastMsg) {
+    if (lastMsg&&!messages.find(item=>item._id===lastMsg.id)) {
       let newMsg = [
         {
           _id: lastMsg?.id,
@@ -129,14 +129,21 @@ export default function ChatDetail({ route }) {
           },
         },
       ]
-      setMessages((previousMessages) => GiftedChat.append(previousMessages, newMsg))
+      if(Platform.OS==='android'){
+        setMessages((previousMessages) => GiftedChat.append(previousMessages, newMsg))
+      }else{
+        getMessagesBefore()
+      }
+     // 
     }
   }
   useEffect(() => {
     const token = session?.access_token
     console.log("AAAA", token)
     client.current.connect(token)
-    getMessagesBefore()
+    setTimeout(()=>{
+      getMessagesBefore()
+    },1000)
   }, [])
   return (
     <View style={styles.container}>
