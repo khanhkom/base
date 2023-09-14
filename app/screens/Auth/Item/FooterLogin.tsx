@@ -1,4 +1,4 @@
-import { StyleSheet, View, Image } from "react-native"
+import { StyleSheet, View, Image, Pressable } from "react-native"
 import React from "react"
 import { HEIGHT, WIDTH } from "@app/config/functions"
 import { spacing } from "@app/theme/spacing"
@@ -6,8 +6,26 @@ import { IconButton } from "react-native-paper"
 import R from "@app/assets"
 import colors from "@app/assets/colors"
 import { Text } from "@app/components/Text"
+import { GoogleSignin } from "@react-native-google-signin/google-signin"
 
 export default function FooterLogin() {
+  const loginWithGoogle = async () => {
+    try {
+      await GoogleSignin.hasPlayServices({
+        showPlayServicesUpdateDialog: true,
+      })
+      const userInfo = await GoogleSignin.signIn()
+
+      console.log("1111111111", {
+        token: userInfo ?? "",
+      })
+    } catch (error) {
+      console.warn("error_error", error)
+      await GoogleSignin.revokeAccess()
+      await GoogleSignin.signOut()
+      // Sentry.captureException(error)
+    }
+  }
   return (
     <View style={styles.container}>
       <View style={styles.wrapperLine}>
@@ -21,12 +39,17 @@ export default function FooterLogin() {
         <View style={styles.line} />
       </View>
       <View style={styles.flexRow}>
-        <Image source={R.images.ic_face} style={styles.button} resizeMode="contain" />
-        <Image
-          source={R.images.ic_google}
-          style={[styles.button, { marginLeft: WIDTH(20) }]}
-          resizeMode="contain"
-        />
+        <Pressable>
+          <Image source={R.images.ic_face} style={styles.button} resizeMode="contain" />
+        </Pressable>
+
+        <Pressable onPress={loginWithGoogle}>
+          <Image
+            source={R.images.ic_google}
+            style={[styles.button, { marginLeft: WIDTH(20) }]}
+            resizeMode="contain"
+          />
+        </Pressable>
       </View>
     </View>
   )

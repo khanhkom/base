@@ -33,6 +33,7 @@ export default function Login() {
   const showModal = () => setVisible(true)
   const hideModal = () => setVisible(false)
   const dispatch = useDispatch()
+
   const onSubmit = async () => {
     // showModal()
     if (phoneNumber === "" || password === "") {
@@ -63,7 +64,11 @@ export default function Login() {
     }
   }
   return (
-    <Screen preset="auto" safeAreaEdges={["bottom"]} contentContainerStyle={{ height: getHeight() }}>
+    <Screen
+      preset="auto"
+      safeAreaEdges={["bottom"]}
+      contentContainerStyle={{ height: getHeight() }}
+    >
       <HeaderLogin />
       <View style={styles.body}>
         <Text preset="xxxlsemibold">Chào mừng bạn,</Text>
