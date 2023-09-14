@@ -42,6 +42,7 @@ import Toast from "react-native-toast-message"
 import rootSaga from "@app/redux/sagas"
 import notifee from "@notifee/react-native"
 import messaging from "@react-native-firebase/messaging"
+import { showToastMessage } from "./utils/library"
 
 export const NAVIGATION_PERSISTENCE_KEY = "NAVIGATION_STATE"
 const sagaMiddleware = createSagaMiddleware()
@@ -109,6 +110,10 @@ function App(props: AppProps) {
   const getDataDarkMode = async () => {
     const dataDarkMode: any = await storage.load(storage.KEYSTORAGE.DATA_DARKMODE)
     const dataSourceColor = await storage.load(storage.KEYSTORAGE.SOURCE_COLOR)
+
+    const token = await messaging().getToken()
+    console.log("token_token", token)
+
     if (dataSourceColor !== null) {
       setSourceColor(dataSourceColor)
     }
@@ -180,6 +185,11 @@ function App(props: AppProps) {
     }
   }
   messaging().setBackgroundMessageHandler(onMessageReceived)
+  messaging().onMessage((notification) => {
+    console.log("notification", notification)
+    showToastMessage(notification.notification.title)
+  })
+
   // Before we show the app, we have to wait for our state to be ready.
   // In the meantime, don't render anything. This will be the background
   // color set in native by rootView's background color.
