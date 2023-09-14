@@ -25,7 +25,7 @@ import { getStringeeToken } from "@app/redux/actions/stringee"
 
 export default function Login() {
   const [indexTab, setIndexTab] = useState(0)
-  const [countryCode, setCountryCode] = useState("84")
+  const [countryCode, setCountryCode] = useState("+84")
   const [phoneNumber, setPhoneNumber] = useState("")
   const [password, setPassword] = useState("")
   const [loading, setLoading] = useState(false)
@@ -87,8 +87,9 @@ export default function Login() {
           phoneNumber={phoneNumber}
           setPhoneNumber={setPhoneNumber}
           setCountryCode={setCountryCode}
+          countryCode={countryCode}
         />
-        {indexTab === 1 && (
+        {/* {indexTab === 1 && (
           <TextField
             label="Mật khẩu"
             containerStyle={{ marginTop: 16 }}
@@ -96,16 +97,17 @@ export default function Login() {
             onChangeText={setPassword}
             secureTextEntry
           />
-        )}
+        )} */}
         <Button
           mode="contained"
           style={styles.buttonNext}
+          labelStyle={{ color: colors.white }}
           disabled={phoneNumber.length === 0}
           onPress={onSubmit}
         >
           Tiếp tục
         </Button>
-        <Text preset="baRegular" style={{ marginTop: HEIGHT(spacing.lg) }}>
+        <Text preset="baRegular" style={{ marginTop: HEIGHT(spacing.lg), color: colors.gray_7 }}>
           Bằng việc tiếp tục, bạn sẽ đồng ý với{" "}
           <Text preset="baSemibold" style={{ color: colors.primary }}>
             Điều khoản dịch vụ và Chính sách bảo mật

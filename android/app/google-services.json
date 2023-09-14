@@ -1,26 +1,36 @@
 {
   "project_info": {
-    "project_number": "194198788954",
-    "project_id": "sdocter-fd609",
-    "storage_bucket": "sdocter-fd609.appspot.com"
+    "project_number": "717467473090",
+    "project_id": "bacsivietnam",
+    "storage_bucket": "bacsivietnam.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:194198788954:android:9fdae8cab49290859eb163",
+        "mobilesdk_app_id": "1:717467473090:android:a75fe24ba3e64f26c8575b",
         "android_client_info": {
           "package_name": "com.sdocter"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "717467473090-4imm3uqsc7rdtg7qgrfs5bnhr3svf1d3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
-          "current_key": "AIzaSyAP_Tz-Q6WxJSjYAGhZkOC4YSKkb0yeCqA"
+          "current_key": "AIzaSyAneNdelpphd8b7QTnABxtiaxLt9zBeGM4"
         }
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "717467473090-4imm3uqsc7rdtg7qgrfs5bnhr3svf1d3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

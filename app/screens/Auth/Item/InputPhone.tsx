@@ -1,21 +1,24 @@
 import { StyleSheet, Keyboard, View, Pressable, TextInput } from "react-native"
 import React, { useRef, useState, useEffect } from "react"
-import PhoneInput from "react-native-phone-number-input"
 import { CountryPicker, CountryButton } from "react-native-country-codes-picker"
-import { Button } from "react-native-paper"
 import R from "@app/assets"
 import { HEIGHT, WIDTH } from "@app/config/functions"
 import colors from "@app/assets/colors"
 import { spacing } from "@app/theme/spacing"
-import { TextPaper } from "@app/components/text-paper"
 import { Icon } from "@app/components/Icon"
 import { Text } from "@app/components/Text"
 interface ItemProps {
   setPhoneNumber: (val: string) => void
   phoneNumber: string
   setCountryCode: (val: string) => void
+  countryCode: string
 }
-export default function InputPhone({ setPhoneNumber, phoneNumber, setCountryCode }: ItemProps) {
+export default function InputPhone({
+  setPhoneNumber,
+  phoneNumber,
+  setCountryCode,
+  countryCode,
+}: ItemProps) {
   const [show, setShow] = useState(false)
   const [focus, setFocus] = useState(false)
   // const [countryCode, setCountryCode] = useState("")
@@ -38,8 +41,14 @@ export default function InputPhone({ setPhoneNumber, phoneNumber, setCountryCode
     <>
       <View style={[styles.wrapperInput, focus && { borderColor: colors.primary }]}>
         <Pressable style={styles.buttonCode} onPress={() => setShow((val) => !val)}>
-          <TextPaper style={{ marginRight: WIDTH(spacing.xxs) }}>+84</TextPaper>
-          <Icon icon="arrow_down" size={16} />
+          <Text
+            size="md"
+            weight="normal"
+            style={{ marginRight: WIDTH(spacing.xxs), color: colors.gray_9 }}
+          >
+            {countryCode}
+          </Text>
+          <Icon icon="arrow_down" size={16} color={colors.gray_9} />
         </Pressable>
         <View style={styles.lineVer} />
         <TextInput
@@ -49,6 +58,7 @@ export default function InputPhone({ setPhoneNumber, phoneNumber, setCountryCode
           onFocus={() => {
             setFocus(true)
           }}
+          placeholderTextColor={colors.gray_6}
           onBlur={() => {
             setFocus(false)
           }}
@@ -61,6 +71,7 @@ export default function InputPhone({ setPhoneNumber, phoneNumber, setCountryCode
         inputPlaceholder="Nhập tên nước"
         // when picker button press you will get the country object with dial code
         pickerButtonOnPress={(item) => {
+          console.log("dial_code", item.dial_code)
           setCountryCode(item.dial_code)
           setShow(false)
         }}
@@ -68,7 +79,6 @@ export default function InputPhone({ setPhoneNumber, phoneNumber, setCountryCode
           setShow(false)
         }}
         disableBackdrop
-        searchMessage={"Some search message here"}
         ListHeaderComponent={({ countries }) => {
           return (
             <View>
@@ -82,19 +92,40 @@ export default function InputPhone({ setPhoneNumber, phoneNumber, setCountryCode
                       setCountryCode(item.dial_code)
                       setShow(false)
                     }}
+                    style={{
+                      flag: {
+                        color: colors.white,
+                      },
+                      dialCode: {
+                        color: colors.gray_9,
+                      },
+                      countryName: {
+                        color: colors.gray_9,
+                      },
+                    }}
                   />
                 )
               })}
             </View>
           )
         }}
+        inputPlaceholderTextColor={colors.gray_6}
         popularCountries={["VN", "EN"]}
         style={{
           // Styles for whole modal [View]
           modal: {
-            height: isKeyboardVisible ? HEIGHT(500) : HEIGHT(800),
+            height: isKeyboardVisible ? HEIGHT(500) : HEIGHT(750),
             paddingTop: 32,
             backgroundColor: R.colors.white,
+          },
+          flag: {
+            color: colors.white,
+          },
+          dialCode: {
+            color: colors.gray_9,
+          },
+          countryName: {
+            color: colors.gray_9,
           },
         }}
       />

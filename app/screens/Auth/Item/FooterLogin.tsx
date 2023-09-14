@@ -12,7 +12,10 @@ export default function FooterLogin() {
     <View style={styles.container}>
       <View style={styles.wrapperLine}>
         <View style={styles.line} />
-        <Text preset="baRegular" style={{ marginHorizontal: WIDTH(spacing.xs) }}>
+        <Text
+          preset="baRegular"
+          style={{ marginHorizontal: WIDTH(spacing.xs), color: colors.gray_7 }}
+        >
           Hoặc đăng ký bằng
         </Text>
         <View style={styles.line} />
