@@ -4,6 +4,10 @@
 
 #import <React/RCTBundleURLProvider.h>
 #import <React/RCTLinkingManager.h>
+#import <FBSDKCoreKit/FBSDKCoreKit-swift.h>
+#import <FBSDKCoreKit/FBSDKCoreKit.h> // <- Add This Import
+#import <AuthenticationServices/AuthenticationServices.h>
+#import <SafariServices/SafariServices.h>
 
 @implementation AppDelegate
 
@@ -17,6 +21,8 @@
 
   [super application:application didFinishLaunchingWithOptions:launchOptions];
   [FIRApp configure];
+   [[FBSDKApplicationDelegate sharedInstance] application:application
+                       didFinishLaunchingWithOptions:launchOptions];
   // RN BootSplash
   UIView *rootView = self.window.rootViewController.view; // react-native >= 0.71 specific
   [RNBootSplash initWithStoryboard:@"BootSplash" rootView:rootView];
@@ -43,9 +49,21 @@
   return true;
 }
 
-// Linking API
-- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options {
-  return [super application:application openURL:url options:options] || [RCTLinkingManager application:application openURL:url options:options];
+// fb login
+- (BOOL)application:(UIApplication *)app
+            openURL:(NSURL *)url
+            options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options
+{
+  if ([[FBSDKApplicationDelegate sharedInstance] application:app openURL:url options:options]) {
+    return YES;
+  }
+
+  if ([RCTLinkingManager application:app openURL:url options:options]) {
+    return YES;
+  }
+  // return [RCTLinkingManager application:application openURL:url options:options];
+
+  return NO;
 }
 
 // Universal Links

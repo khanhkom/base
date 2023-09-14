@@ -10986,10 +10986,10 @@ react-native-date-picker@^4.2.14:
   dependencies:
     prop-types "^15.8.1"
 
-react-native-fbsdk-next@^12.1.0:
-  version "12.1.0"
-  resolved "https://registry.yarnpkg.com/react-native-fbsdk-next/-/react-native-fbsdk-next-12.1.0.tgz#63290586438f5b6c446056963416a32c083bc526"
-  integrity sha512-1UDPyQOfXOm/uLoaTtDwTDAi4OPExfIrKstFcAU+Xy4qwp1/YozFsoOT3hncCk5tqGbSbWJkxBLSuqiqj356Lw==
+react-native-fbsdk-next@^11.2.1:
+  version "11.3.0"
+  resolved "https://registry.yarnpkg.com/react-native-fbsdk-next/-/react-native-fbsdk-next-11.3.0.tgz#a1fb9e177acd11dc9118ec398ad1855e3e7c33c2"
+  integrity sha512-Mb08KqlHh9mIAiIProAvxY8paKEcP4FGR2Hiz9QPxzkM+AxDk8DLcPv3QZrB/nkMOuSNYi4gtwdpao92WNzeUw==
   dependencies:
     xml2js "^0.4.23"
 
