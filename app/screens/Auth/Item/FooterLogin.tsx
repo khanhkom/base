@@ -7,6 +7,7 @@ import R from "@app/assets"
 import colors from "@app/assets/colors"
 import { Text } from "@app/components/Text"
 import { GoogleSignin } from "@react-native-google-signin/google-signin"
+import { LoginButton, AccessToken, LoginManager } from "react-native-fbsdk-next"
 
 export default function FooterLogin() {
   const loginWithGoogle = async () => {
@@ -26,6 +27,28 @@ export default function FooterLogin() {
       // Sentry.captureException(error)
     }
   }
+  const loginWithFacebook = () => {
+    LoginManager.logInWithPermissions(["public_profile"])
+      .then(
+        (result) => {
+          if (result.isCancelled) {
+            console.log("isCancelled")
+          } else {
+            AccessToken.getCurrentAccessToken().then((data) => {
+              console.log("data_facebook", data)
+            })
+          }
+        },
+        function (error: string) {
+          // Sentry.captureException(error)
+          console.log("error_error", error)
+        },
+      )
+      .catch((error) => {
+        console.log("error_error", error)
+        // Sentry.captureException(error)
+      })
+  }
   return (
     <View style={styles.container}>
       <View style={styles.wrapperLine}>
@@ -39,7 +62,7 @@ export default function FooterLogin() {
         <View style={styles.line} />
       </View>
       <View style={styles.flexRow}>
-        <Pressable>
+        <Pressable onPress={loginWithFacebook}>
           <Image source={R.images.ic_face} style={styles.button} resizeMode="contain" />
         </Pressable>
 

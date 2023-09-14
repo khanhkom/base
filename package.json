@@ -74,6 +74,7 @@
     "react-native-calendars": "^1.1301.0",
     "react-native-country-codes-picker": "^2.3.3",
     "react-native-date-picker": "^4.2.14",
+    "react-native-fbsdk-next": "^12.1.0",
     "react-native-gesture-handler": "~2.9.0",
     "react-native-gifted-chat": "^2.4.0",
     "react-native-keyboard-manager": "^6.5.11-2",

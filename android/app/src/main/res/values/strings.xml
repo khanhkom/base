@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">SDocter</string>
+    <string name="facebook_app_id">287306963970525</string>
+    <string name="fb_login_protocol_scheme">fb287306963970525</string>
+    <string name="facebook_client_token">9ff17bed146abb208178f128566a96a5</string>
+
 </resources>

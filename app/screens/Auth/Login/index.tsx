@@ -1,4 +1,4 @@
-import { StyleSheet, View } from "react-native"
+import { Platform, StyleSheet, View } from "react-native"
 import React, { useState } from "react"
 import { Screen } from "@app/components/Screen"
 import HeaderLogin from "../Item/HeaderLogin"
@@ -63,11 +63,12 @@ export default function Login() {
       }
     }
   }
+
   return (
     <Screen
       preset="auto"
       safeAreaEdges={["bottom"]}
-      contentContainerStyle={{ height: getHeight() }}
+      contentContainerStyle={Platform.OS === "ios" ? { height: getHeight() } : { flex: 1 }}
     >
       <HeaderLogin />
       <View style={styles.body}>
