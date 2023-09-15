@@ -17,6 +17,7 @@ import { getOtp, login } from "@app/services/api/functions/users"
 import { LoadingOpacity } from "@app/components/loading/LoadingOpacity"
 import { navigate } from "@app/navigators/navigationUtilities"
 import { useDispatch } from "react-redux"
+import { updateUserField } from "@app/redux/actions"
 
 export default function Login() {
   const [indexTab, setIndexTab] = useState(0)
@@ -25,6 +26,7 @@ export default function Login() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(false)
   const [visible, setVisible] = React.useState(false)
+  const [isNewUser, setNewUser] = React.useState(false)
   const showModal = () => setVisible(true)
   const hideModal = () => setVisible(false)
   const dispatch = useDispatch()
@@ -41,11 +43,32 @@ export default function Login() {
         setLoading(true)
         setError(false)
         let resLogin = await getOtp(body)
-        console.log("resLogin_resLogin", resLogin?.status)
+
+        console.log("resLogin_resLogin", resLogin?.data)
         if (resLogin?.status === 201) {
-          navigate("VerifyOTP", {
-            phone: countryCode + phoneNumber,
-          })
+          dispatch(
+            updateUserField({
+              phone: countryCode + phoneNumber,
+            }),
+          )
+          setNewUser(resLogin?.data?.isNewUser)
+          if (indexTab === 0) {
+            if (resLogin?.data?.isNewUser) {
+              navigate("VerifyOTP", {
+                phone: countryCode + phoneNumber,
+              })
+            } else {
+              showModal()
+            }
+          } else {
+            if (resLogin?.data?.isNewUser) {
+              showModal()
+            } else {
+              navigate("VerifyOTP", {
+                phone: countryCode + phoneNumber,
+              })
+            }
+          }
         } else {
           setError(true)
           showToastMessage("Vui lòng kiểm tra lại số điện thoại!", EToastType.ERROR)
@@ -92,15 +115,6 @@ export default function Login() {
           countryCode={countryCode}
           error={error}
         />
-        {/* {indexTab === 1 && (
-          <TextField
-            label="Mật khẩu"
-            containerStyle={{ marginTop: 16 }}
-            value={password}
-            onChangeText={setPassword}
-            secureTextEntry
-          />
-        )} */}
         <Button
           mode="contained"
           style={styles.buttonNext}
@@ -119,7 +133,12 @@ export default function Login() {
         </Text>
       </View>
       <FooterLogin />
-      <PopupVerify visible={visible} setVisible={setVisible} />
+      <PopupVerify
+        visible={visible}
+        setVisible={setVisible}
+        isNewUser={isNewUser}
+        phone={countryCode + phoneNumber}
+      />
       {loading && <LoadingOpacity />}
     </Screen>
   )

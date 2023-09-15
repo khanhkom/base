@@ -88,7 +88,6 @@ export default function VerifyOTP({ route }: ScreenProps) {
       // even when app is the the background
       setTime((val) => val - 1)
     }, 1000)
-    console.log("ZOOO", time)
     if (time === 0) {
       BackgroundTimer.clearInterval(intervalId)
     }
@@ -100,8 +99,7 @@ export default function VerifyOTP({ route }: ScreenProps) {
       <Header leftIcon="arrow_left" backgroundColor={colors.white} />
       <Text preset="xxxlsemibold">Xác thực OTP</Text>
       <Text preset="mdRegular" style={styles.textDes}>
-        Vui lòng nhập mã xác thực được gửi tới số điện thoại{" "}
-        <Text preset="mdMedium">0123456789</Text>
+        Vui lòng nhập mã xác thực được gửi tới số điện thoại <Text preset="mdMedium">{phone}</Text>
       </Text>
       <SmoothPinCodeInput
         autoFocus
@@ -170,9 +168,6 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginTop: HEIGHT(spacing.md),
     marginBottom: HEIGHT(spacing.xxl),
-  },
-  pinCode: {
-    marginTop: HEIGHT(spacing.xxl),
   },
   textPin: {
     color: colors.main_6,

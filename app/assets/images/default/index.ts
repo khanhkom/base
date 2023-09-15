@@ -3,5 +3,6 @@ const HOME_DEFAULTS = {
   avatar_patient: require("./avatar_patient.png"),
   file_attach: require("./file_attach.png"),
   empty: require("./empty.png"),
+  empty_noti: require("./empty_noti.png"),
 }
 export default HOME_DEFAULTS

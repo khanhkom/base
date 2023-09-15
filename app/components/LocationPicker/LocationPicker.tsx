@@ -9,26 +9,53 @@ import { Icon } from "@app/components/Icon"
 import moment from "moment"
 import { isToday } from "date-fns"
 import ModalAdress from "./ModalAdress"
+import { navigate } from "@app/navigators/navigationUtilities"
+import { EToastType, showToastMessage } from "@app/utils/library"
 interface ItemProps {
   title: string
   placeholder: string
+  value: {
+    name: string
+    _id: string
+  }
+  type: "wards" | "districts" | "provinces"
+  setValue: (val) => void
+  parentId: string
 }
-export default function LocationPicker({ title, placeholder }: ItemProps) {
-  const [date, setDate] = useState(new Date())
-  const [open, setOpen] = useState(false)
+export default function LocationPicker({
+  title,
+  placeholder,
+  value,
+  parentId,
+  setValue,
+  type,
+}: ItemProps) {
   return (
     <View style={styles.container}>
       <Text preset="formLabel">{title}</Text>
       <Pressable
         onPress={() => {
-          setOpen(true)
+          if (parentId === "" && type !== "provinces") {
+            if (type === "districts")
+              showToastMessage("Vui lòng chọn Tỉnh/Thành phố!", EToastType.ERROR)
+            else if (type === "wards")
+              showToastMessage("Vui lòng chọn Quận/Huyện!", EToastType.ERROR)
+          } else {
+            navigate("SelectLocation", {
+              type,
+              value,
+              setValue,
+              parentId,
+            })
+          }
         }}
         style={{ marginTop: HEIGHT(spacing.xs) }}
       >
         <TextField
           placeholder={placeholder}
           placeholderTextColor={colors.gray_9}
-          value={!isToday(date) ? moment(date).format("DD/MM/YYYY") : ""}
+          value={value?.name}
+          style={{ color: colors.gray_9 }}
           editable={false}
           RightAccessory={() => (
             <Icon
@@ -39,7 +66,6 @@ export default function LocationPicker({ title, placeholder }: ItemProps) {
           )}
         />
       </Pressable>
-      <ModalAdress visible={open} setVisible={setOpen} />
     </View>
   )
 }

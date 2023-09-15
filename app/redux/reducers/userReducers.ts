@@ -1,16 +1,14 @@
 const defaultState = {
   user: {
-    token: "string",
-    message: "string",
-    personId: "string",
-    profileId: "string",
-    masterPersonId: "string",
-    birthday: new Date(),
-    accountStatus: 1,
-    weight: 60,
-    height: 180,
-    activitylevel: 2,
-    bodyInfomation: 1,
+    name: "",
+    gender: "",
+    birthday: "",
+    mail: "",
+    province: "",
+    city: "",
+    ward: "",
+    address: "",
+    phone: "",
   },
 }
 export default (state = defaultState, action) => {
@@ -20,19 +18,14 @@ export default (state = defaultState, action) => {
         ...state,
         user: action.data,
       }
-    case "SET_STEPS_USER_REGISTER_TOTAL": {
+    case "UPDATE_USER_FIELD":
       return {
         ...state,
-        stepOnBoarding: action.data,
+        user: {
+          ...state.user,
+          ...action.data,
+        },
       }
-    }
-    case "SET_HIDE_TABAR_ONBOARDING": {
-      return {
-        ...state,
-        ...action.data,
-      }
-    }
-
     default:
       break
   }

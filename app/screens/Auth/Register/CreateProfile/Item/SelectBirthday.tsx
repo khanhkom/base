@@ -11,8 +11,9 @@ import moment from "moment"
 import { isToday } from "date-fns"
 interface ItemProps {
   title: string
+  onSelectDate: (val: Date) => void
 }
-export default function SelectBirthday({ title }: ItemProps) {
+export default function SelectBirthday({ title, onSelectDate }: ItemProps) {
   const [date, setDate] = useState(new Date())
   const [open, setOpen] = useState(false)
   return (
@@ -31,6 +32,7 @@ export default function SelectBirthday({ title }: ItemProps) {
       >
         <TextField
           placeholder="dd/mm/yyyy"
+          style={{ color: colors.gray_9 }}
           value={!isToday(date) ? moment(date).format("DD/MM/YYYY") : ""}
           editable={false}
           RightAccessory={() => (
@@ -49,6 +51,7 @@ export default function SelectBirthday({ title }: ItemProps) {
         onConfirm={(date) => {
           setOpen(false)
           setDate(date)
+          onSelectDate(date)
         }}
         mode="date"
         title="Chọn ngày sinh"

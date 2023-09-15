@@ -29,7 +29,6 @@ export default function Home() {
       setLoading(false)
       const data = response?.hits
       setHits(data)
-      console.log("AAAAAAAAAAAA", data)
     }
   }
   console.log("user_user", hits)

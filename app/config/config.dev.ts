@@ -7,4 +7,5 @@
  */
 export default {
   API_URL: "https://api-dev.sdoctor.vn/api/san-review/",
+  API_LOCATION: "https://vn-public-apis.fpo.vn/",
 }

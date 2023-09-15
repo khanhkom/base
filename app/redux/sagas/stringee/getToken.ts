@@ -3,10 +3,8 @@ import _ from "lodash"
 import { createStringeeSession } from "@app/services/api/functions/stringee"
 
 function* fetchStringeeToken() {
-  console.log("AAAAAAAAAAA")
   try {
     const resData = yield call(createStringeeSession)
-    console.log("resData_resData", resData)
     yield put({
       type: "FETCH_STRINGEE_SESSION_SUCCESS",
       payload: resData?.data,

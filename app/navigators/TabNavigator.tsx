@@ -49,6 +49,7 @@ export function TabNavigator() {
         tabBarItemStyle: $tabBarItem,
         tabBarShowLabel: false,
       }}
+      initialRouteName="Home"
       tabBar={({ navigation, state, descriptors, insets }) => (
         <BottomNavigation.Bar
           navigationState={state}

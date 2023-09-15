@@ -6,6 +6,7 @@ import { Icon } from "@app/components/Icon"
 import { spacing } from "@app/theme/spacing"
 import { Searchbar } from "react-native-paper"
 import colors from "@app/assets/colors"
+import { navigate } from "@app/navigators/navigationUtilities"
 export default function HeaderHome() {
   const [keyword, setKeyword] = useState("")
   return (
@@ -14,7 +15,13 @@ export default function HeaderHome() {
       <View style={styles.flexRow}>
         <Image source={R.images.heart} style={styles.icHeart} />
         <Image source={R.images.textsdocter} style={styles.logoText} resizeMode="contain" />
-        <Icon icon="ic_noti" style={styles.icBard} />
+        <Icon
+          icon="ic_noti"
+          style={styles.icBard}
+          onPress={() => {
+            navigate("Notification")
+          }}
+        />
       </View>
       <Searchbar
         value={keyword}

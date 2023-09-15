@@ -1,4 +1,11 @@
-import { ScrollView, StyleSheet, View } from "react-native"
+import {
+  FlatList,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  View,
+} from "react-native"
 import React, { useState } from "react"
 import { Header } from "@app/components/Header"
 import colors from "@app/assets/colors"
@@ -11,9 +18,78 @@ import { Toggle } from "@app/components/Toggle"
 import SelectBirthday from "./Item/SelectBirthday"
 import LocationPicker from "@app/components/LocationPicker/LocationPicker"
 import { navigate } from "@app/navigators/navigationUtilities"
+import { useSelector } from "@app/redux/reducers"
+import { LoadingOpacity } from "@app/components/loading/LoadingOpacity"
+import moment from "moment"
+import { EToastType, showToastMessage } from "@app/utils/library"
+import { createPatient } from "@app/services/api/functions/patient"
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view"
 
 export default function CreateProfile() {
+  const user = useSelector((state) => state.userReducers.user)
+  console.log("user", user)
+  const [name, setName] = useState(user?.name)
   const [gender, setGender] = useState(0)
+  const [email, setEmail] = useState("")
+  const [address, setAddress] = useState("")
+  const [birthday, setBirthday] = useState("")
+  const [loading, setLoading] = useState(false)
+  const [provinces, setProvinces] = useState({
+    _id: "",
+    name: "",
+    slug: "",
+    type: "",
+    name_with_type: "",
+    code: "",
+  })
+  const [districts, setDistricts] = useState({
+    _id: "",
+    name: "",
+    type: "",
+    slug: "",
+    name_with_type: "",
+    path: "",
+    path_with_type: "",
+    code: "",
+    parent_code: "",
+  })
+  const [wards, setWards] = useState({
+    _id: "",
+    name: "",
+    type: "",
+    slug: "",
+    name_with_type: "",
+    path: "",
+    path_with_type: "",
+    code: "",
+    parent_code: "",
+    isDeleted: false,
+  })
+  const onCreateProfile = async () => {
+    if (birthday === "" || name === "") {
+      showToastMessage("Vui lòng nhập đủ thông tin!", EToastType.ERROR)
+    } else {
+      setLoading(true)
+      const bodyCreate = {
+        name: name,
+        gender: gender === 0 ? "male" : "female",
+        birthday: moment(birthday).format("DD/MM/YYYY"),
+        mail: email,
+        province: provinces?.name,
+        city: districts?.name,
+        ward: wards?.name,
+        address: address,
+      }
+      let resUpdate = await createPatient(bodyCreate)
+      setLoading(false)
+      if (resUpdate?.status === 201) {
+        showToastMessage("Tạo hồ sơ thành công!")
+        navigate("TabNavigator")
+      } else {
+        showToastMessage("Tạo hồ sơ thất bại!", EToastType.ERROR)
+      }
+    }
+  }
   return (
     <View style={styles.container}>
       <Header
@@ -23,16 +99,8 @@ export default function CreateProfile() {
         rightIconColor={colors.blue_6}
         backgroundColor={colors.white}
       />
-      <ScrollView>
-        <Card
-          mode="contained"
-          style={{
-            marginTop: HEIGHT(spacing.md),
-            marginHorizontal: WIDTH(spacing.md),
-            paddingHorizontal: WIDTH(spacing.md),
-            paddingVertical: HEIGHT(spacing.sm),
-          }}
-        >
+      <KeyboardAwareScrollView>
+        <Card mode="contained" style={styles.nodeCard}>
           <Text weight="normal" size="ba">
             Vui lòng nhập chính xác thông tin của bệnh nhân (người khám) theo thông tin giấy tờ tùy
             thân (CCCD/CMND/BHYT). Thông tin không chính xác có thể làm gián đoạn quá trình khám,
@@ -49,16 +117,20 @@ export default function CreateProfile() {
           <TextField
             require
             label="Họ và tên"
-            placeholder="Nguyễn Văn A"
+            placeholder="Nhập họ tên"
+            value={name}
+            onChangeText={setName}
             containerStyle={{ marginTop: HEIGHT(spacing.md) }}
           ></TextField>
           <TextField
             require
             label="Số điện thoại"
-            placeholder="0123456789"
+            editable={false}
+            value={user?.phone}
+            style={{ color: colors.gray_9 }}
             containerStyle={{ marginTop: HEIGHT(spacing.md) }}
           ></TextField>
-          <SelectBirthday />
+          <SelectBirthday title="Ngày sinh" onSelectDate={setBirthday} />
           <Text preset="formLabel">
             Giới tính
             {require && (
@@ -87,35 +159,66 @@ export default function CreateProfile() {
           </View>
           <TextField
             label="Email"
+            value={email}
+            onChangeText={setEmail}
             placeholder="Nhập địa chỉ email"
             containerStyle={{ marginTop: HEIGHT(spacing.md) }}
           ></TextField>
-          <LocationPicker title="Tỉnh/ Thành phố" placeholder="Chọn Tỉnh/ Thành phố" />
-          <LocationPicker title="Quận/ Huyện" placeholder="Chọn Quận/ Huyện" />
-          <LocationPicker title="Phường/ Xã" placeholder="Chọn Phường/Xã" />
+          <LocationPicker
+            value={provinces}
+            setValue={(val) => {
+              setProvinces(val)
+              setDistricts({ name: "", _id: "" })
+              setWards({ name: "", _id: "" })
+            }}
+            title="Tỉnh/ Thành phố"
+            parentId={""}
+            placeholder="Chọn Tỉnh/ Thành phố"
+            type="provinces"
+          />
+          <LocationPicker
+            value={districts}
+            setValue={(val) => {
+              setDistricts(val)
+              setWards({ name: "", _id: "" })
+            }}
+            parentId={provinces?.code}
+            title="Quận/ Huyện"
+            placeholder="Chọn Quận/ Huyện"
+            type="districts"
+          />
+          <LocationPicker
+            value={wards}
+            setValue={setWards}
+            parentId={districts?.code}
+            title="Phường/ Xã"
+            placeholder="Chọn Phường/Xã"
+            type="wards"
+          />
           <TextField
             label="Địa chỉ chi tiết"
             placeholder="Ví dụ: Số nhà, đường, ..."
+            value={address}
+            onChangeText={setAddress}
             containerStyle={{ marginTop: HEIGHT(spacing.md) }}
           ></TextField>
           <Button
             mode="contained"
             style={styles.button}
-            onPress={() => {
-              navigate("TabNavigator")
-            }}
+            onPress={onCreateProfile}
+            loading={loading}
           >
             Lưu
           </Button>
         </View>
-      </ScrollView>
+      </KeyboardAwareScrollView>
     </View>
   )
 }
 
 const styles = StyleSheet.create({
   body: {
-    paddingBottom: HEIGHT(100),
+    paddingBottom: HEIGHT(16),
     paddingHorizontal: WIDTH(spacing.md),
   },
   container: {
@@ -137,5 +240,12 @@ const styles = StyleSheet.create({
     width: WIDTH(343),
     marginTop: HEIGHT(28),
     borderRadius: 8,
+  },
+  nodeCard: {
+    marginTop: HEIGHT(spacing.md),
+    marginHorizontal: WIDTH(spacing.md),
+    paddingHorizontal: WIDTH(spacing.md),
+    paddingVertical: HEIGHT(spacing.sm),
+    backgroundColor: colors.gray_1,
   },
 })

@@ -5,14 +5,19 @@ import { HEIGHT, WIDTH } from "@app/config/functions"
 import colors from "@app/assets/colors"
 import { spacing } from "@app/theme/spacing"
 import { navigate } from "@app/navigators/navigationUtilities"
-
-export default function PopupVerify({ visible, setVisible }) {
+interface ItemProps {
+  visible: boolean
+  setVisible: () => void
+  isNewUser: boolean
+  phone: string
+}
+export default function PopupVerify({ visible, setVisible, isNewUser, phone }: ItemProps) {
   const hideModal = () => setVisible(false)
   return (
     <Modal visible={visible} onDismiss={hideModal} contentContainerStyle={styles.containerStyle}>
       <Text style={styles.textTitle}>
-        Số điện thoại <Text style={styles.textPhone}>0123456789</Text> đã tồn tại trong hệ thống của
-        chúng tôi!
+        Số điện thoại <Text style={styles.textPhone}>{phone}</Text> {isNewUser ? "chưa" : "đã"} tồn
+        tại trong hệ thống của chúng tôi!
       </Text>
       <View style={styles.bottomView}>
         <Button
@@ -26,12 +31,12 @@ export default function PopupVerify({ visible, setVisible }) {
         <Button
           onPress={() => {
             hideModal()
-            navigate("VerifyOTP")
+            navigate("VerifyOTP", { phone })
           }}
           mode="contained"
           style={styles.buttonRight}
         >
-          Đăng nhập
+          {isNewUser ? "Đăng ký ngay" : "Đăng nhập ngay"}
         </Button>
       </View>
     </Modal>
