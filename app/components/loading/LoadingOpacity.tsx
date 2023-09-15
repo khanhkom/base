@@ -25,7 +25,7 @@ export const LoadingOpacity = ({ styleLoading, top, styleText, testID }: ItemPro
           styleLoading,
         ]}
       >
-        <ActivityIndicator size={24} color={colors.primary} />
+        <ActivityIndicator size={24} color={colors.white} />
         <Text
           size="ba"
           weight="normal"
@@ -33,7 +33,7 @@ export const LoadingOpacity = ({ styleLoading, top, styleText, testID }: ItemPro
             {
               marginTop: HEIGHT(spacing.xxs),
               marginHorizontal: HEIGHT(spacing.xxs),
-              color: colors.primary,
+              color: colors.white,
             },
             styleText,
           ]}
@@ -55,6 +55,6 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     right: 0,
-    backgroundColor: colors.white_1,
+    backgroundColor: colors.backdrop,
   },
 })

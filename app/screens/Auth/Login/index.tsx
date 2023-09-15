@@ -4,7 +4,6 @@ import { Screen } from "@app/components/Screen"
 import HeaderLogin from "../Item/HeaderLogin"
 import { HEIGHT, WIDTH, getHeight, getWidth } from "@app/config/functions"
 import R from "@app/assets"
-import { TextPaper } from "@app/components/text-paper"
 import { spacing } from "@app/theme/spacing"
 import ButtonTab from "@app/components/ButtonTab"
 import InputPhone from "../Item/InputPhone"
@@ -13,22 +12,18 @@ import FooterLogin from "../Item/FooterLogin"
 import PopupVerify from "../Item/PopupVerify"
 import { Button } from "react-native-paper"
 import { Text } from "@app/components/Text"
-import { TextField } from "@app/components/TextField"
 import { EToastType, showToastMessage } from "@app/utils/library"
-import { login } from "@app/services/api/functions/users"
+import { getOtp, login } from "@app/services/api/functions/users"
 import { LoadingOpacity } from "@app/components/loading/LoadingOpacity"
-import { KEYSTORAGE, save } from "@app/utils/storage"
-import { api } from "@app/services/api"
 import { navigate } from "@app/navigators/navigationUtilities"
 import { useDispatch } from "react-redux"
-import { getStringeeToken } from "@app/redux/actions/stringee"
 
 export default function Login() {
   const [indexTab, setIndexTab] = useState(0)
   const [countryCode, setCountryCode] = useState("+84")
   const [phoneNumber, setPhoneNumber] = useState("")
-  const [password, setPassword] = useState("")
   const [loading, setLoading] = useState(false)
+  const [error, setError] = useState(false)
   const [visible, setVisible] = React.useState(false)
   const showModal = () => setVisible(true)
   const hideModal = () => setVisible(false)
@@ -36,29 +31,30 @@ export default function Login() {
 
   const onSubmit = async () => {
     // showModal()
-    if (phoneNumber === "" || password === "") {
+    if (phoneNumber === "") {
       showToastMessage("Vui lòng nhập đủ thông tin!", EToastType.ERROR)
     } else {
       try {
         let body = {
-          password: password,
           phone: countryCode + phoneNumber,
         }
         setLoading(true)
-        let resLogin = await login(body)
-        if (resLogin?.data?.accessToken) {
-          const dataLogin = resLogin?.data
-          api.apisauce.setHeader("access-token", dataLogin?.accessToken)
-          save(KEYSTORAGE.LOGIN_DATA, dataLogin)
-          dispatch(getStringeeToken())
-          navigate("TabNavigator")
+        setError(false)
+        let resLogin = await getOtp(body)
+        console.log("resLogin_resLogin", resLogin?.status)
+        if (resLogin?.status === 201) {
+          navigate("VerifyOTP", {
+            phone: countryCode + phoneNumber,
+          })
         } else {
-          showToastMessage("Thông tin không chính xác!", EToastType.ERROR)
+          setError(true)
+          showToastMessage("Vui lòng kiểm tra lại số điện thoại!", EToastType.ERROR)
         }
         console.log("resLogin_resLogin", body, resLogin?.data)
         setLoading(false)
       } catch (error) {
-        showToastMessage("Thông tin không chính xác!", EToastType.ERROR)
+        showToastMessage("Vui lòng kiểm tra lại số điện thoại!", EToastType.ERROR)
+        setError(true)
         setLoading(false)
       }
     }
@@ -94,6 +90,7 @@ export default function Login() {
           setPhoneNumber={setPhoneNumber}
           setCountryCode={setCountryCode}
           countryCode={countryCode}
+          error={error}
         />
         {/* {indexTab === 1 && (
           <TextField

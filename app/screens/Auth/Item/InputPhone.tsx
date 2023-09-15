@@ -12,12 +12,14 @@ interface ItemProps {
   phoneNumber: string
   setCountryCode: (val: string) => void
   countryCode: string
+  error: boolean
 }
 export default function InputPhone({
   setPhoneNumber,
   phoneNumber,
   setCountryCode,
   countryCode,
+  error,
 }: ItemProps) {
   const [show, setShow] = useState(false)
   const [focus, setFocus] = useState(false)
@@ -39,7 +41,13 @@ export default function InputPhone({
   }, [])
   return (
     <>
-      <View style={[styles.wrapperInput, focus && { borderColor: colors.primary }]}>
+      <View
+        style={[
+          styles.wrapperInput,
+          focus && { borderColor: colors.primary },
+          error && { borderColor: colors.red_5 },
+        ]}
+      >
         <Pressable style={styles.buttonCode} onPress={() => setShow((val) => !val)}>
           <Text
             size="md"
@@ -129,9 +137,11 @@ export default function InputPhone({
           },
         }}
       />
-      {/* <Text preset="smRegular" style={{ marginTop: HEIGHT(spacing.xs), color: colors.red_5 }}>
-        Vui lòng kiểm tra lại số điện thoại!
-      </Text> */}
+      {error && (
+        <Text preset="smRegular" style={{ marginTop: HEIGHT(spacing.xs), color: colors.red_5 }}>
+          Vui lòng kiểm tra lại số điện thoại!
+        </Text>
+      )}
     </>
   )
 }

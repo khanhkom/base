@@ -8,14 +8,79 @@ import { spacing } from "@app/theme/spacing"
 import colors from "@app/assets/colors"
 import BackgroundTimer from "react-native-background-timer"
 import { navigate } from "@app/navigators/navigationUtilities"
-
-export default function VerifyOTP() {
+import { api } from "@app/services/api"
+import { KEYSTORAGE, save } from "@app/utils/storage"
+import { getStringeeToken } from "@app/redux/actions/stringee"
+import { useDispatch } from "react-redux"
+import { getOtp, verifyOTP } from "@app/services/api/functions/users"
+import { LoadingOpacity } from "@app/components/loading/LoadingOpacity"
+import { EToastType, showToastMessage } from "@app/utils/library"
+interface ScreenProps {
+  route: {
+    params: {
+      phone: string
+    }
+  }
+}
+export default function VerifyOTP({ route }: ScreenProps) {
+  const phone = route?.params?.phone
   const pinInput = useRef(null)
   const [code, setCode] = useState("")
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState(false)
   const [time, setTime] = useState(30)
-  const _checkCode = () => {
-    console.log("CODE_", code)
-    navigate("ConfirmName")
+  const dispatch = useDispatch()
+  const _checkCode = async (codeFinal) => {
+    try {
+      setLoading(true)
+      const body = {
+        phone: phone,
+        code: codeFinal,
+        role: "patient",
+      }
+      let resOTP = await verifyOTP(body)
+      console.log("body", body)
+      const dataLogin = resOTP?.data
+      setLoading(false)
+      if (resOTP?.data?.accessToken) {
+        api.apisauce.setHeader("access-token", dataLogin?.accessToken)
+        save(KEYSTORAGE.LOGIN_DATA, dataLogin)
+        dispatch(getStringeeToken())
+        if (dataLogin?.isNewUser) {
+          navigate("ConfirmName")
+        } else {
+          navigate("TabNavigator")
+        }
+      } else {
+        setError(true)
+        showToastMessage("Sai mã đăng nhập", EToastType.ERROR)
+      }
+    } catch (error) {
+      showToastMessage("Có lỗi xảy ra! Vui lòng thử lại", EToastType.ERROR)
+      setError(true)
+      setLoading(false)
+      console.warn("_checkCode", error)
+    }
+  }
+  const reSendCode = async () => {
+    try {
+      let body = {
+        phone: phone,
+      }
+      setLoading(true)
+      setCode("")
+      const resLogin = await getOtp(body)
+      setTime(30)
+      if (resLogin?.status === 201) {
+        showToastMessage("Gửi mã thành công!", EToastType.SUCCESS)
+      } else {
+        showToastMessage("Có lỗi xảy ra! Vui lòng thử lại", EToastType.ERROR)
+      }
+      setLoading(false)
+    } catch (error) {
+      showToastMessage("Có lỗi xảy ra! Vui lòng thử lại", EToastType.ERROR)
+      setLoading(false)
+    }
   }
   useEffect(() => {
     const intervalId = BackgroundTimer.setInterval(() => {
@@ -45,29 +110,44 @@ export default function VerifyOTP() {
         placeholder="•"
         value={code}
         onTextChange={(code) => setCode(code)}
-        onFulfill={_checkCode}
+        onFulfill={(code) => _checkCode(code)}
         cellSize={WIDTH(48)}
         codeLength={6}
         cellStyle={styles.cellStyle}
+        textStyle={styles.textPin}
         cellStyleFocused={styles.cellStyleFocused}
       />
-      <Text
-        preset="smRegular"
-        style={{
-          color: colors.red_5,
-          marginTop: HEIGHT(spacing.sm),
-          marginBottom: -HEIGHT(spacing.md),
-        }}
-      >
-        Mã xác thực không chính xác, vui lòng nhập lại!
-      </Text>
-      <Text preset="baMedium" style={{ marginTop: HEIGHT(40), color: colors.gray_7 }}>
-        Gửi lại mã (
-        <Text preset="baMedium" style={{ color: colors.main_7 }}>
-          {time} giây
+      {error && (
+        <Text
+          preset="smRegular"
+          style={{
+            color: colors.red_5,
+            marginTop: HEIGHT(spacing.sm),
+            marginBottom: -HEIGHT(spacing.md),
+          }}
+        >
+          Mã xác thực không chính xác, vui lòng nhập lại!
         </Text>
-        )
+      )}
+
+      <Text
+        disabled={time > 0}
+        onPress={reSendCode}
+        preset="baMedium"
+        style={{ marginTop: HEIGHT(40), color: colors.gray_7 }}
+      >
+        Gửi lại mã{" "}
+        {time > 0 && (
+          <Text>
+            (
+            <Text preset="baMedium" style={{ color: colors.main_7 }}>
+              {time} giây
+            </Text>
+            )
+          </Text>
+        )}
       </Text>
+      {loading && <LoadingOpacity />}
     </View>
   )
 }
@@ -93,5 +173,10 @@ const styles = StyleSheet.create({
   },
   pinCode: {
     marginTop: HEIGHT(spacing.xxl),
+  },
+  textPin: {
+    color: colors.main_6,
+    fontWeight: "600",
+    fontSize: 18,
   },
 })
