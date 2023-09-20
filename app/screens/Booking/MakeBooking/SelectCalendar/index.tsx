@@ -19,13 +19,11 @@ const DATA_EXPLAIN = [
   },
 ]
 export default function DocterInformation() {
-  const [selectedValue, setSelectedValue] = useState(new Date())
-
   return (
     <View style={styles.container}>
       <Header leftIcon="arrow_left" title="Chọn ngày khám" backgroundColor={colors.white} />
       <TitleInfor title="Thông tin lịch khám" data={DATA_EXPLAIN} />
-      <CalendarPicker onConfirm={setSelectedValue} />
+      <CalendarPicker />
     </View>
   )
 }

@@ -10,10 +10,13 @@ import { spacing } from "@app/theme/spacing"
 import R from "@app/assets"
 import { DATA_EXPLAIN, DATA_TIME } from "./Data"
 import { navigate } from "@app/navigators/navigationUtilities"
+import { useDispatch } from "react-redux"
+import { updateSelectedTimeOrder } from "@app/redux/actions/actionOrder"
 
 export default function SelectTimeBooking() {
-  const [timeSelected, setTimeSelected] = useState(-1)
+  const [timeSelected, setTimeSelected] = useState({ id: -1 })
   console.log("timeSelected", timeSelected)
+  const dispatch = useDispatch()
   return (
     <View style={styles.container}>
       <Header leftIcon="arrow_left" title="Chọn giờ khám" backgroundColor={colors.white} />
@@ -34,11 +37,11 @@ export default function SelectTimeBooking() {
                 {item.data.map((item, index) => {
                   return (
                     <ButtonTime
-                      onPress={() => setTimeSelected(item.id)}
+                      onPress={() => setTimeSelected(item)}
                       title={item.time}
                       status={item.status}
                       key={index}
-                      selected={timeSelected === item.id}
+                      selected={timeSelected.id === item.id}
                     />
                   )
                 })}
@@ -52,7 +55,9 @@ export default function SelectTimeBooking() {
       <Button
         onPress={() => {
           navigate("CreateMedicalRecord")
+          dispatch(updateSelectedTimeOrder(timeSelected))
         }}
+        disabled={timeSelected.id === -1}
         mode="contained"
         style={{ marginBottom: HEIGHT(spacing.md), marginHorizontal: WIDTH(spacing.md) }}
       >

@@ -1,5 +1,5 @@
 import { ScrollView, StyleSheet, View } from "react-native"
-import React from "react"
+import React, { useEffect, useState } from "react"
 import { Header } from "@app/components/index"
 import colors from "@app/assets/colors"
 import GeneralInfor from "./Item/GeneralInfor"
@@ -9,13 +9,36 @@ import { HEIGHT, WIDTH, getWidth } from "@app/config/functions"
 import { spacing } from "@app/theme/spacing"
 import { Button } from "react-native-paper"
 import { navigate } from "@app/navigators/navigationUtilities"
-export default function DocterInformation() {
+import { IDocter } from "@app/interface/docter"
+import { getDetailDocter } from "@app/services/api/functions/docter"
+import { useDispatch } from "react-redux"
+import { updateDocterCreateOrder } from "@app/redux/actions/actionOrder"
+interface IScreenProps {
+  route: {
+    params: {
+      item: IDocter
+    }
+  }
+}
+export default function DocterInformation({ route }: IScreenProps) {
+  const [loading, setLoading] = useState(false)
+  const [detailDocter, setDetailDocter] = useState<IDocter>()
+  const loadDetailDocter = async () => {
+    setLoading(true)
+    let resDetail = await getDetailDocter(route.params.item.id)
+    setDetailDocter(resDetail.data)
+    setLoading(false)
+  }
+  useEffect(() => {
+    loadDetailDocter()
+  }, [])
+  const dispatch = useDispatch()
   return (
     <View style={styles.container}>
       <Header leftIcon="arrow_left" title="Thông tin bác sĩ" backgroundColor={colors.gray_1} />
       <ScrollView>
-        <GeneralInfor />
-        <Experience />
+        <GeneralInfor data={detailDocter} />
+        <Experience data={detailDocter} />
         <Rating />
       </ScrollView>
       <View style={styles.buttonWrapper}>
@@ -24,6 +47,7 @@ export default function DocterInformation() {
           style={styles.button}
           onPress={() => {
             navigate("SelectCalendar")
+            dispatch(updateDocterCreateOrder(detailDocter))
           }}
         >
           Đặt khám

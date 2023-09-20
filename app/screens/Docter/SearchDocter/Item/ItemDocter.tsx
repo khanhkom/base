@@ -8,23 +8,32 @@ import { spacing } from "@app/theme/spacing"
 import { Button, Card } from "react-native-paper"
 import { Icon } from "@app/components/Icon"
 import { navigate } from "@app/navigators/navigationUtilities"
-export default function ItemDocter() {
+import { IDocter } from "@app/interface/docter"
+import { useDispatch } from "react-redux"
+import { updateDocterCreateOrder } from "@app/redux/actions/actionOrder"
+interface ItemProps {
+  item: IDocter
+}
+export default function ItemDocter({ item }: ItemProps) {
+  const dispatch = useDispatch()
   return (
     <Card
       mode="contained"
       style={styles.item}
       contentStyle={{ flexDirection: "row" }}
       onPress={() => {
-        navigate("DocterInformation")
+        navigate("DocterInformation", {
+          item,
+        })
       }}
     >
       <Image source={R.images.avatar_docter_rec} style={styles.avatar} resizeMode="center" />
       <View>
         <Text weight="medium" size="md" style={styles.textName}>
-          B.s Nguyễn Văn A
+          B.s {item?.name}
         </Text>
         <Text weight="normal" size="sm" style={styles.textDes}>
-          Khoa: Tai - Mũi - Họng
+          Khoa: {item?.specialist?.[0]}
         </Text>
         <View style={styles.wrapperStar}>
           <Icon icon="ic_start" size={WIDTH(16)} />
@@ -40,10 +49,17 @@ export default function ItemDocter() {
           <Text style={{ color: colors.gray_6 }} size="sm" weight="normal">
             Giá:{" "}
             <Text weight="semiBold" size="md" style={{ color: colors.primary }}>
-              120.000 đ
+              {item?.price} đ
             </Text>
           </Text>
-          <Button mode="contained" style={styles.button}>
+          <Button
+            mode="contained"
+            onPress={() => {
+              navigate("SelectCalendar")
+              dispatch(updateDocterCreateOrder(item))
+            }}
+            style={styles.button}
+          >
             Đặt khám
           </Button>
         </View>

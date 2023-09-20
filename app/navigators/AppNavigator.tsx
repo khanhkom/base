@@ -13,7 +13,7 @@ import DetailSick from "@app/screens/DetailSick"
 import Login from "@app/screens/Auth/Login"
 import VerifyOTP from "@app/screens/Auth/Register/VerifyOTP"
 import ConfirmName from "@app/screens/Auth/Register/ConfirmName"
-import CreateProfile from "@app/screens/Auth/Register/CreateProfile"
+import CreatePatient from "@app/screens/CreatePatient"
 import Call2Screen from "@app/screens/Demo/Call2Screen"
 import R from "@app/assets"
 import { KEYSTORAGE, load } from "@app/utils/storage"
@@ -26,7 +26,7 @@ import ChatScreen from "@app/screens/Demo/ChatScreen"
 import Conversations from "@app/screens/Demo/Conversations"
 import ChatDetail from "@app/screens/Demo/ChatDetail"
 import CousultOnline from "@app/screens/Booking/CousultOnline"
-import ConsultNow from "@app/screens/Booking/ConsultNow"
+import SearchDocter from "@app/screens/Docter/SearchDocter"
 import DocterInformation from "@app/screens/Docter/DocterInformation"
 import SelectCalendar from "@app/screens/Booking/MakeBooking/SelectCalendar"
 import SelectTimeBooking from "@app/screens/Booking/MakeBooking/SelectTimeBooking"
@@ -54,7 +54,7 @@ export type AppStackParamList = {
   DetailSick: undefined
   VerifyOTP: undefined
   ConfirmName: undefined
-  CreateProfile: undefined
+  CreatePatient: undefined
   Call2Screen: undefined
   CallScreen: undefined
 
@@ -62,7 +62,7 @@ export type AppStackParamList = {
   Conversations: undefined
   ChatDetail: undefined
   CousultOnline: undefined
-  ConsultNow: undefined
+  SearchDocter: undefined
   DocterInformation: undefined
 
   SelectCalendar: undefined
@@ -121,14 +121,14 @@ const AppStack = observer(function AppStack() {
       <Stack.Screen name="DetailSick" component={DetailSick} />
       <Stack.Screen name="VerifyOTP" component={VerifyOTP} />
       <Stack.Screen name="ConfirmName" component={ConfirmName} />
-      <Stack.Screen name="CreateProfile" component={CreateProfile} />
+      <Stack.Screen name="CreatePatient" component={CreatePatient} />
       <Stack.Screen name="Call2Screen" component={Call2Screen} />
       <Stack.Screen name="CallScreen" component={CallScreen} />
       <Stack.Screen name="ChatScreen" component={ChatScreen} />
       <Stack.Screen name="Conversations" component={Conversations} />
       <Stack.Screen name="ChatDetail" component={ChatDetail} />
       <Stack.Screen name="CousultOnline" component={CousultOnline} />
-      <Stack.Screen name="ConsultNow" component={ConsultNow} />
+      <Stack.Screen name="SearchDocter" component={SearchDocter} />
       <Stack.Screen name="DocterInformation" component={DocterInformation} />
       <Stack.Screen name="SelectCalendar" component={SelectCalendar} />
       <Stack.Screen name="SelectTimeBooking" component={SelectTimeBooking} />

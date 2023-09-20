@@ -17,23 +17,27 @@ import { TextField } from "@app/components/TextField"
 import { Toggle } from "@app/components/Toggle"
 import SelectBirthday from "./Item/SelectBirthday"
 import LocationPicker from "@app/components/LocationPicker/LocationPicker"
-import { navigate } from "@app/navigators/navigationUtilities"
+import { goBack, navigate } from "@app/navigators/navigationUtilities"
 import { useSelector } from "@app/redux/reducers"
 import { LoadingOpacity } from "@app/components/loading/LoadingOpacity"
 import moment from "moment"
 import { EToastType, showToastMessage } from "@app/utils/library"
 import { createPatient } from "@app/services/api/functions/patient"
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view"
+import { getListPatientRequest } from "@app/redux/actions/patient"
+import { useDispatch } from "react-redux"
 
-export default function CreateProfile() {
+export default function CreatePatient({ route }) {
   const user = useSelector((state) => state.userReducers.user)
   console.log("user", user)
   const [name, setName] = useState(user?.name)
+  const [phone, setPhone] = useState(user?.phone)
   const [gender, setGender] = useState(0)
   const [email, setEmail] = useState("")
   const [address, setAddress] = useState("")
   const [birthday, setBirthday] = useState("")
   const [loading, setLoading] = useState(false)
+  const dispatch = useDispatch()
   const [provinces, setProvinces] = useState({
     _id: "",
     name: "",
@@ -65,8 +69,9 @@ export default function CreateProfile() {
     parent_code: "",
     isDeleted: false,
   })
+  const isNavigateFromRegister = route?.params?.fromRegister
   const onCreateProfile = async () => {
-    if (birthday === "" || name === "") {
+    if (birthday === "" || name === "" || phone === "") {
       showToastMessage("Vui lòng nhập đủ thông tin!", EToastType.ERROR)
     } else {
       setLoading(true)
@@ -84,7 +89,12 @@ export default function CreateProfile() {
       setLoading(false)
       if (resUpdate?.status === 201) {
         showToastMessage("Tạo hồ sơ thành công!")
-        navigate("TabNavigator")
+        if (isNavigateFromRegister) {
+          navigate("TabNavigator")
+        } else {
+          dispatch(getListPatientRequest())
+          goBack()
+        }
       } else {
         showToastMessage("Tạo hồ sơ thất bại!", EToastType.ERROR)
       }
@@ -95,7 +105,7 @@ export default function CreateProfile() {
       <Header
         title="Tạo mới hồ sơ y tế"
         leftIcon="arrow_left"
-        rightText="Bỏ qua"
+        rightText={isNavigateFromRegister ? "Bỏ qua" : undefined}
         rightIconColor={colors.blue_6}
         backgroundColor={colors.white}
       />
@@ -125,8 +135,9 @@ export default function CreateProfile() {
           <TextField
             require
             label="Số điện thoại"
-            editable={false}
-            value={user?.phone}
+            value={phone}
+            onChangeText={setPhone}
+            keyboardType="decimal-pad"
             style={{ color: colors.gray_9 }}
             containerStyle={{ marginTop: HEIGHT(spacing.md) }}
           ></TextField>

@@ -7,6 +7,7 @@ import colors from "@app/assets/colors"
 import { Icon } from "@app/components/Icon"
 import { Text } from "@app/components/Text"
 import { spacing } from "@app/theme/spacing"
+import { IExperience } from "@app/interface/docter"
 interface Item {
   title: string
   icon: string
@@ -14,9 +15,15 @@ interface Item {
   data: string | string[]
 }
 
-export default function ItemExperience({ item }: { item: Item }) {
-  const [data, setData] = useState(item?.data)
+export default function ItemExperience({
+  item,
+  data,
+}: {
+  item: Item
+  data: IExperience[] | string[]
+}) {
   const [isShow, setShow] = useState(false)
+  console.log("data", data)
   return (
     <View style={styles.container}>
       <List.Item
@@ -37,7 +44,7 @@ export default function ItemExperience({ item }: { item: Item }) {
       />
       {item.type === "list" ? (
         <View>
-          {item?.data.map((item, index) => {
+          {data?.map((item, index) => {
             if (isShow || (!isShow && index < 2))
               return (
                 <Text
@@ -46,11 +53,11 @@ export default function ItemExperience({ item }: { item: Item }) {
                   size="ba"
                   style={{ color: colors.gray_7, marginLeft: WIDTH(spacing.xs) }}
                 >
-                  {item}
+                  {item?.timeRange ? `${item?.timeRange}: ${item?.description}` : item}
                 </Text>
               )
           })}
-          {item?.data?.length > 2 && (
+          {data?.length > 2 && (
             <Text
               size="ba"
               weight="normal"

@@ -7,10 +7,12 @@ import { HEIGHT, WIDTH } from "@app/config/functions"
 import { spacing } from "@app/theme/spacing"
 import { Button, Card } from "react-native-paper"
 import { navigate } from "@app/navigators/navigationUtilities"
+import { IPatient } from "@app/interface/patient"
 interface ItemProps {
   onPress: () => void
+  item: IPatient
 }
-export default function ItemRecord({ onPress }: ItemProps) {
+export default function ItemRecord({ onPress, item }: ItemProps) {
   return (
     <Card
       mode="contained"
@@ -23,13 +25,14 @@ export default function ItemRecord({ onPress }: ItemProps) {
       <Image source={R.images.avatar_patient} style={styles.avatar} resizeMode="center" />
       <View>
         <Text weight="medium" size="md" style={styles.textName}>
-          Nguyễn Văn A
+          {item?.name}
         </Text>
         <Text weight="normal" size="sm" style={styles.textDes}>
-          Ngày sinh: <Text style={{ color: colors.gray_9 }}>27/02/2006</Text>
+          Ngày sinh: <Text style={{ color: colors.gray_9 }}>{item?.birthday}</Text>
         </Text>
         <Text weight="normal" size="sm" style={styles.textDes}>
-          Giới tính: <Text style={{ color: colors.gray_9 }}>Nam</Text>
+          Giới tính:{" "}
+          <Text style={{ color: colors.gray_9 }}>{item?.gender === "male" ? "Nam" : "Nữ"}</Text>
         </Text>
       </View>
     </Card>

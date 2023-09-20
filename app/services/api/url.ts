@@ -6,6 +6,15 @@ const URL_LOGIN = {
 }
 const URL_PATIENT = {
   CREATE_PATIENT: "patient",
+  GET_PATIENT: "patient",
+}
+const URL_DOCTER = {
+  GET_DOCTER: "doctor",
+  GET_DOCTER_DETAIL: "doctor/",
+}
+const ORDER = {
+  GET_ORDER: "order",
+  CREATE_ORDER: "order",
 }
 const LOCATION = {
   PROVINCES_GET_ALL: "provinces/getAll",
@@ -16,6 +25,8 @@ const URL = {
   ...URL_LOGIN,
   ...URL_PATIENT,
   ...LOCATION,
+  ...URL_DOCTER,
+  ...ORDER,
   LOGIN: `account/login`,
   CREATE_SESSION: "session/createSession",
   CREATE_SESSION_STRINGEE: "stringee/createClientSession",

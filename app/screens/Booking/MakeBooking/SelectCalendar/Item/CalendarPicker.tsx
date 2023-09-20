@@ -11,12 +11,14 @@ import { Text } from "@app/components/index"
 import ItemYearPicker from "./ItemYearPicker"
 import { DatePickerInput } from "react-native-paper-dates"
 import { navigate } from "@app/navigators/navigationUtilities"
+import { useDispatch } from "react-redux"
+import { updateBodyCreateOrder, updateSeletedDateOrder } from "@app/redux/actions/actionOrder"
 export interface ItemTagetDayProps {
   markedDate: object
   userhabitid: any
 }
 
-const CalendarPicker = ({ onConfirm }) => {
+const CalendarPicker = () => {
   const { colors }: { colors: IColorsTheme } = useTheme()
   const [selectedValue, setSelectedValue] = React.useState(new Date())
 
@@ -92,7 +94,7 @@ const CalendarPicker = ({ onConfirm }) => {
       startingDay: true,
     },
   })
-
+  const dispatch = useDispatch()
   return (
     <Card style={[styles.container, { backgroundColor: R.colors.white }]}>
       <View style={styles.viewCalendar}>
@@ -125,7 +127,11 @@ const CalendarPicker = ({ onConfirm }) => {
         <Calendar
           // disableArrowRight={currentMonth == moment().format("MM/YYYY")}
           markingType={"period"}
-          onMonthChange={(value) => {}}
+          onDayPress={(value) => {
+            console.log("value", value)
+            setSelectedValue(new Date(value.dateString))
+          }}
+          minDate={moment(new Date()).format("YYYY-MM-DD")}
           enableSwipeMonths={false}
           headerStyle={[styles.headerCalendar, { borderColor: colors.outlineVariant }]}
           renderHeader={() => {
@@ -136,7 +142,17 @@ const CalendarPicker = ({ onConfirm }) => {
           current={moment(selectedValue).format("YYYY-MM-DD")}
           hideArrows
           key={moment(selectedValue).format("YYYY-MM-DD")}
-          markedDates={markedDateMonth}
+          markedDates={{
+            ...markedDateMonth,
+            [moment(selectedValue).format("YYYY-MM-DD")]: {
+              marked: true,
+              dotColor: R.colors.primary,
+              color: R.colors.primary,
+              textColor: "white",
+              endingDay: true,
+              startingDay: true,
+            },
+          }}
           theme={Theme}
           style={styles.calendar}
         />
@@ -146,6 +162,7 @@ const CalendarPicker = ({ onConfirm }) => {
         <Button
           onPress={() => {
             navigate("SelectTimeBooking")
+            dispatch(updateSeletedDateOrder(moment(selectedValue).format("YYYY-MM-DD")))
           }}
         >
           OK

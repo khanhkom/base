@@ -37,8 +37,9 @@ export default function ConfirmName() {
         disabled={name === ""}
         style={styles.button}
         onPress={() => {
-          navigate("CreateProfile", {
+          navigate("CreatePatient", {
             name,
+            fromRegister: true,
           })
           dispatch(
             updateUserField({

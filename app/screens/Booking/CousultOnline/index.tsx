@@ -16,7 +16,7 @@ export default function CousultOnline() {
         title="Tư vấn ngay"
         style={styles.item}
         onPress={() => {
-          navigate("ConsultNow")
+          // navigate("SearchDocter")
         }}
         left={() => {
           return <Image source={R.images.ic_tuvanngay} style={styles.icon} resizeMode="contain" />
@@ -32,7 +32,9 @@ export default function CousultOnline() {
       <List.Item
         title="Đặt lịch hẹn"
         style={styles.item}
-        onPress={() => {}}
+        onPress={() => {
+          navigate("SelectPatientRecord")
+        }}
         left={() => {
           return <Image source={R.images.ic_datlichhen} style={styles.icon} resizeMode="contain" />
         }}

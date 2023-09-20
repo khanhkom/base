@@ -30,6 +30,7 @@ export default function CustomPicker({ title, placeholder, required, value, onPr
           placeholder={placeholder}
           placeholderTextColor={colors.gray_9}
           value={value}
+          style={{ color: colors.gray_9 }}
           editable={false}
           RightAccessory={() => (
             <Icon

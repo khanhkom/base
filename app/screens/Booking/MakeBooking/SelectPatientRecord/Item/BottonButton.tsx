@@ -16,7 +16,7 @@ export default function BottonButton() {
         textColor={colors.primary}
         icon={iconRegistry.folder_add}
         onPress={() => {
-          navigate("CreateProfile")
+          navigate("CreatePatient")
         }}
       >
         Thêm mới hồ sơ

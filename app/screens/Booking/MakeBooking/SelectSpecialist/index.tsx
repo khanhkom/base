@@ -7,21 +7,27 @@ import R from "@app/assets"
 import { HEIGHT, WIDTH } from "@app/config/functions"
 import { spacing } from "@app/theme/spacing"
 import { goBack, navigate } from "@app/navigators/navigationUtilities"
+import { useDispatch } from "react-redux"
+import { updateSpecialListOrder } from "@app/redux/actions/actionOrder"
 const DATA = [
   {
     title: "Răng Hàm Mặt",
     icon: R.images.features_1,
+    id: "001",
   },
   {
     title: "Nhi khoa",
     icon: R.images.features_2,
+    id: "002",
   },
   {
     title: "Da liễu",
     icon: R.images.features_3,
+    id: "003",
   },
 ]
 export default function SelectSpecialist() {
+  const dispatch = useDispatch()
   return (
     <View style={styles.container}>
       <Header leftIcon="arrow_left" title="Tư vấn trực tuyến" />
@@ -33,7 +39,8 @@ export default function SelectSpecialist() {
               title={item.title}
               style={styles.item}
               onPress={() => {
-                goBack()
+                dispatch(updateSpecialListOrder(item))
+                navigate("SearchDocter")
               }}
               left={() => {
                 return <Image source={item.icon} style={styles.icon} resizeMode="contain" />

@@ -1,5 +1,5 @@
 import { Pressable, StyleSheet, View } from "react-native"
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import { Text } from "@app/components/Text"
 import colors from "@app/assets/colors"
 import { HEIGHT, WIDTH } from "@app/config/functions"
@@ -12,9 +12,13 @@ import { isToday } from "date-fns"
 interface ItemProps {
   title: string
   onSelectDate: (val: Date) => void
+  value: string
 }
-export default function SelectBirthday({ title, onSelectDate }: ItemProps) {
+export default function SelectBirthday({ title, onSelectDate, value }: ItemProps) {
   const [date, setDate] = useState(new Date())
+  useEffect(() => {
+    if (value) setDate(new Date(value))
+  }, [])
   const [open, setOpen] = useState(false)
   return (
     <View style={styles.container}>

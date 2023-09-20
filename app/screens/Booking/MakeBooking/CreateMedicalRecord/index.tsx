@@ -1,5 +1,5 @@
 import { ScrollView, StyleSheet, View } from "react-native"
-import React from "react"
+import React, { useState } from "react"
 import { Header } from "@app/components/Header"
 import colors from "@app/assets/colors"
 import { Button, Card } from "react-native-paper"
@@ -8,18 +8,66 @@ import { HEIGHT, WIDTH } from "@app/config/functions"
 import { spacing } from "@app/theme/spacing"
 import { TextField } from "@app/components/TextField"
 import { navigate } from "@app/navigators/navigationUtilities"
-import SelectBirthday from "@app/screens/Auth/Register/CreateProfile/Item/SelectBirthday"
+import SelectBirthday from "@app/screens/CreatePatient/Item/SelectBirthday"
 import CustomPicker from "./Item/CustomPicker/CustomPicker"
 import { Icon } from "@app/components/Icon"
 import FileAttachment from "./Item/FileAttachment"
 import PopupVerify from "@app/components/PopupVerify"
+import { useSelector } from "@app/redux/reducers"
+import { useDispatch } from "react-redux"
+import { updateSeletedDateOrder } from "@app/redux/actions/actionOrder"
+import moment from "moment"
+import { EToastType, showToastMessage } from "@app/utils/library"
+import { createOrder } from "@app/services/api/functions/order"
+import { LoadingOpacity } from "@app/components/loading/LoadingOpacity"
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view"
 
 export default function CreateMedicalRecord() {
   const [visible, setVisible] = React.useState(false)
+  const [loading, setLoading] = React.useState(false)
+  const docter = useSelector((state) => state.orderReducers.docter)
+  const selectedDate = useSelector((state) => state.orderReducers.selectedDate)
+  const selectedTime = useSelector((state) => state.orderReducers.selectedTime)
+  const patient = useSelector((state) => state.orderReducers.patient)
+  const specialist = useSelector((state) => state.orderReducers.specialist)
+  const [patientNotes, setPatientNotes] = useState("")
+  const dispatch = useDispatch()
+  const verifyData = () => {
+    if (patientNotes === "") {
+      showToastMessage("Vui lòng nhập lý do", EToastType.ERROR)
+    } else {
+      setVisible(true)
+    }
+  }
+  const onCreateAppointment = async () => {
+    const startDate = moment(new Date(selectedDate))
+      .add(selectedTime.startHour, "hour")
+      .add(selectedTime.startMin, "minute")
+    const endDate = moment(new Date(selectedDate))
+      .add(selectedTime.startHour, "hour")
+      .add(selectedTime.startMin + 15, "minute")
+    console.log("startDate_startDate", startDate.toISOString(), endDate.toISOString())
+    setLoading(true)
+    let bodyOrder = {
+      patientId: patient.id,
+      doctorId: docter.id,
+      specialist: specialist.id,
+      timeRange: {
+        from: startDate.toISOString(),
+        to: endDate.toISOString(),
+      },
+      patientNotes: patientNotes,
+    }
+    let resCreate = await createOrder(bodyOrder)
+    // navigate("BookingSuccess")
+
+    console.log("resCreate_resCreate", resCreate?.data)
+    setLoading(false)
+  }
   return (
     <View style={styles.container}>
-      <Header title="Tạo mới hồ sơ y tế" leftIcon="arrow_left" backgroundColor={colors.white} />
-      <ScrollView>
+      <Header title="Chọn thông tin khám" leftIcon="arrow_left" backgroundColor={colors.white} />
+      <KeyboardAwareScrollView>
         <Card
           mode="contained"
           style={{
@@ -37,22 +85,30 @@ export default function CreateMedicalRecord() {
           <CustomPicker
             required
             title="Chuyên khoa"
+            value={specialist?.title}
             placeholder="Chọn chuyên khoa"
             onPress={() => navigate("SelectSpecialist")}
           />
           <CustomPicker
             required
             title="Bác sĩ"
+            value={docter?.name}
             placeholder="Chọn bác sĩ"
-            onPress={() => navigate("ConsultNow")}
+            onPress={() => navigate("SearchDocter")}
           />
-          <SelectBirthday title="Chọn ngày khám" />
+          <SelectBirthday
+            value={selectedDate}
+            title="Chọn ngày khám"
+            onSelectDate={(date) => {
+              dispatch(updateSeletedDateOrder(moment(date).format("YYYY-MM-DD")))
+            }}
+          />
 
           <TextField
             require
             label="Chọn thời gian"
             placeholder="Chọn thời gian"
-            value="14:00 - 14:30"
+            value={selectedTime?.time}
             RightAccessory={() => (
               <Icon
                 icon="calendar"
@@ -64,6 +120,7 @@ export default function CreateMedicalRecord() {
           <CustomPicker
             required
             title="Bệnh nhân"
+            value={patient?.name}
             placeholder="Chọn hồ sơ bệnh nhân"
             onPress={() => navigate("SelectPatientRecord")}
           />
@@ -71,12 +128,18 @@ export default function CreateMedicalRecord() {
             require
             label="Số điện thoại"
             placeholder="0123456789"
+            value={patient?.mail}
+            editable={false}
+            style={{ color: colors.gray_9 }}
             containerStyle={{ marginTop: HEIGHT(spacing.md) }}
           ></TextField>
           <TextField
             require
             label="Lý do khám"
             multiline
+            style={{ color: colors.gray_9 }}
+            value={patientNotes}
+            onChangeText={setPatientNotes}
             placeholder={`Mô tả lý do khám:
   -Triệu chứng
   -Tiền sử bệnh,...`}
@@ -87,25 +150,26 @@ export default function CreateMedicalRecord() {
             mode="contained"
             style={styles.button}
             onPress={() => {
-              setVisible(true)
+              verifyData()
             }}
           >
             Lưu
           </Button>
         </View>
-      </ScrollView>
+      </KeyboardAwareScrollView>
       <PopupVerify
         title="Xác nhận đặt lịch"
         desc="Vui lòng kiểm tra kỹ các thông tin đặt lịch khám. Thông tin không chính xác có thể làm ảnh hướng đến quá trình khám bệnh!"
         visible={visible}
         setVisible={setVisible}
         onRightPress={() => {
-          navigate("BookingSuccess")
+          onCreateAppointment()
           setVisible(false)
         }}
         rightText="Xác nhận"
         leftText="Hủy"
       />
+      {loading && <LoadingOpacity />}
     </View>
   )
 }

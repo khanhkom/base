@@ -4,6 +4,7 @@ import { HEIGHT, WIDTH } from "@app/config/functions"
 import colors from "@app/assets/colors"
 import { spacing } from "@app/theme/spacing"
 import ItemExperience from "./ItemExperience"
+import { IDocter } from "@app/interface/docter"
 const DATA_EXPERIENCE = [
   {
     title: "Giới thiệu",
@@ -14,12 +15,14 @@ const DATA_EXPERIENCE = [
   {
     title: "Chuyên khoa",
     icon: "department",
+    field: "department",
     type: "list",
     data: ["• Răng hàm mặt", "• Tai - Mũi -Họng"],
   },
   {
-    title: "Giới thiệu",
+    title: "Kinh nghiệm",
     icon: "briefcase",
+    field: "briefcase",
     type: "list",
     data: [
       "• 2016 - 2022: Đại học Y Hà Nội",
@@ -31,19 +34,26 @@ const DATA_EXPERIENCE = [
   {
     title: "Giới thiệu",
     icon: "award",
+    field: "award",
     type: "list",
     data: ["• 2022 - 2023: Bệnh viện Đại học Y Hà Nội"],
   },
 ]
 
-export default function Experience() {
+export default function Experience({ data }: { data: IDocter }) {
+  const returnData = (type) => {
+    if (type === "briefcase") return data?.experience
+    if (type === "award") return data?.education
+    if (type === "department") return data?.specialist
+  }
   return (
     <View style={styles.container}>
       <Text>Experience</Text>
       <FlatList
         data={DATA_EXPERIENCE}
         renderItem={({ item, index }) => {
-          return <ItemExperience item={item} />
+          console.log("CCCC", returnData(item.type), item.type)
+          return <ItemExperience item={item} data={returnData(item.field)} />
         }}
       />
     </View>

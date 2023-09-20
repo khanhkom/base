@@ -7,7 +7,8 @@ import { HEIGHT, WIDTH } from "@app/config/functions"
 import { spacing } from "@app/theme/spacing"
 import { Card } from "react-native-paper"
 import { navigate } from "@app/navigators/navigationUtilities"
-export default function GeneralInfor() {
+import { IDocter } from "@app/interface/docter"
+export default function GeneralInfor({ data }: { data: IDocter }) {
   return (
     <Card
       mode="contained"
@@ -20,20 +21,19 @@ export default function GeneralInfor() {
       <Image source={R.images.avatar_docter_rec} style={styles.avatar} resizeMode="center" />
       <View>
         <Text weight="medium" size="md" style={styles.textName}>
-          B.s Nguyễn Văn A
+          B.s {data?.name}
         </Text>
         <Text weight="normal" size="sm" style={styles.textDes}>
-          Khoa: Tai - Mũi - Họng
+          Khoa: {data?.specialist?.[0]}
         </Text>
         <Text weight="normal" size="sm" style={styles.textDes}>
           Trình độ: Thạc sĩ
         </Text>
-
         <View style={styles.flexRow}>
           <Text style={{ color: colors.gray_6 }} size="sm" weight="normal">
             Giá khám:{" "}
             <Text weight="semiBold" size="md" style={{ color: colors.primary }}>
-              120.000 đ
+              {data?.price} đ
             </Text>
           </Text>
         </View>
