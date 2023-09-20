@@ -19,7 +19,7 @@ export default function SelectPatientRecord() {
   }, [])
   return (
     <View style={styles.container}>
-      <Header leftIcon="arrow_left" title="Chọn hồ sơ bệnh nhân" />
+      <Header leftIcon="arrow_left" title="Chọn hồ sơ bệnh nhân" backgroundColor={colors.gray_1} />
       <FlatList
         data={patients}
         renderItem={({ item, index }) => {

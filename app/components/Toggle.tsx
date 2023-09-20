@@ -260,20 +260,20 @@ function Checkbox(props: ToggleInputProps) {
   const offBackgroundColor = [
     disabled && colors.palette.neutral400,
     status === "error" && colors.errorBackground,
-    colors.palette.neutral200,
+    R.colors.white,
   ].filter(Boolean)[0]
 
   const outerBorderColor = [
     disabled && colors.palette.neutral400,
     status === "error" && colors.error,
-    !on && colors.palette.neutral800,
-    colors.palette.secondary500,
+    !on && R.colors.gray_4,
+    R.colors.green_8,
   ].filter(Boolean)[0]
 
   const onBackgroundColor = [
     disabled && colors.transparent,
     status === "error" && colors.errorBackground,
-    colors.palette.secondary500,
+    R.colors.green_8,
   ].filter(Boolean)[0]
 
   const iconTintColor = [
@@ -553,7 +553,7 @@ const $inputWrapper: ViewStyle = {
 const $inputOuterBase: ViewStyle = {
   height: 20,
   width: 20,
-  borderWidth: 2,
+  borderWidth: 1,
   alignItems: "center",
   overflow: "hidden",
   flexGrow: 0,
@@ -563,7 +563,7 @@ const $inputOuterBase: ViewStyle = {
 }
 
 const $inputOuterVariants: Record<Variants, StyleProp<ViewStyle>> = {
-  checkbox: [$inputOuterBase, { borderRadius: 4 }],
+  checkbox: [$inputOuterBase, { borderRadius: 6 }],
   radio: [$inputOuterBase, { borderRadius: 12 }],
   switch: [$inputOuterBase, { height: 32, width: 56, borderRadius: 16, borderWidth: 0 }],
 }
@@ -577,8 +577,8 @@ const $checkboxInner: ViewStyle = {
 }
 
 const $checkboxDetail: ImageStyle = {
-  width: 20,
-  height: 20,
+  width: 14,
+  height: 14,
   resizeMode: "contain",
 }
 

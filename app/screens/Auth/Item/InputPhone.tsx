@@ -1,5 +1,5 @@
 import { StyleSheet, Keyboard, View, Pressable, TextInput } from "react-native"
-import React, { useRef, useState, useEffect } from "react"
+import React, { useState, useEffect } from "react"
 import { CountryPicker, CountryButton } from "react-native-country-codes-picker"
 import R from "@app/assets"
 import { HEIGHT, WIDTH } from "@app/config/functions"
@@ -41,38 +41,40 @@ export default function InputPhone({
   }, [])
   return (
     <>
-      <View
-        style={[
-          styles.wrapperInput,
-          focus && { borderColor: colors.primary },
-          error && { borderColor: colors.red_5 },
-        ]}
-      >
-        <Pressable style={styles.buttonCode} onPress={() => setShow((val) => !val)}>
-          <Text
-            size="md"
-            weight="normal"
-            style={{ marginRight: WIDTH(spacing.xxs), color: colors.gray_9 }}
-          >
-            {countryCode}
-          </Text>
-          <Icon icon="arrow_down" size={16} color={colors.gray_9} />
-        </Pressable>
-        <View style={styles.lineVer} />
-        <TextInput
-          placeholder="Nhập số điện thoại"
-          style={styles.textInput}
-          keyboardType="numeric"
-          onFocus={() => {
-            setFocus(true)
-          }}
-          placeholderTextColor={colors.gray_6}
-          onBlur={() => {
-            setFocus(false)
-          }}
-          phoneNumber={phoneNumber}
-          onChangeText={(val) => setPhoneNumber(val)}
-        />
+      <View style={[styles.containerInput, focus && { borderColor: colors.primary_0 }]}>
+        <View
+          style={[
+            styles.wrapperInput,
+            focus && { borderColor: colors.primary_6 },
+            error && { borderColor: colors.red_5 },
+          ]}
+        >
+          <Pressable style={styles.buttonCode} onPress={() => setShow((val) => !val)}>
+            <Text
+              size="md"
+              weight="normal"
+              style={{ marginRight: WIDTH(spacing.xxs), color: colors.gray_9 }}
+            >
+              {countryCode}
+            </Text>
+            <Icon icon="arrow_down" size={16} color={colors.gray_9} />
+          </Pressable>
+          <View style={styles.lineVer} />
+          <TextInput
+            placeholder="Nhập số điện thoại"
+            style={styles.textInput}
+            keyboardType="numeric"
+            onFocus={() => {
+              setFocus(true)
+            }}
+            placeholderTextColor={colors.gray_6}
+            onBlur={() => {
+              setFocus(false)
+            }}
+            phoneNumber={phoneNumber}
+            onChangeText={(val) => setPhoneNumber(val)}
+          />
+        </View>
       </View>
       <CountryPicker
         show={show}
@@ -147,13 +149,18 @@ export default function InputPhone({
 }
 
 const styles = StyleSheet.create({
-  wrapperInput: {
+  containerInput: {
+    marginTop: HEIGHT(spacing.md),
+    borderRadius: 12,
+    borderWidth: 4,
     width: WIDTH(343),
+    borderColor: colors.white,
+  },
+  wrapperInput: {
     borderRadius: 8,
     borderWidth: 1,
     borderColor: colors.gray_3,
     paddingVertical: HEIGHT(spacing.sm),
-    marginTop: HEIGHT(spacing.md),
     flexDirection: "row",
     alignItems: "center",
   },

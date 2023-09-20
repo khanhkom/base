@@ -11,7 +11,7 @@ import { navigate } from "@app/navigators/navigationUtilities"
 export default function CousultOnline() {
   return (
     <View style={styles.container}>
-      <Header leftIcon="arrow_left" title="Tư vấn trực tuyến" />
+      <Header leftIcon="arrow_left" title="Tư vấn trực tuyến" backgroundColor={colors.gray_1} />
       <List.Item
         title="Tư vấn ngay"
         style={styles.item}

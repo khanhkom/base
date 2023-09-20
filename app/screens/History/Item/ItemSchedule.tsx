@@ -9,7 +9,11 @@ import { Icon } from "@app/components/Icon"
 import { navigate } from "@app/navigators/navigationUtilities"
 const ItemValue = ({ title, value }) => {
   return (
-    <Text size="ba" weight="normal" style={{ color: colors.gray_6, marginTop: HEIGHT(8) }}>
+    <Text
+      size="ba"
+      weight="normal"
+      style={{ color: colors.gray_6, marginTop: HEIGHT(8), paddingHorizontal: WIDTH(spacing.sm) }}
+    >
       {title} <Text style={{ color: colors.gray_9 }}>{value}</Text>
     </Text>
   )
@@ -88,6 +92,9 @@ export default function ItemSchedule({ item }: ItemProps) {
             </View>
           )
         }}
+        style={{
+          paddingHorizontal: WIDTH(spacing.sm),
+        }}
         title={() => {
           return (
             <Text size="md" weight="medium" style={{ color: colors.gray_9 }}>
@@ -119,8 +126,6 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white,
     marginHorizontal: WIDTH(spacing.md),
     marginBottom: HEIGHT(spacing.sm),
-    paddingHorizontal: WIDTH(spacing.sm),
-    paddingBottom: HEIGHT(spacing.sm),
   },
   boxIcon: {
     height: WIDTH(32),
@@ -131,7 +136,10 @@ const styles = StyleSheet.create({
     backgroundColor: colors.blue_0,
   },
   buttonRate: {
-    borderRadius: 8,
+    borderBottomLeftRadius: 12,
+    borderBottomRightRadius: 12,
+    borderRadius: 0,
     marginTop: HEIGHT(spacing.md),
+    backgroundColor: colors.primary_8,
   },
 })
