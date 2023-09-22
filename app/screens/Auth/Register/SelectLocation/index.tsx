@@ -67,7 +67,6 @@ export default function SelectLocation({ route }: ScreenProps) {
       default:
         break
     }
-    console.log("resData_resData", resData?.data)
     setLoading(false)
     setListData(resData?.data?.data?.data)
   }

@@ -1,13 +1,6 @@
 import { IDocter } from "@app/interface/docter"
 import { IOrder } from "@app/interface/order"
 
-export function updateBodyCreateOrder(data: any) {
-  return {
-    type: "UPDATE_BODY_CREATE_ORDER",
-    data,
-  }
-}
-
 export function updateDocterCreateOrder(data: IDocter) {
   return {
     type: "UPDATE_ORDER_DOCTER",
@@ -36,5 +29,10 @@ export function updateSpecialListOrder(data) {
   return {
     type: "UPDATE_ORDER_SPECIALIST",
     data,
+  }
+}
+export function getOrderHistory() {
+  return {
+    type: "FETCH_ORDER_HISTORY_REQUEST",
   }
 }

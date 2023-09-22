@@ -17,10 +17,11 @@ interface ItemProps {
   item: {
     title: string
     icon: string
-    data: { title: string; value: string }[]
+    data: { title: string; type: string }[]
   }
+  returnDataByField: (type: string) => string
 }
-export default function ItemBookInformation({ item }: ItemProps) {
+export default function ItemBookInformation({ item, returnDataByField }: ItemProps) {
   return (
     <Card style={styles.card} mode="contained">
       <List.Item
@@ -40,7 +41,7 @@ export default function ItemBookInformation({ item }: ItemProps) {
         }}
       />
       {item?.data.map((item, index) => {
-        return <ItemValue key={index} title={item.title} value={item.value} />
+        return <ItemValue key={index} title={item.title} value={returnDataByField(item.type)} />
       })}
     </Card>
   )

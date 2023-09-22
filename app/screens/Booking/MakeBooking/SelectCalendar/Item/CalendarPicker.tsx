@@ -12,7 +12,7 @@ import ItemYearPicker from "./ItemYearPicker"
 import { DatePickerInput } from "react-native-paper-dates"
 import { navigate } from "@app/navigators/navigationUtilities"
 import { useDispatch } from "react-redux"
-import { updateBodyCreateOrder, updateSeletedDateOrder } from "@app/redux/actions/actionOrder"
+import { updateSeletedDateOrder } from "@app/redux/actions/actionOrder"
 export interface ItemTagetDayProps {
   markedDate: object
   userhabitid: any

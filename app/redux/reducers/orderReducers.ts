@@ -4,16 +4,6 @@ import moment from "moment"
 import { STATUS_DOCTER } from "@app/screens/Booking/MakeBooking/SelectTimeBooking/Data"
 import { IPatient } from "@app/interface/patient"
 const defaultState: IState = {
-  orderCreate: {
-    patientId: "",
-    doctorId: "",
-    specialist: "",
-    timeRange: {
-      from: "",
-      to: "",
-    },
-    patientNotes: "",
-  },
   selectedDate: moment(new Date()).format("YYYY-MM-DD"),
   selectedTime: {
     time: "10:00 - 10:15",
@@ -53,9 +43,10 @@ const defaultState: IState = {
     title: "",
     id: "",
   },
+  orderHistory: [],
+  loading: false,
 }
 interface IState {
-  orderCreate: IOrder
   docter: IDocter
   selectedDate: ""
   selectedTime: {
@@ -68,20 +59,13 @@ interface IState {
   patient: IPatient
   specialist: {
     title: string
-    id: string
+    code: string
   }
+  orderHistory: IOrder[]
+  loading: boolean
 }
 export default (state = defaultState, action) => {
   switch (action.type) {
-    case "UPDATE_BODY_CREATE_ORDER": {
-      return {
-        ...state,
-        orderCreate: {
-          ...state.orderCreate,
-          ...action.data,
-        },
-      }
-    }
     case "UPDATE_ORDER_DOCTER": {
       return {
         ...state,
@@ -112,6 +96,26 @@ export default (state = defaultState, action) => {
         specialist: action.data,
       }
     }
+    case "FETCH_ORDER_HISTORY_REQUEST": {
+      return {
+        ...state,
+        loading: true,
+      }
+    }
+    case "FETCH_ORDER_HISTORY_FAIL": {
+      return {
+        ...state,
+        loading: false,
+      }
+    }
+    case "FETCH_ORDER_HISTORY_SUCCESS": {
+      return {
+        ...state,
+        orderHistory: action.data,
+        loading: false,
+      }
+    }
+
     default:
       break
   }

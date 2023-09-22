@@ -1,5 +1,5 @@
 import { StyleSheet, Image, View, FlatList } from "react-native"
-import React from "react"
+import React, { useEffect, useState } from "react"
 import colors from "@app/assets/colors"
 import { Header, Icon } from "@app/components/index"
 import { List } from "react-native-paper"
@@ -9,41 +9,41 @@ import { spacing } from "@app/theme/spacing"
 import { goBack, navigate } from "@app/navigators/navigationUtilities"
 import { useDispatch } from "react-redux"
 import { updateSpecialListOrder } from "@app/redux/actions/actionOrder"
-const DATA = [
-  {
-    title: "Răng Hàm Mặt",
-    icon: R.images.features_1,
-    id: "001",
-  },
-  {
-    title: "Nhi khoa",
-    icon: R.images.features_2,
-    id: "002",
-  },
-  {
-    title: "Da liễu",
-    icon: R.images.features_3,
-    id: "003",
-  },
-]
+import { ISpecialList } from "@app/interface/docter"
+import { getListSpecialList } from "@app/services/api/functions/docter"
+import LoadingScreen from "@app/components/loading/LoadingScreen"
 export default function SelectSpecialist() {
   const dispatch = useDispatch()
+  const [specialList, setListSpecialList] = useState<ISpecialList[]>([])
+  const [loading, setLoading] = useState(false)
+  const getListData = async () => {
+    setLoading(true)
+    let resList = await getListSpecialList()
+    setListSpecialList(resList.data)
+    setLoading(false)
+  }
+  useEffect(() => {
+    getListData()
+  }, [])
+  if (loading) return <LoadingScreen />
   return (
     <View style={styles.container}>
-      <Header leftIcon="arrow_left" title="Tư vấn trực tuyến" />
+      <Header leftIcon="arrow_left" title="Tư vấn trực tuyến" backgroundColor={colors.gray_1} />
       <FlatList
-        data={DATA}
+        data={specialList}
         renderItem={({ item, index }) => {
           return (
             <List.Item
-              title={item.title}
+              title={item.name}
               style={styles.item}
               onPress={() => {
                 dispatch(updateSpecialListOrder(item))
                 navigate("SearchDocter")
               }}
               left={() => {
-                return <Image source={item.icon} style={styles.icon} resizeMode="contain" />
+                return (
+                  <Image source={R.images.features_1} style={styles.icon} resizeMode="contain" />
+                )
               }}
               right={() => {
                 return (

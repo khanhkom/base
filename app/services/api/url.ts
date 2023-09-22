@@ -11,10 +11,13 @@ const URL_PATIENT = {
 const URL_DOCTER = {
   GET_DOCTER: "doctor",
   GET_DOCTER_DETAIL: "doctor/",
+  GET_LIST_SPECIAL_LIST: "doctor/specialist",
 }
 const ORDER = {
   GET_ORDER: "order",
+  GET_DETAIL_ORDER: "order/",
   CREATE_ORDER: "order",
+  CANCEL_ORDER: "order/cancel/",
 }
 const LOCATION = {
   PROVINCES_GET_ALL: "provinces/getAll",

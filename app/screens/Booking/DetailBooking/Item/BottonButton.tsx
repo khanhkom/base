@@ -5,15 +5,15 @@ import { HEIGHT, WIDTH } from "@app/config/functions"
 import { spacing } from "@app/theme/spacing"
 import colors from "@app/assets/colors"
 import { navigate } from "@app/navigators/navigationUtilities"
-const TYPE_SCHEDULE = {
-  BOOKED: 0,
-  READY: 1,
-  COMPLETE: 2,
-  CANCEL: 3,
+import { STATUS_ORDER } from "@app/interface/order"
+interface ItemProps {
+  id: string
+  status: string
+  getDetailOrderApi: () => void
 }
 
-export default function BottonButton({ status }) {
-  if (status === TYPE_SCHEDULE.BOOKED)
+export default function BottonButton({ status, id, getDetailOrderApi }: ItemProps) {
+  if (status === STATUS_ORDER.created)
     return (
       <View style={styles.container}>
         <Button
@@ -21,14 +21,14 @@ export default function BottonButton({ status }) {
           style={[styles.buttonHome, { backgroundColor: colors.red_0 }]}
           textColor={colors.red_5}
           onPress={() => {
-            navigate("CancelBooking")
+            navigate("CancelBooking", { id, getDetailOrderApi })
           }}
         >
           Hủy
         </Button>
         <Button
           onPress={() => {
-            navigate("CreateMedicalRecord")
+            navigate("CreateMedicalRecord", { id })
           }}
           mode="contained"
           style={styles.button}
@@ -37,7 +37,7 @@ export default function BottonButton({ status }) {
         </Button>
       </View>
     )
-  if (status === TYPE_SCHEDULE.READY)
+  if (status === STATUS_ORDER.verified)
     return (
       <View style={styles.container}>
         <Button
@@ -61,7 +61,7 @@ export default function BottonButton({ status }) {
         </Button>
       </View>
     )
-  if (status === TYPE_SCHEDULE.COMPLETE)
+  if (status === STATUS_ORDER.done)
     return (
       <View style={styles.container}>
         <Button

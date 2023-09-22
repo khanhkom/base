@@ -1,4 +1,4 @@
-import { ScrollView, StyleSheet, View } from "react-native"
+import { Platform, ScrollView, StyleSheet, View } from "react-native"
 import React, { useState } from "react"
 import { Header } from "@app/components/Header"
 import colors from "@app/assets/colors"
@@ -15,7 +15,7 @@ import FileAttachment from "./Item/FileAttachment"
 import PopupVerify from "@app/components/PopupVerify"
 import { useSelector } from "@app/redux/reducers"
 import { useDispatch } from "react-redux"
-import { updateSeletedDateOrder } from "@app/redux/actions/actionOrder"
+import { getOrderHistory, updateSeletedDateOrder } from "@app/redux/actions/actionOrder"
 import moment from "moment"
 import { EToastType, showToastMessage } from "@app/utils/library"
 import { createOrder } from "@app/services/api/functions/order"
@@ -25,6 +25,8 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view
 export default function CreateMedicalRecord() {
   const [visible, setVisible] = React.useState(false)
   const [loading, setLoading] = React.useState(false)
+  const [listImage, setListImage] = useState([])
+
   const docter = useSelector((state) => state.orderReducers.docter)
   const selectedDate = useSelector((state) => state.orderReducers.selectedDate)
   const selectedTime = useSelector((state) => state.orderReducers.selectedTime)
@@ -46,37 +48,46 @@ export default function CreateMedicalRecord() {
     const endDate = moment(new Date(selectedDate))
       .add(selectedTime.startHour, "hour")
       .add(selectedTime.startMin + 15, "minute")
-    console.log("startDate_startDate", startDate.toISOString(), endDate.toISOString())
     setLoading(true)
-    let bodyOrder = {
-      patientId: patient.id,
-      doctorId: docter.id,
-      specialist: specialist.id,
-      timeRange: {
-        from: startDate.toISOString(),
-        to: endDate.toISOString(),
-      },
-      patientNotes: patientNotes,
+    let timeRange = {
+      from: startDate.toISOString(),
+      to: endDate.toISOString(),
     }
-    let resCreate = await createOrder(bodyOrder)
-    // navigate("BookingSuccess")
+    let formData = new FormData()
+    formData.append("patientId", patient.id)
+    formData.append("doctorId", docter.id)
+    formData.append("specialist", specialist.code)
+    formData.append("timeRange", JSON.stringify(timeRange))
+    formData.append("patientNotes", patientNotes)
+    formData.append("inAppNotification", "false")
 
-    console.log("resCreate_resCreate", resCreate?.data)
+    listImage.map((item) => {
+      formData.append("files", {
+        name: item.name,
+        type: item.type,
+        uri: Platform.OS === "ios" ? item.uri.replace("file://", "") : item.uri,
+      })
+    })
+
+    let resCreate = await createOrder(formData)
+    // navigate("BookingSuccess")
+    if (resCreate.status === 201) {
+      navigate("BookingSuccess", {
+        id: resCreate.data.id,
+      })
+      dispatch(getOrderHistory())
+
+      showToastMessage("Đặt lịch thành công!", EToastType.SUCCESS)
+    } else {
+      showToastMessage("Đặt lịch thất bại!", EToastType.SUCCESS)
+    }
     setLoading(false)
   }
   return (
     <View style={styles.container}>
       <Header title="Chọn thông tin khám" leftIcon="arrow_left" backgroundColor={colors.white} />
       <KeyboardAwareScrollView>
-        <Card
-          mode="contained"
-          style={{
-            marginTop: HEIGHT(spacing.md),
-            marginHorizontal: WIDTH(spacing.md),
-            paddingHorizontal: WIDTH(spacing.md),
-            paddingVertical: HEIGHT(spacing.sm),
-          }}
-        >
+        <Card mode="contained" style={styles.note}>
           <Text weight="normal" size="ba">
             Để việc tư vấn được tốt hơn, hãy cũng cấp đầy đủ thông tin cho bác sĩ!
           </Text>
@@ -85,7 +96,7 @@ export default function CreateMedicalRecord() {
           <CustomPicker
             required
             title="Chuyên khoa"
-            value={specialist?.title}
+            value={specialist?.name}
             placeholder="Chọn chuyên khoa"
             onPress={() => navigate("SelectSpecialist")}
           />
@@ -129,7 +140,6 @@ export default function CreateMedicalRecord() {
             label="Số điện thoại"
             placeholder="0123456789"
             value={patient?.mail}
-            editable={false}
             style={{ color: colors.gray_9 }}
             containerStyle={{ marginTop: HEIGHT(spacing.md) }}
           ></TextField>
@@ -145,7 +155,7 @@ export default function CreateMedicalRecord() {
   -Tiền sử bệnh,...`}
             containerStyle={{ marginTop: HEIGHT(spacing.md) }}
           ></TextField>
-          <FileAttachment />
+          <FileAttachment listImage={listImage} setListImage={setListImage} />
           <Button
             mode="contained"
             style={styles.button}
@@ -183,7 +193,13 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white,
     flex: 1,
   },
-
+  note: {
+    marginTop: HEIGHT(spacing.md),
+    marginHorizontal: WIDTH(spacing.md),
+    paddingHorizontal: WIDTH(spacing.md),
+    paddingVertical: HEIGHT(spacing.sm),
+    backgroundColor: colors.gray_1,
+  },
   button: {
     width: WIDTH(343),
     marginTop: HEIGHT(28),

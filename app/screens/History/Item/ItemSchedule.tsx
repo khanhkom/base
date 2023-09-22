@@ -7,6 +7,9 @@ import { HEIGHT, WIDTH } from "@app/config/functions"
 import { spacing } from "@app/theme/spacing"
 import { Icon } from "@app/components/Icon"
 import { navigate } from "@app/navigators/navigationUtilities"
+import { IOrderHistory, STATUS_ORDER } from "@app/interface/order"
+import moment from "moment"
+import { LIST_ICON_BY_STATUS } from "@app/config/constants"
 const ItemValue = ({ title, value }) => {
   return (
     <Text
@@ -21,59 +24,44 @@ const ItemValue = ({ title, value }) => {
 const DATA_FIELD_SCHEDULE = [
   {
     title: "Bác sĩ: ",
-    value: "Nguyễn Văn A",
   },
   {
     title: "Thời gian khám: ",
-    value: "16:00 - 16:15, 25/09/2023",
   },
   {
     title: "Chuyên khoa: ",
-    value: "Tai - Mũi - Họng",
   },
   {
     title: "Bệnh nhân: ",
-    value: "16:00 - 16:30",
   },
 ]
-const LIST_ICON_BY_STATUS = [
-  {
-    title: "Đã đặt khám",
-    icon: "ic_status_booked",
-    color: colors.primary,
-    backgroundColor: colors.blue_0,
-  },
-  {
-    title: "Sẵn sàng khám",
-    icon: "ic_status_booked",
-    color: colors.primary,
-    backgroundColor: colors.blue_0,
-  },
-  {
-    title: "Đã khám",
-    icon: "tick_circle",
-    color: colors.green_7,
-    backgroundColor: colors.green_0,
-  },
-  {
-    title: "Đã hủy",
-    icon: "refresh",
-    color: colors.red_5,
-    backgroundColor: colors.red_0,
-  },
-]
+
 interface ItemProps {
-  item: {
-    docter: string
-    time: string
-    specialist: string
-    patient: string
-    status: number
-  }
+  item: IOrderHistory
 }
 export default function ItemSchedule({ item }: ItemProps) {
-  const itemData = LIST_ICON_BY_STATUS[item.status]
-  const isDoneSchedule = item?.status === 2
+  const itemData =
+    LIST_ICON_BY_STATUS.find((it) => it.status === item.status) || LIST_ICON_BY_STATUS[0]
+  const isDoneSchedule = item?.status === STATUS_ORDER.done
+  const returnDataByField = (index) => {
+    switch (index) {
+      case 0:
+        return item?.doctor?.name
+      case 1: {
+        const time = `${moment(item?.timeRange?.from).format("hh:mm")} - ${moment(
+          item?.timeRange?.to,
+        ).format("hh:mm")}`
+        const date = `${moment(item?.timeRange?.from).format("DD/MM/YYYY")}`
+        return `${time}, ${date}`
+      }
+      case 2:
+        return item?.doctor?.name
+      case 3:
+        return item?.patient?.name
+      default:
+        break
+    }
+  }
   return (
     <Card
       style={styles.card}
@@ -81,6 +69,7 @@ export default function ItemSchedule({ item }: ItemProps) {
       onPress={() => {
         navigate("DetailBooking", {
           status: item.status,
+          id: item.id,
         })
       }}
     >
@@ -98,15 +87,15 @@ export default function ItemSchedule({ item }: ItemProps) {
         title={() => {
           return (
             <Text size="md" weight="medium" style={{ color: colors.gray_9 }}>
-              {LIST_ICON_BY_STATUS[item.status].title}
+              {itemData.title}
             </Text>
           )
         }}
       />
       {DATA_FIELD_SCHEDULE.map((item, index) => {
-        return <ItemValue key={index} title={item.title} value={item.value} />
+        return <ItemValue key={index} title={item.title} value={returnDataByField(index)} />
       })}
-      {isDoneSchedule && (
+      {isDoneSchedule ? (
         <Button
           style={styles.buttonRate}
           mode="contained"
@@ -116,6 +105,8 @@ export default function ItemSchedule({ item }: ItemProps) {
         >
           Đánh giá
         </Button>
+      ) : (
+        <View style={{ height: HEIGHT(spacing.sm) }} />
       )}
     </Card>
   )

@@ -7,7 +7,7 @@ import colors from "@app/assets/colors"
 import { Icon } from "@app/components/Icon"
 import { Card, List } from "react-native-paper"
 import R from "@app/assets"
-export default function FileAttachment() {
+export default function FileAttachment({ data }: { data: string[] }) {
   return (
     <Card mode="contained" style={styles.container}>
       <List.Item
@@ -27,9 +27,9 @@ export default function FileAttachment() {
         }}
       />
       <ScrollView horizontal style={styles.card}>
-        <Image source={R.images.file_attach} style={styles.image} />
-        <Image source={R.images.file_attach} style={styles.image} />
-        <Image source={R.images.file_attach} style={styles.image} />
+        {data.map((item, index) => {
+          return <Image key={index} source={{ uri: item }} style={styles.image} />
+        })}
       </ScrollView>
     </Card>
   )

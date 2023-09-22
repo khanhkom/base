@@ -1,91 +1,32 @@
-import { StyleSheet, Image, View, FlatList } from "react-native"
+import { StyleSheet, View, FlatList } from "react-native"
 import React from "react"
 import colors from "@app/assets/colors"
 import { Header, Icon, Text } from "@app/components/index"
-import { navigate } from "@app/navigators/navigationUtilities"
 import ItemBookInformation from "./Item/ItemBookInformation"
 import BottonButton from "./Item/BottonButton"
 import FileAttachment from "./Item/FileAttachment"
 import { HEIGHT, WIDTH } from "@app/config/functions"
 import { spacing } from "@app/theme/spacing"
 import { List } from "react-native-paper"
-const DATA_BOOK = [
-  {
-    icon: "calendar",
-    title: "Thông tin lịch khám",
-    data: [
-      {
-        title: "Trạng thái: ",
-        value: "Đặt lịch",
-      },
-      {
-        title: "Ngày khám: ",
-        value: "01/01/2023",
-      },
-      {
-        title: "Giờ khám: ",
-        value: "16:00 - 16:30",
-      },
-    ],
-  },
-  {
-    icon: "personalcard",
-    title: "Thông tin bệnh nhân",
-    data: [
-      {
-        title: "Mã bệnh nhân: ",
-        value: "YT1234",
-      },
-      {
-        title: "Họ tên: ",
-        value: "Nguyễn Văn A",
-      },
-    ],
-  },
-  {
-    icon: "note",
-    title: "Thông tin đăng ký khám",
-    data: [
-      {
-        title: "Bác sĩ: ",
-        value: "Nguyễn Văn A",
-      },
-      {
-        title: "Chuyên khoa: ",
-        value: "Tai - Mũi - Họng",
-      },
-    ],
-  },
-  {
-    icon: "ask",
-    title: "Lý do khám:",
-    data: [
-      {
-        value: "• Ốm, sốt cao",
-        title: "",
-      },
-      {
-        value: "• Ho nhiều, ",
-        title: "",
-      },
-    ],
-  },
-]
+import LoadingScreen from "@app/components/loading/LoadingScreen"
+import useHookDetailBooking, { DATA_BOOK } from "./useHookDetailBooking"
+import { STATUS_ORDER } from "@app/interface/order"
 export default function DetailBooking({ route }) {
-  const status = route?.params?.status
-  console.log("AAAAAAAAAA", status)
+  const id = route?.params?.id
+  const { detailOrder, loading, returnDataByField, getDetailOrderApi } = useHookDetailBooking(id)
+
+  if (loading) return <LoadingScreen />
   return (
     <View style={styles.container}>
-      <Header leftIcon="arrow_left" title="Chi tiết lịch khám" />
-
+      <Header leftIcon="arrow_left" title="Chi tiết lịch khám" backgroundColor={colors.gray_1} />
       <FlatList
         data={DATA_BOOK}
         renderItem={({ item, index }) => {
-          return <ItemBookInformation item={item} />
+          return <ItemBookInformation item={item} returnDataByField={returnDataByField} />
         }}
-        ListFooterComponent={() => <FileAttachment />}
+        ListFooterComponent={() => <FileAttachment data={detailOrder?.fileUpload ?? []} />}
         ListHeaderComponent={() => {
-          if (status === 3)
+          if (detailOrder?.status === STATUS_ORDER.cancel)
             return (
               <List.Item
                 style={{
@@ -103,7 +44,7 @@ export default function DetailBooking({ route }) {
                 title={() => {
                   return (
                     <Text size="ba" weight="normal" style={{ color: colors.white }}>
-                      Lý do hủy: Không có nhu cầu khám
+                      Lý do hủy: {detailOrder?.cancelDescription}
                     </Text>
                   )
                 }}
@@ -112,7 +53,7 @@ export default function DetailBooking({ route }) {
           return <View style={{ height: HEIGHT(spacing.md) }} />
         }}
       />
-      <BottonButton status={status} />
+      <BottonButton status={detailOrder?.status} id={id} getDetailOrderApi={getDetailOrderApi} />
     </View>
   )
 }

@@ -25,3 +25,7 @@ interface Education {
   description: string
   id: string
 }
+export interface ISpecialList {
+  name: string
+  code: string
+}

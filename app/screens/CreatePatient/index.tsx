@@ -84,6 +84,7 @@ export default function CreatePatient({ route }) {
         city: districts?.name,
         ward: wards?.name,
         address: address,
+        phone,
       }
       let resUpdate = await createPatient(bodyCreate)
       setLoading(false)
@@ -135,6 +136,7 @@ export default function CreatePatient({ route }) {
           <TextField
             require
             label="Số điện thoại"
+            placeholder="Nhập số điện thoại"
             value={phone}
             onChangeText={setPhone}
             keyboardType="decimal-pad"
