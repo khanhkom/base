@@ -10,6 +10,7 @@ import ModalFilter from "./Item/ModalFilter"
 import { useSelector } from "@app/redux/reducers"
 import { useDispatch } from "react-redux"
 import { getOrderHistory } from "@app/redux/actions/actionOrder"
+import ItemEmpty from "@app/components/ItemEmpty"
 
 export default function History() {
   const refModal = useRef(null)
@@ -38,6 +39,9 @@ export default function History() {
         style={{ marginTop: HEIGHT(spacing.sm) }}
         renderItem={({ item, index }) => {
           return <ItemSchedule item={item} />
+        }}
+        ListEmptyComponent={() => {
+          return <ItemEmpty title="Bạn chưa có lịch khám nào!" />
         }}
       />
       <ModalFilter ref={refModal} />

@@ -68,7 +68,7 @@ export default function FooterLogin({ setLoading }) {
     const dataLogin = resLogin?.data
     console.log("resLogin_resLogin", resLogin)
     if (resLogin.data.accessToken) {
-      if (!resLogin.data.isNewUser) {
+      if (resLogin.data.isNewUser) {
         api.apisauce.setHeader("access-token", resLogin.data.accessToken)
         navigate("VerifyPhoneNumber")
       } else {
