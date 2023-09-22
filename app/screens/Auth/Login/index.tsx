@@ -19,6 +19,7 @@ import { navigate } from "@app/navigators/navigationUtilities"
 import { useDispatch } from "react-redux"
 import { updateUserField } from "@app/redux/actions"
 import { Toggle } from "@app/components/Toggle"
+import ItemOTPMethod from "../Item/ItemOTPMethod"
 
 export default function Login() {
   const [indexTab, setIndexTab] = useState(0)
@@ -117,29 +118,7 @@ export default function Login() {
           countryCode={countryCode}
           error={error}
         />
-        <Text
-          size="ba"
-          weight="medium"
-          style={{ marginVertical: HEIGHT(spacing.sm), color: colors.gray_7 }}
-        >
-          Gửi mã xác minh OTP tới:
-        </Text>
-        <View style={styles.wrapperToggle}>
-          <Toggle
-            containerStyle={styles.flexRow}
-            label="Tin nhắn Zalo"
-            variant="checkbox"
-            value={otpMethod === 0}
-            onPress={() => setOTPMethod(0)}
-          />
-          <Toggle
-            containerStyle={styles.flexRow}
-            label="SMS OTP"
-            variant="checkbox"
-            value={otpMethod === 1}
-            onPress={() => setOTPMethod(1)}
-          />
-        </View>
+        <ItemOTPMethod setOTPMethod={setOTPMethod} otpMethod={otpMethod} />
         <Button
           mode="contained"
           style={styles.buttonNext}
@@ -181,10 +160,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: WIDTH(spacing.md),
     paddingTop: HEIGHT(20),
   },
-  flexRow: {
-    flexDirection: "row",
-    width: WIDTH(140),
-  },
   tab: {
     flexDirection: "row",
     alignItems: "center",
@@ -194,10 +169,5 @@ const styles = StyleSheet.create({
     width: WIDTH(343),
     borderRadius: 8,
     marginTop: HEIGHT(spacing.lg),
-  },
-  wrapperToggle: {
-    flexDirection: "row",
-    alignItems: "center",
-    width: WIDTH(343),
   },
 })

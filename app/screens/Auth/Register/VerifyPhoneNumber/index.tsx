@@ -2,7 +2,7 @@ import { StyleSheet, View } from "react-native"
 import React, { useRef, useState, useEffect } from "react"
 import { Header } from "@app/components/Header"
 import { Text } from "@app/components/Text"
-import { HEIGHT, WIDTH } from "@app/config/functions"
+import { HEIGHT, WIDTH, getWidth } from "@app/config/functions"
 import { spacing } from "@app/theme/spacing"
 import colors from "@app/assets/colors"
 import { navigate } from "@app/navigators/navigationUtilities"
@@ -13,19 +13,16 @@ import { EToastType, showToastMessage } from "@app/utils/library"
 import { updateUserField } from "@app/redux/actions"
 import InputPhone from "../../Item/InputPhone"
 import { Button } from "react-native-paper"
-interface ScreenProps {
-  route: {
-    params: {
-      phone: string
-    }
-  }
-}
+import HeaderLogin from "../../Item/HeaderLogin"
+import R from "@app/assets"
+import ItemOTPMethod from "../../Item/ItemOTPMethod"
 export default function VerifyPhoneNumber() {
   const [countryCode, setCountryCode] = useState("+84")
   const [phoneNumber, setPhoneNumber] = useState("")
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(false)
   const [isNewUser, setNewUser] = React.useState(false)
+  const [otpMethod, setOTPMethod] = useState(0)
   const dispatch = useDispatch()
   const onSubmit = async () => {
     // showModal()
@@ -67,30 +64,46 @@ export default function VerifyPhoneNumber() {
 
   return (
     <View style={styles.container}>
-      <Header leftIcon="arrow_left" backgroundColor={colors.white} title="Nhập số điện thoại" />
-      <InputPhone
-        phoneNumber={phoneNumber}
-        setPhoneNumber={setPhoneNumber}
-        setCountryCode={setCountryCode}
-        countryCode={countryCode}
-        error={error}
-      />
-      <Button
-        mode="contained"
-        style={styles.buttonNext}
-        labelStyle={{ color: colors.white }}
-        disabled={phoneNumber.length === 0}
-        buttonColor={colors.primary_8}
-        onPress={onSubmit}
-      >
-        Tiếp tục
-      </Button>
+      <HeaderLogin />
+      <View style={styles.body}>
+        <Text preset="xxxlsemibold">Chào mừng bạn,</Text>
+        <InputPhone
+          phoneNumber={phoneNumber}
+          setPhoneNumber={setPhoneNumber}
+          setCountryCode={setCountryCode}
+          countryCode={countryCode}
+          error={error}
+        />
+        <ItemOTPMethod setOTPMethod={setOTPMethod} otpMethod={otpMethod} />
+
+        <Button
+          mode="contained"
+          style={styles.buttonNext}
+          labelStyle={{ color: colors.white }}
+          disabled={phoneNumber.length === 0}
+          buttonColor={colors.primary_8}
+          onPress={onSubmit}
+        >
+          Tiếp tục
+        </Button>
+      </View>
+
       {loading && <LoadingOpacity />}
     </View>
   )
 }
 
 const styles = StyleSheet.create({
+  body: {
+    width: getWidth(),
+    flex: 1,
+    marginTop: -HEIGHT(80),
+    backgroundColor: R.colors.white,
+    borderTopRightRadius: 24,
+    borderTopLeftRadius: 24,
+    paddingHorizontal: WIDTH(spacing.md),
+    paddingTop: HEIGHT(20),
+  },
   container: {
     flex: 1,
     alignItems: "center",
@@ -102,5 +115,6 @@ const styles = StyleSheet.create({
     marginTop: HEIGHT(spacing.lg),
     position: "absolute",
     bottom: HEIGHT(spacing.md),
+    left: WIDTH(spacing.md),
   },
 })

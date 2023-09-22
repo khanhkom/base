@@ -23,27 +23,11 @@ export default function FooterLogin({ setLoading }) {
         showPlayServicesUpdateDialog: true,
       })
       const userInfo = await GoogleSignin.signIn()
-      setLoading(true)
-      let resLogin = await loginSocial({
+      setLoading(false)
+      _hanldeLoginServer({
         token: userInfo.serverAuthCode,
         base: "google",
       })
-      setLoading(false)
-      const dataLogin = resLogin?.data
-      console.log("resLogin_resLogin", resLogin)
-      if (resLogin.data.accessToken) {
-        if (resLogin.data.isNewUser) {
-          api.apisauce.setHeader("access-token", resLogin.data.accessToken)
-          navigate("VerifyPhoneNumber")
-        } else {
-          api.apisauce.setHeader("access-token", dataLogin?.accessToken)
-          save(KEYSTORAGE.LOGIN_DATA, dataLogin)
-          dispatch(getStringeeToken())
-          navigate("TabNavigator")
-        }
-      } else {
-        showToastMessage("Có lỗi xảy ra! Vui lòng thử lại", EToastType.ERROR)
-      }
     } catch (error) {
       console.warn("error_error", error)
       await GoogleSignin.revokeAccess()
@@ -60,27 +44,10 @@ export default function FooterLogin({ setLoading }) {
           } else {
             AccessToken.getCurrentAccessToken().then(async (data) => {
               console.log("data_facebook", data)
-              setLoading(true)
-              let resLogin = await loginSocial({
+              _hanldeLoginServer({
                 token: data.accessToken,
                 base: "facebook",
               })
-              setLoading(false)
-              const dataLogin = resLogin?.data
-              console.log("resLogin_resLogin", resLogin)
-              if (resLogin.data.accessToken) {
-                if (resLogin.data.isNewUser) {
-                  api.apisauce.setHeader("access-token", resLogin.data.accessToken)
-                  navigate("VerifyPhoneNumber")
-                } else {
-                  api.apisauce.setHeader("access-token", dataLogin?.accessToken)
-                  save(KEYSTORAGE.LOGIN_DATA, dataLogin)
-                  dispatch(getStringeeToken())
-                  navigate("TabNavigator")
-                }
-              } else {
-                showToastMessage("Có lỗi xảy ra! Vui lòng thử lại", EToastType.ERROR)
-              }
             })
           }
         },
@@ -93,6 +60,26 @@ export default function FooterLogin({ setLoading }) {
         console.log("error_error", error)
         // Sentry.captureException(error)
       })
+  }
+  const _hanldeLoginServer = async (body) => {
+    setLoading(true)
+    let resLogin = await loginSocial(body)
+    setLoading(false)
+    const dataLogin = resLogin?.data
+    console.log("resLogin_resLogin", resLogin)
+    if (resLogin.data.accessToken) {
+      if (!resLogin.data.isNewUser) {
+        api.apisauce.setHeader("access-token", resLogin.data.accessToken)
+        navigate("VerifyPhoneNumber")
+      } else {
+        api.apisauce.setHeader("access-token", dataLogin?.accessToken)
+        save(KEYSTORAGE.LOGIN_DATA, dataLogin)
+        dispatch(getStringeeToken())
+        navigate("TabNavigator")
+      }
+    } else {
+      showToastMessage("Có lỗi xảy ra! Vui lòng thử lại", EToastType.ERROR)
+    }
   }
   return (
     <View style={styles.container}>
