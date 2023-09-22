@@ -11,9 +11,11 @@ import { List } from "react-native-paper"
 import LoadingScreen from "@app/components/loading/LoadingScreen"
 import useHookDetailBooking, { DATA_BOOK } from "./useHookDetailBooking"
 import { STATUS_ORDER } from "@app/interface/order"
+import { useSelector } from "@app/redux/reducers"
 export default function DetailBooking({ route }) {
   const id = route?.params?.id
   const { detailOrder, loading, returnDataByField, getDetailOrderApi } = useHookDetailBooking(id)
+  const clientId = useSelector((state) => state.stringeeReducers.clientId)
 
   if (loading) return <LoadingScreen />
   return (
@@ -53,7 +55,15 @@ export default function DetailBooking({ route }) {
           return <View style={{ height: HEIGHT(spacing.md) }} />
         }}
       />
-      <BottonButton status={detailOrder?.status} id={id} getDetailOrderApi={getDetailOrderApi} />
+      <BottonButton
+        status={detailOrder?.status}
+        id={id}
+        getDetailOrderApi={getDetailOrderApi}
+        clientId={clientId}
+        userId={detailOrder?.patient?.userId}
+        to={detailOrder?.doctor?.userId}
+        detailOrder={detailOrder}
+      />
     </View>
   )
 }

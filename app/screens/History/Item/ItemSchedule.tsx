@@ -68,7 +68,6 @@ export default function ItemSchedule({ item }: ItemProps) {
       mode="contained"
       onPress={() => {
         navigate("DetailBooking", {
-          status: item.status,
           id: item.id,
         })
       }}

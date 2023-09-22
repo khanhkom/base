@@ -77,6 +77,44 @@ interface AppProps {
 /**
  * This is the root component of our app.
  */
+
+async function onMessageReceived(message) {
+  const data = JSON.parse(message.data.data)
+  const callStatus = data.callStatus
+  const from = data.from.number
+  const notificationId = "11111" // YOUR_NOTIFICATION_ID
+  console.log("data: " + callStatus)
+  const channelId = await notifee.createChannel({
+    id: "sdocter",
+    name: "sdocter",
+    vibration: true,
+  })
+  switch (callStatus) {
+    case "started":
+      await notifee.displayNotification({
+        id: notificationId,
+        title: "Incoming Call",
+        body: "Call from " + from,
+        android: {
+          channelId,
+          pressAction: {
+            id: "default",
+            mainComponent: "SDocter",
+          },
+        },
+      })
+      break
+    case "ended":
+      break
+  }
+}
+messaging().setBackgroundMessageHandler(onMessageReceived)
+messaging().onMessage((notification) => {
+  console.log("notification", notification)
+  if (notification?.notification?.title) {
+    showToastMessage(notification?.notification?.title)
+  }
+})
 function App(props: AppProps) {
   const { hideSplashScreen } = props
   const {
@@ -154,41 +192,6 @@ function App(props: AppProps) {
     // Note: (vanilla iOS) You might notice the splash-screen logo change size. This happens in debug/development mode. Try building the app for release.
     setTimeout(hideSplashScreen, 500)
   })
-  async function onMessageReceived(message) {
-    const data = JSON.parse(message.data.data)
-    const callStatus = data.callStatus
-    const from = data.from.number
-    const notificationId = "11111" // YOUR_NOTIFICATION_ID
-    console.log("data: " + callStatus)
-    const channelId = await notifee.createChannel({
-      id: "sdocter",
-      name: "sdocter",
-      vibration: true,
-    })
-    switch (callStatus) {
-      case "started":
-        await notifee.displayNotification({
-          id: notificationId,
-          title: "Incoming Call",
-          body: "Call from " + from,
-          android: {
-            channelId,
-            pressAction: {
-              id: "default",
-              mainComponent: "SDocter",
-            },
-          },
-        })
-        break
-      case "ended":
-        break
-    }
-  }
-  messaging().setBackgroundMessageHandler(onMessageReceived)
-  messaging().onMessage((notification) => {
-    console.log("notification", notification)
-    showToastMessage(notification.notification.title)
-  })
 
   // Before we show the app, we have to wait for our state to be ready.
   // In the meantime, don't render anything. This will be the background
@@ -207,7 +210,7 @@ function App(props: AppProps) {
   // const theme = isThemeDark
   //   ? { ...darkTheme, colors: { ...customTheme.dark, ...colorExpandDark } }
   //   : { ...lightTheme, colors: { ...customTheme.light, ...colorExpandLight } }
-   const theme = { ...lightTheme, colors: { ...customTheme.light, ...colorExpandLight } }
+  const theme = { ...lightTheme, colors: { ...customTheme.light, ...colorExpandLight } }
   // otherwise, we're ready to render the app
   return (
     <SafeAreaProvider initialMetrics={initialWindowMetrics}>

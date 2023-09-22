@@ -5,14 +5,37 @@ import { HEIGHT, WIDTH } from "@app/config/functions"
 import { spacing } from "@app/theme/spacing"
 import colors from "@app/assets/colors"
 import { navigate } from "@app/navigators/navigationUtilities"
-import { STATUS_ORDER } from "@app/interface/order"
+import { IOrderHistory, STATUS_ORDER } from "@app/interface/order"
 interface ItemProps {
   id: string
   status: string
   getDetailOrderApi: () => void
+  userId: string
+  clientId: string
+  to: string
+  detailOrder: IOrderHistory
 }
-
-export default function BottonButton({ status, id, getDetailOrderApi }: ItemProps) {
+export default function BottonButton({
+  status,
+  id,
+  getDetailOrderApi,
+  userId,
+  clientId,
+  to,
+  detailOrder,
+}: ItemProps) {
+  const onPressCall = () => {
+    // console.log("AAAAAA", clientId?.current?.getId?.())
+    navigate("Call2Screen", {
+      callId: "",
+      clientId: clientId,
+      isVideoCall: true,
+      from: userId,
+      to: to,
+      isIncoming: false,
+      detailOrder: detailOrder,
+    })
+  }
   if (status === STATUS_ORDER.created)
     return (
       <View style={styles.container}>
@@ -50,13 +73,7 @@ export default function BottonButton({ status, id, getDetailOrderApi }: ItemProp
         >
           Nhắn tin
         </Button>
-        <Button
-          onPress={() => {
-            navigate("CallVideo")
-          }}
-          mode="contained"
-          style={styles.button}
-        >
+        <Button onPress={onPressCall} mode="contained" style={styles.button}>
           Vào cuộc gọi
         </Button>
       </View>

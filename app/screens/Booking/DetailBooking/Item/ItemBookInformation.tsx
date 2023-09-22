@@ -9,7 +9,10 @@ import { Icon } from "@app/components/Icon"
 const ItemValue = ({ title, value }) => {
   return (
     <Text size="ba" weight="normal" style={{ color: colors.gray_6, marginTop: HEIGHT(8) }}>
-      {title} <Text style={{ color: colors.gray_9 }}>{value}</Text>
+      {title}{" "}
+      <Text size="ba" weight="normal" style={{ color: colors.gray_9 }}>
+        {value}
+      </Text>
     </Text>
   )
 }

@@ -3,6 +3,7 @@ const defaultState = {
     access_token: "",
     exp: 0,
   },
+  clientId: "",
 }
 export default (state = defaultState, action) => {
   switch (action.type) {
@@ -12,7 +13,12 @@ export default (state = defaultState, action) => {
         session: action.payload,
       }
     }
-
+    case "UPDATE_CLIENT_ID": {
+      return {
+        ...state,
+        clientId: action.data,
+      }
+    }
     default:
       break
   }

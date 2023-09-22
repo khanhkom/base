@@ -1,9 +1,19 @@
+/* eslint-disable react-native/no-unused-styles */
 import { Icon } from "@app/components/Icon"
 import React, { Component } from "react"
-import { StyleSheet, View, TouchableOpacity, Text, Alert, Dimensions, Platform } from "react-native"
+import { StyleSheet, View, Alert, Image, Dimensions, Platform, Pressable } from "react-native"
 
 import { StringeeCall2, StringeeVideoView } from "stringee-react-native"
-
+import Toolbar from "../CallVideo/Item/Toolbar"
+import colors from "@app/assets/colors"
+import BottomButton from "../CallVideo/Item/BottomButton"
+import { HEIGHT, WIDTH } from "@app/config/functions"
+import { spacing } from "@app/theme/spacing"
+import R from "@app/assets"
+import { Text } from "@app/components/Text"
+import { Header } from "@app/components/Header"
+import { goBack } from "@app/navigators/navigationUtilities"
+import MediaManager from "@app/utils/MediaManager"
 export default class Call2Screen extends Component {
   constructor(props) {
     super(props)
@@ -14,7 +24,7 @@ export default class Call2Screen extends Component {
       to: props.route.params.to,
       isVideoCall: props.route.params.isVideoCall,
       isIncoming: props.route.params.isIncoming,
-
+      detailOrder: props.route.params.detailOrder,
       isMute: false,
       isVideoEnable: props.route.params.isVideoCall,
       isSpeaker: props.route.params.isVideoCall,
@@ -36,10 +46,15 @@ export default class Call2Screen extends Component {
     }
   }
 
+  componentWillUnmount(): void {
+    MediaManager.stopMusicBackground()
+  }
+
   componentDidMount(): void {
     console.log("AAAAAA", this.props.route.params.clientId)
-    // InitAnswer
+    MediaManager.initSound("messenger_ringtone.mp3", true, () => {})
     if (this.state.isIncoming) {
+      MediaManager.playMusicBackGround("messenger_ringtone.mp3", true)
       this.call2.current.initAnswer(this.state.callId, (status, code, message) => {
         console.log("initAnswer " + message)
       })
@@ -52,7 +67,7 @@ export default class Call2Screen extends Component {
         isVideoCall: this.state.isVideoCall,
         videoResolution: "NORMAL",
       })
-      console.log("CCCCCCCCC", callParams)
+      console.log("ZZZZZZZZ", callParams)
       this.call2.current.makeCall(callParams, (status, code, message, callId) => {
         console.log(
           "status-" + status + " code-" + code + " message-" + message + " callId-" + callId,
@@ -62,6 +77,7 @@ export default class Call2Screen extends Component {
             callId: callId,
             status: "Outgoing Call",
           })
+          MediaManager.playMusicBackGround("phone_call.mp3", true)
         } else {
           Alert.alert("Make call fail: " + message)
         }
@@ -151,6 +167,7 @@ export default class Call2Screen extends Component {
   // Invoked when the remote stream is available
   callDidReceiveRemoteStream = ({ callId }) => {
     console.log("callDidReceiveRemoteStream")
+    MediaManager.stopMusicBackground()
     if (this.state.receivedRemoteStream) {
       this.setState({ receivedRemoteStream: false })
       this.setState({ receivedRemoteStream: true })
@@ -269,6 +286,7 @@ export default class Call2Screen extends Component {
   }
 
   answerCall = () => {
+    console.log("AAAAAAAA", this.state.callId)
     this.call2.current.answer(this.state.callId, (status, code, message) => {
       console.log("answer: " + message)
       if (status) {
@@ -301,28 +319,23 @@ export default class Call2Screen extends Component {
   }
 
   dismissCallingView = () => {
-    this.props.navigation.goBack()
+    // this.props.navigation.goBack()
   }
 
   render(): React.ReactNode {
-    const CircleBtn = ({ color, iconName, iconColor, onPress }) => (
-      <TouchableOpacity
-        style={{
-          width: 70,
-          height: 70,
-          justifyContent: "center",
-          alignItems: "center",
-          borderRadius: 100,
-          backgroundColor: color,
-        }}
-        onPress={onPress}
-      >
-        <Icon icon={iconName} color={iconColor} size={30} />
-      </TouchableOpacity>
-    )
-
     return (
       <View style={this.styles.container}>
+        <Header
+          title="Cuộc gọi"
+          backgroundColor={colors.primary_8}
+          leftIcon="arrow_left"
+          onLeftPress={() => {
+            this.endPress(!this.state.showAnswerBtn)
+            goBack()
+          }}
+          leftIconColor={colors.white}
+          titleStyle={{ color: colors.white }}
+        />
         {this.state.isVideoCall && this.state.callId !== "" && this.state.receivedRemoteStream && (
           <StringeeVideoView
             style={this.styles.remoteView}
@@ -333,77 +346,95 @@ export default class Call2Screen extends Component {
         )}
 
         {this.state.receivedLocalStream && this.state.callId !== "" && this.state.isVideoCall && (
-          <StringeeVideoView
-            style={this.styles.localView}
-            callId={this.state.callId}
-            local={true}
-            overlay={true}
-          />
-        )}
-
-        {this.state.isVideoCall && (
-          <View style={this.styles.btnSwitch}>
-            <CircleBtn
-              color="transparent"
-              iconName="switch-camera"
-              iconColor="white"
-              onPress={this.switchPress}
+          <View style={this.styles.wrapperUserTarget}>
+            <StringeeVideoView
+              style={this.styles.userTarget}
+              callId={this.state.callId}
+              local={true}
+              overlay={true}
             />
+            <Pressable onPress={this.switchPress} style={this.styles.iconSwith}>
+              <Icon icon="switch_camera" size={WIDTH(20)} />
+            </Pressable>
           </View>
         )}
-
-        <Text style={this.styles.userId}>
-          {this.state.isIncoming ? this.props.route.params.from : this.props.route.params.to}
-        </Text>
-
-        <Text style={this.styles.status}>{this.state.status}</Text>
-
-        {!this.state.showAnswerBtn && (
-          <View style={this.styles.bottomContainer}>
-            <CircleBtn
-              color={this.state.isMute ? "#FFFFFF8A" : "white"}
-              iconName={this.state.isMute ? "mic-off" : "mic"}
-              iconColor={this.state.isMute ? "white" : "black"}
-              onPress={this.mutePress}
-            />
-
-            <CircleBtn
-              color={this.state.isSpeaker ? "#FFFFFF8A" : "white"}
-              iconName={this.state.isSpeaker ? "volume-up" : "volume-off"}
-              iconColor={this.state.isSpeaker ? "white" : "black"}
-              onPress={this.speakerPress}
-            />
-
-            {this.state.isVideoCall && (
-              <CircleBtn
-                color={!this.state.isVideoEnable ? "#FFFFFF8A" : "white"}
-                iconName={!this.state.isVideoEnable ? "videocam-off" : "videocam"}
-                iconColor={!this.state.isVideoEnable ? "white" : "black"}
-                onPress={this.videoPress}
-              />
+        {!this.state.receivedRemoteStream && (
+          <View>
+            <Image source={R.images.call_avatar} style={this.styles.imageCalling} />
+            {!this.state.isIncoming ? (
+              <View>
+                <Text
+                  size="xxl"
+                  weight="semiBold"
+                  style={{ color: colors.white, textAlign: "center" }}
+                >
+                  B.n {this.state.detailOrder?.patient?.name}
+                </Text>
+                <Text
+                  size="sm"
+                  weight="normal"
+                  style={{
+                    color: colors.gray_3,
+                    textAlign: "center",
+                    marginTop: HEIGHT(spacing.md),
+                  }}
+                >
+                  Đang kết nối...
+                </Text>
+              </View>
+            ) : (
+              <View>
+                <Text
+                  size="xxl"
+                  weight="semiBold"
+                  style={{ color: colors.white, textAlign: "center" }}
+                >
+                  B.s {this.state.detailOrder?.doctor?.name}
+                </Text>
+                <Text
+                  size="sm"
+                  weight="normal"
+                  style={{
+                    color: colors.gray_3,
+                    textAlign: "center",
+                    marginTop: HEIGHT(spacing.md),
+                  }}
+                >
+                  Đang gọi cho bạn
+                </Text>
+              </View>
             )}
           </View>
         )}
 
-        <View style={this.styles.callActions}>
-          <CircleBtn
-            color={"red"}
-            iconName={"call-end"}
-            iconColor={"white"}
-            onPress={() => {
-              this.endPress(!this.state.showAnswerBtn)
-            }}
-          />
+        {/* <Text style={this.styles.status}>{this.state.status}</Text> */}
 
-          {this.state.showAnswerBtn && (
-            <CircleBtn
-              color={"green"}
-              iconName={"call"}
-              iconColor={"white"}
-              onPress={this.answerCall}
+        {!this.state.showAnswerBtn && (
+          <View style={this.styles.bottomContainer}>
+            <Toolbar
+              isMute={this.state.isMute}
+              isSpeaker={this.state.isSpeaker}
+              mutePress={this.mutePress}
+              speakerPress={this.speakerPress}
+              isVideoEnable={this.state.isVideoEnable}
+              videoPress={this.videoPress}
+              endPress={() => {
+                this.endPress(!this.state.showAnswerBtn)
+              }}
             />
-          )}
-        </View>
+          </View>
+        )}
+        {this.state.showAnswerBtn && (
+          <View style={this.styles.bottomContainer}>
+            <BottomButton
+              onAccept={this.answerCall}
+              onCancel={() => {
+                this.endPress(!this.state.showAnswerBtn)
+                goBack()
+              }}
+            />
+          </View>
+        )}
 
         <StringeeCall2
           clientId={this.state.clientId}
@@ -417,11 +448,14 @@ export default class Call2Screen extends Component {
   styles = StyleSheet.create({
     container: {
       flex: 1,
-      alignItems: "center",
-      backgroundColor: "#00A6AD",
-      position: "relative",
+      backgroundColor: colors.primary_8,
     },
-
+    imageCalling: {
+      width: WIDTH(240),
+      height: WIDTH(240),
+      alignSelf: "center",
+      marginTop: HEIGHT(80),
+    },
     btnSwitch: {
       top: 10,
       left: 10,
@@ -433,30 +467,10 @@ export default class Call2Screen extends Component {
       height: 70,
       width: "100%",
       flexDirection: "row",
-      justifyContent: "space-evenly",
       alignItems: "center",
       position: "absolute",
-      bottom: 140,
+      bottom: HEIGHT(0),
       zIndex: 1,
-    },
-
-    callActions: {
-      height: 70,
-      width: "100%",
-      flexDirection: "row",
-      justifyContent: "space-evenly",
-      alignItems: "center",
-      position: "absolute",
-      bottom: 50,
-      zIndex: 1,
-    },
-
-    userId: {
-      color: "white",
-      justifyContent: "center",
-      fontSize: 28,
-      fontWeight: "bold",
-      marginTop: 130,
     },
 
     status: {
@@ -484,6 +498,29 @@ export default class Call2Screen extends Component {
       width: Dimensions.get("window").width,
       height: Dimensions.get("window").height,
       zIndex: 0,
+    },
+    wrapperUserTarget: {
+      position: "absolute",
+      right: WIDTH(spacing.md),
+      top: HEIGHT(spacing.xl),
+    },
+    iconSwith: {
+      width: WIDTH(36),
+      height: WIDTH(36),
+      borderRadius: WIDTH(36),
+      justifyContent: "center",
+      alignItems: "center",
+      backgroundColor: colors.main_7,
+      alignSelf: "center",
+      marginTop: -WIDTH(18),
+    },
+    userTarget: {
+      width: WIDTH(100),
+      height: WIDTH(132),
+      borderRadius: 24,
+      // borderWidth: 3,
+      // borderColor: colors.white,
+      backgroundColor: colors.black,
     },
   })
 }

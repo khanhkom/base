@@ -1,17 +1,20 @@
 /* eslint-disable react-native/no-color-literals */
 import { Pressable, StyleSheet, Text, View } from "react-native"
-import React from "react"
+import React, { useEffect } from "react"
 import { HEIGHT, WIDTH } from "@app/config/functions"
 import { spacing } from "@app/theme/spacing"
 import { Icon } from "@app/components/Icon"
 import colors from "@app/assets/colors"
 import { goBack, navigate } from "@app/navigators/navigationUtilities"
+import MediaManager from "@app/utils/MediaManager"
 const LIST_ACTION = [
   {
     active: "microphone_2",
+    inactive: "microphone_slash",
   },
   {
     active: "ic_call_video",
+    inactive: "camera_slash",
   },
   {
     active: "ic_chat_filled",
@@ -20,19 +23,57 @@ const LIST_ACTION = [
     active: "ic_call",
   },
 ]
-export default function Toolbar() {
+export default function Toolbar({
+  isMute,
+  isSpeaker,
+  mutePress,
+  speakerPress,
+  isVideoEnable,
+  videoPress,
+  endPress,
+}) {
+  const returnActive = (index) => {
+    switch (index) {
+      case 0:
+        return isMute
+      case 1:
+        return isVideoEnable
+      default:
+        return true
+    }
+  }
+  useEffect(() => {
+    return () => MediaManager.stopMusicBackground()
+  }, [])
+  const onPress = (index) => {
+    switch (index) {
+      case 0:
+        mutePress()
+        break
+      case 1:
+        videoPress()
+        break
+      case 3: {
+        endPress()
+        // navigate("RatingDocter")
+        goBack()
+
+        break
+      }
+      default:
+        return true
+    }
+  }
   return (
     <View style={styles.container}>
       {LIST_ACTION.map((item, index) => {
         return (
           <Pressable
-            onPress={() => {
-              navigate("RatingDocter")
-            }}
+            onPress={() => onPress(index)}
             style={[styles.boxIcon, index === 3 && { backgroundColor: colors.red_5 }]}
             key={index}
           >
-            <Icon icon={item.active} size={WIDTH(28)} />
+            <Icon icon={returnActive(index) ? item.active : item?.inactive} size={WIDTH(28)} />
           </Pressable>
         )
       })}
