@@ -3,6 +3,7 @@ export const ROOT = DEFAULT_API_CONFIG.url_prod
 const URL_LOGIN = {
   GET_OTP: "pin/getOtp",
   VERIFY_OTP: "pin/verifyOtp",
+  LOGIN_SOCIAL: "session/createSessionWithOAuth2",
 }
 const URL_PATIENT = {
   CREATE_PATIENT: "patient",

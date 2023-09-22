@@ -9,13 +9,17 @@ import { Text } from "@app/components/Text"
 import { HEIGHT, WIDTH } from "@app/config/functions"
 import { spacing } from "@app/theme/spacing"
 import { EToastType, showToastMessage } from "@app/utils/library"
+import { api } from "@app/services/api"
+import { GoogleSignin } from "@react-native-google-signin/google-signin"
 
 export default function Profile() {
   const session = useSelector((state) => state.stringeeReducers.session)
   const [token, setToken] = useState("")
-  const onLogout = () => {
+  const onLogout = async () => {
     remove(KEYSTORAGE.LOGIN_DATA)
     navigate("Login")
+    api.apisauce.setHeader("access-token", "")
+    await GoogleSignin.signOut()
   }
   async function requestUserPermission() {
     PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS)

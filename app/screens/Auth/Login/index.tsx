@@ -158,7 +158,7 @@ export default function Login() {
           của SDoctor
         </Text>
       </View>
-      <FooterLogin />
+      <FooterLogin setLoading={setLoading} />
       <PopupVerify
         visible={visible}
         setVisible={setVisible}

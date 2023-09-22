@@ -44,6 +44,7 @@ import ExaminationHistory from "@app/screens/Patient/ExaminationHistory"
 import DetailExamination from "@app/screens/Patient/DetailExamination"
 import SelectLocation from "@app/screens/Auth/Register/SelectLocation"
 import Notification from "@app/screens/Notification"
+import VerifyPhoneNumber from "@app/screens/Auth/Register/VerifyPhoneNumber"
 
 export type AppStackParamList = {
   TabNavigator: undefined
@@ -54,6 +55,8 @@ export type AppStackParamList = {
   DetailSick: undefined
   VerifyOTP: undefined
   ConfirmName: undefined
+  VerifyPhoneNumber: undefined
+
   CreatePatient: undefined
   Call2Screen: undefined
   CallScreen: undefined
@@ -83,6 +86,7 @@ export type AppStackParamList = {
 
   SelectLocation: undefined
   Notification: undefined
+
   // 🔥 Your screens go here
   // IGNITE_GENERATOR_ANCHOR_APP_STACK_PARAM_LIST
 }
@@ -146,6 +150,7 @@ const AppStack = observer(function AppStack() {
       <Stack.Screen name="DetailExamination" component={DetailExamination} />
       <Stack.Screen name="SelectLocation" component={SelectLocation} />
       <Stack.Screen name="Notification" component={Notification} />
+      <Stack.Screen name="VerifyPhoneNumber" component={VerifyPhoneNumber} />
     </Stack.Navigator>
   )
 })

@@ -2,24 +2,48 @@ import { StyleSheet, View, Image, Pressable } from "react-native"
 import React from "react"
 import { HEIGHT, WIDTH } from "@app/config/functions"
 import { spacing } from "@app/theme/spacing"
-import { IconButton } from "react-native-paper"
 import R from "@app/assets"
 import colors from "@app/assets/colors"
 import { Text } from "@app/components/Text"
 import { GoogleSignin } from "@react-native-google-signin/google-signin"
-import { LoginButton, AccessToken, LoginManager } from "react-native-fbsdk-next"
+import { AccessToken, LoginManager } from "react-native-fbsdk-next"
+import { loginSocial } from "@app/services/api/functions/users"
+import { api } from "@app/services/api"
+import { navigate } from "@app/navigators/navigationUtilities"
+import { EToastType, showToastMessage } from "@app/utils/library"
+import { KEYSTORAGE, save } from "@app/utils/storage"
+import { getStringeeToken } from "@app/redux/actions/stringee"
+import { useDispatch } from "react-redux"
 
-export default function FooterLogin() {
+export default function FooterLogin({ setLoading }) {
+  const dispatch = useDispatch()
   const loginWithGoogle = async () => {
     try {
       await GoogleSignin.hasPlayServices({
         showPlayServicesUpdateDialog: true,
       })
       const userInfo = await GoogleSignin.signIn()
-
-      console.log("1111111111", {
-        token: userInfo ?? "",
+      setLoading(true)
+      let resLogin = await loginSocial({
+        token: userInfo.serverAuthCode,
+        base: "google",
       })
+      setLoading(false)
+      const dataLogin = resLogin?.data
+      console.log("resLogin_resLogin", resLogin)
+      if (resLogin.data.accessToken) {
+        if (resLogin.data.isNewUser) {
+          api.apisauce.setHeader("access-token", resLogin.data.accessToken)
+          navigate("VerifyPhoneNumber")
+        } else {
+          api.apisauce.setHeader("access-token", dataLogin?.accessToken)
+          save(KEYSTORAGE.LOGIN_DATA, dataLogin)
+          dispatch(getStringeeToken())
+          navigate("TabNavigator")
+        }
+      } else {
+        showToastMessage("Có lỗi xảy ra! Vui lòng thử lại", EToastType.ERROR)
+      }
     } catch (error) {
       console.warn("error_error", error)
       await GoogleSignin.revokeAccess()
@@ -34,8 +58,29 @@ export default function FooterLogin() {
           if (result.isCancelled) {
             console.log("isCancelled")
           } else {
-            AccessToken.getCurrentAccessToken().then((data) => {
+            AccessToken.getCurrentAccessToken().then(async (data) => {
               console.log("data_facebook", data)
+              setLoading(true)
+              let resLogin = await loginSocial({
+                token: data.accessToken,
+                base: "facebook",
+              })
+              setLoading(false)
+              const dataLogin = resLogin?.data
+              console.log("resLogin_resLogin", resLogin)
+              if (resLogin.data.accessToken) {
+                if (resLogin.data.isNewUser) {
+                  api.apisauce.setHeader("access-token", resLogin.data.accessToken)
+                  navigate("VerifyPhoneNumber")
+                } else {
+                  api.apisauce.setHeader("access-token", dataLogin?.accessToken)
+                  save(KEYSTORAGE.LOGIN_DATA, dataLogin)
+                  dispatch(getStringeeToken())
+                  navigate("TabNavigator")
+                }
+              } else {
+                showToastMessage("Có lỗi xảy ra! Vui lòng thử lại", EToastType.ERROR)
+              }
             })
           }
         },
