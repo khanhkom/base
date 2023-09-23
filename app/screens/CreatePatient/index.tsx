@@ -121,6 +121,7 @@ export default function CreatePatient({ route }) {
             <Text weight="normal" size="ba" style={{ color: colors.red_5 }}>
               Lưu ý:
             </Text>{" "}
+            <Text style={{ color: colors.red_5 }}> * </Text>
             là những trường thông tin bắt buộc
           </Text>
         </Card>
@@ -148,6 +149,7 @@ export default function CreatePatient({ route }) {
             Giới tính
             {require && (
               <Text preset="formLabel" style={{ color: colors.red_5 }}>
+                {" "}
                 *
               </Text>
             )}

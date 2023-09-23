@@ -191,6 +191,7 @@ export const TextField = forwardRef(function TextField(props: TextFieldProps, re
           />
           {require && (
             <Text preset="formLabel" style={{ color: colors.error }}>
+              {" "}
               *
             </Text>
           )}

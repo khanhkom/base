@@ -20,8 +20,10 @@ export default function ConfirmName() {
       <Header leftIcon="arrow_left" title="Xác nhận họ tên" backgroundColor={colors.white} />
       <View style={{ flex: 1 }}>
         <TextInput
+          placeholderTextColor={colors.gray_5}
+          placeholder="Nhập họ và tên"
           mode="outlined"
-          label="Nhập họ và tên"
+          // label="Nhập họ và tên"
           value={name}
           style={{
             marginHorizontal: WIDTH(spacing.md),
@@ -32,24 +34,26 @@ export default function ConfirmName() {
           onChangeText={(text) => setText(text)}
         />
       </View>
-      <Button
-        mode="contained"
-        disabled={name === ""}
-        style={styles.button}
-        onPress={() => {
-          navigate("CreatePatient", {
-            name,
-            fromRegister: true,
-          })
-          dispatch(
-            updateUserField({
+      <KeyboardAvoidingView behavior="padding">
+        <Button
+          mode="contained"
+          disabled={name === ""}
+          style={styles.button}
+          onPress={() => {
+            navigate("CreatePatient", {
               name,
-            }),
-          )
-        }}
-      >
-        Tiếp tục
-      </Button>
+              fromRegister: true,
+            })
+            dispatch(
+              updateUserField({
+                name,
+              }),
+            )
+          }}
+        >
+          Tiếp tục
+        </Button>
+      </KeyboardAvoidingView>
     </View>
   )
 }

@@ -1,4 +1,4 @@
-import { Platform, StyleSheet, View } from "react-native"
+import { Keyboard, Platform, StyleSheet, View } from "react-native"
 import React, { useState } from "react"
 import { Screen } from "@app/components/Screen"
 import HeaderLogin from "../Item/HeaderLogin"
@@ -36,6 +36,7 @@ export default function Login() {
 
   const onSubmit = async () => {
     // showModal()
+    Keyboard.dismiss()
     if (phoneNumber === "") {
       showToastMessage("Vui lòng nhập đủ thông tin!", EToastType.ERROR)
     } else {
@@ -169,5 +170,6 @@ const styles = StyleSheet.create({
     width: WIDTH(343),
     borderRadius: 8,
     marginTop: HEIGHT(spacing.lg),
+    height: HEIGHT(spacing.xxl),
   },
 })

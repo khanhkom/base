@@ -105,7 +105,8 @@ export default function VerifyOTP({ route }: ScreenProps) {
         autoFocus
         ref={pinInput}
         mask="﹡"
-        placeholder="•"
+        // placeholder="•"
+        placeholder={<View style={styles.dot_placeholder} />}
         value={code}
         onTextChange={(code) => setCode(code)}
         onFulfill={(code) => _checkCode(code)}
@@ -173,5 +174,12 @@ const styles = StyleSheet.create({
     color: colors.main_6,
     fontWeight: "600",
     fontSize: 18,
+  },
+  dot_placeholder: {
+    width: WIDTH(6),
+    height: WIDTH(6),
+    borderRadius: 25,
+    opacity: 0.3,
+    backgroundColor: colors.gray_5,
   },
 })

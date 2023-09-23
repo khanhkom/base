@@ -1,7 +1,7 @@
 import { StyleSheet, Text, View, TouchableOpacity } from "react-native"
 import React from "react"
 import { Button, Modal } from "react-native-paper"
-import { HEIGHT, WIDTH } from "@app/config/functions"
+import { HEIGHT, WIDTH, getHeight, getWidth } from "@app/config/functions"
 import colors from "@app/assets/colors"
 import { spacing } from "@app/theme/spacing"
 import { navigate } from "@app/navigators/navigationUtilities"
@@ -14,30 +14,33 @@ interface ItemProps {
 export default function PopupVerify({ visible, setVisible, isNewUser, phone }: ItemProps) {
   const hideModal = () => setVisible(false)
   return (
-    <Modal visible={visible} onDismiss={hideModal} contentContainerStyle={styles.containerStyle}>
-      <Text style={styles.textTitle}>
-        Số điện thoại <Text style={styles.textPhone}>{phone}</Text> {isNewUser ? "chưa" : "đã"} tồn
-        tại trong hệ thống của chúng tôi!
-      </Text>
-      <View style={styles.bottomView}>
-        <Button
-          onPress={hideModal}
-          mode="contained"
-          style={styles.buttonLeft}
-          textColor={colors.black}
-        >
-          Đóng
-        </Button>
-        <Button
-          onPress={() => {
-            hideModal()
-            navigate("VerifyOTP", { phone })
-          }}
-          mode="contained"
-          style={styles.buttonRight}
-        >
-          {isNewUser ? "Đăng ký ngay" : "Đăng nhập ngay"}
-        </Button>
+    <Modal visible={visible} onDismiss={hideModal}>
+      <TouchableOpacity onPress={hideModal} style={styles.touch_group} />
+      <View style={styles.containerStyle}>
+        <Text style={styles.textTitle}>
+          Số điện thoại <Text style={styles.textPhone}>{phone}</Text> {isNewUser ? "chưa" : "đã"}{" "}
+          tồn tại trong hệ thống của chúng tôi!
+        </Text>
+        <View style={styles.bottomView}>
+          <Button
+            onPress={hideModal}
+            mode="contained"
+            style={styles.buttonLeft}
+            textColor={colors.black}
+          >
+            Đóng
+          </Button>
+          <Button
+            onPress={() => {
+              hideModal()
+              navigate("VerifyOTP", { phone })
+            }}
+            mode="contained"
+            style={styles.buttonRight}
+          >
+            {isNewUser ? "Đăng ký ngay" : "Đăng nhập ngay"}
+          </Button>
+        </View>
       </View>
     </Modal>
   )
@@ -68,5 +71,12 @@ const styles = StyleSheet.create({
     alignItems: "center",
     width: WIDTH(343),
     marginTop: HEIGHT(spacing.lg),
+  },
+  touch_group: {
+    position: "absolute",
+    width: getWidth(),
+    height: getHeight(),
+    opacity: 0.75,
+    backgroundColor: colors.gray_9,
   },
 })
