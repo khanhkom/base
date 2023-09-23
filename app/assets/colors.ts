@@ -6,7 +6,7 @@ const colors = {
   primary_0: "#EDF0F7",
   black: "#000000",
   white: "#ffffff",
-  backdrop: "rgba(0, 0, 0, .6)",
+  backdrop: "rgba(0, 0, 0, .4)",
   white_1: "rgba(255, 255, 255, .1)",
   gray_5: "#ADB5BD",
   gray_6: "#868E96",

@@ -1,38 +1,34 @@
-const defaultState = {
-  history: [
-    {
-      docter: "Nguyễn Văn A",
-      time: "16:00 - 16:15, 25/09/2023",
-      specialist: "Tai - Mũi - Họng",
-      patient: "16:00 - 16:30",
-      status: 0,
-    },
-    {
-      docter: "Nguyễn Văn A",
-      time: "16:00 - 16:15, 25/09/2023",
-      specialist: "Tai - Mũi - Họng",
-      patient: "16:00 - 16:30",
-      status: 1,
-    },
-    {
-      docter: "Nguyễn Văn A",
-      time: "16:00 - 16:15, 25/09/2023",
-      specialist: "Tai - Mũi - Họng",
-      patient: "16:00 - 16:30",
-      status: 2,
-    },
-    {
-      docter: "Nguyễn Văn A",
-      time: "16:00 - 16:15, 25/09/2023",
-      specialist: "Tai - Mũi - Họng",
-      patient: "16:00 - 16:30",
-      status: 3,
-    },
-  ],
-  //routeName
+import { IOrder } from "@app/interface/order"
+
+const defaultState: IState = {
+  orderHistoryFilter: [],
+  loading: false,
+}
+interface IState {
+  orderHistoryFilter: IOrder[]
+  loading: boolean
 }
 export default (state = defaultState, action) => {
   switch (action.type) {
+    case "FETCH_ORDER_HISTORY_FILTER_REQUEST": {
+      return {
+        ...state,
+        loading: true,
+      }
+    }
+    case "FETCH_ORDER_HISTORY_FILTER_FAIL": {
+      return {
+        ...state,
+        loading: false,
+      }
+    }
+    case "FETCH_ORDER_HISTORY_FILTER_SUCCESS": {
+      return {
+        ...state,
+        orderHistoryFilter: action.data,
+        loading: false,
+      }
+    }
     default:
       break
   }

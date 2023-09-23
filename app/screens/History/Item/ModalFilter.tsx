@@ -1,7 +1,7 @@
 import { StyleSheet, View } from "react-native"
 import React, { forwardRef, useImperativeHandle, useState } from "react"
 import Modal from "react-native-modal"
-import { HEIGHT, WIDTH, getHeight } from "@app/config/functions"
+import { HEIGHT, WIDTH, getHeight, returnStartEndDate } from "@app/config/functions"
 import colors from "@app/assets/colors"
 import { Button, Divider, List, Searchbar } from "react-native-paper"
 import { spacing } from "@app/theme/spacing"
@@ -9,12 +9,44 @@ import { Text } from "@app/components/Text"
 import { Toggle } from "@app/components/Toggle"
 import { iconRegistry } from "@app/components/Icon"
 import ItemDatePicker from "./ItemDatePicker"
+import { STATUS_ORDER } from "@app/interface/order"
+import { useDispatch } from "react-redux"
+import { getOrderHistoryFilter } from "@app/redux/actions/actionOrderHistory"
+import moment from "moment"
 
 type Props = {
-  onPress: () => void
+  filterSelected: any
 }
-const LIST_SPECIALIST = ["Tất cả", "Đã đặt khám", "Đã khám", "Đã hủy"]
-const SORTBY = ["Hôm nay", "Tuần này", "Tháng này", "Chọn thời gian"]
+const LIST_SPECIALIST = [
+  {
+    title: "Tất cả",
+    status: "",
+  },
+  {
+    title: "Đã đặt khám",
+    status: STATUS_ORDER.verified,
+  },
+  {
+    title: "Đã khám",
+    status: STATUS_ORDER.done,
+  },
+  {
+    title: "Đã hủy",
+    status: STATUS_ORDER.cancel,
+  },
+]
+const SORTBY = [
+  {
+    title: "Hôm nay",
+  },
+  {
+    title: "Tuần này",
+  },
+  {
+    title: "Tháng này",
+  },
+  { title: "Chọn thời gian" },
+]
 const DATA_SESSION = [
   {
     title: "Trạng thái lịch khám",
@@ -27,8 +59,13 @@ const DATA_SESSION = [
 ]
 const ModalFilter = forwardRef((props: Props, ref) => {
   const [visible, setVisible] = useState(false)
+  const filterSelected = props?.filterSelected
   const [statusFilter, setStatusFilter] = useState(0)
-  const [timeFilter, setTimeFilter] = useState(0)
+  const [timeFilter, setTimeFilter] = useState(2)
+  const [startDate, setStartDate] = useState(new Date())
+  const [endDate, setEndDate] = useState(new Date())
+  const dispatch = useDispatch()
+  const dateStartEnd = returnStartEndDate()
   useImperativeHandle(ref, () => ({
     show() {
       setVisible(true)
@@ -40,6 +77,42 @@ const ModalFilter = forwardRef((props: Props, ref) => {
   const hide = () => {
     setVisible(false)
   }
+  const onApplyFilter = () => {
+    hide()
+    filterSelected.current = {
+      statusFilter: statusFilter,
+      timeFilter: timeFilter,
+    }
+    let body = {
+      timeFrom: dateStartEnd.todayStart,
+      timeTo: dateStartEnd.todayEnd,
+    }
+    if (timeFilter === 1) {
+      body = {
+        timeFrom: dateStartEnd.weekStart,
+        timeTo: dateStartEnd.weekEnd,
+      }
+    } else if (timeFilter === 2) {
+      body = {
+        timeFrom: dateStartEnd.monthStart,
+        timeTo: dateStartEnd.monthEnd,
+      }
+    } else if (timeFilter === 3) {
+      body = {
+        timeFrom: startDate.toISOString(),
+        timeTo: moment(endDate).endOf("day").toISOString(),
+      }
+    }
+    console.log("body", body, LIST_SPECIALIST[statusFilter]?.status)
+    setTimeout(() => {
+      dispatch(
+        getOrderHistoryFilter({
+          ...body,
+          status: LIST_SPECIALIST[statusFilter]?.status,
+        }),
+      )
+    }, 500)
+  }
   return (
     <Modal
       isVisible={visible}
@@ -47,6 +120,8 @@ const ModalFilter = forwardRef((props: Props, ref) => {
       backdropOpacity={0.5}
       onBackButtonPress={() => {
         setVisible(false)
+        setStatusFilter(filterSelected.current.statusFilter)
+        setTimeFilter(filterSelected.current.timeFilter)
       }}
       animationIn={"slideInRight"}
       animationOut={"slideOutRight"}
@@ -57,6 +132,8 @@ const ModalFilter = forwardRef((props: Props, ref) => {
       coverScreen={true}
       onBackdropPress={() => {
         setVisible(false)
+        setStatusFilter(filterSelected.current.statusFilter)
+        setTimeFilter(filterSelected.current.timeFilter)
       }}
     >
       <View style={styles.container}>
@@ -85,7 +162,7 @@ const ModalFilter = forwardRef((props: Props, ref) => {
                       }}
                       key={index}
                       variant="radio"
-                      label={item}
+                      label={item?.title}
                       value={isActive}
                       containerStyle={{ marginTop: HEIGHT(12) }}
                     />
@@ -98,8 +175,13 @@ const ModalFilter = forwardRef((props: Props, ref) => {
         })}
         {timeFilter === 3 && (
           <View>
-            <ItemDatePicker title="Từ ngày" />
-            <ItemDatePicker title="Đến ngày" />
+            <ItemDatePicker title="Từ ngày" onChangeDate={setStartDate} date={startDate} />
+            <ItemDatePicker
+              title="Đến ngày"
+              onChangeDate={setEndDate}
+              minDate={startDate}
+              date={endDate}
+            />
           </View>
         )}
 
@@ -108,7 +190,7 @@ const ModalFilter = forwardRef((props: Props, ref) => {
             Đặt lại
           </Button>
           <Button
-            onPress={hide}
+            onPress={onApplyFilter}
             mode="contained"
             icon={iconRegistry.rotate_left}
             style={{ borderRadius: 8 }}

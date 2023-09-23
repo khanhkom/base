@@ -5,7 +5,10 @@ export interface IDocter {
   birthday: string
   mail: string
   price: number
-  specialist: string[]
+  specialist: {
+    code: string
+    value: string
+  }[]
   experience: IExperience[]
   education: Education[]
   averageRating: number

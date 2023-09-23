@@ -33,7 +33,7 @@ export default function ItemDocter({ item }: ItemProps) {
           B.s {item?.name}
         </Text>
         <Text weight="normal" size="sm" style={styles.textDes}>
-          Khoa: {item?.specialist?.[0]}
+          Khoa: {item?.specialist?.[0]?.value}
         </Text>
         <View style={styles.wrapperStar}>
           <Icon icon="ic_start" size={WIDTH(16)} />

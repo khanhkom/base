@@ -1,7 +1,10 @@
 export interface IOrder {
   patientId: string
   doctorId: string
-  specialist: string
+  specialist: {
+    code: string
+    value: string
+  }
   timeRange: {
     from: string
     to: string
