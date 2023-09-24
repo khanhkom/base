@@ -42,6 +42,9 @@ export default function HomeScreen() {
     }
   }, [])
 
+  /** search bar */
+  const onSearch = async (keyword) => {}
+  /** */
   useEffect(() => {
     async function updateTokenFi() {
       const token = await messaging().getToken()
@@ -73,7 +76,7 @@ export default function HomeScreen() {
 
   return (
     <Screen preset="scroll" style={styles.container}>
-      <HeaderHome />
+      <HeaderHome onSearch={onSearch} />
       <ItemUtilities />
       <BannerCarousel />
       <TopDocter />

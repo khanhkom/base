@@ -7,7 +7,11 @@ import { spacing } from "@app/theme/spacing"
 import { Searchbar } from "react-native-paper"
 import colors from "@app/assets/colors"
 import { navigate } from "@app/navigators/navigationUtilities"
-export default function HeaderHome() {
+type HeaderHomeProps = {
+  onSearch?: (keyword: string) => void
+}
+export default function HeaderHome(props: HeaderHomeProps) {
+  const { onSearch } = props
   const [keyword, setKeyword] = useState("")
   return (
     <View style={styles.imageBGR} resizeMode="contain">
@@ -24,12 +28,14 @@ export default function HeaderHome() {
         />
       </View>
       <Searchbar
+        onClearIconPress={() => setKeyword("")}
         value={keyword}
         icon={R.images.search_normal}
         style={styles.searchBar}
         iconColor={colors.white}
         placeholderTextColor={colors.primary_2}
         placeholder="Tìm kiếm"
+        onChangeText={(txt) => setKeyword(txt)}
       />
     </View>
   )

@@ -16,7 +16,7 @@ export default function CousultOnline() {
         title="Tư vấn ngay"
         style={styles.item}
         onPress={() => {
-          // navigate("SearchDocter")
+          navigate("SearchDocter")
         }}
         left={() => {
           return <Image source={R.images.ic_tuvanngay} style={styles.icon} resizeMode="contain" />

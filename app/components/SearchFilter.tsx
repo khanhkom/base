@@ -9,9 +9,17 @@ import R from "@app/assets"
 interface ItemProps {
   placeholder?: string
   onPressFilter: () => void
+  onIconPress?: () => void
+  value?: string
+  onChangeText?: (txt: string) => void
 }
-export default function SearchFilter({ onPressFilter, placeholder }: ItemProps) {
-  const [keyword, setKeyword] = useState("")
+export default function SearchFilter({
+  onPressFilter,
+  placeholder,
+  onIconPress,
+  onChangeText,
+  value,
+}: ItemProps) {
   const [height, setHeight] = useState(WIDTH(48))
   const onLayout = (event: LayoutChangeEvent) => {
     const { height: viewHeight } = event.nativeEvent.layout
@@ -21,14 +29,15 @@ export default function SearchFilter({ onPressFilter, placeholder }: ItemProps) 
   return (
     <View style={styles.container}>
       <Searchbar
+        onIconPress={onIconPress}
         onLayout={onLayout}
         icon={R.images.search_normal}
         iconColor={colors.gray_5}
         style={[styles.searchContainer, { width: getWidth() - height - WIDTH(44) }]}
-        value={keyword}
+        value={value}
         placeholder={placeholder || "Tìm kiếm bác sĩ"}
         placeholderTextColor={colors.gray_6}
-        onChangeText={setKeyword}
+        onChangeText={onChangeText}
       />
       <IconButton
         icon={iconRegistry.filter}

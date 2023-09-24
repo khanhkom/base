@@ -1,5 +1,5 @@
 import { FlatList, KeyboardAvoidingView, Platform, StyleSheet, View } from "react-native"
-import React, { forwardRef, useImperativeHandle, useState } from "react"
+import React, { forwardRef, useEffect, useImperativeHandle, useState } from "react"
 import Modal from "react-native-modal"
 import { HEIGHT, WIDTH, getHeight } from "@app/config/functions"
 import colors from "@app/assets/colors"
@@ -8,49 +8,61 @@ import { spacing } from "@app/theme/spacing"
 import { Text } from "@app/components/Text"
 import { Toggle } from "@app/components/Toggle"
 import { iconRegistry } from "@app/components/Icon"
+import { da } from "date-fns/locale"
 
 type Props = {
-  onPress: () => void
+  onPress?: () => void
+  data?: IITem[]
+  selectItem?: (item, index) => void
+  onApply?: () => void
 }
-const LIST_SPECIALIST = ["Tất cả", "Nhi khoa", "Tai mũi họng"]
-const GENDER = ["Nam", "Nữ"]
-const SORTBY = ["Đánh giá từ cao đến thấp", "Đánh giá từ thấp đến cao"]
-const DATA_SESSION = [
-  {
-    title: "Chuyên khoa",
-    data: LIST_SPECIALIST,
-  },
-  {
-    title: "Giới tính",
-    data: GENDER,
-  },
-  {
-    title: "Sắp xếp theo",
-    data: SORTBY,
-  },
-]
+type IITem = {
+  title?: string
+  data: string[]
+  isIndex?: number
+}
+
 const ModalFilter = forwardRef((props: Props, ref) => {
   const [visible, setVisible] = useState(false)
+  const [data, setData] = useState(props.data)
+  const [isSelect, setIsSelect] = useState(false)
+  const [isReset, setIsReset] = useState(false)
   const hide = () => {
     setVisible(false)
+    return data
   }
-
+  const onSelectItem = (index, indx) => {
+    setIsSelect(!isSelect)
+    data[index].isIndex = indx
+  }
+  const onReset = () => {
+    setIsSelect(!isSelect)
+    for (let i = 0; i < data.length; i++) {
+      data[i].isIndex = 0
+    }
+  }
+  const onHandlApply = () => {
+    hide()
+    props.onApply()
+  }
   useImperativeHandle(ref, () => ({
     show() {
       setVisible(true)
     },
     hide() {
-      setVisible(false)
+      hide()
+    },
+    returnData() {
+      return data
     },
   }))
-
   return (
     <Modal
       isVisible={visible}
       avoidKeyboard
       backdropOpacity={0.5}
       onBackButtonPress={() => {
-        setVisible(false)
+        hide()
       }}
       animationIn={"slideInRight"}
       animationOut={"slideOutRight"}
@@ -69,20 +81,21 @@ const ModalFilter = forwardRef((props: Props, ref) => {
             Bộ lọc
           </Text>
         </View>
-        {DATA_SESSION.map((item, index) => {
+        {props.data.map((item, index) => {
           return (
             <View key={index}>
               <View style={styles.session}>
                 <Text size="md" weight="medium" style={{ color: colors.gray_9 }}>
                   {item.title}:
                 </Text>
-                {item.data.map((item, index) => {
+                {item.data.map((itemm, indx) => {
                   return (
                     <Toggle
-                      key={index}
+                      onPress={() => onSelectItem(index, indx)}
+                      key={indx}
                       variant="radio"
-                      label={item}
-                      value={index === 0}
+                      label={itemm}
+                      value={indx === data[index].isIndex}
                       containerStyle={{ marginTop: HEIGHT(12) }}
                     />
                   )
@@ -93,10 +106,15 @@ const ModalFilter = forwardRef((props: Props, ref) => {
           )
         })}
         <View style={styles.bottomButton}>
-          <Button textColor={colors.gray_7} icon={iconRegistry.rotate_left}>
+          <Button onPress={onReset} textColor={colors.gray_7} icon={iconRegistry.rotate_left}>
             Đặt lại
           </Button>
-          <Button mode="contained" icon={iconRegistry.rotate_left} style={{ borderRadius: 8 }}>
+          <Button
+            onPress={onHandlApply}
+            mode="contained"
+            icon={iconRegistry.rotate_left}
+            style={{ borderRadius: 8 }}
+          >
             Áp dụng
           </Button>
         </View>
