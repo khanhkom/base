@@ -16,6 +16,7 @@ interface ItemProps {
 }
 export default function SelectBirthday({ title, onSelectDate, value }: ItemProps) {
   const [date, setDate] = useState(new Date())
+  const [isSeleted, setSeleted] = useState(false)
   useEffect(() => {
     if (value) setDate(new Date(value))
   }, [])
@@ -37,7 +38,7 @@ export default function SelectBirthday({ title, onSelectDate, value }: ItemProps
         <TextField
           placeholder="dd/mm/yyyy"
           style={{ color: colors.gray_9 }}
-          value={!isToday(date) ? moment(date).format("DD/MM/YYYY") : ""}
+          value={!isSeleted || value ? moment(value).format("DD/MM/YYYY") : ""}
           editable={false}
           RightAccessory={() => (
             <Icon
@@ -56,6 +57,9 @@ export default function SelectBirthday({ title, onSelectDate, value }: ItemProps
           setOpen(false)
           setDate(date)
           onSelectDate(date)
+          if (!isSeleted) {
+            setSeleted(true)
+          }
         }}
         mode="date"
         title="Chọn ngày sinh"

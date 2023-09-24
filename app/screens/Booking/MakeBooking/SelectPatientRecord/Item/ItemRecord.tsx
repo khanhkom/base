@@ -1,4 +1,4 @@
-import { StyleSheet, View, Image } from "react-native"
+import { StyleSheet, View, Image, Pressable } from "react-native"
 import React from "react"
 import R from "@app/assets"
 import { Text } from "@app/components/Text"
@@ -14,12 +14,11 @@ interface ItemProps {
 }
 export default function ItemRecord({ onPress, item }: ItemProps) {
   return (
-    <Card
-      mode="contained"
+    <Pressable
       style={styles.item}
-      contentStyle={{ flexDirection: "row" }}
       onPress={() => {
         onPress && onPress()
+        console.log("AAAAAAA")
       }}
     >
       <Image source={R.images.avatar_patient} style={styles.avatar} resizeMode="center" />
@@ -35,7 +34,7 @@ export default function ItemRecord({ onPress, item }: ItemProps) {
           <Text style={{ color: colors.gray_9 }}>{item?.gender === "male" ? "Nam" : "Nữ"}</Text>
         </Text>
       </View>
-    </Card>
+    </Pressable>
   )
 }
 
@@ -47,6 +46,7 @@ const styles = StyleSheet.create({
     marginTop: HEIGHT(spacing.sm),
     flexDirection: "row",
     paddingHorizontal: WIDTH(spacing.sm),
+    borderRadius: 8,
   },
   avatar: {
     width: WIDTH(72),

@@ -54,7 +54,7 @@ export default function SelectTimeBooking() {
       />
       <Button
         onPress={() => {
-          navigate("CreateMedicalRecord")
+          navigate("CompleteBooking")
           dispatch(updateSelectedTimeOrder(timeSelected))
         }}
         disabled={timeSelected.id === -1}

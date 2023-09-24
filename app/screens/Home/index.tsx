@@ -14,6 +14,7 @@ import messaging from "@react-native-firebase/messaging"
 import { useSelector } from "@app/redux/reducers"
 import { useDispatch } from "react-redux"
 import { StringeeClient } from "stringee-react-native"
+import { getOrderHistory } from "@app/redux/actions/actionOrder"
 
 export default function HomeScreen() {
   const session = useSelector((state) => state.stringeeReducers.session)
@@ -42,8 +43,6 @@ export default function HomeScreen() {
   }, [])
 
   useEffect(() => {
-    dispatch(getStringeeToken())
-
     async function updateTokenFi() {
       const token = await messaging().getToken()
       console.log("AAAAA", token)
@@ -62,6 +61,10 @@ export default function HomeScreen() {
       }, 500)
     }
   }, [session?.access_token])
+  useEffect(() => {
+    dispatch(getStringeeToken())
+    dispatch(getOrderHistory())
+  }, [])
   useEffect(() => {
     if (session?.access_token !== "") {
       client?.current?.connect(session?.access_token)

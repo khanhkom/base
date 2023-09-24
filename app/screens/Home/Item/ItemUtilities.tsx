@@ -1,13 +1,14 @@
 import { StyleSheet, Image, View, FlatList, Pressable } from "react-native"
 import React from "react"
 import R from "@app/assets"
-import { HEIGHT, WIDTH } from "@app/config/functions"
+import { HEIGHT, WIDTH, convertDuration } from "@app/config/functions"
 import { Text } from "@app/components/Text"
 import { Card, List } from "react-native-paper"
 import { spacing } from "@app/theme/spacing"
 import colors from "@app/assets/colors"
 import { navigate } from "@app/navigators/navigationUtilities"
 import { Icon } from "@app/components/Icon"
+import useHookHome from "../useHookHome"
 const TYPE_FEATURES = {
   DATLICH: 0,
   TUVAN: 1,
@@ -59,6 +60,7 @@ const Item = ({ item, index, onPress }) => {
   )
 }
 export default function ItemUtilities() {
+  const { returnNearestOrder } = useHookHome()
   const onPresItem = (index) => {
     switch (index) {
       case TYPE_FEATURES.TUVAN:
@@ -72,6 +74,10 @@ export default function ItemUtilities() {
         break
     }
   }
+  console.log("returnNearestOrder", returnNearestOrder())
+  const nearestOrder = returnNearestOrder()
+  const timeFromNow = convertDuration(nearestOrder?.timeDifference)
+
   return (
     <Card style={styles.card}>
       <FlatList
@@ -82,27 +88,35 @@ export default function ItemUtilities() {
         }}
         ItemSeparatorComponent={() => <View style={{ height: HEIGHT(spacing.md) }} />}
       />
-      <List.Item
-        style={styles.itemRemind}
-        onPress={() => {
-          navigate("DetailBooking")
-        }}
-        title={() => {
-          return (
-            <Text size="sm" weight="medium" style={{ color: colors.white }}>
-              Đã đến giờ khám bệnh, vào khám
-            </Text>
-          )
-        }}
-        left={() => {
-          return (
-            <Image source={R.images.call_reminder} style={styles.iconRemind} resizeMode="contain" />
-          )
-        }}
-        right={() => {
-          return <Icon icon="arrow_right_full" size={WIDTH(28)} />
-        }}
-      />
+      {nearestOrder?.timeDifference && timeFromNow.day === 0 && (
+        <List.Item
+          style={styles.itemRemind}
+          onPress={() => {
+            navigate("DetailBooking")
+          }}
+          title={() => {
+            return (
+              <Text size="sm" weight="medium" style={{ color: colors.white }}>
+                {timeFromNow?.day === 0 && timeFromNow.hour === 0 && timeFromNow.min < 5
+                  ? "Đã đến giờ khám bệnh, vào khám"
+                  : `Bạn có lịch khám sắp tới trong ${timeFromNow?.hour} giờ ${timeFromNow?.min} phút tới`}
+              </Text>
+            )
+          }}
+          left={() => {
+            return (
+              <Image
+                source={R.images.call_reminder}
+                style={styles.iconRemind}
+                resizeMode="contain"
+              />
+            )
+          }}
+          right={() => {
+            return <Icon icon="arrow_right_full" size={WIDTH(28)} />
+          }}
+        />
+      )}
     </Card>
   )
 }

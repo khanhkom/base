@@ -51,7 +51,7 @@ export default function BottonButton({
         </Button>
         <Button
           onPress={() => {
-            navigate("CreateMedicalRecord", { id })
+            navigate("CompleteBooking", { id })
           }}
           mode="contained"
           style={styles.button}

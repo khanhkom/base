@@ -30,7 +30,7 @@ import SearchDocter from "@app/screens/Docter/SearchDocter"
 import DocterInformation from "@app/screens/Docter/DocterInformation"
 import SelectCalendar from "@app/screens/Booking/MakeBooking/SelectCalendar"
 import SelectTimeBooking from "@app/screens/Booking/MakeBooking/SelectTimeBooking"
-import CreateMedicalRecord from "@app/screens/Booking/MakeBooking/CreateMedicalRecord"
+import CompleteBooking from "@app/screens/Booking/MakeBooking/CompleteBooking"
 import BookingSuccess from "@app/screens/Booking/BookingSuccess"
 import SelectPatientRecord from "@app/screens/Booking/MakeBooking/SelectPatientRecord"
 import SelectSpecialist from "@app/screens/Booking/MakeBooking/SelectSpecialist"
@@ -70,7 +70,7 @@ export type AppStackParamList = {
 
   SelectCalendar: undefined
   SelectTimeBooking: undefined
-  CreateMedicalRecord: undefined
+  CompleteBooking: undefined
   BookingSuccess: undefined
   SelectPatientRecord: undefined
   SelectSpecialist: undefined
@@ -136,7 +136,7 @@ const AppStack = observer(function AppStack() {
       <Stack.Screen name="DocterInformation" component={DocterInformation} />
       <Stack.Screen name="SelectCalendar" component={SelectCalendar} />
       <Stack.Screen name="SelectTimeBooking" component={SelectTimeBooking} />
-      <Stack.Screen name="CreateMedicalRecord" component={CreateMedicalRecord} />
+      <Stack.Screen name="CompleteBooking" component={CompleteBooking} />
       <Stack.Screen name="BookingSuccess" component={BookingSuccess} />
       <Stack.Screen name="SelectPatientRecord" component={SelectPatientRecord} />
       <Stack.Screen name="SelectSpecialist" component={SelectSpecialist} />

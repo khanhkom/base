@@ -22,7 +22,7 @@ import { createOrder } from "@app/services/api/functions/order"
 import { LoadingOpacity } from "@app/components/loading/LoadingOpacity"
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view"
 
-export default function CreateMedicalRecord() {
+export default function CompleteBooking() {
   const [visible, setVisible] = React.useState(false)
   const [loading, setLoading] = React.useState(false)
   const [listImage, setListImage] = useState([])
@@ -68,8 +68,9 @@ export default function CreateMedicalRecord() {
         uri: Platform.OS === "ios" ? item.uri.replace("file://", "") : item.uri,
       })
     })
-
+    console.log("formData_formData", formData)
     let resCreate = await createOrder(formData)
+    console.log("resCreate_resCreate", resCreate)
     // navigate("BookingSuccess")
     if (resCreate.status === 201) {
       navigate("BookingSuccess", {
@@ -137,14 +138,6 @@ export default function CreateMedicalRecord() {
           />
           <TextField
             require
-            label="Số điện thoại"
-            placeholder="0123456789"
-            value={patient?.mail}
-            style={{ color: colors.gray_9 }}
-            containerStyle={{ marginTop: HEIGHT(spacing.md) }}
-          ></TextField>
-          <TextField
-            require
             label="Lý do khám"
             multiline
             style={{ color: colors.gray_9 }}
@@ -159,6 +152,7 @@ export default function CreateMedicalRecord() {
           <Button
             mode="contained"
             style={styles.button}
+            loading={loading}
             onPress={() => {
               verifyData()
             }}
