@@ -92,7 +92,9 @@ export default function ItemUtilities() {
         <List.Item
           style={styles.itemRemind}
           onPress={() => {
-            navigate("DetailBooking")
+            navigate("DetailBooking", {
+              id: nearestOrder?.id,
+            })
           }}
           title={() => {
             return (

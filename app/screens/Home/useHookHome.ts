@@ -1,10 +1,10 @@
-import { IOrder, STATUS_ORDER } from "@app/interface/order"
+import { IOrderHistory, STATUS_ORDER } from "@app/interface/order"
 import { useSelector } from "@app/redux/reducers"
 import moment from "moment"
 
 const useHookHome = () => {
   const orderHistory = useSelector((state) => state.orderReducers.orderHistory)
-  const returnNearestOrder = (): IOrder & {
+  const returnNearestOrder = (): IOrderHistory & {
     timeDifference: number
   } => {
     const currentTimestamp = Date.now()
