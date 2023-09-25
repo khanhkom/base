@@ -193,8 +193,7 @@ const ModalFilter = forwardRef((props: Props, ref) => {
           <Button
             onPress={onHandlApply}
             mode="contained"
-            icon={iconRegistry.rotate_left}
-            style={{ borderRadius: 8 }}
+            style={{ borderRadius: 8, width: WIDTH(120) }}
           >
             Áp dụng
           </Button>

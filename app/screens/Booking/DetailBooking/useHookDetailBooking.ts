@@ -86,7 +86,7 @@ const useHookDetailBooking = (id) => {
   const getDetailOrderApi = async () => {
     setLoading(true)
     let resOrder = await getDetailOrder(id)
-    console.log("AAAAAAAAAA", resOrder?.data)
+    console.log("AAAAAAAAAA", resOrder)
     setDetailOrder(resOrder.data)
     setLoading(false)
   }
