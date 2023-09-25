@@ -10,6 +10,7 @@ const IMAGE_DATLICH = {
   features_1: require("./features_1.png"),
   features_2: require("./features_2.png"),
   features_3: require("./features_3.png"),
+  datlich_erros: require("./datlich_erro.png"),
 }
 
 export default IMAGE_DATLICH
