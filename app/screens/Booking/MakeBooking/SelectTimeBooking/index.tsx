@@ -46,7 +46,11 @@ export default function SelectTimeBooking({ route }: ScreenProps) {
     getDoctorCalendarAvailable()
   }, [])
   const checkIsFull = (from: string) => {
-    if (moment(from.valueOf(), "HH:mm") < new Date().getTime()) {
+    const today = new Date()
+    const selectDate = new Date(selectedDate)
+    const checkTimeHour = moment(from.valueOf(), "HH:mm") < new Date().getTime()
+    const checkDate = selectDate.getTime() > today.getTime()
+    if (checkTimeHour && !checkDate) {
       return true
     } else if (dataCalendar.length > 0) {
       const valueFrom = dataCalendar?.find((item) => item.timeRange.from === from)
