@@ -17,7 +17,6 @@ import { getDocterCalendar } from "@app/services/api/functions/docter"
 import { IDoctorCalendar } from "@app/interface/docter"
 import LoadingScreen from "@app/components/loading/LoadingScreen"
 import moment from "moment"
-import { log } from "react-native-reanimated"
 interface ScreenProps {
   route: {
     params: {
