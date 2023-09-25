@@ -44,10 +44,10 @@ export default function CompleteBooking() {
 
   const onCreateAppointment = async () => {
     const startDate = moment(new Date(selectedDate))
-      .add(selectedTime.startHour, "hour")
+      .add(selectedTime.startHour - 7, "hour")
       .add(selectedTime.startMin, "minute")
     const endDate = moment(new Date(selectedDate))
-      .add(selectedTime.startHour, "hour")
+      .add(selectedTime.startHour - 7, "hour")
       .add(selectedTime.startMin + 15, "minute")
     setLoading(true)
     let timeRange = {
@@ -75,7 +75,7 @@ export default function CompleteBooking() {
     // navigate("BookingSuccess")
     if (resCreate.status === 201) {
       navigate("BookingSuccess", {
-        id: resCreate.data.id,
+        id: resCreate.data?.[0]?.id,
       })
       dispatch(getOrderHistory())
 

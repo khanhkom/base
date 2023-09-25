@@ -6,31 +6,94 @@ import SearchFilter from "@app/components/SearchFilter"
 import ItemSchedule from "./Item/ItemSchedule"
 import { HEIGHT, returnStartEndDate } from "@app/config/functions"
 import { spacing } from "@app/theme/spacing"
-import ModalFilter from "./Item/ModalFilter"
+import ModalFilter, { LIST_SPECIALIST } from "./Item/ModalFilter"
 import { useSelector } from "@app/redux/reducers"
 import ItemEmpty from "@app/components/ItemEmpty"
 import { useDispatch } from "react-redux"
 import { getOrderHistoryFilter } from "@app/redux/actions/actionOrderHistory"
+import moment from "moment"
 
 export default function History() {
   const refModal = useRef(null)
   const orderHistoryFilter = useSelector((state) => state.bookingHistoryReducers.orderHistoryFilter)
   const loading = useSelector((state) => state.bookingHistoryReducers.loading)
   const dispatch = useDispatch()
+  const [isFiltered, setFiltered] = useState(false)
+
+  const dateStartEnd = returnStartEndDate()
   const filterSelected = useRef({
     statusFilter: 0,
-    timeFilter: 2,
+    timeFilter: -1,
+    startDate: new Date(),
+    endDate: new Date(),
   })
+  const [keyword, setKeyword] = useState("")
+  let timerId
+  const onApplyFilter = (dataFilter) => {
+    filterSelected.current = dataFilter
 
-  useEffect(() => {
-    const dateStartEnd = returnStartEndDate()
-    dispatch(
-      getOrderHistoryFilter({
+    const { statusFilter, timeFilter, startDate, endDate } = filterSelected?.current
+    if (statusFilter > 0 || timeFilter !== -1) {
+      setFiltered(true)
+    } else {
+      setFiltered(false)
+    }
+    let body = {
+      timeFrom: dateStartEnd.todayStart,
+      timeTo: dateStartEnd.todayEnd,
+    }
+    if (timeFilter === -1) {
+      body = {}
+    }
+    if (timeFilter === 1) {
+      body = {
+        timeFrom: dateStartEnd.weekStart,
+        timeTo: dateStartEnd.weekEnd,
+      }
+    } else if (timeFilter === 2) {
+      body = {
         timeFrom: dateStartEnd.monthStart,
         timeTo: dateStartEnd.monthEnd,
-      }),
-    )
-  }, [])
+      }
+    } else if (timeFilter === 3) {
+      body = {
+        timeFrom: startDate.toISOString(),
+        timeTo: moment(endDate).endOf("day").toISOString(),
+      }
+    }
+    if (statusFilter !== 0) {
+      Object.assign(body, {
+        status: LIST_SPECIALIST[statusFilter]?.status,
+      })
+    }
+    Object.assign(body, {
+      search: keyword,
+    })
+    console.log("body", body)
+    setTimeout(() => {
+      dispatch(
+        getOrderHistoryFilter({
+          ...body,
+        }),
+      )
+    }, 500)
+  }
+
+  function bounceToSearch() {
+    clearTimeout(timerId)
+
+    timerId = setTimeout(() => {
+      // Code to trigger the search
+      onApplyFilter(filterSelected.current)
+      console.log("filterSelected", filterSelected.current)
+      console.log("Searching...")
+    }, 300)
+  }
+
+  useEffect(() => {
+    bounceToSearch()
+  }, [keyword])
+
   return (
     <View style={styles.container}>
       <Header
@@ -39,9 +102,11 @@ export default function History() {
         titleStyle={{ color: colors.white }}
       />
       <SearchFilter
+        isFiltered={isFiltered}
         onPressFilter={() => {
           refModal?.current?.show()
         }}
+        onChangeText={(txt) => setKeyword(txt)}
         placeholder="Tìm tên bệnh nhân, bác sĩ"
       />
       {loading && (
@@ -61,7 +126,7 @@ export default function History() {
           return <ItemEmpty title="Bạn chưa có lịch khám nào!" />
         }}
       />
-      <ModalFilter ref={refModal} filterSelected={filterSelected} />
+      <ModalFilter ref={refModal} filterSelected={filterSelected} onApplyFilter={onApplyFilter} />
     </View>
   )
 }

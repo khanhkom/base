@@ -11,13 +11,12 @@ import { iconRegistry } from "@app/components/Icon"
 import ItemDatePicker from "./ItemDatePicker"
 import { STATUS_ORDER } from "@app/interface/order"
 import { useDispatch } from "react-redux"
-import { getOrderHistoryFilter } from "@app/redux/actions/actionOrderHistory"
-import moment from "moment"
 
 type Props = {
   filterSelected: any
+  onApplyFilter: (val) => void
 }
-const LIST_SPECIALIST = [
+export const LIST_SPECIALIST = [
   {
     title: "Tất cả",
     status: "",
@@ -61,7 +60,7 @@ const ModalFilter = forwardRef((props: Props, ref) => {
   const [visible, setVisible] = useState(false)
   const filterSelected = props?.filterSelected
   const [statusFilter, setStatusFilter] = useState(0)
-  const [timeFilter, setTimeFilter] = useState(2)
+  const [timeFilter, setTimeFilter] = useState(-1)
   const [startDate, setStartDate] = useState(new Date())
   const [endDate, setEndDate] = useState(new Date())
   const dispatch = useDispatch()
@@ -79,39 +78,12 @@ const ModalFilter = forwardRef((props: Props, ref) => {
   }
   const onApplyFilter = () => {
     hide()
-    filterSelected.current = {
+    props?.onApplyFilter({
       statusFilter: statusFilter,
       timeFilter: timeFilter,
-    }
-    let body = {
-      timeFrom: dateStartEnd.todayStart,
-      timeTo: dateStartEnd.todayEnd,
-    }
-    if (timeFilter === 1) {
-      body = {
-        timeFrom: dateStartEnd.weekStart,
-        timeTo: dateStartEnd.weekEnd,
-      }
-    } else if (timeFilter === 2) {
-      body = {
-        timeFrom: dateStartEnd.monthStart,
-        timeTo: dateStartEnd.monthEnd,
-      }
-    } else if (timeFilter === 3) {
-      body = {
-        timeFrom: startDate.toISOString(),
-        timeTo: moment(endDate).endOf("day").toISOString(),
-      }
-    }
-    console.log("body", body, LIST_SPECIALIST[statusFilter]?.status)
-    setTimeout(() => {
-      dispatch(
-        getOrderHistoryFilter({
-          ...body,
-          status: LIST_SPECIALIST[statusFilter]?.status,
-        }),
-      )
-    }, 500)
+      startDate,
+      endDate,
+    })
   }
   return (
     <Modal
@@ -186,7 +158,21 @@ const ModalFilter = forwardRef((props: Props, ref) => {
         )}
 
         <View style={styles.bottomButton}>
-          <Button textColor={colors.gray_7} icon={iconRegistry.rotate_left}>
+          <Button
+            textColor={colors.gray_7}
+            onPress={() => {
+              hide()
+              setStatusFilter(0)
+              setTimeFilter(-1)
+              props?.onApplyFilter({
+                statusFilter: 0,
+                timeFilter: -1,
+                startDate: new Date(),
+                endDate: new Date(),
+              })
+            }}
+            icon={iconRegistry.rotate_left}
+          >
             Đặt lại
           </Button>
           <Button

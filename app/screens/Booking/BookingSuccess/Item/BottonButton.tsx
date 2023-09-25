@@ -21,7 +21,7 @@ export default function BottonButton() {
       </Button>
       <Button
         onPress={() => {
-          navigate("Home")
+          navigate("SelectPatientRecord")
         }}
         mode="contained"
         style={styles.button}

@@ -1,10 +1,9 @@
-import { StyleSheet, View, TouchableOpacity } from "react-native"
+import { StyleSheet, View } from "react-native"
 import React from "react"
 import { Button, Modal } from "react-native-paper"
 import { HEIGHT, WIDTH } from "@app/config/functions"
 import colors from "@app/assets/colors"
 import { spacing } from "@app/theme/spacing"
-import { navigate } from "@app/navigators/navigationUtilities"
 import { Text } from "./Text"
 interface ItemProps {
   visible: boolean
