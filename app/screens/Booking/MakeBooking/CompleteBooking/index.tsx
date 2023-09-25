@@ -1,4 +1,4 @@
-import { Platform, ScrollView, StyleSheet, View } from "react-native"
+import { Platform, Pressable, ScrollView, StyleSheet, View } from "react-native"
 import React, { useState } from "react"
 import { Header } from "@app/components/Header"
 import colors from "@app/assets/colors"
@@ -41,6 +41,7 @@ export default function CompleteBooking() {
       setVisible(true)
     }
   }
+
   const onCreateAppointment = async () => {
     const startDate = moment(new Date(selectedDate))
       .add(selectedTime.startHour, "hour")
@@ -99,42 +100,77 @@ export default function CompleteBooking() {
             title="Chuyên khoa"
             value={specialist?.name}
             placeholder="Chọn chuyên khoa"
-            onPress={() => navigate("SelectSpecialist")}
+            onPress={() => navigate("SelectSpecialistAgain", { preScreen: "CompleteBooking" })}
           />
           <CustomPicker
             required
             title="Bác sĩ"
             value={docter?.name}
             placeholder="Chọn bác sĩ"
-            onPress={() => navigate("SearchDocter")}
+            onPress={() =>
+              navigate("SearchDocterAgain", {
+                preScreen: "CompleteBooking",
+              })
+            }
           />
-          <SelectBirthday
-            value={selectedDate}
-            title="Chọn ngày khám"
-            onSelectDate={(date) => {
-              dispatch(updateSeletedDateOrder(moment(date).format("YYYY-MM-DD")))
+          <Pressable
+            onPress={() => {
+              navigate("SelectCalendarAgain", {
+                preScreen: "CompleteBooking",
+              })
             }}
-          />
+          >
+            <TextField
+              require
+              label="Chọn ngày khám"
+              placeholder="Chọn ngày khám"
+              style={{ color: colors.gray_9 }}
+              containerStyle={{ marginVertical: HEIGHT(spacing.sm) }}
+              value={moment(selectedDate).format("DD/MM/YYYY")}
+              editable={false}
+              RightAccessory={() => (
+                <Icon
+                  icon="calendar"
+                  size={20}
+                  style={{ marginTop: HEIGHT(10), marginRight: WIDTH(12) }}
+                />
+              )}
+            ></TextField>
+          </Pressable>
+          <Pressable
+            onPress={() => {
+              navigate("SelectTimeBookingAgain", {
+                preScreen: "CompleteBooking",
+              })
+            }}
+          >
+            <TextField
+              require
+              style={{ color: colors.gray_9 }}
+              label="Chọn thời gian"
+              placeholder="Chọn thời gian"
+              value={selectedTime?.time}
+              editable={false}
+              RightAccessory={() => (
+                <Icon
+                  icon="calendar"
+                  size={20}
+                  style={{ marginTop: HEIGHT(10), marginRight: WIDTH(12) }}
+                />
+              )}
+            ></TextField>
+          </Pressable>
 
-          <TextField
-            require
-            label="Chọn thời gian"
-            placeholder="Chọn thời gian"
-            value={selectedTime?.time}
-            RightAccessory={() => (
-              <Icon
-                icon="calendar"
-                size={20}
-                style={{ marginTop: HEIGHT(10), marginRight: WIDTH(12) }}
-              />
-            )}
-          ></TextField>
           <CustomPicker
             required
             title="Bệnh nhân"
             value={patient?.name}
             placeholder="Chọn hồ sơ bệnh nhân"
-            onPress={() => navigate("SelectPatientRecord")}
+            onPress={() =>
+              navigate("SelectPatientRecordAgain", {
+                preScreen: "CompleteBooking",
+              })
+            }
           />
           <TextField
             require

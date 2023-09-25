@@ -7,25 +7,19 @@ import { HEIGHT, WIDTH } from "@app/config/functions"
 import { spacing } from "@app/theme/spacing"
 import { Button, Card } from "react-native-paper"
 import { Icon } from "@app/components/Icon"
-import { navigate } from "@app/navigators/navigationUtilities"
 import { IDocter } from "@app/interface/docter"
-import { useDispatch } from "react-redux"
-import { updateDocterCreateOrder } from "@app/redux/actions/actionOrder"
 interface ItemProps {
   item: IDocter
+  onPress: () => void
+  onPressBook: () => void
 }
-export default function ItemDocter({ item }: ItemProps) {
-  const dispatch = useDispatch()
+export default function ItemDocter({ item, onPress, onPressBook }: ItemProps) {
   return (
     <Card
       mode="contained"
       style={styles.item}
       contentStyle={{ flexDirection: "row" }}
-      onPress={() => {
-        navigate("DocterInformation", {
-          item,
-        })
-      }}
+      onPress={onPress}
     >
       <Image source={R.images.avatar_docter_rec} style={styles.avatar} resizeMode="center" />
       <View>
@@ -39,11 +33,11 @@ export default function ItemDocter({ item }: ItemProps) {
           <Icon icon="ic_start" size={WIDTH(16)} />
           <Text weight="medium" size="xs" style={{ color: colors.gray_9 }}>
             {" "}
-            4,7{" "}
+            {item?.averageRating}{" "}
           </Text>
-          <Text weight="normal" size="xs" style={{ color: colors.gray_7 }}>
+          {/* <Text weight="normal" size="xs" style={{ color: colors.gray_7 }}>
             (120)
-          </Text>
+          </Text> */}
         </View>
         <View style={styles.flexRow}>
           <Text style={{ color: colors.gray_6 }} size="sm" weight="normal">
@@ -52,14 +46,7 @@ export default function ItemDocter({ item }: ItemProps) {
               {item?.price} đ
             </Text>
           </Text>
-          <Button
-            mode="contained"
-            onPress={() => {
-              navigate("SelectCalendar")
-              dispatch(updateDocterCreateOrder(item))
-            }}
-            style={styles.button}
-          >
+          <Button mode="contained" onPress={onPressBook} style={styles.button}>
             Đặt khám
           </Button>
         </View>

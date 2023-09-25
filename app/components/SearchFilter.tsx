@@ -4,21 +4,21 @@ import { HEIGHT, WIDTH, getWidth } from "@app/config/functions"
 import { spacing } from "../theme"
 import colors from "@app/assets/colors"
 import { IconButton, Searchbar } from "react-native-paper"
-import { iconRegistry } from "./Icon"
+import { Icon, iconRegistry } from "./Icon"
 import R from "@app/assets"
 interface ItemProps {
   placeholder?: string
   onPressFilter: () => void
-  onIconPress?: () => void
   value?: string
   onChangeText?: (txt: string) => void
+  isFiltered?: boolean
 }
 export default function SearchFilter({
   onPressFilter,
   placeholder,
-  onIconPress,
   onChangeText,
   value,
+  isFiltered,
 }: ItemProps) {
   const [height, setHeight] = useState(WIDTH(48))
   const onLayout = (event: LayoutChangeEvent) => {
@@ -29,7 +29,6 @@ export default function SearchFilter({
   return (
     <View style={styles.container}>
       <Searchbar
-        onIconPress={onIconPress}
         onLayout={onLayout}
         icon={R.images.search_normal}
         iconColor={colors.gray_5}
@@ -39,6 +38,23 @@ export default function SearchFilter({
         placeholderTextColor={colors.gray_6}
         onChangeText={onChangeText}
       />
+      <Pressable
+        style={[
+          styles.buttonFilter,
+          {
+            width: height,
+            height: height,
+          },
+        ]}
+        onPress={onPressFilter}
+      >
+        <Icon icon="filter" size={WIDTH(24)} />
+        {isFiltered && (
+          <View style={styles.icTicked}>
+            <Icon icon="tick_circle" size={WIDTH(16)} />
+          </View>
+        )}
+      </Pressable>
       <IconButton
         icon={iconRegistry.filter}
         onPress={onPressFilter}
@@ -76,5 +92,12 @@ const styles = StyleSheet.create({
     marginLeft: WIDTH(spacing.sm),
     width: WIDTH(44),
     height: WIDTH(44),
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  icTicked: {
+    position: "absolute",
+    top: 8,
+    right: 8,
   },
 })

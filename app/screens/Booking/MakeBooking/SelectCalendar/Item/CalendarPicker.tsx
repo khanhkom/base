@@ -10,7 +10,7 @@ import { spacing } from "@app/theme/spacing"
 import { Text } from "@app/components/index"
 import ItemYearPicker from "./ItemYearPicker"
 import { DatePickerInput } from "react-native-paper-dates"
-import { navigate } from "@app/navigators/navigationUtilities"
+import { goBack, navigate } from "@app/navigators/navigationUtilities"
 import { useDispatch } from "react-redux"
 import { updateSeletedDateOrder } from "@app/redux/actions/actionOrder"
 export interface ItemTagetDayProps {
@@ -18,7 +18,7 @@ export interface ItemTagetDayProps {
   userhabitid: any
 }
 
-const CalendarPicker = () => {
+const CalendarPicker = ({ preScreen }) => {
   const { colors }: { colors: IColorsTheme } = useTheme()
   const [selectedValue, setSelectedValue] = React.useState(new Date())
 
@@ -161,8 +161,12 @@ const CalendarPicker = () => {
         <Button>Cancel</Button>
         <Button
           onPress={() => {
-            navigate("SelectTimeBooking")
             dispatch(updateSeletedDateOrder(moment(selectedValue).format("YYYY-MM-DD")))
+            if (preScreen) {
+              goBack()
+            } else {
+              navigate("SelectTimeBooking")
+            }
           }}
         >
           OK

@@ -13,14 +13,17 @@ interface ItemProps {
   title: string
   onSelectDate: (val: Date) => void
   value: string
+  status?: "error" | "disabled"
+  helper?: string
 }
-export default function SelectBirthday({ title, onSelectDate, value }: ItemProps) {
+export default function SelectBirthday({ title, onSelectDate, value, helper, status }: ItemProps) {
   const [date, setDate] = useState(new Date())
   const [isSeleted, setSeleted] = useState(false)
   useEffect(() => {
     if (value) setDate(new Date(value))
-  }, [])
+  }, [value])
   const [open, setOpen] = useState(false)
+
   return (
     <View style={styles.container}>
       <Text preset="formLabel">
@@ -36,9 +39,11 @@ export default function SelectBirthday({ title, onSelectDate, value }: ItemProps
         style={{ marginTop: HEIGHT(spacing.xs) }}
       >
         <TextField
+          helper={helper}
+          status={status}
           placeholder="dd/mm/yyyy"
           style={{ color: colors.gray_9 }}
-          value={!isSeleted || value ? moment(value).format("DD/MM/YYYY") : ""}
+          value={isSeleted || value ? moment(value).format("DD/MM/YYYY") : ""}
           editable={false}
           RightAccessory={() => (
             <Icon
@@ -62,6 +67,8 @@ export default function SelectBirthday({ title, onSelectDate, value }: ItemProps
           }
         }}
         mode="date"
+        cancelText="Huỷ"
+        confirmText="Xác nhận"
         title="Chọn ngày sinh"
         onCancel={() => {
           setOpen(false)

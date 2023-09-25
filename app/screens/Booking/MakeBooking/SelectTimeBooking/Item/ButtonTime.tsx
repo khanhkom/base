@@ -10,10 +10,9 @@ interface ItemProps {
   status: STATUS_DOCTER
   onPress: () => void
   selected: boolean
+  isFull: boolean
 }
-export default function ButtonTime({ title, status, onPress, selected }: ItemProps) {
-  console.log("selected", selected)
-  const isFull = status === STATUS_DOCTER.FULL
+export default function ButtonTime({ title, status, onPress, selected, isFull }: ItemProps) {
   return (
     <Button
       onPress={() => {
@@ -27,7 +26,7 @@ export default function ButtonTime({ title, status, onPress, selected }: ItemPro
         selected && { backgroundColor: colors.primary },
         isFull && { backgroundColor: colors.gray_5 },
       ]}
-      //   disabled={status === STATUS_DOCTER.FULL}
+      disabled={isFull}
     >
       {title}
     </Button>

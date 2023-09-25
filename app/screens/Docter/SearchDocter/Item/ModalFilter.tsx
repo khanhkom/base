@@ -1,49 +1,73 @@
-import { FlatList, KeyboardAvoidingView, Platform, StyleSheet, View } from "react-native"
+import { Modal, Pressable, ScrollView, StyleSheet, View } from "react-native"
 import React, { forwardRef, useEffect, useImperativeHandle, useState } from "react"
-import Modal from "react-native-modal"
 import { HEIGHT, WIDTH, getHeight } from "@app/config/functions"
 import colors from "@app/assets/colors"
-import { Button, Divider, List, Searchbar } from "react-native-paper"
+import { Button, Divider } from "react-native-paper"
 import { spacing } from "@app/theme/spacing"
 import { Text } from "@app/components/Text"
 import { Toggle } from "@app/components/Toggle"
 import { iconRegistry } from "@app/components/Icon"
-import { da } from "date-fns/locale"
-
+import { ISpecialList } from "@app/interface/docter"
+import * as Animatable from "react-native-animatable"
+import { useSelector } from "@app/redux/reducers"
+const GENDER = [
+  {
+    name: "Nam",
+    code: "male",
+  },
+  {
+    name: "Nữ",
+    code: "female",
+  },
+]
+const SORTBY = [
+  {
+    name: "Đánh giá từ cao đến thấp",
+    code: -1,
+  },
+  {
+    name: "Đánh giá từ thấp đến cao",
+    code: 1,
+  },
+]
+interface IFilter {
+  specialist: string
+  gender: string
+  sortByRatings: number
+}
 type Props = {
   onPress?: () => void
-  data?: IITem[]
-  selectItem?: (item, index) => void
-  onApply?: () => void
-}
-type IITem = {
-  title?: string
-  data: string[]
-  isIndex?: number
+  onApply?: (val: IFilter) => void
+  speciallist?: ISpecialList
+  filterData: IFilter
 }
 
 const ModalFilter = forwardRef((props: Props, ref) => {
+  const { filterData, onApply } = props
   const [visible, setVisible] = useState(false)
-  const [data, setData] = useState(props.data)
-  const [isSelect, setIsSelect] = useState(false)
-  const [isReset, setIsReset] = useState(false)
+  const [filterDataTemp, setFilterDataTemp] = useState({
+    specialist: "",
+    gender: "",
+    sortByRatings: 0,
+  })
+  const specialList = useSelector((state) => state.doctorReducers.listSpecialList)
+
   const hide = () => {
     setVisible(false)
-    return data
   }
-  const onSelectItem = (index, indx) => {
-    setIsSelect(!isSelect)
-    data[index].isIndex = indx
-  }
+  useEffect(() => {
+    setFilterDataTemp(filterData)
+  }, [visible])
   const onReset = () => {
-    setIsSelect(!isSelect)
-    for (let i = 0; i < data.length; i++) {
-      data[i].isIndex = 0
-    }
+    setFilterDataTemp({
+      specialist: "",
+      gender: "",
+      sortByRatings: 0,
+    })
   }
   const onHandlApply = () => {
     hide()
-    props.onApply()
+    onApply(filterDataTemp)
   }
   useImperativeHandle(ref, () => ({
     show() {
@@ -53,58 +77,115 @@ const ModalFilter = forwardRef((props: Props, ref) => {
       hide()
     },
     returnData() {
-      return data
+      return filterDataTemp
     },
   }))
   return (
     <Modal
-      isVisible={visible}
-      avoidKeyboard
-      backdropOpacity={0.5}
-      onBackButtonPress={() => {
+      visible={visible}
+      onRequestClose={() => {
         hide()
       }}
-      animationIn={"slideInRight"}
-      animationOut={"slideOutRight"}
-      style={{
-        alignItems: "flex-end",
-        margin: 0,
-      }}
-      coverScreen={false}
-      onBackdropPress={() => {
-        setVisible(false)
-      }}
+      transparent
+      animationType="fade"
     >
-      <View style={styles.container}>
+      <Pressable style={styles.backdrop} onPress={hide} />
+      <Animatable.View animation={"slideInRight"} duration={500} style={styles.container}>
         <View style={styles.head}>
           <Text size="xl" weight="semiBold" style={{ color: colors.gray_9 }}>
             Bộ lọc
           </Text>
         </View>
-        {props.data.map((item, index) => {
-          return (
-            <View key={index}>
-              <View style={styles.session}>
-                <Text size="md" weight="medium" style={{ color: colors.gray_9 }}>
-                  {item.title}:
-                </Text>
-                {item.data.map((itemm, indx) => {
-                  return (
-                    <Toggle
-                      onPress={() => onSelectItem(index, indx)}
-                      key={indx}
-                      variant="radio"
-                      label={itemm}
-                      value={indx === data[index].isIndex}
-                      containerStyle={{ marginTop: HEIGHT(12) }}
-                    />
-                  )
-                })}
-              </View>
-              <Divider />
+        <ScrollView>
+          <View>
+            <View style={styles.session}>
+              <Text size="md" weight="medium" style={{ color: colors.gray_9 }}>
+                Chuyên khoa:
+              </Text>
+              <Toggle
+                variant="radio"
+                label={"Tất cả"}
+                value={filterDataTemp.specialist === ""}
+                onPress={() => {
+                  setFilterDataTemp({
+                    ...filterDataTemp,
+                    specialist: "",
+                  })
+                }}
+                containerStyle={{ marginTop: HEIGHT(12) }}
+              />
+              {specialList.map((itemm, indx) => {
+                return (
+                  <Toggle
+                    key={indx}
+                    variant="radio"
+                    label={itemm?.name}
+                    onPress={() => {
+                      setFilterDataTemp({
+                        ...filterDataTemp,
+                        specialist: itemm?.code,
+                      })
+                    }}
+                    value={filterDataTemp?.specialist === itemm?.code}
+                    containerStyle={{ marginTop: HEIGHT(12) }}
+                  />
+                )
+              })}
             </View>
-          )
-        })}
+            <Divider />
+          </View>
+          <View>
+            <View style={styles.session}>
+              <Text size="md" weight="medium" style={{ color: colors.gray_9 }}>
+                Giới tính:
+              </Text>
+              {GENDER.map((itemm, indx) => {
+                return (
+                  <Toggle
+                    onPress={() => {
+                      setFilterDataTemp({
+                        ...filterDataTemp,
+                        gender: itemm?.code,
+                      })
+                    }}
+                    key={indx}
+                    variant="radio"
+                    label={itemm?.name}
+                    value={filterDataTemp?.gender === itemm?.code}
+                    containerStyle={{ marginTop: HEIGHT(12) }}
+                  />
+                )
+              })}
+            </View>
+            <Divider />
+          </View>
+          <View>
+            <View style={styles.session}>
+              <Text size="md" weight="medium" style={{ color: colors.gray_9 }}>
+                Sắp xếp theo:
+              </Text>
+              {SORTBY.map((itemm, indx) => {
+                return (
+                  <Toggle
+                    onPress={() => {
+                      setFilterDataTemp({
+                        ...filterDataTemp,
+                        sortByRatings: itemm?.code,
+                      })
+                    }}
+                    key={indx}
+                    variant="radio"
+                    label={itemm?.name}
+                    value={filterDataTemp?.sortByRatings === itemm?.code}
+                    containerStyle={{ marginTop: HEIGHT(12) }}
+                  />
+                )
+              })}
+            </View>
+            <Divider />
+          </View>
+          <View style={{ height: 100 }} />
+        </ScrollView>
         <View style={styles.bottomButton}>
           <Button onPress={onReset} textColor={colors.gray_7} icon={iconRegistry.rotate_left}>
             Đặt lại
@@ -118,7 +199,7 @@ const ModalFilter = forwardRef((props: Props, ref) => {
             Áp dụng
           </Button>
         </View>
-      </View>
+      </Animatable.View>
     </Modal>
   )
 })
@@ -131,7 +212,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white,
     height: getHeight(),
     flex: 1,
-    marginRight: -WIDTH(32),
+    alignSelf: "flex-end",
   },
   head: {
     backgroundColor: colors.gray_0,
@@ -154,5 +235,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: WIDTH(spacing.md),
     paddingBottom: HEIGHT(spacing.md),
     backgroundColor: colors.white,
+  },
+  backdrop: {
+    backgroundColor: colors.backdrop,
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
   },
 })

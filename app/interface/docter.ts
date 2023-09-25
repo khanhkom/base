@@ -32,3 +32,12 @@ export interface ISpecialList {
   name: string
   code: string
 }
+export interface IDoctorCalendar {
+  timeRange: {
+    from: string
+    to: string
+    id: string
+  }
+  isOrder: boolean
+  id: string
+}

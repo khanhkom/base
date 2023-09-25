@@ -24,7 +24,7 @@ export default function GeneralInfor({ data }: { data: IDocter }) {
           B.s {data?.name}
         </Text>
         <Text weight="normal" size="sm" style={styles.textDes}>
-          Khoa: {data?.specialist?.[0]}
+          Khoa: {data?.specialist?.[0]?.value}
         </Text>
         <Text weight="normal" size="sm" style={styles.textDes}>
           Trình độ: Thạc sĩ

@@ -13,6 +13,7 @@ const URL_DOCTER = {
   GET_DOCTER: "doctor",
   GET_DOCTER_DETAIL: "doctor/",
   GET_LIST_SPECIAL_LIST: "doctor/specialist",
+  GET_DOCTOR_CALENDAR: "doctor/",
 }
 const ORDER = {
   GET_ORDER: "order",

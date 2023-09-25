@@ -8,7 +8,7 @@ import Rating from "./Item/Rating"
 import { HEIGHT, WIDTH, getWidth } from "@app/config/functions"
 import { spacing } from "@app/theme/spacing"
 import { Button } from "react-native-paper"
-import { navigate } from "@app/navigators/navigationUtilities"
+import { goBack, navigate } from "@app/navigators/navigationUtilities"
 import { IDocter } from "@app/interface/docter"
 import { getDetailDocter } from "@app/services/api/functions/docter"
 import { useDispatch } from "react-redux"
@@ -17,6 +17,7 @@ interface IScreenProps {
   route: {
     params: {
       item: IDocter
+      preScreen?: string
     }
   }
 }
@@ -46,8 +47,13 @@ export default function DocterInformation({ route }: IScreenProps) {
           mode="contained"
           style={styles.button}
           onPress={() => {
-            navigate("SelectCalendar")
             dispatch(updateDocterCreateOrder(detailDocter))
+            if (route?.params?.preScreen) {
+              goBack()
+              goBack()
+            } else {
+              navigate("SelectCalendar")
+            }
           }}
         >
           Đặt khám

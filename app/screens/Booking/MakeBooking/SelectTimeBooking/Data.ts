@@ -18,6 +18,7 @@ export const DATA_TIME = [
     data: [
       {
         time: "10:00 - 10:15",
+        from: "10:00",
         startHour: 10,
         startMin: 0,
         status: STATUS_DOCTER.AVAILABLE,
@@ -25,6 +26,7 @@ export const DATA_TIME = [
       },
       {
         time: "10:15 - 10:30",
+        from: "10:15",
         startHour: 10,
         startMin: 15,
         status: STATUS_DOCTER.AVAILABLE,
@@ -32,6 +34,7 @@ export const DATA_TIME = [
       },
       {
         time: "10:30 - 10:45",
+        from: "10:30",
         startHour: 10,
         startMin: 30,
         status: STATUS_DOCTER.AVAILABLE,
@@ -40,6 +43,7 @@ export const DATA_TIME = [
       {
         time: "10:45 - 11:00",
         status: STATUS_DOCTER.AVAILABLE,
+        from: "10:45",
         startHour: 10,
         startMin: 45,
         id: 3,
@@ -47,6 +51,7 @@ export const DATA_TIME = [
       {
         time: "11:45 - 12:00",
         status: STATUS_DOCTER.AVAILABLE,
+        from: "11:45",
         startHour: 11,
         startMin: 45,
         id: 4,
@@ -58,6 +63,7 @@ export const DATA_TIME = [
     data: [
       {
         time: "13:00 - 13:15",
+        from: "13:00",
         startHour: 13,
         startMin: 0,
         status: STATUS_DOCTER.AVAILABLE,
@@ -65,6 +71,7 @@ export const DATA_TIME = [
       },
       {
         time: "13:30 - 13:45",
+        from: "13:30",
         startHour: 13,
         startMin: 30,
         status: STATUS_DOCTER.AVAILABLE,
@@ -72,6 +79,7 @@ export const DATA_TIME = [
       },
       {
         time: "13:45 - 14:00",
+        from: "13:45",
         startHour: 13,
         startMin: 45,
         status: STATUS_DOCTER.AVAILABLE,
@@ -79,6 +87,7 @@ export const DATA_TIME = [
       },
       {
         time: "14:00 - 14:15",
+        from: "14:00",
         startHour: 14,
         startMin: 0,
         status: STATUS_DOCTER.AVAILABLE,
@@ -91,6 +100,7 @@ export const DATA_TIME = [
     data: [
       {
         time: "18:00 - 18:15",
+        from: "18:00",
         startHour: 18,
         startMin: 0,
         status: STATUS_DOCTER.AVAILABLE,
@@ -98,6 +108,7 @@ export const DATA_TIME = [
       },
       {
         time: "18:15 - 18:30",
+        from: "18:15",
         startHour: 18,
         startMin: 15,
         status: STATUS_DOCTER.AVAILABLE,

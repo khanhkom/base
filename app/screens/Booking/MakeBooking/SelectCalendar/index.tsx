@@ -18,12 +18,19 @@ const DATA_EXPLAIN = [
     type: 2,
   },
 ]
-export default function DocterInformation() {
+interface ScreenProps {
+  route: {
+    params: {
+      preScreen?: string
+    }
+  }
+}
+export default function DocterInformation({ route }: ScreenProps) {
   return (
     <View style={styles.container}>
       <Header leftIcon="arrow_left" title="Chọn ngày khám" backgroundColor={colors.white} />
       <TitleInfor title="Thông tin lịch khám" data={DATA_EXPLAIN} />
-      <CalendarPicker />
+      <CalendarPicker preScreen={route?.params?.preScreen} />
     </View>
   )
 }

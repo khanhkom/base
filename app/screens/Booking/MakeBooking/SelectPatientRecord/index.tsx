@@ -9,6 +9,7 @@ import { useDispatch } from "react-redux"
 import { getListPatientRequest } from "@app/redux/actions/patient"
 import { updatePatientOrder } from "@app/redux/actions/actionOrder"
 import { navigate } from "@app/navigators/navigationUtilities"
+import { HEIGHT } from "@app/config/functions"
 
 export default function SelectPatientRecord() {
   const patients = useSelector((state) => state.patientReducers.patients)
@@ -33,7 +34,7 @@ export default function SelectPatientRecord() {
             />
           )
         }}
-        ListFooterComponent={() => <View style={{ height: 16 }} />}
+        ListFooterComponent={() => <View style={{ height: HEIGHT(100) }} />}
       />
       <BottonButton />
     </View>

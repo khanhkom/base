@@ -70,10 +70,17 @@ export type AppStackParamList = {
 
   SelectCalendar: undefined
   SelectTimeBooking: undefined
+  SelectCalendarAgain: undefined
+  SelectTimeBookingAgain: undefined
+
   CompleteBooking: undefined
   BookingSuccess: undefined
   SelectPatientRecord: undefined
+  SelectPatientRecordAgain: undefined
   SelectSpecialist: undefined
+  SelectSpecialistAgain: undefined
+  SearchDocterAgain: undefined
+
   DocterReviews: undefined
   DetailBooking: undefined
   CallVideo: undefined
@@ -133,13 +140,22 @@ const AppStack = observer(function AppStack() {
       <Stack.Screen name="ChatDetail" component={ChatDetail} />
       <Stack.Screen name="CousultOnline" component={CousultOnline} />
       <Stack.Screen name="SearchDocter" component={SearchDocter} />
+      <Stack.Screen name="SearchDocterAgain" component={SearchDocter} />
+
       <Stack.Screen name="DocterInformation" component={DocterInformation} />
       <Stack.Screen name="SelectCalendar" component={SelectCalendar} />
+      <Stack.Screen name="SelectCalendarAgain" component={SelectCalendar} />
       <Stack.Screen name="SelectTimeBooking" component={SelectTimeBooking} />
+      <Stack.Screen name="SelectTimeBookingAgain" component={SelectTimeBooking} />
+
       <Stack.Screen name="CompleteBooking" component={CompleteBooking} />
       <Stack.Screen name="BookingSuccess" component={BookingSuccess} />
       <Stack.Screen name="SelectPatientRecord" component={SelectPatientRecord} />
+      <Stack.Screen name="SelectPatientRecordAgain" component={SelectPatientRecord} />
+
       <Stack.Screen name="SelectSpecialist" component={SelectSpecialist} />
+      <Stack.Screen name="SelectSpecialistAgain" component={SelectSpecialist} />
+
       <Stack.Screen name="DocterReviews" component={DocterReviews} />
       <Stack.Screen name="DetailBooking" component={DetailBooking} />
       <Stack.Screen name="CallVideo" component={CallVideo} />

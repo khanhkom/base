@@ -1,11 +1,4 @@
-import {
-  FlatList,
-  KeyboardAvoidingView,
-  Platform,
-  ScrollView,
-  StyleSheet,
-  View,
-} from "react-native"
+import { StyleSheet, View } from "react-native"
 import React, { useState } from "react"
 import { Header } from "@app/components/Header"
 import colors from "@app/assets/colors"
@@ -26,16 +19,19 @@ import { createPatient } from "@app/services/api/functions/patient"
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view"
 import { getListPatientRequest } from "@app/redux/actions/patient"
 import { useDispatch } from "react-redux"
-
+import { Formik } from "formik"
+import * as Yup from "yup"
+const SignupSchema = Yup.object().shape({
+  name: Yup.string().required("Vui lòng nhập họ tên!"),
+  phone: Yup.string().required("Vui lòng nhập số điện thoại!"),
+  birthday: Yup.string().required("Vui lòng chọn ngày sinh!"),
+})
 export default function CreatePatient({ route }) {
   const user = useSelector((state) => state.userReducers.user)
   console.log("user", user)
-  const [name, setName] = useState(user?.name)
-  const [phone, setPhone] = useState(user?.phone)
   const [gender, setGender] = useState(0)
   const [email, setEmail] = useState("")
   const [address, setAddress] = useState("")
-  const [birthday, setBirthday] = useState("")
   const [loading, setLoading] = useState(false)
   const dispatch = useDispatch()
   const [provinces, setProvinces] = useState({
@@ -70,35 +66,31 @@ export default function CreatePatient({ route }) {
     isDeleted: false,
   })
   const isNavigateFromRegister = route?.params?.fromRegister
-  const onCreateProfile = async () => {
-    if (birthday === "" || name === "" || phone === "") {
-      showToastMessage("Vui lòng nhập đủ thông tin!", EToastType.ERROR)
-    } else {
-      setLoading(true)
-      const bodyCreate = {
-        name: name,
-        gender: gender === 0 ? "male" : "female",
-        birthday: moment(birthday).format("DD/MM/YYYY"),
-        mail: email,
-        province: provinces?.name,
-        city: districts?.name,
-        ward: wards?.name,
-        address: address,
-        phone,
-      }
-      let resUpdate = await createPatient(bodyCreate)
-      setLoading(false)
-      if (resUpdate?.status === 201) {
-        showToastMessage("Tạo hồ sơ thành công!")
-        if (isNavigateFromRegister) {
-          navigate("TabNavigator")
-        } else {
-          dispatch(getListPatientRequest())
-          goBack()
-        }
+  const onCreateProfile = async (values: { name: string; phone: string; birthday: Date }) => {
+    setLoading(true)
+    const bodyCreate = {
+      name: values.name,
+      gender: gender === 0 ? "male" : "female",
+      birthday: moment(values.birthday).format("DD/MM/YYYY"),
+      mail: email,
+      province: provinces?.name,
+      city: districts?.name,
+      ward: wards?.name,
+      address: address,
+      phone: values.phone,
+    }
+    let resUpdate = await createPatient(bodyCreate)
+    setLoading(false)
+    if (resUpdate?.status === 201) {
+      showToastMessage("Tạo hồ sơ thành công!")
+      if (isNavigateFromRegister) {
+        navigate("TabNavigator")
       } else {
-        showToastMessage("Tạo hồ sơ thất bại!", EToastType.ERROR)
+        dispatch(getListPatientRequest())
+        goBack()
       }
+    } else {
+      showToastMessage("Tạo hồ sơ thất bại!", EToastType.ERROR)
     }
   }
   return (
@@ -125,107 +117,127 @@ export default function CreatePatient({ route }) {
             là những trường thông tin bắt buộc
           </Text>
         </Card>
-        <View style={styles.body}>
-          <TextField
-            require
-            label="Họ và tên"
-            placeholder="Nhập họ tên"
-            value={name}
-            onChangeText={setName}
-            containerStyle={{ marginTop: HEIGHT(spacing.md) }}
-          ></TextField>
-          <TextField
-            require
-            label="Số điện thoại"
-            placeholder="Nhập số điện thoại"
-            value={phone}
-            onChangeText={setPhone}
-            keyboardType="decimal-pad"
-            style={{ color: colors.gray_9 }}
-            containerStyle={{ marginTop: HEIGHT(spacing.md) }}
-          ></TextField>
-          <SelectBirthday title="Ngày sinh" onSelectDate={setBirthday} />
-          <Text preset="formLabel">
-            Giới tính
-            {require && (
-              <Text preset="formLabel" style={{ color: colors.red_5 }}>
-                {" "}
-                *
+        <Formik
+          validationSchema={SignupSchema}
+          initialValues={{ name: user?.name, phone: user?.phone, birthday: "" }}
+          onSubmit={(values) => {
+            onCreateProfile(values)
+          }}
+        >
+          {({ handleChange, handleBlur, handleSubmit, values, errors, touched, setFieldValue }) => (
+            <View style={styles.body}>
+              <TextField
+                require
+                label="Họ và tên"
+                placeholder="Nhập họ tên"
+                value={values.name}
+                status={errors.name && "error"}
+                helper={errors.name}
+                onChangeText={handleChange("name")}
+                containerStyle={{ marginTop: HEIGHT(spacing.md) }}
+              ></TextField>
+              <TextField
+                require
+                label="Số điện thoại"
+                placeholder="Nhập số điện thoại"
+                value={values.phone}
+                status={errors.phone && "error"}
+                helper={errors.phone}
+                onChangeText={handleChange("phone")}
+                keyboardType="decimal-pad"
+                style={{ color: colors.gray_9 }}
+                containerStyle={{ marginTop: HEIGHT(spacing.md) }}
+              ></TextField>
+              <SelectBirthday
+                title="Ngày sinh"
+                status={errors.birthday && "error"}
+                helper={errors.birthday}
+                value={values.birthday}
+                onSelectDate={(date) => setFieldValue("birthday", moment(date).toISOString())}
+              />
+              <Text preset="formLabel">
+                Giới tính
+                {require && (
+                  <Text preset="formLabel" style={{ color: colors.red_5 }}>
+                    {" "}
+                    *
+                  </Text>
+                )}
               </Text>
-            )}
-          </Text>
-          <View style={styles.flexGender}>
-            <Toggle
-              containerStyle={styles.flexRow}
-              variant="radio"
-              onPress={() => setGender(0)}
-              label="Nam"
-              labelPosition="right"
-              value={gender === 0}
-            />
-            <Toggle
-              containerStyle={styles.flexRow}
-              variant="radio"
-              onPress={() => setGender(1)}
-              value={gender === 1}
-              label="Nữ"
-              labelPosition="right"
-            />
-          </View>
-          <TextField
-            label="Email"
-            value={email}
-            onChangeText={setEmail}
-            placeholder="Nhập địa chỉ email"
-            containerStyle={{ marginTop: HEIGHT(spacing.md) }}
-          ></TextField>
-          <LocationPicker
-            value={provinces}
-            setValue={(val) => {
-              setProvinces(val)
-              setDistricts({ name: "", _id: "" })
-              setWards({ name: "", _id: "" })
-            }}
-            title="Tỉnh/ Thành phố"
-            parentId={""}
-            placeholder="Chọn Tỉnh/ Thành phố"
-            type="provinces"
-          />
-          <LocationPicker
-            value={districts}
-            setValue={(val) => {
-              setDistricts(val)
-              setWards({ name: "", _id: "" })
-            }}
-            parentId={provinces?.code}
-            title="Quận/ Huyện"
-            placeholder="Chọn Quận/ Huyện"
-            type="districts"
-          />
-          <LocationPicker
-            value={wards}
-            setValue={setWards}
-            parentId={districts?.code}
-            title="Phường/ Xã"
-            placeholder="Chọn Phường/Xã"
-            type="wards"
-          />
-          <TextField
-            label="Địa chỉ chi tiết"
-            placeholder="Ví dụ: Số nhà, đường, ..."
-            value={address}
-            onChangeText={setAddress}
-            containerStyle={{ marginTop: HEIGHT(spacing.md) }}
-          ></TextField>
-          <Button
-            mode="contained"
-            style={styles.button}
-            onPress={onCreateProfile}
-            loading={loading}
-          >
-            Lưu
-          </Button>
-        </View>
+              <View style={styles.flexGender}>
+                <Toggle
+                  containerStyle={styles.flexRow}
+                  variant="radio"
+                  onPress={() => setGender(0)}
+                  label="Nam"
+                  labelPosition="right"
+                  value={gender === 0}
+                />
+                <Toggle
+                  containerStyle={styles.flexRow}
+                  variant="radio"
+                  onPress={() => setGender(1)}
+                  value={gender === 1}
+                  label="Nữ"
+                  labelPosition="right"
+                />
+              </View>
+              <TextField
+                label="Email"
+                value={email}
+                onChangeText={setEmail}
+                placeholder="Nhập địa chỉ email"
+                containerStyle={{ marginTop: HEIGHT(spacing.md) }}
+              ></TextField>
+              <LocationPicker
+                value={provinces}
+                setValue={(val) => {
+                  setProvinces(val)
+                  setDistricts({ name: "", _id: "" })
+                  setWards({ name: "", _id: "" })
+                }}
+                title="Tỉnh/ Thành phố"
+                parentId={""}
+                placeholder="Chọn Tỉnh/ Thành phố"
+                type="provinces"
+              />
+              <LocationPicker
+                value={districts}
+                setValue={(val) => {
+                  setDistricts(val)
+                  setWards({ name: "", _id: "" })
+                }}
+                parentId={provinces?.code}
+                title="Quận/ Huyện"
+                placeholder="Chọn Quận/ Huyện"
+                type="districts"
+              />
+              <LocationPicker
+                value={wards}
+                setValue={setWards}
+                parentId={districts?.code}
+                title="Phường/ Xã"
+                placeholder="Chọn Phường/Xã"
+                type="wards"
+              />
+              <TextField
+                label="Địa chỉ chi tiết"
+                placeholder="Ví dụ: Số nhà, đường, ..."
+                value={address}
+                onChangeText={setAddress}
+                containerStyle={{ marginTop: HEIGHT(spacing.md) }}
+              ></TextField>
+              <Button
+                mode="contained"
+                style={styles.button}
+                onPress={handleSubmit}
+                loading={loading}
+              >
+                Lưu
+              </Button>
+            </View>
+          )}
+        </Formik>
       </KeyboardAwareScrollView>
     </View>
   )

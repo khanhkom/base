@@ -9,26 +9,28 @@ import { spacing } from "@app/theme/spacing"
 import { goBack, navigate } from "@app/navigators/navigationUtilities"
 import { useDispatch } from "react-redux"
 import { updateSpecialListOrder } from "@app/redux/actions/actionOrder"
-import { ISpecialList } from "@app/interface/docter"
-import { getListSpecialList } from "@app/services/api/functions/docter"
 import LoadingScreen from "@app/components/loading/LoadingScreen"
-export default function SelectSpecialist() {
-  const dispatch = useDispatch()
-  const [specialList, setListSpecialList] = useState<ISpecialList[]>([])
-  const [loading, setLoading] = useState(false)
-  const getListData = async () => {
-    setLoading(true)
-    let resList = await getListSpecialList()
-    setListSpecialList(resList.data)
-    setLoading(false)
+import { getListSpecialListRequest } from "@app/redux/actions/actionDoctor"
+import { useSelector } from "@app/redux/reducers"
+interface ScreenProps {
+  route: {
+    params: {
+      preScreen?: string
+    }
   }
+}
+export default function SelectSpecialist({ route }: ScreenProps) {
+  const dispatch = useDispatch()
+  const specialList = useSelector((state) => state.doctorReducers.listSpecialList)
+  const loading = useSelector((state) => state.doctorReducers.loading)
+
   useEffect(() => {
-    getListData()
+    dispatch(getListSpecialListRequest())
   }, [])
   if (loading) return <LoadingScreen />
   return (
     <View style={styles.container}>
-      <Header leftIcon="arrow_left" title="Tư vấn trực tuyến" backgroundColor={colors.gray_1} />
+      <Header leftIcon="arrow_left" title="Chọn chuyên khoa" backgroundColor={colors.gray_1} />
       <FlatList
         data={specialList}
         renderItem={({ item, index }) => {
@@ -38,7 +40,13 @@ export default function SelectSpecialist() {
               style={styles.item}
               onPress={() => {
                 dispatch(updateSpecialListOrder(item))
-                navigate("SearchDocter")
+                if (route?.params?.preScreen) {
+                  goBack()
+                } else {
+                  navigate("SearchDocter", {
+                    speciallist: item,
+                  })
+                }
               }}
               left={() => {
                 return (
