@@ -15,13 +15,14 @@ import FileAttachment from "./Item/FileAttachment"
 import PopupVerify from "@app/components/PopupVerify"
 import { useSelector } from "@app/redux/reducers"
 import { useDispatch } from "react-redux"
-import { getOrderHistory, updateSeletedDateOrder } from "@app/redux/actions/actionOrder"
+import { getOrderHistory } from "@app/redux/actions/actionOrder"
 import moment from "moment"
 import { EToastType, showToastMessage } from "@app/utils/library"
 import { createOrder, updateOrder } from "@app/services/api/functions/order"
 import { LoadingOpacity } from "@app/components/loading/LoadingOpacity"
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view"
 import useHookDetailBooking from "../../DetailBooking/useHookDetailBooking"
+import PopupErros from "@app/components/PopupErros"
 interface ScreenProps {
   route: {
     params: {
@@ -43,6 +44,7 @@ export default function CompleteBooking({ route }: ScreenProps) {
   const patient = useSelector((state) => state.orderReducers.patient)
   const specialist = useSelector((state) => state.orderReducers.specialist)
   const [patientNotes, setPatientNotes] = useState("")
+  const [visibleErros, setVisibleErros] = useState(false)
   const dispatch = useDispatch()
   useEffect(() => {
     if (route?.params?.id) {
@@ -112,6 +114,7 @@ export default function CompleteBooking({ route }: ScreenProps) {
 
         showToastMessage("Đặt lịch thành công!", EToastType.SUCCESS)
       } else {
+        setVisibleErros(true)
         showToastMessage("Đặt lịch thất bại!", EToastType.SUCCESS)
       }
     }
@@ -241,6 +244,12 @@ export default function CompleteBooking({ route }: ScreenProps) {
         }}
         rightText="Xác nhận"
         leftText="Hủy"
+      />
+      <PopupErros
+        setVisible={setVisibleErros}
+        title="Đặt lịch không thành công"
+        desc="Quý khách vui lòng thử lại để đặt lịch khám!"
+        visible={visibleErros}
       />
       {loading && <LoadingOpacity />}
     </View>
