@@ -16,6 +16,7 @@ import moment from "moment"
 export default function History() {
   const refModal = useRef(null)
   const orderHistoryFilter = useSelector((state) => state.bookingHistoryReducers.orderHistoryFilter)
+  const orderHistory = useSelector((state) => state.orderReducers.orderHistory)
   const loading = useSelector((state) => state.bookingHistoryReducers.loading)
   const dispatch = useDispatch()
   const [isFiltered, setFiltered] = useState(false)
@@ -92,7 +93,7 @@ export default function History() {
 
   useEffect(() => {
     bounceToSearch()
-  }, [keyword])
+  }, [keyword, orderHistory])
 
   return (
     <View style={styles.container}>

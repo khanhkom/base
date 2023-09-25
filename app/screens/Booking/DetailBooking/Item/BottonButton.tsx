@@ -14,6 +14,7 @@ interface ItemProps {
   clientId: string
   to: string
   detailOrder: IOrderHistory
+  updateDataCreateOrder?: () => void
 }
 export default function BottonButton({
   status,
@@ -23,6 +24,7 @@ export default function BottonButton({
   clientId,
   to,
   detailOrder,
+  updateDataCreateOrder,
 }: ItemProps) {
   const onPressCall = () => {
     // console.log("AAAAAA", clientId?.current?.getId?.())
@@ -51,6 +53,7 @@ export default function BottonButton({
         </Button>
         <Button
           onPress={() => {
+            updateDataCreateOrder()
             navigate("CompleteBooking", { id })
           }}
           mode="contained"

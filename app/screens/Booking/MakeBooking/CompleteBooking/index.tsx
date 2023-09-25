@@ -1,5 +1,5 @@
 import { Platform, Pressable, ScrollView, StyleSheet, View } from "react-native"
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import { Header } from "@app/components/Header"
 import colors from "@app/assets/colors"
 import { Button, Card } from "react-native-paper"
@@ -7,7 +7,7 @@ import { Text } from "@app/components/Text"
 import { HEIGHT, WIDTH } from "@app/config/functions"
 import { spacing } from "@app/theme/spacing"
 import { TextField } from "@app/components/TextField"
-import { navigate } from "@app/navigators/navigationUtilities"
+import { goBack, navigate } from "@app/navigators/navigationUtilities"
 import SelectBirthday from "@app/screens/CreatePatient/Item/SelectBirthday"
 import CustomPicker from "./Item/CustomPicker/CustomPicker"
 import { Icon } from "@app/components/Icon"
@@ -18,15 +18,25 @@ import { useDispatch } from "react-redux"
 import { getOrderHistory, updateSeletedDateOrder } from "@app/redux/actions/actionOrder"
 import moment from "moment"
 import { EToastType, showToastMessage } from "@app/utils/library"
-import { createOrder } from "@app/services/api/functions/order"
+import { createOrder, updateOrder } from "@app/services/api/functions/order"
 import { LoadingOpacity } from "@app/components/loading/LoadingOpacity"
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view"
-
-export default function CompleteBooking() {
+import useHookDetailBooking from "../../DetailBooking/useHookDetailBooking"
+interface ScreenProps {
+  route: {
+    params: {
+      id?: string
+    }
+  }
+}
+export default function CompleteBooking({ route }: ScreenProps) {
   const [visible, setVisible] = React.useState(false)
   const [loading, setLoading] = React.useState(false)
   const [listImage, setListImage] = useState([])
-
+  const { detailOrder, getDetailOrderApi, updateDataCreateOrder } = useHookDetailBooking(
+    route?.params?.id,
+  )
+  console.log("route")
   const docter = useSelector((state) => state.orderReducers.docter)
   const selectedDate = useSelector((state) => state.orderReducers.selectedDate)
   const selectedTime = useSelector((state) => state.orderReducers.selectedTime)
@@ -34,6 +44,17 @@ export default function CompleteBooking() {
   const specialist = useSelector((state) => state.orderReducers.specialist)
   const [patientNotes, setPatientNotes] = useState("")
   const dispatch = useDispatch()
+  useEffect(() => {
+    if (route?.params?.id) {
+      getDetailOrderApi()
+    }
+  }, [])
+  useEffect(() => {
+    if (detailOrder?.patientNotes) {
+      setPatientNotes(detailOrder?.patientNotes)
+    }
+  }, [detailOrder])
+
   const verifyData = () => {
     if (patientNotes === "") {
       showToastMessage("Vui lòng nhập lý do", EToastType.ERROR)
@@ -69,20 +90,32 @@ export default function CompleteBooking() {
         uri: Platform.OS === "ios" ? item.uri.replace("file://", "") : item.uri,
       })
     })
-    console.log("formData_formData", formData)
-    let resCreate = await createOrder(formData)
-    console.log("resCreate_resCreate", resCreate)
-    // navigate("BookingSuccess")
-    if (resCreate.status === 201) {
-      navigate("BookingSuccess", {
-        id: resCreate.data?.[0]?.id,
-      })
-      dispatch(getOrderHistory())
-
-      showToastMessage("Đặt lịch thành công!", EToastType.SUCCESS)
+    let resCreate = {}
+    if (route?.params?.id) {
+      resCreate = await updateOrder(route?.params?.id, formData)
+      if (resCreate.status === 200) {
+        dispatch(getOrderHistory())
+        goBack()
+        goBack()
+        showToastMessage("Cập nhật lịch thành công!", EToastType.SUCCESS)
+      } else {
+        showToastMessage("Cập nhật lịch thất bại!", EToastType.SUCCESS)
+      }
     } else {
-      showToastMessage("Đặt lịch thất bại!", EToastType.SUCCESS)
+      resCreate = await createOrder(formData)
+      console.log("ZOOOOOOOOO", 2, formData, resCreate)
+      if (resCreate.status === 201) {
+        navigate("BookingSuccess", {
+          id: resCreate.data?.[0]?.id,
+        })
+        dispatch(getOrderHistory())
+
+        showToastMessage("Đặt lịch thành công!", EToastType.SUCCESS)
+      } else {
+        showToastMessage("Đặt lịch thất bại!", EToastType.SUCCESS)
+      }
     }
+
     setLoading(false)
   }
   return (
@@ -98,7 +131,7 @@ export default function CompleteBooking() {
           <CustomPicker
             required
             title="Chuyên khoa"
-            value={specialist?.name}
+            value={specialist?.value || specialist?.name}
             placeholder="Chọn chuyên khoa"
             onPress={() => navigate("SelectSpecialistAgain", { preScreen: "CompleteBooking" })}
           />

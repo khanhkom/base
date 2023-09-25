@@ -16,7 +16,11 @@ export const createOrder = (order: IOrder): Promise<ApiResponse<IDocter>> =>
     .post(URL.CREATE_ORDER, order)
     .then((res) => res)
     .catch((err) => err)
-
+export const updateOrder = (id: string, order: IOrder): Promise<ApiResponse<IDocter>> =>
+  api.apisauce
+    .put(URL.UPDATE_ORDER + id, order)
+    .then((res) => res)
+    .catch((err) => err)
 export const getDetailOrder = (id: string): Promise<ApiResponse<IOrderHistory>> =>
   api.apisauce
     .get(URL.GET_DETAIL_ORDER + id)

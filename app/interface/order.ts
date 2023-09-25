@@ -1,3 +1,5 @@
+import { ISpecialList } from "./docter"
+
 export interface IOrder {
   patientId: string
   doctorId: string
@@ -36,6 +38,10 @@ export interface IOrderHistory {
     from: string
     to: string
     id: string
+  }
+  specialist: {
+    specialistCode: string
+    value: string
   }
   patientNotes: string
   createdBy: string

@@ -19,6 +19,7 @@ const ORDER = {
   GET_ORDER: "order",
   GET_DETAIL_ORDER: "order/",
   CREATE_ORDER: "order",
+  UPDATE_ORDER: "order/",
   CANCEL_ORDER: "order/cancel/",
 }
 const LOCATION = {

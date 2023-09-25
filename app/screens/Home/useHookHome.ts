@@ -1,5 +1,6 @@
 import { IOrder, STATUS_ORDER } from "@app/interface/order"
 import { useSelector } from "@app/redux/reducers"
+import moment from "moment"
 
 const useHookHome = () => {
   const orderHistory = useSelector((state) => state.orderReducers.orderHistory)
@@ -10,7 +11,9 @@ const useHookHome = () => {
     const orderFilter = orderHistory?.filter((it) => it.status === STATUS_ORDER.verified)
     const nearestOrder = orderFilter
       .map((order) => {
-        const fromTimestamp = new Date(order.timeRange.from).getTime()
+        const fromTimestamp = new Date(
+          moment(order.timeRange.from).add("hour", 7).toISOString(),
+        ).getTime()
         const timeDifference = Math.abs(currentTimestamp - fromTimestamp)
 
         return {

@@ -48,14 +48,14 @@ export default function ItemSchedule({ item }: ItemProps) {
       case 0:
         return item?.doctor?.name
       case 1: {
-        const time = `${moment(item?.timeRange?.from).format("hh:mm")} - ${moment(
+        const time = `${moment(item?.timeRange?.from).format("HH:mm")} - ${moment(
           item?.timeRange?.to,
-        ).format("hh:mm")}`
+        ).format("HH:mm")}`
         const date = `${moment(item?.timeRange?.from).format("DD/MM/YYYY")}`
         return `${time}, ${date}`
       }
       case 2:
-        return item?.doctor?.name
+        return item?.specialist?.value
       case 3:
         return item?.patient?.name
       default:

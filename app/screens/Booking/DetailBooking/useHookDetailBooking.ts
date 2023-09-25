@@ -1,8 +1,17 @@
 import { LIST_ICON_BY_STATUS } from "@app/config/constants"
 import { IOrderHistory } from "@app/interface/order"
+import {
+  updateDocterCreateOrder,
+  updatePatientOrder,
+  updateSelectedTimeOrder,
+  updateSeletedDateOrder,
+  updateSpecialListOrder,
+} from "@app/redux/actions/actionOrder"
 import { getDetailOrder } from "@app/services/api/functions/order"
 import moment from "moment"
 import React, { useEffect, useState } from "react"
+import { useDispatch } from "react-redux"
+import { DATA_TIME } from "../MakeBooking/SelectTimeBooking/Data"
 export const TYPE_FIELD = {
   status: 0,
   date: 1,
@@ -81,6 +90,25 @@ const useHookDetailBooking = (id) => {
     setDetailOrder(resOrder.data)
     setLoading(false)
   }
+  const dispatch = useDispatch()
+  const updateDataCreateOrder = () => {
+    let timeFrom = moment(detailOrder?.timeRange?.from).format("HH:mm")
+    DATA_TIME.map((item, index) => {
+      let itemStamp = item.data.find((it) => it.from === timeFrom)
+      if (itemStamp?.from) {
+        dispatch(updateSelectedTimeOrder(itemStamp))
+      }
+    })
+    dispatch(updateSeletedDateOrder(moment(detailOrder?.timeRange?.from).format("YYYY-MM-DD")))
+    dispatch(updatePatientOrder(detailOrder?.patient))
+    dispatch(
+      updateSpecialListOrder({
+        name: detailOrder?.specialist?.value,
+        code: detailOrder?.specialist?.specialistCode,
+      }),
+    )
+    dispatch(updateDocterCreateOrder(detailOrder?.doctor))
+  }
   const returnDataByField = (field) => {
     if (!detailOrder?.id) return ""
     switch (field) {
@@ -89,9 +117,9 @@ const useHookDetailBooking = (id) => {
       case TYPE_FIELD.date:
         return moment(detailOrder?.timeRange?.from).format("DD/MM/YYYY")
       case TYPE_FIELD.time:
-        return `${moment(detailOrder?.timeRange?.from).format("hh:mm")} - ${moment(
+        return `${moment(detailOrder?.timeRange?.from).format("HH:mm")} - ${moment(
           detailOrder?.timeRange?.to,
-        ).format("hh:mm")}`
+        ).format("HH:mm")}`
       case TYPE_FIELD.patientId:
         return detailOrder?.patient?.id
       case TYPE_FIELD.patientName:
@@ -99,7 +127,7 @@ const useHookDetailBooking = (id) => {
       case TYPE_FIELD.docterName:
         return detailOrder?.doctor?.name
       case TYPE_FIELD.specialList:
-        return detailOrder?.doctor?.id
+        return detailOrder?.specialist?.value
       case TYPE_FIELD.patientNotes:
         return detailOrder?.patientNotes
       default:
@@ -109,6 +137,6 @@ const useHookDetailBooking = (id) => {
   useEffect(() => {
     getDetailOrderApi()
   }, [])
-  return { loading, detailOrder, returnDataByField, getDetailOrderApi }
+  return { loading, detailOrder, returnDataByField, getDetailOrderApi, updateDataCreateOrder }
 }
 export default useHookDetailBooking

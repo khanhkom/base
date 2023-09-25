@@ -8,12 +8,17 @@ import { useSelector } from "@app/redux/reducers"
 import { useDispatch } from "react-redux"
 import { getListPatientRequest } from "@app/redux/actions/patient"
 import { updatePatientOrder } from "@app/redux/actions/actionOrder"
-import { navigate } from "@app/navigators/navigationUtilities"
+import { goBack, navigate } from "@app/navigators/navigationUtilities"
 import { HEIGHT } from "@app/config/functions"
-
-export default function SelectPatientRecord() {
+interface IScreenProps {
+  route: {
+    params: {
+      preScreen?: string
+    }
+  }
+}
+export default function SelectPatientRecord({ route }: IScreenProps) {
   const patients = useSelector((state) => state.patientReducers.patients)
-  console.log("patients_patients", patients)
   const dispatch = useDispatch()
   useEffect(() => {
     dispatch(getListPatientRequest())
@@ -28,8 +33,12 @@ export default function SelectPatientRecord() {
             <ItemRecord
               item={item}
               onPress={() => {
-                navigate("SelectSpecialist")
                 dispatch(updatePatientOrder(item))
+                if (route?.params?.preScreen) {
+                  goBack()
+                } else {
+                  navigate("SelectSpecialist")
+                }
               }}
             />
           )

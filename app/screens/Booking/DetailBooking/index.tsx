@@ -14,7 +14,8 @@ import { STATUS_ORDER } from "@app/interface/order"
 import { useSelector } from "@app/redux/reducers"
 export default function DetailBooking({ route }) {
   const id = route?.params?.id
-  const { detailOrder, loading, returnDataByField, getDetailOrderApi } = useHookDetailBooking(id)
+  const { detailOrder, loading, returnDataByField, getDetailOrderApi, updateDataCreateOrder } =
+    useHookDetailBooking(id)
   const clientId = useSelector((state) => state.stringeeReducers.clientId)
 
   if (loading) return <LoadingScreen />
@@ -60,6 +61,7 @@ export default function DetailBooking({ route }) {
         id={id}
         getDetailOrderApi={getDetailOrderApi}
         clientId={clientId}
+        updateDataCreateOrder={updateDataCreateOrder}
         userId={detailOrder?.patient?.userId}
         to={detailOrder?.doctor?.userId}
         detailOrder={detailOrder}
