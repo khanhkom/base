@@ -16,6 +16,8 @@ import { useSelector } from "@app/redux/reducers"
 import { getDocterCalendar } from "@app/services/api/functions/docter"
 import { IDoctorCalendar } from "@app/interface/docter"
 import LoadingScreen from "@app/components/loading/LoadingScreen"
+import moment from "moment"
+import { log } from "react-native-reanimated"
 interface ScreenProps {
   route: {
     params: {
@@ -45,7 +47,9 @@ export default function SelectTimeBooking({ route }: ScreenProps) {
     getDoctorCalendarAvailable()
   }, [])
   const checkIsFull = (from: string) => {
-    if (dataCalendar.length > 0) {
+    if (moment(from.valueOf(), "HH:mm") < new Date().getTime()) {
+      return true
+    } else if (dataCalendar.length > 0) {
       const valueFrom = dataCalendar?.find((item) => item.timeRange.from === from)
       return valueFrom?.isOrder ?? false
     } else {
