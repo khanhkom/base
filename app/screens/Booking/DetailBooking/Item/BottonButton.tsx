@@ -63,7 +63,7 @@ export default function BottonButton({
         </Button>
       </View>
     )
-  if (status === STATUS_ORDER.verified)
+  if (status === STATUS_ORDER.verified || status === STATUS_ORDER.examining)
     return (
       <View style={styles.container}>
         <Button
