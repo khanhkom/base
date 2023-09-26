@@ -319,6 +319,7 @@ export default class Call2Screen extends Component {
   }
 
   dismissCallingView = () => {
+    goBack()
     // this.props.navigation.goBack()
   }
 

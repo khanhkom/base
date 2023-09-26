@@ -10981,6 +10981,11 @@ react-native-calendars@^1.1301.0:
   optionalDependencies:
     moment "^2.29.4"
 
+react-native-callkeep@^4.3.12:
+  version "4.3.12"
+  resolved "https://registry.yarnpkg.com/react-native-callkeep/-/react-native-callkeep-4.3.12.tgz#e29b0602f0a2942cfcdabea6d5c6697ee40566f6"
+  integrity sha512-MPgnQkJn4k8rorBCcYYl6FtI0Gp3BHrBKE5RZ6dbyQchddy3xIj8K4BcpCuDOrAaRls1jAXceSeeJVBdw2jDHw==
+
 react-native-codegen@^0.71.5:
   version "0.71.5"
   resolved "https://registry.yarnpkg.com/react-native-codegen/-/react-native-codegen-0.71.5.tgz#454a42a891cd4ca5fc436440d301044dc1349c14"
@@ -11238,6 +11243,11 @@ react-native-vector-icons@^10.0.0:
   dependencies:
     prop-types "^15.7.2"
     yargs "^16.1.1"
+
+react-native-voip-push-notification@^3.3.2:
+  version "3.3.2"
+  resolved "https://registry.yarnpkg.com/react-native-voip-push-notification/-/react-native-voip-push-notification-3.3.2.tgz#59ec95348f6a336763d79dd6fb9242e509ff35e8"
+  integrity sha512-O5oNRmlL4iEAYr9os1PJZPetIxZ5j4qy9xLzF/A3/6x94gRmXihIT9o26jtGnuJfijUm5aM8GvNqcLnOAwtjXA==
 
 react-native-web@~0.18.7:
   version "0.18.12"

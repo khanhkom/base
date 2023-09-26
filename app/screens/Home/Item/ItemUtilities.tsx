@@ -74,7 +74,6 @@ export default function ItemUtilities() {
         break
     }
   }
-  console.log("returnNearestOrder", returnNearestOrder())
   const nearestOrder = returnNearestOrder()
   const timeFromNow = convertDuration(nearestOrder?.timeDifference)
 

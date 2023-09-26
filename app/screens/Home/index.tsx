@@ -1,5 +1,5 @@
 import { Platform, ScrollView, StatusBar, StyleSheet, Text, View } from "react-native"
-import React, { useEffect } from "react"
+import React, { useEffect, useState } from "react"
 import HeaderHome from "./Item/Header"
 import { Screen } from "@app/components/Screen"
 import ItemUtilities from "./Item/ItemUtilities"
@@ -15,7 +15,14 @@ import { useSelector } from "@app/redux/reducers"
 import { useDispatch } from "react-redux"
 import { StringeeClient } from "stringee-react-native"
 import { getOrderHistory } from "@app/redux/actions/actionOrder"
-
+import RNCallKeep from 'react-native-callkeep';
+import VoipPushNotification from "react-native-voip-push-notification";
+const iOS = Platform.OS === "ios" ? true : false;
+ const options = {
+  ios: {
+    appName: 'SDocter',
+  }
+};
 export default function HomeScreen() {
   const session = useSelector((state) => state.stringeeReducers.session)
   const dispatch = useDispatch()
@@ -32,6 +39,7 @@ export default function HomeScreen() {
     client,
     permissionGranted,
     requestPermission,
+    currentCallKitId,setCurrentCallKitId
   } = useHookStringee(updateClientId)
 
   React.useEffect(() => {
@@ -46,17 +54,47 @@ export default function HomeScreen() {
   const onSearch = async (keyword) => {}
   /** */
   useEffect(() => {
+
+    if (iOS) {
+      RNCallKeep.setup(options);
+      VoipPushNotification.addEventListener('register', (token) => {
+        console.log("token_A",token)
+        client?.current?.registerPush(
+          token,
+          false, // isProduction: false: In development, true: In Production.
+          true, // (iOS) isVoip: true: Voip PushNotification. Stringee supports this push notification.
+          (status, code, message) => {
+            console.log(message);
+          }
+        );
+      });
+
+      VoipPushNotification.addEventListener('notification', (notification) => {
+        console.log("notification",notification)
+        let  callKitUUID = notification.getData().uuid;
+        console.log("callKitUUID",callKitUUID)
+        if (currentCallKitId) {
+          setCurrentCallKitId(callKitUUID)
+        } else {
+          // if Callkit already exists then end Callkit wiht the callKitUUID
+          RNCallKeep.endCall(callKitUUID);
+        }
+
+          // Handle incoming pushes
+      });
+    }
+
     async function updateTokenFi() {
-      const token = await messaging().getToken()
-      console.log("AAAAA", token)
-      client?.current?.registerPush(
-        token,
-        false, // only for iOS
-        false, // only for iOS
-        (status, code, message) => {
-          console.log(message)
-        },
-      )
+      // const token = await messaging().getToken()
+      // console.log("AAAAA", token)
+      // client?.current?.registerPush(
+      //   token,
+      //   false, // only for iOS
+      //   true, // only for iOS
+      //   (status, code, message) => {
+      //     console.log(message)
+      //   },
+      // )
     }
     if (session?.access_token !== "") {
       setTimeout(() => {

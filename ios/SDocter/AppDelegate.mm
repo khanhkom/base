@@ -9,11 +9,17 @@
 #import <AuthenticationServices/AuthenticationServices.h>
 #import <SafariServices/SafariServices.h>
 
+
+#import <PushKit/PushKit.h>
+#import "RNVoipPushNotificationManager.h"
+#import "RNCallKeep.h"
+
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
   self.moduleName = @"SDocter";
+
 
   // You can add your custom initial props in the dictionary below.
   // They will be passed down to the ViewController used by React Native.
@@ -26,9 +32,85 @@
   // RN BootSplash
   UIView *rootView = self.window.rootViewController.view; // react-native >= 0.71 specific
   [RNBootSplash initWithStoryboard:@"BootSplash" rootView:rootView];
+  [RNVoipPushNotificationManager voipRegistration];
+
 
   return YES;
 }
+
+/* Add PushKit delegate method */
+
+// --- Handle updated push credentials
+- (void)pushRegistry:(PKPushRegistry *)registry didUpdatePushCredentials:(PKPushCredentials *)credentials forType:(PKPushType)type {
+  // Register VoIP push token (a property of PKPushCredentials) with server
+  [RNVoipPushNotificationManager didUpdatePushCredentials:credentials forType:(NSString *)type];
+}
+
+// --- Handle incoming pushes (for ios <= 10)
+- (void)pushRegistry:(PKPushRegistry *)registry didReceiveIncomingPushWithPayload:(PKPushPayload *)payload forType:(PKPushType)type {
+  [RNVoipPushNotificationManager didReceiveIncomingPushWithPayload:payload forType:(NSString *)type];
+}
+
+// --- Handle incoming pushes (for ios >= 11)
+- (void)pushRegistry:(PKPushRegistry *)registry didReceiveIncomingPushWithPayload:(PKPushPayload *)payload forType:(PKPushType)type withCompletionHandler:(void (^)(void))completion {
+  NSLog(@"Thinhnt didReceiveIncomingPushWithPayload có complete: %@", payload.dictionaryPayload);
+
+  NSDictionary *payloadDataDic = payload.dictionaryPayload[@"data"][@"map"][@"data"][@"map"];
+  NSString *callId = payloadDataDic[@"callId"];
+  NSNumber *serial = payloadDataDic[@"serial"];
+  NSString *callStatus = payloadDataDic[@"callStatus"];
+
+  NSString *fromAlias = payloadDataDic[@"from"][@"map"][@"alias"];
+  NSString *fromNumber = payloadDataDic[@"from"][@"map"][@"number"];
+  NSString *callName = fromAlias != NULL ? fromAlias : fromNumber != NULL ? fromNumber : @"Connecting...";
+
+  NSString *uuid = [[[NSUUID UUID] UUIDString] lowercaseString];
+  NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
+  [dict setObject:uuid forKey:@"uuid"];
+  [dict setObject:serial forKey:@"serial"];
+  [dict setObject:callId forKey:@"callId"];
+
+  // --- You should make sure to report to callkit BEFORE execute `completion()`
+  if (callId != NULL && [callStatus isEqual: @"started"]) {
+    // --- Process the received push
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"voipRemoteNotificationReceived" object:self userInfo:dict];
+    
+    [RNCallKeep reportNewIncomingCall: uuid
+                                 handle: @"Stringee"
+                             handleType: @"generic"
+                               hasVideo: true
+                    localizedCallerName: @"Bác sĩ"
+                        supportsHolding: YES
+                           supportsDTMF: YES
+                       supportsGrouping: YES
+                     supportsUngrouping: YES
+                            fromPushKit: YES
+                                payload: nil
+                  withCompletionHandler: completion];
+    
+
+
+  } else {
+    // Show fake call
+    NSLog(@"Thinhnt show fake call");
+    [RNCallKeep reportNewIncomingCall: uuid
+                                 handle: @"Stringee"
+                             handleType: @"generic"
+                               hasVideo: true
+                    localizedCallerName: @"Bác sĩ"
+                        supportsHolding: YES
+                           supportsDTMF: YES
+                       supportsGrouping: YES
+                     supportsUngrouping: YES
+                            fromPushKit: YES
+                                payload: nil
+                  withCompletionHandler: completion];
+    
+    [RNCallKeep endCallWithUUID:uuid reason:1];
+  }
+  completion();
+}
+
 
 - (NSURL *)sourceURLForBridge:(RCTBridge *)bridge
 {

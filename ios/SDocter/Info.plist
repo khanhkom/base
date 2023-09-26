@@ -67,6 +67,11 @@
 	<string></string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>SDocter uses Microphone</string>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>remote-notification</string>
+		<string>voip</string>
+	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>BootSplash</string>
 	<key>UIRequiredDeviceCapabilities</key>

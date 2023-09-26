@@ -1,10 +1,15 @@
 import { navigate } from "@app/navigators/navigationUtilities"
 import { useRef, useState } from "react"
-import { PermissionsAndroid } from "react-native"
+import { PermissionsAndroid,Platform } from "react-native"
+import VoipPushNotification from "react-native-voip-push-notification";
+const iOS = Platform.OS === "ios" ? true : false;
 
 const useHookStringee = (updateClientId) => {
   const client = useRef(null)
   const [permissionGranted, setPermissionGranted] = useState(false)
+  const [currentCallKitId,setCurrentCallKitId] = useState("")
+
+
   const [callData, setCallData] = useState({
     userId: "",
     to: "",
@@ -15,6 +20,11 @@ const useHookStringee = (updateClientId) => {
   // The client connects to Stringee server
   const clientDidConnect = ({ userId }) => {
     console.log("clientDidConnect02 - " + userId, client?.current?.getId?.())
+
+    if (iOS) {
+      VoipPushNotification.registerVoipToken();
+    }
+
     setCallData({
       ...callData,
       userId: userId,
@@ -111,6 +121,7 @@ const useHookStringee = (updateClientId) => {
     client,
     permissionGranted,
     requestPermission,
+    currentCallKitId,setCurrentCallKitId
   }
 }
 export default useHookStringee

@@ -507,6 +507,8 @@ PODS:
     - React-Core
   - react-native-date-picker (4.2.14):
     - React-Core
+  - react-native-document-picker (9.0.1):
+    - React-Core
   - react-native-fbsdk-next (11.3.0):
     - React-Core
     - react-native-fbsdk-next/Core (= 11.3.0)
@@ -521,6 +523,8 @@ PODS:
   - react-native-fbsdk-next/Share (11.3.0):
     - FBSDKGamingServicesKit (~> 15.0.0)
     - FBSDKShareKit (~> 15.0.0)
+    - React-Core
+  - react-native-image-picker (7.0.0):
     - React-Core
   - react-native-pager-view (6.2.1):
     - React-Core
@@ -622,6 +626,8 @@ PODS:
     - React-RCTText
   - RNBootSplash (4.5.0):
     - React-Core
+  - RNCallKeep (4.3.12):
+    - React
   - RNCAsyncStorage (1.17.11):
     - React-Core
   - RNDateTimePicker (7.5.0):
@@ -676,13 +682,20 @@ PODS:
   - RNScreens (3.20.0):
     - React-Core
     - React-RCTImage
+  - RNSound (0.11.2):
+    - React-Core
+    - RNSound/Core (= 0.11.2)
+  - RNSound/Core (0.11.2):
+    - React-Core
   - RNStringee (1.0.0):
     - React
     - Stringee (~> 1.9.14)
   - RNVectorIcons (10.0.0):
     - React-Core
+  - RNVoipPushNotification (3.3.2):
+    - React-Core
   - SocketRocket (0.6.1)
-  - Stringee (1.9.19):
+  - Stringee (1.9.20):
     - GoogleWebRTC (= 1.1.31999)
   - Yoga (1.14.0)
   - YogaKit (1.18.1):
@@ -756,7 +769,9 @@ DEPENDENCIES:
   - React-logger (from `../node_modules/react-native/ReactCommon/logger`)
   - react-native-background-timer (from `../node_modules/react-native-background-timer`)
   - react-native-date-picker (from `../node_modules/react-native-date-picker`)
+  - react-native-document-picker (from `../node_modules/react-native-document-picker`)
   - react-native-fbsdk-next (from `../node_modules/react-native-fbsdk-next`)
+  - react-native-image-picker (from `../node_modules/react-native-image-picker`)
   - react-native-pager-view (from `../node_modules/react-native-pager-view`)
   - react-native-render-html (from `../node_modules/react-native-render-html`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
@@ -775,6 +790,7 @@ DEPENDENCIES:
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
   - ReactNativeKeyboardManager (from `../node_modules/react-native-keyboard-manager`)
   - RNBootSplash (from `../node_modules/react-native-bootsplash`)
+  - RNCallKeep (from `../node_modules/react-native-callkeep`)
   - "RNCAsyncStorage (from `../node_modules/@react-native-async-storage/async-storage`)"
   - "RNDateTimePicker (from `../node_modules/@react-native-community/datetimepicker`)"
   - "RNFBApp (from `../node_modules/@react-native-firebase/app`)"
@@ -785,8 +801,10 @@ DEPENDENCIES:
   - "RNNotifee (from `../node_modules/@notifee/react-native`)"
   - RNReanimated (from `../node_modules/react-native-reanimated`)
   - RNScreens (from `../node_modules/react-native-screens`)
+  - RNSound (from `../node_modules/react-native-sound`)
   - RNStringee (from `../node_modules/stringee-react-native`)
   - RNVectorIcons (from `../node_modules/react-native-vector-icons`)
+  - RNVoipPushNotification (from `../node_modules/react-native-voip-push-notification`)
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
 SPEC REPOS:
@@ -901,8 +919,12 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-background-timer"
   react-native-date-picker:
     :path: "../node_modules/react-native-date-picker"
+  react-native-document-picker:
+    :path: "../node_modules/react-native-document-picker"
   react-native-fbsdk-next:
     :path: "../node_modules/react-native-fbsdk-next"
+  react-native-image-picker:
+    :path: "../node_modules/react-native-image-picker"
   react-native-pager-view:
     :path: "../node_modules/react-native-pager-view"
   react-native-render-html:
@@ -939,6 +961,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-keyboard-manager"
   RNBootSplash:
     :path: "../node_modules/react-native-bootsplash"
+  RNCallKeep:
+    :path: "../node_modules/react-native-callkeep"
   RNCAsyncStorage:
     :path: "../node_modules/@react-native-async-storage/async-storage"
   RNDateTimePicker:
@@ -959,10 +983,14 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-reanimated"
   RNScreens:
     :path: "../node_modules/react-native-screens"
+  RNSound:
+    :path: "../node_modules/react-native-sound"
   RNStringee:
     :path: "../node_modules/stringee-react-native"
   RNVectorIcons:
     :path: "../node_modules/react-native-vector-icons"
+  RNVoipPushNotification:
+    :path: "../node_modules/react-native-voip-push-notification"
   Yoga:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
@@ -1038,7 +1066,9 @@ SPEC CHECKSUMS:
   React-logger: 3f8ebad1be1bf3299d1ab6d7f971802d7395c7ef
   react-native-background-timer: 17ea5e06803401a379ebf1f20505b793ac44d0fe
   react-native-date-picker: 8847cb359cf259ddae5ed165217e15573a654519
+  react-native-document-picker: 2b8f18667caee73a96708a82b284a4f40b30a156
   react-native-fbsdk-next: 16e652b5f1236492631185c58ec2ae15b029119d
+  react-native-image-picker: ddbbe4d226d9c82a82360f5de66bf71a657a42e6
   react-native-pager-view: d211379f61895b6349bd7e571b44a26d005c2975
   react-native-render-html: 984dfe2294163d04bf5fe25d7c9f122e60e05ebe
   react-native-safe-area-context: 39c2d8be3328df5d437ac1700f4f3a4f75716acc
@@ -1057,6 +1087,7 @@ SPEC CHECKSUMS:
   ReactCommon: dbfbe2f7f3c5ce4ce44f43f2fd0d5950d1eb67c5
   ReactNativeKeyboardManager: 60292dbac467c49841a7d69588208ec4a4f7b2a2
   RNBootSplash: 364ec0f6a61d96bce40e8630d80d949c214a5749
+  RNCallKeep: aa9b1f9286f8f60d7b7d41ee5de47de564356aac
   RNCAsyncStorage: 8616bd5a58af409453ea4e1b246521bb76578d60
   RNDateTimePicker: b722c23030b744763cf51d80fc22f354653f65e0
   RNFBApp: 0b534885354024f4d171ede8da04521d81bc1767
@@ -1067,10 +1098,12 @@ SPEC CHECKSUMS:
   RNNotifee: f3c01b391dd8e98e67f539f9a35a9cbcd3bae744
   RNReanimated: cc5e3aa479cb9170bcccf8204291a6950a3be128
   RNScreens: 218801c16a2782546d30bd2026bb625c0302d70f
+  RNSound: 6c156f925295bdc83e8e422e7d8b38d33bc71852
   RNStringee: 834cb883110a75340d24b44dd60ae5daffe749a5
   RNVectorIcons: 8b5bb0fa61d54cd2020af4f24a51841ce365c7e9
+  RNVoipPushNotification: 543e18f83089134a35e7f1d2eba4c8b1f7776b08
   SocketRocket: f32cd54efbe0f095c4d7594881e52619cfe80b17
-  Stringee: c95d342d94caaabe608f4ee3e5b68084aeaa5924
+  Stringee: 78db0ceaf302094c0061cd752522978ab0e00c37
   Yoga: d56980c8914db0b51692f55533409e844b66133c
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 
