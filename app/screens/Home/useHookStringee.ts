@@ -1,46 +1,32 @@
 import { navigate } from "@app/navigators/navigationUtilities"
 import { useRef, useState } from "react"
-import { PermissionsAndroid,Platform } from "react-native"
-import VoipPushNotification from "react-native-voip-push-notification";
-const iOS = Platform.OS === "ios" ? true : false;
+import { PermissionsAndroid, Platform } from "react-native"
+import VoipPushNotification from "react-native-voip-push-notification"
+const iOS = Platform.OS === "ios" ? true : false
 
 const useHookStringee = (updateClientId) => {
   const client = useRef(null)
   const [permissionGranted, setPermissionGranted] = useState(false)
-  const [currentCallKitId,setCurrentCallKitId] = useState("")
+  const [currentCallKitId, setCurrentCallKitId] = useState("")
+  const [userId, setUserId] = useState("")
 
-
-  const [callData, setCallData] = useState({
-    userId: "",
-    to: "",
-    connected: false,
-    clientId: "",
-  })
   //Event
   // The client connects to Stringee server
   const clientDidConnect = ({ userId }) => {
     console.log("clientDidConnect02 - " + userId, client?.current?.getId?.())
 
     if (iOS) {
-      VoipPushNotification.registerVoipToken();
+      VoipPushNotification.registerVoipToken()
     }
+    setUserId(userId)
 
-    setCallData({
-      ...callData,
-      userId: userId,
-      connected: true,
-    })
     updateClientId(client?.current?.getId?.())
   }
   // The client disconnects from Stringee server
   const clientDidDisConnect = () => {
     console.log("clientDidDisConnect")
     client?.current?.disconnect()
-    setCallData({
-      ...callData,
-      userId: "Disconnected",
-      connected: false,
-    })
+    setUserId("Disconnected")
   }
 
   // The client fails to connects to Stringee server
@@ -77,13 +63,12 @@ const useHookStringee = (updateClientId) => {
         "customDataFromYourServer-" +
         customDataFromYourServer,
     )
-
     navigate("Call2Screen", {
       callId: callId,
       clientId: client?.current?.getId(),
       isVideoCall: isVideoCall,
       from: from,
-      to: callData.userId,
+      to: userId,
       isIncoming: true,
     })
   }
@@ -102,6 +87,8 @@ const useHookStringee = (updateClientId) => {
     PermissionsAndroid.requestMultiple([
       PermissionsAndroid.PERMISSIONS.CAMERA,
       PermissionsAndroid.PERMISSIONS.RECORD_AUDIO,
+      PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS,
+      PermissionsAndroid.PERMISSIONS.BLUETOOTH_CONNECT,
     ]).then((result) => {
       if (
         result["android.permission.CAMERA"] &&
@@ -121,7 +108,8 @@ const useHookStringee = (updateClientId) => {
     client,
     permissionGranted,
     requestPermission,
-    currentCallKitId,setCurrentCallKitId
+    currentCallKitId,
+    setCurrentCallKitId,
   }
 }
 export default useHookStringee

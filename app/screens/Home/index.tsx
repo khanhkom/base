@@ -8,21 +8,16 @@ import TopDocter from "./Item/TopDocter"
 import TopPackage from "./Item/TopPackage"
 import HotNews from "./Item/HotNews"
 import colors from "@app/assets/colors"
-import useHookStringee from "./useHookStringee"
+// import useHookStringee from "./useHookStringee"
 import { getStringeeToken, updateStringeeClientId } from "@app/redux/actions/stringee"
 import messaging from "@react-native-firebase/messaging"
 import { useSelector } from "@app/redux/reducers"
 import { useDispatch } from "react-redux"
 import { StringeeClient } from "stringee-react-native"
 import { getOrderHistory } from "@app/redux/actions/actionOrder"
-import RNCallKeep from 'react-native-callkeep';
-import VoipPushNotification from "react-native-voip-push-notification";
-const iOS = Platform.OS === "ios" ? true : false;
- const options = {
-  ios: {
-    appName: 'SDocter',
-  }
-};
+import useHookCallKitIOS from "@app/hooks/stringee/useHookCallKitIOS"
+const iOS = Platform.OS === "ios" ? true : false
+
 export default function HomeScreen() {
   const session = useSelector((state) => state.stringeeReducers.session)
   const dispatch = useDispatch()
@@ -39,8 +34,7 @@ export default function HomeScreen() {
     client,
     permissionGranted,
     requestPermission,
-    currentCallKitId,setCurrentCallKitId
-  } = useHookStringee(updateClientId)
+  } = useHookCallKitIOS(updateClientId)
 
   React.useEffect(() => {
     if (!permissionGranted) {
@@ -54,51 +48,23 @@ export default function HomeScreen() {
   const onSearch = async (keyword) => {}
   /** */
   useEffect(() => {
-
-    if (iOS) {
-      RNCallKeep.setup(options);
-      VoipPushNotification.addEventListener('register', (token) => {
-        console.log("token_A",token)
-        client?.current?.registerPush(
-          token,
-          false, // isProduction: false: In development, true: In Production.
-          true, // (iOS) isVoip: true: Voip PushNotification. Stringee supports this push notification.
-          (status, code, message) => {
-            console.log(message);
-          }
-        );
-      });
-
-      VoipPushNotification.addEventListener('notification', (notification) => {
-        console.log("notification",notification)
-        let  callKitUUID = notification.getData().uuid;
-        console.log("callKitUUID",callKitUUID)
-        if (currentCallKitId) {
-          setCurrentCallKitId(callKitUUID)
-        } else {
-          // if Callkit already exists then end Callkit wiht the callKitUUID
-          RNCallKeep.endCall(callKitUUID);
-        }
-
-          // Handle incoming pushes
-      });
-    }
-
     async function updateTokenFi() {
-      // const token = await messaging().getToken()
-      // console.log("AAAAA", token)
-      // client?.current?.registerPush(
-      //   token,
-      //   false, // only for iOS
-      //   true, // only for iOS
-      //   (status, code, message) => {
-      //     console.log(message)
-      //   },
-      // )
+      const token = await messaging().getToken()
+      console.log("AAAAA", token)
+      client?.current?.registerPush(
+        token,
+        false, // only for iOS
+        true, // only for iOS
+        (status, code, message) => {
+          console.log(message)
+        },
+      )
     }
     if (session?.access_token !== "") {
       setTimeout(() => {
-        updateTokenFi()
+        if (!iOS) {
+          updateTokenFi()
+        }
       }, 500)
     }
   }, [session?.access_token])
