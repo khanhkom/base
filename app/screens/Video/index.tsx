@@ -69,7 +69,7 @@ export default function Video({ route }) {
             isIncoming: false,
           })
         } else {
-          navigate("Call2Screen", {
+          navigate("CallScreen", {
             callId: "",
             clientId: client?.current?.getId?.(),
             isVideoCall: isVideoCall,
@@ -179,7 +179,7 @@ export default function Video({ route }) {
         customDataFromYourServer,
     )
 
-    navigate("Call2Screen", {
+    navigate("CallScreen", {
       callId: callId,
       clientId: client?.current?.getId(),
       isVideoCall: isVideoCall,

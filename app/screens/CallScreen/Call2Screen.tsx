@@ -15,7 +15,7 @@ import { Header } from "@app/components/Header"
 import { goBack } from "@app/navigators/navigationUtilities"
 import MediaManager from "@app/utils/MediaManager"
 import RNCallKeep from "react-native-callkeep"
-export default class Call2Screen extends Component {
+export default class CallScreen extends Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -52,16 +52,16 @@ export default class Call2Screen extends Component {
   }
 
   componentDidMount(): void {
-    console.log("AAAAAA", this.props.route.params?.answered    )
+    console.log("AAAAAA", this.props.route.params?.answered)
     MediaManager.initSound("messenger_ringtone.mp3", true, () => {})
     if (this.state.isIncoming) {
       MediaManager.playMusicBackGround("messenger_ringtone.mp3", true)
       this.call2.current.initAnswer(this.state.callId, (status, code, message) => {
         console.log("initAnswer " + message)
-          if(this.props.route.params?.answered ){
-            // this.answerCall()
-            // RNCallKeep.endAllCalls()
-          }
+        if (this.props.route.params?.answered) {
+          // this.answerCall()
+          // RNCallKeep.endAllCalls()
+        }
       })
     }
     // Make new call

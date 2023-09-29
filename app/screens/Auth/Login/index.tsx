@@ -1,5 +1,5 @@
-import { Keyboard, Platform, StyleSheet, View } from "react-native"
-import React, { useState } from "react"
+import { Platform, StyleSheet, View } from "react-native"
+import React from "react"
 import { Screen } from "@app/components/Screen"
 import HeaderLogin from "../Item/HeaderLogin"
 import { HEIGHT, WIDTH, getHeight, getWidth } from "@app/config/functions"
@@ -12,100 +12,49 @@ import FooterLogin from "../Item/FooterLogin"
 import PopupVerify from "../Item/PopupVerify"
 import { Button } from "react-native-paper"
 import { Text } from "@app/components/Text"
-import { EToastType, showToastMessage } from "@app/utils/library"
-import { getOtp, login } from "@app/services/api/functions/users"
 import { LoadingOpacity } from "@app/components/loading/LoadingOpacity"
-import { navigate } from "@app/navigators/navigationUtilities"
-import { useDispatch } from "react-redux"
-import { updateUserField } from "@app/redux/actions"
-import { Toggle } from "@app/components/Toggle"
 import ItemOTPMethod from "../Item/ItemOTPMethod"
+import { translate } from "@app/i18n/translate"
+import useHookLogin from "./useHookLogin"
 
 export default function Login() {
-  const [indexTab, setIndexTab] = useState(0)
-  const [otpMethod, setOTPMethod] = useState(0)
-  const [countryCode, setCountryCode] = useState("+84")
-  const [phoneNumber, setPhoneNumber] = useState("")
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState(false)
-  const [visible, setVisible] = React.useState(false)
-  const [isNewUser, setNewUser] = React.useState(false)
-  const showModal = () => setVisible(true)
-  const hideModal = () => setVisible(false)
-  const dispatch = useDispatch()
-
-  const onSubmit = async () => {
-    // showModal()
-    Keyboard.dismiss()
-    if (phoneNumber === "") {
-      showToastMessage("Vui lòng nhập đủ thông tin!", EToastType.ERROR)
-    } else {
-      try {
-        let body = {
-          phone: countryCode + phoneNumber,
-        }
-        setLoading(true)
-        setError(false)
-        let resLogin = await getOtp(body)
-
-        console.log("resLogin_resLogin", resLogin?.data)
-        if (resLogin?.status === 201) {
-          dispatch(
-            updateUserField({
-              phone: countryCode + phoneNumber,
-            }),
-          )
-          setNewUser(resLogin?.data?.isNewUser)
-          if (indexTab === 0) {
-            if (resLogin?.data?.isNewUser) {
-              navigate("VerifyOTP", {
-                phone: countryCode + phoneNumber,
-              })
-            } else {
-              showModal()
-            }
-          } else {
-            if (resLogin?.data?.isNewUser) {
-              showModal()
-            } else {
-              navigate("VerifyOTP", {
-                phone: countryCode + phoneNumber,
-              })
-            }
-          }
-        } else {
-          setError(true)
-          showToastMessage("Vui lòng kiểm tra lại số điện thoại!", EToastType.ERROR)
-        }
-        console.log("resLogin_resLogin", body, resLogin?.data)
-        setLoading(false)
-      } catch (error) {
-        showToastMessage("Vui lòng kiểm tra lại số điện thoại!", EToastType.ERROR)
-        setError(true)
-        setLoading(false)
-      }
-    }
-  }
+  const {
+    indexTab,
+    setIndexTab,
+    otpMethod,
+    setOTPMethod,
+    countryCode,
+    setCountryCode,
+    phoneNumber,
+    setPhoneNumber,
+    loading,
+    setLoading,
+    error,
+    visible,
+    setVisible,
+    isNewUser,
+    onSubmit,
+  } = useHookLogin()
 
   return (
     <Screen
       preset="auto"
       safeAreaEdges={["bottom"]}
-      contentContainerStyle={Platform.OS === "ios" ? { height: getHeight() } : { flex: 1 }}
+      contentContainerStyle={Platform.OS === "ios" ? { height: getHeight() } : styles.container}
     >
       <HeaderLogin />
       <View style={styles.body}>
-        <Text preset="xxxlsemibold">Chào mừng bạn,</Text>
+        <Text preset="xxxlsemibold">{translate("auth.greetings_to_you")}</Text>
         <View style={styles.tab}>
           <ButtonTab
-            text="ĐĂNG KÝ"
+            text={translate("auth.register")}
             isActive={indexTab === 0}
             onPress={() => {
               setIndexTab(0)
             }}
           />
           <ButtonTab
-            text="ĐĂNG NHẬP"
+            text={translate("auth.login")}
             isActive={indexTab === 1}
             onPress={() => {
               setIndexTab(1)
@@ -128,14 +77,14 @@ export default function Login() {
           buttonColor={colors.primary_8}
           onPress={onSubmit}
         >
-          Tiếp tục
+          {translate("auth.continue")}
         </Button>
         <Text preset="baRegular" style={{ marginTop: HEIGHT(spacing.lg), color: colors.gray_7 }}>
-          Bằng việc tiếp tục, bạn sẽ đồng ý với{" "}
+          {translate("auth.by_proceeding")}
           <Text preset="baSemibold" style={{ color: colors.primary }}>
-            Điều khoản dịch vụ và Chính sách bảo mật
+            {translate("auth.terms_of_service")}
           </Text>{" "}
-          của SDoctor
+          {translate("auth.of_sdoctor")}
         </Text>
       </View>
       <FooterLogin setLoading={setLoading} />
@@ -152,24 +101,24 @@ export default function Login() {
 
 const styles = StyleSheet.create({
   body: {
-    width: getWidth(),
+    backgroundColor: R.colors.white,
+    borderTopLeftRadius: 24,
+    borderTopRightRadius: 24,
     flex: 1,
     marginTop: -HEIGHT(80),
-    backgroundColor: R.colors.white,
-    borderTopRightRadius: 24,
-    borderTopLeftRadius: 24,
     paddingHorizontal: WIDTH(spacing.md),
     paddingTop: HEIGHT(20),
-  },
-  tab: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginTop: HEIGHT(spacing.sm),
+    width: getWidth(),
   },
   buttonNext: {
-    width: WIDTH(343),
     borderRadius: 8,
     marginTop: HEIGHT(spacing.lg),
-    height: HEIGHT(spacing.xxl),
+    width: WIDTH(343),
+  },
+  container: { flex: 1 },
+  tab: {
+    alignItems: "center",
+    flexDirection: "row",
+    marginTop: HEIGHT(spacing.sm),
   },
 })

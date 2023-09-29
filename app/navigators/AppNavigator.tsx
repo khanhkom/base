@@ -8,20 +8,18 @@ import { useStores } from "../models" // @demo remove-current-line
 import { TabNavigator } from "./TabNavigator" // @demo remove-current-line
 import { navigationRef, useBackButtonHandler } from "./navigationUtilities"
 import { colors } from "@app/theme/colors/colors"
-import { LoginScreen } from "../screens"
 import DetailSick from "@app/screens/DetailSick"
 import Login from "@app/screens/Auth/Login"
 import VerifyOTP from "@app/screens/Auth/Register/VerifyOTP"
 import ConfirmName from "@app/screens/Auth/Register/ConfirmName"
 import CreatePatient from "@app/screens/CreatePatient"
-import Call2Screen from "@app/screens/Demo/Call2Screen"
+import CallScreen from "@app/screens/CallScreen"
 import R from "@app/assets"
 import { KEYSTORAGE, load } from "@app/utils/storage"
 import { setLoginedApp } from "@app/redux/actions"
 import { useDispatch } from "react-redux"
 import { useSelector } from "@app/redux/reducers"
 import { api } from "@app/services/api"
-import CallScreen from "@app/screens/Demo/CallScreen"
 import ChatScreen from "@app/screens/Demo/ChatScreen"
 import Conversations from "@app/screens/Demo/Conversations"
 import ChatDetail from "@app/screens/Demo/ChatDetail"
@@ -58,7 +56,6 @@ export type AppStackParamList = {
   VerifyPhoneNumber: undefined
 
   CreatePatient: undefined
-  Call2Screen: undefined
   CallScreen: undefined
 
   ChatScreen: undefined
@@ -133,7 +130,6 @@ const AppStack = observer(function AppStack() {
       <Stack.Screen name="VerifyOTP" component={VerifyOTP} />
       <Stack.Screen name="ConfirmName" component={ConfirmName} />
       <Stack.Screen name="CreatePatient" component={CreatePatient} />
-      <Stack.Screen name="Call2Screen" component={Call2Screen} />
       <Stack.Screen name="CallScreen" component={CallScreen} />
       <Stack.Screen name="ChatScreen" component={ChatScreen} />
       <Stack.Screen name="Conversations" component={Conversations} />

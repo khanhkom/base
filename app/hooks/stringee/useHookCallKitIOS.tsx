@@ -7,11 +7,7 @@ import { goBack, navigate } from "@app/navigators/navigationUtilities"
 import SyncCall from "@app/screens/Demo/SyncCall"
 
 const iOS = Platform.OS === "ios" ? true : false
-const options = {
-  ios: {
-    appName: 'SDocter',
-  }
-};
+
 const useHookCallKitIOS = (updateClientId) => {
   const client = useRef(null)
 
@@ -31,8 +27,8 @@ const useHookCallKitIOS = (updateClientId) => {
   const [appState, setAppState] = useState(AppState.currentState)
 
   const [userId, setUserId] = useState("")
-  const [callId,setCallId] = useState("")
-  const [from,setFrom] = useState("")
+  const [callId, setCallId] = useState("")
+  const [from, setFrom] = useState("")
   const stringeeCall = useRef(null)
 
   const endCallAndUpdateView = () => {
@@ -87,8 +83,8 @@ const useHookCallKitIOS = (updateClientId) => {
   const activateAudioSessionListener = (data) => {
     setIsActivateAudioSession(true)
     // answerCallAction()
-    
   }
+
   const removeSyncCallInCacheArray = (callId, serial) => {
     // Xoa call cu neu da save
     const newAllSyncCalls = allSyncCalls.filter(
@@ -226,27 +222,28 @@ const useHookCallKitIOS = (updateClientId) => {
         customDataFromYourServer,
       serial,
     )
+    navigate("CallScreen", {
+      callId: callId,
+      clientId: client?.current?.getId(),
+      isVideoCall: true,
+      from: from,
+      to: userId,
+      isIncoming: true,
+    })
+    console.log("syncCall_syncCall", syncCall)
+
     if (syncCall == null) {
       console.log("Call + Show new call kit")
       const newSyncCall = new SyncCall()
       newSyncCall.callId = callId
       newSyncCall.serial = serial
       // newSyncCall.callkitId = uuid.v1()
-      newSyncCall.callkitId = Math.round(Math.random()*100).toString()
+      newSyncCall.callkitId = Math.round(Math.random() * 100).toString()
       newSyncCall.receivedStringeeCall = true
-      console.log("newSyncCall",newSyncCall)
       // Callkit
-      // RNCallKeep.displayIncomingCall(newSyncCall.callkitId, "Stringee", fromAlias, "generic", true)
+      RNCallKeep.displayIncomingCall(newSyncCall.callkitId, "Stringee", fromAlias, "generic", true)
       setSyncCall(newSyncCall)
-      // setShowCallingView(true)
-      // navigate("Call2Screen", {
-      //   callId: callId,
-      //   clientId: client?.current?.getId(),
-      //   isVideoCall: true,
-      //   from: from,
-      //   to: userId,
-      //   isIncoming: true,
-      // })
+
       // answerCallAction()
       return
     }
@@ -265,7 +262,7 @@ const useHookCallKitIOS = (updateClientId) => {
       return
     }
     // Da show callkit => update UI
-    if (syncCall.callkitId != "") {
+    if (syncCall.callkitId !== "") {
       console.log("Call + Update")
       RNCallKeep.updateDisplay(syncCall.callkitId, fromAlias, "")
 
@@ -274,7 +271,7 @@ const useHookCallKitIOS = (updateClientId) => {
       newSyncCall.receivedStringeeCall = true
       setSyncCall(newSyncCall)
       // setShowCallingView(true)
-      // navigate("Call2Screen", {
+      // navigate("CallScreen", {
       //   callId: callId,
       //   clientId: client?.current?.getId(),
       //   isVideoCall: true,
@@ -292,7 +289,7 @@ const useHookCallKitIOS = (updateClientId) => {
     newSyncCall.callId = callId
     newSyncCall.serial = serial
     // newSyncCall.callkitId = uuid.v1()
-    newSyncCall.callkitId = Math.round(Math.random()*100).toString()
+    newSyncCall.callkitId = Math.round(Math.random() * 100).toString()
     newSyncCall.receivedStringeeCall = true
 
     // Callkit
@@ -300,7 +297,7 @@ const useHookCallKitIOS = (updateClientId) => {
     setSyncCall(newSyncCall)
     // setShowCallingView(true)
     // Call screen
-    // navigate("Call2Screen", {
+    // navigate("CallScreen", {
     //   callId: callId,
     //   clientId: client?.current?.getId(),
     //   isVideoCall: true,
@@ -324,20 +321,21 @@ const useHookCallKitIOS = (updateClientId) => {
     // if (callUUID != syncCall.callkitId) {
     //   return
     // }
+    RNCallKeep.backToForeground()
+    RNCallKeep.endAllCalls()
 
     const newSyncCall = syncCall
-    newSyncCall.answered = true
 
     setSyncCall(newSyncCall)
     console.log("ZZZZZZZZ")
-    navigate("Call2Screen", {
+    navigate("CallScreen", {
       callId: callId,
       clientId: client?.current?.getId(),
       isVideoCall: true,
       from: from,
       to: userId,
       isIncoming: true,
-      answered:true
+      answered: true,
     })
     // answerCallAction()
   }
@@ -384,11 +382,12 @@ const useHookCallKitIOS = (updateClientId) => {
   }
 
   useEffect(() => {
-    RNCallKeep.setup(options)
-    VoipPushNotification.registerVoipToken()
+    if (iOS) {
+      VoipPushNotification.registerVoipToken()
 
-    VoipPushNotification.addEventListener("register", registerListener)
-    VoipPushNotification.addEventListener("notification", notificationListener)
+      VoipPushNotification.addEventListener("register", registerListener)
+      VoipPushNotification.addEventListener("notification", notificationListener)
+    }
     RNCallKeep.addEventListener("didDisplayIncomingCall", displayIncomingCallListener)
     RNCallKeep.addEventListener("didActivateAudioSession", activateAudioSessionListener)
     RNCallKeep.addEventListener("didReceiveStartCallAction", startCallActionListener)
@@ -558,15 +557,6 @@ const useHookCallKitIOS = (updateClientId) => {
     AppState.addEventListener("change", handleAppStateChange)
   }, [])
 
-  const showFakeCall = () => {
-    // rule moi cua apple la nhan duoc Voip push bat buoc phai show callkit => voi cac truong hop khong can thiet thi show roi end luon
-    //const callKitUUID = uuid.v1()
-    const callKitUUID = Math.round(Math.random()*100).toString()
-    // RNCallKeep.displayIncomingCall(callKitUUID, "Stringee", "CallEnded", "generic", true)
-    const newFakeCallIds = fakeCallIds.push(callKitUUID)
-    setFakeCallIds(newFakeCallIds)
-    console.log("SHOW FAKE CALL, UUID: " + callKitUUID + " fakeCallIds: " + fakeCallIds.toString)
-  }
   const _muteAction = () => {
     // Implement the muteAction function...
   }

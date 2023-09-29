@@ -3,7 +3,7 @@ import { CommonActions, CompositeScreenProps } from "@react-navigation/native"
 import React from "react"
 import { Platform, TextStyle, ViewStyle } from "react-native"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
-import { Icon, Text } from "../components"
+import { Icon } from "../components"
 import { translate } from "../i18n"
 import { colors, spacing, typography } from "../theme"
 import { AppStackParamList, AppStackScreenProps } from "./AppNavigator"
@@ -11,7 +11,6 @@ import Home from "@app/screens/Home"
 import Profile from "@app/screens/Profile"
 import Video from "@app/screens/Video"
 import History from "@app/screens/History"
-import { navigate } from "./navigationUtilities"
 import { BottomNavigation } from "react-native-paper"
 import { HEIGHT } from "@app/config/functions"
 import R from "@app/assets"
@@ -52,6 +51,7 @@ export function TabNavigator() {
       initialRouteName="Home"
       tabBar={({ navigation, state, descriptors, insets }) => (
         <BottomNavigation.Bar
+          labeled={false}
           navigationState={state}
           safeAreaInsets={insets}
           onTabPress={({ route, preventDefault }) => {
@@ -84,17 +84,6 @@ export function TabNavigator() {
               height: HEIGHT(80),
             },
           ]}
-          getLabelText={({ route }) => {
-            const { options } = descriptors[route.key]
-            const label =
-              options.tabBarLabel !== undefined
-                ? options.tabBarLabel
-                : options.title !== undefined
-                ? options.title
-                : route.title
-
-            return label
-          }}
         />
       )}
     >
@@ -102,8 +91,6 @@ export function TabNavigator() {
         name="Home"
         component={Home}
         options={{
-          tabBarShowLabel: false,
-          tabBarLabel: "Trang chủ",
           tabBarIcon: ({ focused }) => (
             <Icon
               icon={focused ? "ic_home_active" : "ic_home"}
@@ -118,8 +105,6 @@ export function TabNavigator() {
         name="History"
         component={History}
         options={{
-          tabBarShowLabel: false,
-          tabBarLabel: "Lịch",
           tabBarIcon: ({ focused }) => (
             <Icon
               icon={focused ? "ic_calendar_active" : "ic_calendar"}
@@ -134,9 +119,6 @@ export function TabNavigator() {
         name="Video"
         component={Video}
         options={{
-          tabBarShowLabel: false,
-          tabBarAccessibilityLabel: translate("demoNavigator.podcastListTab"),
-          tabBarLabel: "Chat",
           tabBarIcon: ({ focused }) => (
             <Icon
               icon={focused ? "ic_chat_filled" : "ic_chat"}
@@ -151,8 +133,6 @@ export function TabNavigator() {
         name="Profile"
         component={Profile}
         options={{
-          tabBarShowLabel: false,
-          tabBarLabel: "Profile",
           tabBarIcon: ({ focused }) => (
             <Icon
               icon={focused ? "ic_profile" : "ic_profile"}

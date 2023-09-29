@@ -63,8 +63,6 @@ const ModalFilter = forwardRef((props: Props, ref) => {
   const [timeFilter, setTimeFilter] = useState(-1)
   const [startDate, setStartDate] = useState(new Date())
   const [endDate, setEndDate] = useState(new Date())
-  const dispatch = useDispatch()
-  const dateStartEnd = returnStartEndDate()
   useImperativeHandle(ref, () => ({
     show() {
       setVisible(true)

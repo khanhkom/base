@@ -43,6 +43,8 @@ import rootSaga from "@app/redux/sagas"
 import notifee from "@notifee/react-native"
 import messaging from "@react-native-firebase/messaging"
 import { showToastMessage } from "./utils/library"
+import CallService from "@app/utils/call/androidCallService.js"
+import RNCallKeep from "react-native-callkeep"
 
 export const NAVIGATION_PERSISTENCE_KEY = "NAVIGATION_STATE"
 const sagaMiddleware = createSagaMiddleware()
@@ -91,6 +93,8 @@ async function onMessageReceived(message) {
   })
   switch (callStatus) {
     case "started":
+      RNCallKeep.displayIncomingCall(notificationId, from, channelId, "number", false)
+
       await notifee.displayNotification({
         id: notificationId,
         title: "Incoming Call",

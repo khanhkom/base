@@ -5,9 +5,10 @@ import { HEIGHT, WIDTH, getHeight, getWidth } from "@app/config/functions"
 import colors from "@app/assets/colors"
 import { spacing } from "@app/theme/spacing"
 import { navigate } from "@app/navigators/navigationUtilities"
+import { translate } from "@app/i18n/translate"
 interface ItemProps {
   visible: boolean
-  setVisible: () => void
+  setVisible: (val: boolean) => void
   isNewUser: boolean
   phone: string
 }
@@ -18,8 +19,9 @@ export default function PopupVerify({ visible, setVisible, isNewUser, phone }: I
       <TouchableOpacity onPress={hideModal} style={styles.touch_group} />
       <View style={styles.containerStyle}>
         <Text style={styles.textTitle}>
-          Số điện thoại <Text style={styles.textPhone}>{phone}</Text> {isNewUser ? "chưa" : "đã"}{" "}
-          tồn tại trong hệ thống của chúng tôi!
+          {translate("common.phonenumber")} <Text style={styles.textPhone}>{phone}</Text>{" "}
+          {isNewUser ? translate("common.not") : translate("common.has")}{" "}
+          {translate("auth.exists_in_our_system")}
         </Text>
         <View style={styles.bottomView}>
           <Button
@@ -28,7 +30,7 @@ export default function PopupVerify({ visible, setVisible, isNewUser, phone }: I
             style={styles.buttonLeft}
             textColor={colors.black}
           >
-            Đóng
+            {translate("common.close")}
           </Button>
           <Button
             onPress={() => {
@@ -38,7 +40,7 @@ export default function PopupVerify({ visible, setVisible, isNewUser, phone }: I
             mode="contained"
             style={styles.buttonRight}
           >
-            {isNewUser ? "Đăng ký ngay" : "Đăng nhập ngay"}
+            {isNewUser ? translate("auth.register_now") : translate("auth.log_in_now")}
           </Button>
         </View>
       </View>
@@ -47,36 +49,36 @@ export default function PopupVerify({ visible, setVisible, isNewUser, phone }: I
 }
 
 const styles = StyleSheet.create({
+  bottomView: {
+    alignItems: "center",
+    flexDirection: "row",
+    marginTop: HEIGHT(spacing.lg),
+    width: WIDTH(343),
+  },
+  buttonLeft: {
+    backgroundColor: colors.gray_1,
+    borderBottomLeftRadius: 16,
+    borderRadius: 0,
+    flex: 1,
+  },
+  buttonRight: { borderBottomRightRadius: 16, borderRadius: 0, flex: 1 },
   containerStyle: {
     backgroundColor: colors.white,
-    width: WIDTH(343),
-    marginLeft: WIDTH(spacing.md),
     borderRadius: 16,
-  },
-  textTitle: {
-    paddingHorizontal: WIDTH(spacing.md),
-    marginTop: HEIGHT(spacing.md),
-    textAlign: "center",
+    marginLeft: WIDTH(spacing.md),
+    width: WIDTH(343),
   },
   textPhone: { color: colors.black, fontWeight: "500" },
-  buttonLeft: {
-    flex: 1,
-    borderRadius: 0,
-    borderBottomLeftRadius: 16,
-    backgroundColor: colors.gray_1,
-  },
-  buttonRight: { flex: 1, borderRadius: 0, borderBottomRightRadius: 16 },
-  bottomView: {
-    flexDirection: "row",
-    alignItems: "center",
-    width: WIDTH(343),
-    marginTop: HEIGHT(spacing.lg),
+  textTitle: {
+    marginTop: HEIGHT(spacing.md),
+    paddingHorizontal: WIDTH(spacing.md),
+    textAlign: "center",
   },
   touch_group: {
-    position: "absolute",
-    width: getWidth(),
+    backgroundColor: colors.gray_9,
     height: getHeight(),
     opacity: 0.75,
-    backgroundColor: colors.gray_9,
+    position: "absolute",
+    width: getWidth(),
   },
 })

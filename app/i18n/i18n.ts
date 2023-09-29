@@ -3,10 +3,9 @@ import i18n from "i18n-js"
 import { I18nManager } from "react-native"
 
 // if English isn't your default language, move Translations to the appropriate language file.
-import en, { Translations } from "./en"
-import ar from "./ar"
-import ko from "./ko"
-import { KEYSTORAGE, load } from "app/utils/storage"
+import en from "./en"
+import vi, { Translations } from "./vi"
+import { KEYSTORAGE, load } from "@app/utils/storage"
 
 i18n.fallbacks = true
 /**
@@ -14,7 +13,7 @@ i18n.fallbacks = true
  * the language code is the suffixed with "-US". i.e. if a device is set to English ("en"),
  * if you change to another language and then return to English language code is now "en-US".
  */
-i18n.translations = { ar, en, "en-US": en, ko }
+i18n.translations = { en, "en-US": en, vi }
 
 i18n.locale = Localization.locale
 
@@ -45,6 +44,7 @@ type RecursiveKeyOfHandleValue<TValue, Text extends string> = TValue extends any
   : TValue extends object
   ? Text | `${Text}${RecursiveKeyOfInner<TValue>}`
   : Text
+i18n.locale = "vi"
 export const setLangInApp = async () => {
   const lang: any = await load(KEYSTORAGE.LANGUAGE)
   if (lang && lang?.local) {

@@ -1,17 +1,14 @@
-import { StyleSheet, Image, View, ImageBackground } from "react-native"
+import { StyleSheet, Image, View } from "react-native"
 import React, { useState } from "react"
-import { HEIGHT, WIDTH, getWidth } from "@app/config/functions"
+import { HEIGHT, WIDTH } from "@app/config/functions"
 import R from "@app/assets"
 import { Icon } from "@app/components/Icon"
 import { spacing } from "@app/theme/spacing"
 import { Searchbar } from "react-native-paper"
 import colors from "@app/assets/colors"
 import { navigate } from "@app/navigators/navigationUtilities"
-type HeaderHomeProps = {
-  onSearch?: (keyword: string) => void
-}
-export default function HeaderHome(props: HeaderHomeProps) {
-  const { onSearch } = props
+
+export default function HeaderHome() {
   const [keyword, setKeyword] = useState("")
   return (
     <View style={styles.imageBGR} resizeMode="contain">

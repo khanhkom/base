@@ -1,6 +1,5 @@
 import { StyleSheet, View } from "react-native"
-import React, { useRef, useState, useEffect } from "react"
-import { Header } from "@app/components/Header"
+import React, { useState } from "react"
 import { Text } from "@app/components/Text"
 import { HEIGHT, WIDTH, getWidth } from "@app/config/functions"
 import { spacing } from "@app/theme/spacing"
@@ -21,7 +20,6 @@ export default function VerifyPhoneNumber() {
   const [phoneNumber, setPhoneNumber] = useState("")
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(false)
-  const [isNewUser, setNewUser] = React.useState(false)
   const [otpMethod, setOTPMethod] = useState(0)
   const dispatch = useDispatch()
   const onSubmit = async () => {
@@ -44,7 +42,6 @@ export default function VerifyPhoneNumber() {
               phone: countryCode + phoneNumber,
             }),
           )
-          setNewUser(resLogin?.data?.isNewUser)
           navigate("VerifyOTP", {
             phone: countryCode + phoneNumber,
           })

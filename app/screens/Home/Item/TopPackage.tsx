@@ -90,10 +90,6 @@ export default function TopPackage() {
 }
 
 const styles = StyleSheet.create({
-  image: {
-    width: WIDTH(343),
-    height: WIDTH(120),
-  },
   container: {
     marginTop: HEIGHT(spacing.lg),
   },

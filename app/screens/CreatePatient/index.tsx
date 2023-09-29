@@ -12,7 +12,6 @@ import SelectBirthday from "./Item/SelectBirthday"
 import LocationPicker from "@app/components/LocationPicker/LocationPicker"
 import { goBack, navigate } from "@app/navigators/navigationUtilities"
 import { useSelector } from "@app/redux/reducers"
-import { LoadingOpacity } from "@app/components/loading/LoadingOpacity"
 import moment from "moment"
 import { EToastType, showToastMessage } from "@app/utils/library"
 import { createPatient } from "@app/services/api/functions/patient"
@@ -21,10 +20,11 @@ import { getListPatientRequest } from "@app/redux/actions/patient"
 import { useDispatch } from "react-redux"
 import { Formik } from "formik"
 import * as Yup from "yup"
+import { translate } from "@app/i18n/translate"
 const SignupSchema = Yup.object().shape({
-  name: Yup.string().required("Vui lòng nhập họ tên!"),
-  phone: Yup.string().required("Vui lòng nhập số điện thoại!"),
-  birthday: Yup.string().required("Vui lòng chọn ngày sinh!"),
+  name: Yup.string().required(translate("create_patient.please_enter_fullname")),
+  phone: Yup.string().required(translate("create_patient.please_enter_phone")),
+  birthday: Yup.string().required(translate("create_patient.please_enter_date_birth")),
 })
 export default function CreatePatient({ route }) {
   const user = useSelector((state) => state.userReducers.user)
@@ -79,10 +79,10 @@ export default function CreatePatient({ route }) {
       address: address,
       phone: values.phone,
     }
-    let resUpdate = await createPatient(bodyCreate)
+    const resUpdate = await createPatient(bodyCreate)
     setLoading(false)
     if (resUpdate?.status === 201) {
-      showToastMessage("Tạo hồ sơ thành công!")
+      showToastMessage(translate("create_patient.create_patient_successful"))
       if (isNavigateFromRegister) {
         navigate("TabNavigator")
       } else {
@@ -90,31 +90,36 @@ export default function CreatePatient({ route }) {
         goBack()
       }
     } else {
-      showToastMessage("Tạo hồ sơ thất bại!", EToastType.ERROR)
+      showToastMessage(translate("create_patient.create_patient_failure"), EToastType.ERROR)
     }
   }
   return (
     <View style={styles.container}>
       <Header
-        title="Tạo mới hồ sơ y tế"
+        title={translate("create_patient.create_new_patient")}
         leftIcon="arrow_left"
-        rightText={isNavigateFromRegister ? "Bỏ qua" : undefined}
+        rightText={isNavigateFromRegister ? translate("common.skip") : undefined}
         rightIconColor={colors.blue_6}
         backgroundColor={colors.white}
+        onRightPress={() => {
+          if (!isNavigateFromRegister) {
+            goBack()
+          } else {
+            navigate("TabNavigator")
+          }
+        }}
       />
       <KeyboardAwareScrollView>
         <Card mode="contained" style={styles.nodeCard}>
           <Text weight="normal" size="ba">
-            Vui lòng nhập chính xác thông tin của bệnh nhân (người khám) theo thông tin giấy tờ tùy
-            thân (CCCD/CMND/BHYT). Thông tin không chính xác có thể làm gián đoạn quá trình khám,
-            chữa bệnh của bạn.
+            {translate("create_patient.please_enter_information")}
           </Text>
           <Text weight="normal" size="ba">
             <Text weight="normal" size="ba" style={{ color: colors.red_5 }}>
-              Lưu ý:
+              {translate("create_patient.note")}
             </Text>{" "}
             <Text style={{ color: colors.red_5 }}> * </Text>
-            là những trường thông tin bắt buộc
+            {translate("create_patient.field_required")}
           </Text>
         </Card>
         <Formik
@@ -128,8 +133,8 @@ export default function CreatePatient({ route }) {
             <View style={styles.body}>
               <TextField
                 require
-                label="Họ và tên"
-                placeholder="Nhập họ tên"
+                label={translate("create_patient.full_name")}
+                placeholder={translate("create_patient.enter_fullname")}
                 value={values.name}
                 status={errors.name && "error"}
                 helper={errors.name}
@@ -138,8 +143,8 @@ export default function CreatePatient({ route }) {
               ></TextField>
               <TextField
                 require
-                label="Số điện thoại"
-                placeholder="Nhập số điện thoại"
+                label={translate("common.phonenumber")}
+                placeholder={translate("auth.enter_your_phone_number")}
                 value={values.phone}
                 status={errors.phone && "error"}
                 helper={errors.phone}
@@ -149,14 +154,14 @@ export default function CreatePatient({ route }) {
                 containerStyle={{ marginTop: HEIGHT(spacing.md) }}
               ></TextField>
               <SelectBirthday
-                title="Ngày sinh"
+                title={translate("create_patient.date_of_birth")}
                 status={errors.birthday && "error"}
                 helper={errors.birthday}
                 value={values.birthday}
                 onSelectDate={(date) => setFieldValue("birthday", moment(date).toISOString())}
               />
               <Text preset="formLabel">
-                Giới tính
+                {translate("create_patient.gender")}
                 {require && (
                   <Text preset="formLabel" style={{ color: colors.red_5 }}>
                     {" "}
@@ -169,7 +174,7 @@ export default function CreatePatient({ route }) {
                   containerStyle={styles.flexRow}
                   variant="radio"
                   onPress={() => setGender(0)}
-                  label="Nam"
+                  label={translate("create_patient.male")}
                   labelPosition="right"
                   value={gender === 0}
                 />
@@ -178,7 +183,7 @@ export default function CreatePatient({ route }) {
                   variant="radio"
                   onPress={() => setGender(1)}
                   value={gender === 1}
-                  label="Nữ"
+                  label={translate("create_patient.fe_male")}
                   labelPosition="right"
                 />
               </View>
@@ -186,7 +191,7 @@ export default function CreatePatient({ route }) {
                 label="Email"
                 value={email}
                 onChangeText={setEmail}
-                placeholder="Nhập địa chỉ email"
+                placeholder={translate("create_patient.enter_email")}
                 containerStyle={{ marginTop: HEIGHT(spacing.md) }}
               ></TextField>
               <LocationPicker
@@ -196,9 +201,9 @@ export default function CreatePatient({ route }) {
                   setDistricts({ name: "", _id: "" })
                   setWards({ name: "", _id: "" })
                 }}
-                title="Tỉnh/ Thành phố"
+                title={translate("create_patient.province")}
                 parentId={""}
-                placeholder="Chọn Tỉnh/ Thành phố"
+                placeholder={translate("create_patient.select_province")}
                 type="provinces"
               />
               <LocationPicker
@@ -208,21 +213,21 @@ export default function CreatePatient({ route }) {
                   setWards({ name: "", _id: "" })
                 }}
                 parentId={provinces?.code}
-                title="Quận/ Huyện"
-                placeholder="Chọn Quận/ Huyện"
+                title={translate("create_patient.district")}
+                placeholder={translate("create_patient.select_district")}
                 type="districts"
               />
               <LocationPicker
                 value={wards}
                 setValue={setWards}
                 parentId={districts?.code}
-                title="Phường/ Xã"
-                placeholder="Chọn Phường/Xã"
+                title={translate("create_patient.ward")}
+                placeholder={translate("create_patient.select_ward")}
                 type="wards"
               />
               <TextField
-                label="Địa chỉ chi tiết"
-                placeholder="Ví dụ: Số nhà, đường, ..."
+                label={translate("create_patient.detail_address")}
+                placeholder={translate("create_patient.example_address")}
                 value={address}
                 onChangeText={setAddress}
                 containerStyle={{ marginTop: HEIGHT(spacing.md) }}
@@ -233,7 +238,7 @@ export default function CreatePatient({ route }) {
                 onPress={handleSubmit}
                 loading={loading}
               >
-                Lưu
+                {translate("common.save")}
               </Button>
             </View>
           )}

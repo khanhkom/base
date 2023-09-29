@@ -28,7 +28,7 @@ export default function BottonButton({
 }: ItemProps) {
   const onPressCall = () => {
     // console.log("AAAAAA", clientId?.current?.getId?.())
-    navigate("Call2Screen", {
+    navigate("CallScreen", {
       callId: "",
       clientId: clientId,
       isVideoCall: true,

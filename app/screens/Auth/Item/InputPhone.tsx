@@ -7,6 +7,7 @@ import colors from "@app/assets/colors"
 import { spacing } from "@app/theme/spacing"
 import { Icon } from "@app/components/Icon"
 import { Text } from "@app/components/Text"
+import { translate } from "@app/i18n/translate"
 interface ItemProps {
   setPhoneNumber: (val: string) => void
   phoneNumber: string
@@ -61,7 +62,7 @@ export default function InputPhone({
           </Pressable>
           <View style={styles.lineVer} />
           <TextInput
-            placeholder="Nhập số điện thoại"
+            placeholder={translate("auth.enter_your_phone_number")}
             style={styles.textInput}
             keyboardType="numeric"
             onFocus={() => {
@@ -97,7 +98,7 @@ export default function InputPhone({
                   <CountryButton
                     item={item}
                     key={index}
-                    name={item.name["en"]}
+                    name={item.name.en}
                     onPress={() => {
                       setCountryCode(item.dial_code)
                       setShow(false)
@@ -141,7 +142,7 @@ export default function InputPhone({
       />
       {error && (
         <Text preset="smRegular" style={{ marginTop: HEIGHT(spacing.xs), color: colors.red_5 }}>
-          Vui lòng kiểm tra lại số điện thoại!
+          {translate("auth.verify_telephone_number_again")}
         </Text>
       )}
     </>
@@ -149,26 +150,18 @@ export default function InputPhone({
 }
 
 const styles = StyleSheet.create({
-  containerInput: {
-    marginTop: HEIGHT(spacing.md),
-    borderRadius: 12,
-    borderWidth: 4,
-    width: WIDTH(343),
-    borderColor: colors.white,
-  },
-  wrapperInput: {
-    borderRadius: 8,
-    borderWidth: 1,
-    borderColor: colors.gray_3,
-    paddingVertical: HEIGHT(spacing.sm),
-    flexDirection: "row",
-    alignItems: "center",
-  },
   buttonCode: {
-    flexDirection: "row",
     alignItems: "center",
+    flexDirection: "row",
     paddingLeft: WIDTH(spacing.sm),
     paddingRight: WIDTH(spacing.xs),
+  },
+  containerInput: {
+    borderColor: colors.white,
+    borderRadius: 12,
+    borderWidth: 4,
+    marginTop: HEIGHT(spacing.md),
+    width: WIDTH(343),
   },
   lineVer: {
     backgroundColor: colors.gray_3,
@@ -176,8 +169,16 @@ const styles = StyleSheet.create({
     width: 1,
   },
   textInput: {
-    padding: 0,
     margin: 0,
     marginLeft: WIDTH(spacing.xs),
+    padding: 0,
+  },
+  wrapperInput: {
+    alignItems: "center",
+    borderColor: colors.gray_3,
+    borderRadius: 8,
+    borderWidth: 1,
+    flexDirection: "row",
+    paddingVertical: HEIGHT(spacing.sm),
   },
 })

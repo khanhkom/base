@@ -1,14 +1,5 @@
-import {
-  ActivityIndicator,
-  FlatList,
-  KeyboardAvoidingView,
-  Platform,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native"
+import { ActivityIndicator, FlatList, StyleSheet, View } from "react-native"
 import React, { useEffect, useState } from "react"
-import Modal from "react-native-modal"
 import { HEIGHT, WIDTH } from "@app/config/functions"
 import colors from "@app/assets/colors"
 import { Divider, List, Searchbar } from "react-native-paper"
@@ -19,8 +10,8 @@ import {
   getProvincesByPage,
   getWardsByDistrict,
 } from "@app/services/api/functions/location"
-import { LoadingOpacity } from "@app/components/loading/LoadingOpacity"
 import { goBack } from "@app/navigators/navigationUtilities"
+import { translate } from "@app/i18n/translate"
 interface ScreenProps {
   route: {
     params: {
@@ -36,10 +27,10 @@ export default function SelectLocation({ route }: ScreenProps) {
   const [keyword, setKeyword] = useState("")
   const [listData, setListData] = useState([])
   const [loading, setLoading] = useState(false)
-  const { type, value, setValue, parentId } = route.params
+  const { type, setValue, parentId } = route.params
   const getDataList = async (keyword) => {
     setLoading(true)
-    let body = {
+    const body = {
       limit: -1,
       q: keyword || "",
       cols: "name,name_with_type",
@@ -92,10 +83,10 @@ export default function SelectLocation({ route }: ScreenProps) {
   }
   const title =
     type === "provinces"
-      ? "Chọn Tỉnh/ Thành phố"
+      ? translate("create_patient.select_province")
       : type === "districts"
-      ? "Chọn Quận/Huyện"
-      : "Chọn Phường/ Xã"
+      ? translate("create_patient.select_district")
+      : translate("create_patient.select_ward")
   return (
     <View style={styles.container}>
       <Header title={title} leftIcon="arrow_left" backgroundColor={colors.white} />
@@ -103,7 +94,7 @@ export default function SelectLocation({ route }: ScreenProps) {
         value={keyword}
         onChangeText={setKeyword}
         style={styles.searchBar}
-        placeholder="Tìm kiếm..."
+        placeholder={translate("common.searching")}
       />
       {loading && <ActivityIndicator color={colors.primary} />}
       <FlatList

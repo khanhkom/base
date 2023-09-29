@@ -1,16 +1,14 @@
 import { Pressable, StyleSheet, View } from "react-native"
-import React, { useState } from "react"
+import React from "react"
 import { Text } from "@app/components/Text"
 import colors from "@app/assets/colors"
 import { HEIGHT, WIDTH } from "@app/config/functions"
 import { spacing } from "@app/theme/spacing"
 import { TextField } from "@app/components/TextField"
 import { Icon } from "@app/components/Icon"
-import moment from "moment"
-import { isToday } from "date-fns"
-import ModalAdress from "./ModalAdress"
 import { navigate } from "@app/navigators/navigationUtilities"
 import { EToastType, showToastMessage } from "@app/utils/library"
+import { translate } from "@app/i18n/translate"
 interface ItemProps {
   title: string
   placeholder: string
@@ -37,9 +35,9 @@ export default function LocationPicker({
         onPress={() => {
           if (parentId === "" && type !== "provinces") {
             if (type === "districts")
-              showToastMessage("Vui lòng chọn Tỉnh/Thành phố!", EToastType.ERROR)
+              showToastMessage(translate("create_patient.please_select_province"), EToastType.ERROR)
             else if (type === "wards")
-              showToastMessage("Vui lòng chọn Quận/Huyện!", EToastType.ERROR)
+              showToastMessage(translate("create_patient.please_select_district"), EToastType.ERROR)
           } else {
             navigate("SelectLocation", {
               type,

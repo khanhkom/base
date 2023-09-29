@@ -37,6 +37,7 @@ export default function SearchFilter({
         placeholder={placeholder || "Tìm kiếm bác sĩ"}
         placeholderTextColor={colors.gray_6}
         onChangeText={onChangeText}
+        clearIcon={"close"}
       />
       <Pressable
         style={[
@@ -55,7 +56,7 @@ export default function SearchFilter({
           </View>
         )}
       </Pressable>
-      <IconButton
+      {/* <IconButton
         icon={iconRegistry.filter}
         onPress={onPressFilter}
         style={[
@@ -65,7 +66,7 @@ export default function SearchFilter({
             height: height,
           },
         ]}
-      />
+      /> */}
     </View>
   )
 }

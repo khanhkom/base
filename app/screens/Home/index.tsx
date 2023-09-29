@@ -13,9 +13,9 @@ import { getStringeeToken, updateStringeeClientId } from "@app/redux/actions/str
 import messaging from "@react-native-firebase/messaging"
 import { useSelector } from "@app/redux/reducers"
 import { useDispatch } from "react-redux"
-import { StringeeClient } from "stringee-react-native"
 import { getOrderHistory } from "@app/redux/actions/actionOrder"
 import useHookCallKitIOS from "@app/hooks/stringee/useHookCallKitIOS"
+import { StringeeCall2, StringeeClient } from "stringee-react-native"
 const iOS = Platform.OS === "ios" ? true : false
 
 export default function HomeScreen() {

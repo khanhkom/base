@@ -6,10 +6,10 @@ import { HEIGHT, WIDTH } from "@app/config/functions"
 import { spacing } from "@app/theme/spacing"
 import colors from "@app/assets/colors"
 import { navigate } from "@app/navigators/navigationUtilities"
-import { Screen } from "@app/components/Screen"
 import { updateUserField } from "@app/redux/actions"
 import { useDispatch } from "react-redux"
 import { useSelector } from "@app/redux/reducers"
+import { translate } from "@app/i18n/translate"
 
 export default function ConfirmName() {
   const nameRedux = useSelector((state) => state.userReducers.user?.name)
@@ -17,11 +17,15 @@ export default function ConfirmName() {
   const dispatch = useDispatch()
   return (
     <View style={styles.container}>
-      <Header leftIcon="arrow_left" title="Xác nhận họ tên" backgroundColor={colors.white} />
+      <Header
+        leftIcon="arrow_left"
+        title={translate("auth.name_confirmation")}
+        backgroundColor={colors.white}
+      />
       <View style={{ flex: 1 }}>
         <TextInput
           placeholderTextColor={colors.gray_5}
-          placeholder="Nhập họ và tên"
+          placeholder={translate("auth.enter_full_name")}
           mode="outlined"
           // label="Nhập họ và tên"
           value={name}
@@ -30,7 +34,7 @@ export default function ConfirmName() {
             marginTop: HEIGHT(spacing.lg),
           }}
           autoFocus
-          outlineStyle={{ borderRadius: 8, borderColor: colors.main_6 }}
+          outlineStyle={styles.outlineStyle}
           onChangeText={(text) => setText(text)}
         />
       </View>
@@ -51,7 +55,7 @@ export default function ConfirmName() {
             )
           }}
         >
-          Tiếp tục
+          {translate("common.continue")}
         </Button>
       </KeyboardAvoidingView>
     </View>
@@ -59,14 +63,15 @@ export default function ConfirmName() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: colors.white,
-  },
   button: {
-    width: WIDTH(343),
+    borderRadius: 8,
     marginBottom: HEIGHT(spacing.md),
     marginLeft: WIDTH(spacing.md),
-    borderRadius: 8,
+    width: WIDTH(343),
   },
+  container: {
+    backgroundColor: colors.white,
+    flex: 1,
+  },
+  outlineStyle: { borderColor: colors.main_6, borderRadius: 8 },
 })

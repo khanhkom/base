@@ -15,6 +15,7 @@ import { useDispatch } from "react-redux"
 import { getOtp, verifyOTP } from "@app/services/api/functions/users"
 import { LoadingOpacity } from "@app/components/loading/LoadingOpacity"
 import { EToastType, showToastMessage } from "@app/utils/library"
+import { translate } from "@app/i18n/translate"
 interface ScreenProps {
   route: {
     params: {
@@ -34,11 +35,11 @@ export default function VerifyOTP({ route }: ScreenProps) {
     try {
       setLoading(true)
       const body = {
-        phone: phone,
+        phone,
         code: codeFinal,
         role: "patient",
       }
-      let resOTP = await verifyOTP(body)
+      const resOTP = await verifyOTP(body)
       console.log("body", body)
       const dataLogin = resOTP?.data
       setLoading(false)
@@ -53,10 +54,10 @@ export default function VerifyOTP({ route }: ScreenProps) {
         }
       } else {
         setError(true)
-        showToastMessage("Sai mã đăng nhập", EToastType.ERROR)
+        showToastMessage(translate("otp.incorrect_login_code"), EToastType.ERROR)
       }
     } catch (error) {
-      showToastMessage("Có lỗi xảy ra! Vui lòng thử lại", EToastType.ERROR)
+      showToastMessage(translate("otp.code_sent_successfully"), EToastType.ERROR)
       setError(true)
       setLoading(false)
       console.warn("_checkCode", error)
@@ -64,21 +65,21 @@ export default function VerifyOTP({ route }: ScreenProps) {
   }
   const reSendCode = async () => {
     try {
-      let body = {
-        phone: phone,
+      const body = {
+        phone,
       }
       setLoading(true)
       setCode("")
       const resLogin = await getOtp(body)
       setTime(30)
       if (resLogin?.status === 201) {
-        showToastMessage("Gửi mã thành công!", EToastType.SUCCESS)
+        showToastMessage(translate("otp.code_sent_successfully"), EToastType.SUCCESS)
       } else {
-        showToastMessage("Có lỗi xảy ra! Vui lòng thử lại", EToastType.ERROR)
+        showToastMessage(translate("common.oops_error"), EToastType.ERROR)
       }
       setLoading(false)
     } catch (error) {
-      showToastMessage("Có lỗi xảy ra! Vui lòng thử lại", EToastType.ERROR)
+      showToastMessage(translate("common.oops_error"), EToastType.ERROR)
       setLoading(false)
     }
   }
@@ -97,9 +98,9 @@ export default function VerifyOTP({ route }: ScreenProps) {
   return (
     <View style={styles.container}>
       <Header leftIcon="arrow_left" backgroundColor={colors.white} />
-      <Text preset="xxxlsemibold">Xác thực OTP</Text>
+      <Text preset="xxxlsemibold">{translate("otp.otpVerificationTitle")}</Text>
       <Text preset="mdRegular" style={styles.textDes}>
-        Vui lòng nhập mã xác thực được gửi tới số điện thoại <Text preset="mdMedium">{phone}</Text>
+        {translate("otp.enterOtpCode")} <Text preset="mdMedium">{phone}</Text>
       </Text>
       <SmoothPinCodeInput
         autoFocus
@@ -125,7 +126,7 @@ export default function VerifyOTP({ route }: ScreenProps) {
             marginBottom: -HEIGHT(spacing.md),
           }}
         >
-          Mã xác thực không chính xác, vui lòng nhập lại!
+          {translate("otp.incorrectCode")}
         </Text>
       )}
 
@@ -135,12 +136,12 @@ export default function VerifyOTP({ route }: ScreenProps) {
         preset="baMedium"
         style={{ marginTop: HEIGHT(40), color: colors.gray_7 }}
       >
-        Gửi lại mã{" "}
+        {translate("otp.resendCode")}{" "}
         {time > 0 && (
           <Text>
             (
             <Text preset="baMedium" style={{ color: colors.main_7 }}>
-              {time} giây
+              {time} {translate("common.second")}
             </Text>
             )
           </Text>
@@ -152,34 +153,34 @@ export default function VerifyOTP({ route }: ScreenProps) {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: "center",
-    backgroundColor: colors.white,
-  },
   cellStyle: {
-    borderRadius: 8,
     backgroundColor: colors.background,
+    borderRadius: 8,
   },
   cellStyleFocused: {
     borderColor: colors.main_7,
     borderWidth: 1,
   },
+  container: {
+    alignItems: "center",
+    backgroundColor: colors.white,
+    flex: 1,
+  },
+  dot_placeholder: {
+    backgroundColor: colors.gray_5,
+    borderRadius: 25,
+    height: WIDTH(6),
+    opacity: 0.3,
+    width: WIDTH(6),
+  },
   textDes: {
-    textAlign: "center",
-    marginTop: HEIGHT(spacing.md),
     marginBottom: HEIGHT(spacing.xxl),
+    marginTop: HEIGHT(spacing.md),
+    textAlign: "center",
   },
   textPin: {
     color: colors.main_6,
-    fontWeight: "600",
     fontSize: 18,
-  },
-  dot_placeholder: {
-    width: WIDTH(6),
-    height: WIDTH(6),
-    borderRadius: 25,
-    opacity: 0.3,
-    backgroundColor: colors.gray_5,
+    fontWeight: "600",
   },
 })

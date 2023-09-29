@@ -41,7 +41,7 @@ interface ItemProps {
 }
 export default function ItemSchedule({ item }: ItemProps) {
   const itemData =
-    LIST_ICON_BY_STATUS.find((it) => it.status === item.status) || LIST_ICON_BY_STATUS[0]
+    LIST_ICON_BY_STATUS.find((it) => it.status === item?.status) || LIST_ICON_BY_STATUS[0]
   const isDoneSchedule = item?.status === STATUS_ORDER.done
   const returnDataByField = (index) => {
     switch (index) {
