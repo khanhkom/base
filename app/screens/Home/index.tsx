@@ -16,6 +16,7 @@ import { useDispatch } from "react-redux"
 import { getOrderHistory } from "@app/redux/actions/actionOrder"
 import useHookCallKitIOS from "@app/hooks/stringee/useHookCallKitIOS"
 import { StringeeCall2, StringeeClient } from "stringee-react-native"
+import TestCallScreen from "../CallScreen/TestCallScreen"
 const iOS = Platform.OS === "ios" ? true : false
 
 export default function HomeScreen() {
@@ -77,7 +78,7 @@ export default function HomeScreen() {
       client?.current?.connect(session?.access_token)
     }
   }, [session?.access_token])
-
+  return <TestCallScreen />
   return (
     <Screen preset="scroll" style={styles.container}>
       <HeaderHome onSearch={onSearch} />
