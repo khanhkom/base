@@ -3,18 +3,18 @@ import { StyleSheet, Text, View, TouchableOpacity, Image, Dimensions } from "rea
 import { StringeeVideoView } from "stringee-react-native"
 // import RNCallKeep from 'react-native-callkeep';
 // import App from '../App';
-
+import R from "../../../assets"
 var height = Dimensions.get("window").height
 var width = Dimensions.get("window").width
 
-const muteImg = require("../resource/mute.png")
-const muteImg_selected = require("../resource/mute_selected.png")
+const muteImg = R.images.ic_calendar
+const muteImg_selected = R.images.ic_calendar
 
-const speakerImg = require("../resource/speaker.png")
-const speakerImg_selected = require("../resource/speaker_selected.png")
+const speakerImg = R.images.ic_calendar
+const speakerImg_selected = R.images.ic_calendar
 
-const videoDisableImg = require("../resource/video_disable.png")
-const videoEnableImg = require("../resource/video_enable.png")
+const videoDisableImg = R.images.ic_calendar
+const videoEnableImg = R.images.ic_calendar
 
 class CallScreen extends Component {
   render() {
@@ -44,7 +44,7 @@ class CallScreen extends Component {
         </View>
 
         <TouchableOpacity onPress={this.props.switchCameraHandler} style={styles.camera}>
-          <Image source={require("../resource/camera_switch.png")} style={styles.switchCamera} />
+          <Image source={R.images.ic_calendar} style={styles.switchCamera} />
         </TouchableOpacity>
 
         <Text style={styles.userId}>{this.props.userId}</Text>
@@ -67,11 +67,11 @@ class CallScreen extends Component {
         {this.props.isAnswered ? null : (
           <View style={styles.callActionContainer}>
             <TouchableOpacity onPress={this.props.rejectButtonHandler}>
-              <Image source={require("../resource/end_call.png")} style={styles.button} />
+              <Image source={R.images.ic_calendar} style={styles.button} />
             </TouchableOpacity>
 
             <TouchableOpacity invisible onPress={this.props.acceptButtonHandler}>
-              <Image source={require("../resource/accept_call.png")} style={styles.button} />
+              <Image source={R.images.ic_calendar} style={styles.button} />
             </TouchableOpacity>
           </View>
         )}
@@ -84,7 +84,7 @@ class CallScreen extends Component {
                 this.props.endButtonHandler()
               }}
             >
-              <Image source={require("../resource/end_call.png")} style={styles.button} />
+              <Image source={R.images.ic_calendar} style={styles.button} />
             </TouchableOpacity>
           </View>
         )}
