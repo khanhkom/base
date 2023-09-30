@@ -211,8 +211,7 @@ export default function CompleteBooking({ route }: ScreenProps) {
           <TextField
             require
             label="Lý do khám"
-            multiline
-            style={{ color: colors.gray_9 }}
+            style={{ color: colors.gray_9, minHeight: HEIGHT(80) }}
             value={patientNotes}
             onChangeText={setPatientNotes}
             placeholder={`Mô tả lý do khám:

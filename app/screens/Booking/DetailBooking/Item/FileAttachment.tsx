@@ -34,7 +34,7 @@ export default function FileAttachment({ data }: { data: string[] }) {
         </ScrollView>
       </Card>
     )
-  else return null
+  else return <View style={{ marginBottom: HEIGHT(100) }} />
 }
 
 const styles = StyleSheet.create({
