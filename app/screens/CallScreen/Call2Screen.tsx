@@ -54,6 +54,13 @@ export default class CallScreen extends Component {
   componentDidMount(): void {
     console.log("AAAAAA", this.props.route.params?.answered)
     MediaManager.initSound("messenger_ringtone.mp3", true, () => {})
+    setTimeout(()=>{
+      RNCallKeep.addEventListener("answerCall", ()=>{
+        this.answerCall()
+      })
+  
+    },1000)
+
     if (this.state.isIncoming) {
       MediaManager.playMusicBackGround("messenger_ringtone.mp3", true)
       this.call2.current.initAnswer(this.state.callId, (status, code, message) => {

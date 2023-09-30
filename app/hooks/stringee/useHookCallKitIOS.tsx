@@ -5,6 +5,7 @@ import VoipPushNotification from "react-native-voip-push-notification"
 // import uuid from "react-native-uuid"
 import { goBack, navigate } from "@app/navigators/navigationUtilities"
 import SyncCall from "@app/screens/Demo/SyncCall"
+import UUIDGenerator from "react-native-uuid-generator"
 
 const iOS = Platform.OS === "ios" ? true : false
 
@@ -189,7 +190,7 @@ const useHookCallKitIOS = (updateClientId) => {
     deleteSyncCallIfNeed()
   }
 
-  const clientDidIncomingCall2 = ({
+  const clientDidIncomingCall2 =async ({
     callId,
     from,
     to,
@@ -240,8 +241,10 @@ const useHookCallKitIOS = (updateClientId) => {
       // newSyncCall.callkitId = uuid.v1()
       newSyncCall.callkitId = Math.round(Math.random() * 100).toString()
       newSyncCall.receivedStringeeCall = true
+     let uuid= await UUIDGenerator.getRandomUUID()
+     console.log("uuid_uuid",uuid)
       // Callkit
-      RNCallKeep.displayIncomingCall(newSyncCall.callkitId, "Stringee", fromAlias, "generic", true)
+      // RNCallKeep.displayIncomingCall(uuid, "Stringee", fromAlias, "generic", true)
       setSyncCall(newSyncCall)
 
       // answerCallAction()
