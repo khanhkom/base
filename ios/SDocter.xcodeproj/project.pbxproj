@@ -13,6 +13,8 @@
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		1C4968C22AB310DF008E6C5D /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1C4968C12AB310DF008E6C5D /* GoogleService-Info.plist */; };
+		1CDEC2BC2AC97D260018AD2A /* messenger_ringtone.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 1CDEC2BA2AC97D260018AD2A /* messenger_ringtone.mp3 */; };
+		1CDEC2BD2AC97D260018AD2A /* phone_call.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 1CDEC2BB2AC97D260018AD2A /* phone_call.mp3 */; };
 		2215ACBC1E62C44583DB69A9 /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5AFED2E09CC2E86D1338C0F /* ExpoModulesProvider.swift */; };
 		400EB2C1E1807E6CBC68B7AB /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 951E59D51E504BC9C5F46169 /* ExpoModulesProvider.swift */; };
 		7699B88040F8A987B510C191 /* libPods-SDocter-SDocterTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 19F6CBCC0A4E27FBF8BF4A61 /* libPods-SDocter-SDocterTests.a */; };
@@ -43,6 +45,8 @@
 		1C4968BE2AAEAF65008E6C5D /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "SDocter/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		1C4968C02AAEBDB4008E6C5D /* SDocter.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = SDocter.entitlements; path = SDocter/SDocter.entitlements; sourceTree = "<group>"; };
 		1C4968C12AB310DF008E6C5D /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "SDocter/GoogleService-Info.plist"; sourceTree = "<group>"; };
+		1CDEC2BA2AC97D260018AD2A /* messenger_ringtone.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = messenger_ringtone.mp3; sourceTree = "<group>"; };
+		1CDEC2BB2AC97D260018AD2A /* phone_call.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = phone_call.mp3; sourceTree = "<group>"; };
 		3B4392A12AC88292D35C810B /* Pods-SDocter.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SDocter.debug.xcconfig"; path = "Target Support Files/Pods-SDocter/Pods-SDocter.debug.xcconfig"; sourceTree = "<group>"; };
 		5709B34CF0A7D63546082F79 /* Pods-SDocter.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SDocter.release.xcconfig"; path = "Target Support Files/Pods-SDocter/Pods-SDocter.release.xcconfig"; sourceTree = "<group>"; };
 		5B7EB9410499542E8C5724F5 /* Pods-SDocter-SDocterTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SDocter-SDocterTests.debug.xcconfig"; path = "Target Support Files/Pods-SDocter-SDocterTests/Pods-SDocter-SDocterTests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -142,6 +146,8 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				1CDEC2BA2AC97D260018AD2A /* messenger_ringtone.mp3 */,
+				1CDEC2BB2AC97D260018AD2A /* phone_call.mp3 */,
 				1C4968BE2AAEAF65008E6C5D /* GoogleService-Info.plist */,
 				1C4968C12AB310DF008E6C5D /* GoogleService-Info.plist */,
 				13B07FAE1A68108700A75B9A /* SDocter */,
@@ -281,6 +287,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				BE406F562862D73000A81E39 /* BootSplash.storyboard in Resources */,
+				1CDEC2BC2AC97D260018AD2A /* messenger_ringtone.mp3 in Resources */,
+				1CDEC2BD2AC97D260018AD2A /* phone_call.mp3 in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				1C4968C22AB310DF008E6C5D /* GoogleService-Info.plist in Resources */,
 			);
