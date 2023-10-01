@@ -35,7 +35,7 @@ export default function Toolbar({
   const returnActive = (index) => {
     switch (index) {
       case 0:
-        return isMute
+        return !isMute
       case 1:
         return isVideoEnable
       default:

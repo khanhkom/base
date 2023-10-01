@@ -58,7 +58,17 @@ export default class CallScreen extends Component {
       RNCallKeep.addEventListener("answerCall", ()=>{
         this.answerCall()
       })
-  
+      RNCallKeep.addEventListener("endCall", ({ callUUID }) => {
+        console.log("endCall_endCall")
+        this.call?.current?.reject(this.state.callId, (status, code, message) => {
+          console.log("stringeeCall.reject: " + message)
+          if (status) {
+            // Sucess
+          } else {
+            // Fail
+          }
+        }) 
+      })
     },1000)
 
     if (this.state.isIncoming) {
@@ -301,7 +311,7 @@ export default class CallScreen extends Component {
     console.log("AAAAAAAA", this.state.callId)
     RNCallKeep.endAllCalls()
 
-    this.call2.current.answer(this.state.callId, (status, code, message) => {
+    this?.call2?.current?.answer(this.state.callId, (status, code, message) => {
       console.log("answer: " + message)
       if (status) {
         this.setState({
@@ -333,6 +343,7 @@ export default class CallScreen extends Component {
   }
 
   dismissCallingView = () => {
+    RNCallKeep.endAllCalls()
     goBack()
     // this.props.navigation.goBack()
   }
