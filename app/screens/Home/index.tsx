@@ -15,8 +15,7 @@ import { useSelector } from "@app/redux/reducers"
 import { useDispatch } from "react-redux"
 import { getOrderHistory } from "@app/redux/actions/actionOrder"
 import useHookCallKitIOS from "@app/hooks/stringee/useHookCallKitIOS"
-import { StringeeCall2, StringeeClient } from "stringee-react-native"
-import TestCallScreen from "../CallScreen/TestCallScreen"
+import { StringeeClient } from "stringee-react-native"
 const iOS = Platform.OS === "ios" ? true : false
 
 export default function HomeScreen() {

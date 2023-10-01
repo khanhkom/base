@@ -54,9 +54,9 @@ export default class CallScreen extends Component {
   componentDidMount(): void {
     console.log("AAAAAA", this.props.route.params?.answered)
     MediaManager.initSound("messenger_ringtone.mp3", true, () => {})
-    setTimeout(()=>{
-      RNCallKeep.addEventListener("answerCall", ()=>{
-        this.answerCall()
+    setTimeout(() => {
+      RNCallKeep.addEventListener("answerCall", () => {
+        // this.answerCall()
       })
       RNCallKeep.addEventListener("endCall", ({ callUUID }) => {
         console.log("endCall_endCall")
@@ -67,9 +67,9 @@ export default class CallScreen extends Component {
           } else {
             // Fail
           }
-        }) 
+        })
       })
-    },1000)
+    }, 1000)
 
     if (this.state.isIncoming) {
       MediaManager.playMusicBackGround("messenger_ringtone.mp3", true)

@@ -21,13 +21,12 @@ import "./utils/ignoreWarnings"
 import { useFonts } from "expo-font"
 import React, { useEffect } from "react"
 import { initialWindowMetrics, SafeAreaProvider } from "react-native-safe-area-context"
-import { Appearance } from "react-native"
+import { Appearance, Platform } from "react-native"
 import * as Linking from "expo-linking"
 import { useInitialRootStore } from "./models"
 import { AppNavigator, useNavigationPersistence } from "./navigators"
 import * as storage from "./utils/storage"
 import { customFontsToLoad } from "./theme"
-import Config from "./config"
 import { setLangInApp } from "./i18n"
 import { PreferencesContext } from "./context/themeContext"
 import { PaperProvider } from "react-native-paper"
@@ -42,8 +41,6 @@ import Toast from "react-native-toast-message"
 import rootSaga from "@app/redux/sagas"
 import notifee from "@notifee/react-native"
 import messaging from "@react-native-firebase/messaging"
-import { showToastMessage } from "./utils/library"
-import CallService from "@app/utils/call/androidCallService.js"
 import RNCallKeep from "react-native-callkeep"
 
 export const NAVIGATION_PERSISTENCE_KEY = "NAVIGATION_STATE"
@@ -94,7 +91,6 @@ async function onMessageReceived(message) {
   switch (callStatus) {
     case "started":
       RNCallKeep.displayIncomingCall(notificationId, from, channelId, "number", false)
-
       await notifee.displayNotification({
         id: notificationId,
         title: "Incoming Call",
@@ -112,13 +108,9 @@ async function onMessageReceived(message) {
       break
   }
 }
+
 messaging().setBackgroundMessageHandler(onMessageReceived)
-messaging().onMessage((notification) => {
-  console.log("notification", notification)
-  if (notification?.notification?.title) {
-    showToastMessage(notification?.notification?.title)
-  }
-})
+messaging().onMessage(onMessageReceived)
 function App(props: AppProps) {
   const { hideSplashScreen } = props
   const {
