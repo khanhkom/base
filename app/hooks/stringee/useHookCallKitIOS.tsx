@@ -391,12 +391,12 @@ const useHookCallKitIOS = (updateClientId) => {
       VoipPushNotification.addEventListener("register", registerListener)
       VoipPushNotification.addEventListener("notification", notificationListener)
     }
-    RNCallKeep.addEventListener("didDisplayIncomingCall", displayIncomingCallListener)
-    RNCallKeep.addEventListener("didActivateAudioSession", activateAudioSessionListener)
-    RNCallKeep.addEventListener("didReceiveStartCallAction", startCallActionListener)
-    RNCallKeep.addEventListener("didPerformSetMutedCallAction", setMutedCallActionListener)
-    RNCallKeep.addEventListener("answerCall", answerCallListener)
-    RNCallKeep.addEventListener("endCall", endCallListener)
+    // RNCallKeep.addEventListener("didDisplayIncomingCall", displayIncomingCallListener)
+    // RNCallKeep.addEventListener("didActivateAudioSession", activateAudioSessionListener)
+    // RNCallKeep.addEventListener("didReceiveStartCallAction", startCallActionListener)
+    // RNCallKeep.addEventListener("didPerformSetMutedCallAction", setMutedCallActionListener)
+    // RNCallKeep.addEventListener("answerCall", answerCallListener)
+    // RNCallKeep.addEventListener("endCall", endCallListener)
   }, [])
 
   const clientDidConnect = ({ userId }) => {

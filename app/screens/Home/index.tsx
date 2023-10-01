@@ -78,7 +78,7 @@ export default function HomeScreen() {
       client?.current?.connect(session?.access_token)
     }
   }, [session?.access_token])
-  return <TestCallScreen />
+  return <TestCallScreen token={session?.access_token} />
   return (
     <Screen preset="scroll" style={styles.container}>
       <HeaderHome onSearch={onSearch} />
