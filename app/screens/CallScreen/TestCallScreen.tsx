@@ -8,6 +8,7 @@ import {
   View,
   TextInput,
   AppState,
+  Platform,
 } from "react-native"
 import { StringeeClient, StringeeCall } from "stringee-react-native"
 import RNCallKeep from "react-native-callkeep"
@@ -318,7 +319,9 @@ class TestCallScreen extends Component {
     }
 
     RNCallKeep.setup(options)
-    VoipPushNotification.registerVoipToken()
+    if (Platform.OS === "ios") {
+      VoipPushNotification.registerVoipToken()
+    }
 
     VoipPushNotification.addEventListener("register", (token) => {
       console.log("LAY DUOC VOIP TOKEN: " + token)
@@ -806,7 +809,6 @@ class TestCallScreen extends Component {
   }
 
   async componentDidMount() {
-
     await this.refs.stringeeClient.connect(this.props.token)
 
     AppState.addEventListener("change", this._handleAppStateChange)
