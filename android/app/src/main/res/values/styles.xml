@@ -11,5 +11,9 @@
         <item name="windowSplashScreenAnimatedIcon">@mipmap/bootsplash_logo</item>
         <item name="postSplashScreenTheme">@style/AppTheme</item>
     </style>
+    <style name="incomingCall" parent="Theme.AppCompat.Light.NoActionBar">color <!-- Customize status bar color   -->
+            <item
+            name="colorPrimaryDark">#000000</item>
+    </style>
 
 </resources>

@@ -21,12 +21,12 @@ import "./utils/ignoreWarnings"
 import { useFonts } from "expo-font"
 import React, { useEffect } from "react"
 import { initialWindowMetrics, SafeAreaProvider } from "react-native-safe-area-context"
-import { Appearance, Platform } from "react-native"
+import { Appearance, NativeModules, Platform } from "react-native"
 import * as Linking from "expo-linking"
 import { useInitialRootStore } from "./models"
 import { AppNavigator, useNavigationPersistence } from "./navigators"
 import * as storage from "./utils/storage"
-import { customFontsToLoad } from "./theme"
+import { colors, customFontsToLoad } from "./theme"
 import { setLangInApp } from "./i18n"
 import { PreferencesContext } from "./context/themeContext"
 import { PaperProvider } from "react-native-paper"
@@ -39,10 +39,15 @@ import createSagaMiddleware from "redux-saga"
 import rootReducers from "./redux/reducers"
 import Toast from "react-native-toast-message"
 import rootSaga from "@app/redux/sagas"
-import notifee from "@notifee/react-native"
+import notifee, {
+  AndroidCategory,
+  AndroidImportance,
+  AndroidVisibility,
+} from "@notifee/react-native"
 import messaging from "@react-native-firebase/messaging"
 import RNCallKeep from "react-native-callkeep"
-
+import RNNotificationCall from "react-native-full-screen-notification-incoming-call"
+import R from "@app/assets"
 export const NAVIGATION_PERSISTENCE_KEY = "NAVIGATION_STATE"
 const sagaMiddleware = createSagaMiddleware()
 const store = createStore(rootReducers, applyMiddleware(sagaMiddleware))
@@ -76,8 +81,9 @@ interface AppProps {
 /**
  * This is the root component of our app.
  */
+const { IncomingCall } = NativeModules
 
-async function onMessageReceived(message) {
+export async function onMessageReceived(message) {
   const data = JSON.parse(message.data.data)
   const callStatus = data.callStatus
   const from = data.from.number
@@ -87,29 +93,82 @@ async function onMessageReceived(message) {
     id: "sdocter",
     name: "sdocter",
     vibration: true,
+    sound: "messenger_ringtone",
+    visibility: AndroidVisibility.PUBLIC,
+    vibrationPattern: [300, 500],
   })
   switch (callStatus) {
     case "started":
       RNCallKeep.displayIncomingCall(notificationId, from, channelId, "number", false)
-      await notifee.displayNotification({
-        id: notificationId,
-        title: "Incoming Call",
-        body: "Call from " + from,
-        android: {
-          channelId,
-          pressAction: {
-            id: "default",
-            mainComponent: "SDocter",
-          },
-        },
-      })
+
+      if (Platform.OS === "android") {
+        RNCallKeep.addEventListener("didDisplayIncomingCall", ({ callUUID }) => {
+          console.log("didDisplayIncomingCall", callUUID)
+        })
+        RNCallKeep.addEventListener("showIncomingCallUi", ({ callUUID: uuid }) => {
+          console.log("showIncomingCallUi_showIncomingCallUi", uuid)
+          RNNotificationCall.displayNotification(
+            "22221a97-8eb4-4ac2-b2cf-0a3c0b9100ad",
+            null,
+            30000,
+            {
+              channelId: "sdocter",
+              channelName: "sdocter",
+              notificationIcon: "ic_launcher", //mipmap
+              notificationTitle: "Bác sĩ",
+              notificationBody: "Cuộc gọi video đến",
+              answerText: "Nghe",
+              declineText: "Từ chối",
+              notificationColor: "colorAccent",
+              //mainComponent:'MyReactNativeApp',//AppRegistry.registerComponent('MyReactNativeApp', () => CustomIncomingCall);
+              // payload:{name:'Test',Body:'test'}
+            },
+          )
+        })
+        RNNotificationCall.addEventListener("answer", (data) => {
+          RNNotificationCall.backToApp()
+          const { callUUID, payload } = data
+          console.log("press answer", callUUID)
+        })
+        RNNotificationCall.addEventListener("endCall", (data) => {
+          const { callUUID, endAction, payload } = data
+          console.log("press endCall", callUUID)
+        })
+      }
+      // await notifee.displayNotification({
+      //   body: "Full-screen notification",
+      //   android: {
+      //     // Recommended to set a category
+      //     channelId,
+      //     category: AndroidCategory.CALL,
+      //     // Recommended to set importance to high
+      //     importance: AndroidImportance.HIGH,
+      //     fullScreenAction: {
+      //       id: "default",
+      //     },
+      //   },
+      // })
+      // await notifee.displayNotification({
+      //   id: notificationId,
+      //   title: "Incoming Call",
+      //   body: "Call from " + from,
+      //   android: {
+      //     channelId,
+      //     pressAction: {
+      //       id: "default",
+      //       mainComponent: "SDocter",
+      //     },
+      //     importance: AndroidImportance.HIGH,
+      //     loopSound: true,
+      //     visibility: AndroidVisibility.PUBLIC,
+      //   },
+      // })
       break
     case "ended":
       break
   }
 }
 
-messaging().setBackgroundMessageHandler(onMessageReceived)
 messaging().onMessage(onMessageReceived)
 function App(props: AppProps) {
   const { hideSplashScreen } = props

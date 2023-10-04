@@ -80,6 +80,7 @@ export default function CreatePatient({ route }) {
       phone: values.phone,
     }
     const resUpdate = await createPatient(bodyCreate)
+    console.log("resUpdate", resUpdate, bodyCreate)
     setLoading(false)
     if (resUpdate?.status === 201) {
       showToastMessage(translate("create_patient.create_patient_successful"))

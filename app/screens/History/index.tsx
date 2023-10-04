@@ -121,6 +121,7 @@ export default function History() {
       const response = await getListOrder(body)
       if (response?.data) {
         setLoading(false)
+        setRefreshState(RefreshState.Idle)
         const data: any = response?.data
         const dataListRes: any = data?.items ?? []
         let dataListOld: IOrderHistory[] = listData ?? []

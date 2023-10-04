@@ -1,4 +1,4 @@
-import { Platform, ScrollView, StatusBar, StyleSheet, Text, View } from "react-native"
+import { Alert, Platform, ScrollView, StatusBar, StyleSheet, Text, View } from "react-native"
 import React, { useEffect, useState } from "react"
 import HeaderHome from "./Item/Header"
 import { Screen } from "@app/components/Screen"
@@ -16,14 +16,50 @@ import { useDispatch } from "react-redux"
 import { getOrderHistory } from "@app/redux/actions/actionOrder"
 import useHookCallKitIOS from "@app/hooks/stringee/useHookCallKitIOS"
 import { StringeeClient } from "stringee-react-native"
+import notifee, { AuthorizationStatus } from "@notifee/react-native"
 const iOS = Platform.OS === "ios" ? true : false
+async function checkNotificationPermission() {
+  const settings = await notifee.getNotificationSettings()
 
+  if (settings.authorizationStatus === AuthorizationStatus.AUTHORIZED) {
+    console.log("Notification permissions has been authorized")
+  } else if (settings.authorizationStatus === AuthorizationStatus.DENIED) {
+    console.log("Notification permissions has been denied")
+  }
+}
 export default function HomeScreen() {
   const session = useSelector((state) => state.stringeeReducers.session)
   const dispatch = useDispatch()
   const updateClientId = (id: string) => {
     dispatch(updateStringeeClientId(id))
   }
+  const checkBatteryAndroid = async () => {
+    const batteryOptimizationEnabled = await notifee.isBatteryOptimizationEnabled()
+    if (batteryOptimizationEnabled) {
+      // 2. ask your users to disable the feature
+      Alert.alert(
+        "Tắt hạn chế tối ưu pin cho SDoctor",
+        "Để đảm bảo nhận thông báo cuộc gọi, vui lòng tắt tính năng tối ưu hóa pin cho ứng dụng.",
+        [
+          // 3. launch intent to navigate the user to the appropriate screen
+          {
+            text: "Cài đặt",
+            onPress: async () => await notifee.openBatteryOptimizationSettings(),
+          },
+          {
+            text: "Hủy",
+            onPress: () => console.log("Cancel Pressed"),
+            style: "cancel",
+          },
+        ],
+        { cancelable: false },
+      )
+    }
+  }
+  useEffect(() => {
+    checkBatteryAndroid()
+    checkNotificationPermission()
+  }, [])
   const {
     clientDidConnect,
     clientDidDisConnect,

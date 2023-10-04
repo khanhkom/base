@@ -15,6 +15,7 @@ import { Header } from "@app/components/Header"
 import { goBack } from "@app/navigators/navigationUtilities"
 import MediaManager from "@app/utils/MediaManager"
 import RNCallKeep from "react-native-callkeep"
+import RNNotificationCall from "react-native-full-screen-notification-incoming-call"
 export default class CallScreen extends Component {
   constructor(props) {
     super(props)
@@ -310,7 +311,7 @@ export default class CallScreen extends Component {
   answerCall = () => {
     console.log("AAAAAAAA", this.state.callId)
     RNCallKeep.endAllCalls()
-
+    RNNotificationCall.hideNotification()
     this?.call2?.current?.answer(this.state.callId, (status, code, message) => {
       console.log("answer: " + message)
       if (status) {
@@ -344,6 +345,7 @@ export default class CallScreen extends Component {
 
   dismissCallingView = () => {
     RNCallKeep.endAllCalls()
+    RNNotificationCall.hideNotification()
     goBack()
     // this.props.navigation.goBack()
   }
