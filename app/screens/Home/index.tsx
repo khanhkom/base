@@ -10,14 +10,13 @@ import HotNews from "./Item/HotNews"
 import colors from "@app/assets/colors"
 // import useHookStringee from "./useHookStringee"
 import { getStringeeToken, updateStringeeClientId } from "@app/redux/actions/stringee"
-import messaging from "@react-native-firebase/messaging"
 import { useSelector } from "@app/redux/reducers"
 import { useDispatch } from "react-redux"
 import { getOrderHistory } from "@app/redux/actions/actionOrder"
 import useHookCallKitIOS from "@app/hooks/stringee/useHookCallKitIOS"
 import { StringeeClient } from "stringee-react-native"
 import notifee, { AuthorizationStatus } from "@notifee/react-native"
-const iOS = Platform.OS === "ios" ? true : false
+import RNNotificationCall from "react-native-full-screen-notification-incoming-call"
 async function checkNotificationPermission() {
   const settings = await notifee.getNotificationSettings()
 
@@ -27,6 +26,7 @@ async function checkNotificationPermission() {
     console.log("Notification permissions has been denied")
   }
 }
+
 export default function HomeScreen() {
   const session = useSelector((state) => state.stringeeReducers.session)
   const dispatch = useDispatch()
@@ -83,27 +83,7 @@ export default function HomeScreen() {
   /** search bar */
   const onSearch = async (keyword) => {}
   /** */
-  useEffect(() => {
-    async function updateTokenFi() {
-      const token = await messaging().getToken()
-      console.log("AAAAA", token)
-      client?.current?.registerPush(
-        token,
-        false, // only for iOS
-        true, // only for iOS
-        (status, code, message) => {
-          console.log(message)
-        },
-      )
-    }
-    if (session?.access_token !== "") {
-      setTimeout(() => {
-        if (!iOS) {
-          updateTokenFi()
-        }
-      }, 500)
-    }
-  }, [session?.access_token])
+
   useEffect(() => {
     dispatch(getStringeeToken())
     dispatch(getOrderHistory())

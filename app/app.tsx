@@ -99,6 +99,7 @@ export async function onMessageReceived(message) {
   })
   switch (callStatus) {
     case "started":
+      console.log("started_started")
       RNCallKeep.displayIncomingCall(notificationId, from, channelId, "number", false)
 
       if (Platform.OS === "android") {
@@ -148,23 +149,25 @@ export async function onMessageReceived(message) {
       //     },
       //   },
       // })
-      // await notifee.displayNotification({
-      //   id: notificationId,
-      //   title: "Incoming Call",
-      //   body: "Call from " + from,
-      //   android: {
-      //     channelId,
-      //     pressAction: {
-      //       id: "default",
-      //       mainComponent: "SDocter",
-      //     },
-      //     importance: AndroidImportance.HIGH,
-      //     loopSound: true,
-      //     visibility: AndroidVisibility.PUBLIC,
-      //   },
-      // })
+      await notifee.displayNotification({
+        id: notificationId,
+        title: "Incoming Call",
+        body: "Call from " + from,
+        android: {
+          channelId,
+          pressAction: {
+            id: "default",
+            mainComponent: "SDocter",
+          },
+          importance: AndroidImportance.HIGH,
+          loopSound: true,
+          visibility: AndroidVisibility.PUBLIC,
+        },
+      })
       break
     case "ended":
+      RNCallKeep.endAllCalls()
+      RNNotificationCall.hideNotification()
       break
   }
 }

@@ -6,6 +6,7 @@ import VoipPushNotification from "react-native-voip-push-notification"
 import { goBack, navigate } from "@app/navigators/navigationUtilities"
 import SyncCall from "@app/screens/Demo/SyncCall"
 import UUIDGenerator from "react-native-uuid-generator"
+import messaging from "@react-native-firebase/messaging"
 
 const iOS = Platform.OS === "ios" ? true : false
 
@@ -14,13 +15,9 @@ const useHookCallKitIOS = (updateClientId) => {
 
   const [pushToken, setPushToken] = useState("")
   const [syncCall, setSyncCall] = useState(null)
-  const [showCallingView, setShowCallingView] = useState(false)
   const [permissionGranted, setPermissionGranted] = useState(false)
 
-  const [isActivateAudioSession, setIsActivateAudioSession] = useState(false)
-  const [isMute, setIsMute] = useState(false)
   const [fakeCallIds, setFakeCallIds] = useState([])
-  const [answeredCall, setAnsweredCall] = useState(false)
   const [allSyncCalls, setAllSyncCalls] = useState([])
   const [callState, setCallState] = useState("")
   const [endTimeout, setEndTimeout] = useState(null)
@@ -32,25 +29,6 @@ const useHookCallKitIOS = (updateClientId) => {
   const [from, setFrom] = useState("")
   const stringeeCall = useRef(null)
 
-  const endCallAndUpdateView = () => {
-    // End callkit call
-    if (syncCall != null && syncCall.callkitId != "") {
-      RNCallKeep.endCall(syncCall.callkitId)
-    }
-    // End tat ca ongoing call cho chac
-    RNCallKeep.endAllCalls()
-
-    // reset trang thai va view
-    setCallState("Ended")
-
-    // Xoa sync call neu can
-    deleteSyncCallIfNeed()
-
-    // Show CallScreen them 0.5s de hien thi trang thai ended (Cho giong native call cua ios)
-    setTimeout(() => {
-      goBack()
-    }, 500)
-  }
   const deleteSyncCallIfNeed = () => {
     // Implement the deleteSyncCallIfNeed function...
     if (syncCall == null) {
@@ -81,10 +59,6 @@ const useHookCallKitIOS = (updateClientId) => {
     newAllSyncCalls.push(sCall)
     setAllSyncCalls(newAllSyncCalls)
   }
-  const activateAudioSessionListener = (data) => {
-    setIsActivateAudioSession(true)
-    // answerCallAction()
-  }
 
   const removeSyncCallInCacheArray = (callId, serial) => {
     // Xoa call cu neu da save
@@ -94,9 +68,6 @@ const useHookCallKitIOS = (updateClientId) => {
     setAllSyncCalls(newAllSyncCalls)
   }
 
-  const startCallActionListener = ({ handle, callUUID, name }) => {
-    // Code for didReceiveStartCallAction event...
-  }
   // Kiem tra xem call da duoc xu ly lan nao chua
   const handledCall = (callId, serial) => {
     // Xoa call cu neu da save
@@ -190,7 +161,7 @@ const useHookCallKitIOS = (updateClientId) => {
     deleteSyncCallIfNeed()
   }
 
-  const clientDidIncomingCall2 =async ({
+  const clientDidIncomingCall2 = async ({
     callId,
     from,
     to,
@@ -241,8 +212,8 @@ const useHookCallKitIOS = (updateClientId) => {
       // newSyncCall.callkitId = uuid.v1()
       newSyncCall.callkitId = Math.round(Math.random() * 100).toString()
       newSyncCall.receivedStringeeCall = true
-     let uuid= await UUIDGenerator.getRandomUUID()
-     console.log("uuid_uuid",uuid)
+      let uuid = await UUIDGenerator.getRandomUUID()
+      console.log("uuid_uuid", uuid)
       // Callkit
       // RNCallKeep.displayIncomingCall(uuid, "Stringee", fromAlias, "generic", true)
       setSyncCall(newSyncCall)
@@ -273,17 +244,6 @@ const useHookCallKitIOS = (updateClientId) => {
       newSyncCall.callId = callId
       newSyncCall.receivedStringeeCall = true
       setSyncCall(newSyncCall)
-      // setShowCallingView(true)
-      // navigate("CallScreen", {
-      //   callId: callId,
-      //   clientId: client?.current?.getId(),
-      //   isVideoCall: true,
-      //   from: from,
-      //   to: userId,
-      //   isIncoming: true,
-      // })
-
-      // answerCallAction()
       return
     }
 
@@ -294,94 +254,7 @@ const useHookCallKitIOS = (updateClientId) => {
     // newSyncCall.callkitId = uuid.v1()
     newSyncCall.callkitId = Math.round(Math.random() * 100).toString()
     newSyncCall.receivedStringeeCall = true
-
-    // Callkit
-    // RNCallKeep.displayIncomingCall(newSyncCall.callkitId, "Stringee", fromAlias, "generic", true)
     setSyncCall(newSyncCall)
-    // setShowCallingView(true)
-    // Call screen
-    // navigate("CallScreen", {
-    //   callId: callId,
-    //   clientId: client?.current?.getId(),
-    //   isVideoCall: true,
-    //   from: from,
-    //   to: userId,
-    //   isIncoming: true,
-    // })
-    // answerCallAction()
-  }
-  const setMutedCallActionListener = ({ muted, callUUID }) => {
-    if (muted != isMute) {
-      _muteAction()
-    }
-  }
-
-  const answerCallListener = ({ callUUID }) => {
-    // if (syncCall == null) {
-    //   return
-    // }
-
-    // if (callUUID != syncCall.callkitId) {
-    //   return
-    // }
-    RNCallKeep.backToForeground()
-    RNCallKeep.endAllCalls()
-
-    const newSyncCall = syncCall
-
-    setSyncCall(newSyncCall)
-    console.log("ZZZZZZZZ")
-    navigate("CallScreen", {
-      callId: callId,
-      clientId: client?.current?.getId(),
-      isVideoCall: true,
-      from: from,
-      to: userId,
-      isIncoming: true,
-      answered: true,
-    })
-    // answerCallAction()
-  }
-
-  const endCallListener = ({ callUUID }) => {
-    console.log("EVENT END CALLKIT, callUUID: " + callUUID)
-
-    if (syncCall == null) {
-      console.log("EVENT END CALLKIT - syncCall = null")
-      return
-    }
-
-    if (syncCall.callkitId == "" || callUUID != syncCall.callkitId) {
-      console.log("EVENT END CALLKIT - uuid khac, callkitId: " + syncCall.callkitId)
-      return
-    }
-
-    const newSyncCall = syncCall
-    newSyncCall.endedCallkit = true
-    newSyncCall.rejected = true
-
-    setSyncCall(newSyncCall)
-
-    console.log(
-      "EVENT END CALLKIT, syncCall: " +
-        syncCall +
-        " callId: " +
-        syncCall?.callId +
-        " callCode: " +
-        syncCall.callCode,
-    )
-
-    if (syncCall?.callId != "" && syncCall.callCode != 3 && syncCall.callCode != 4) {
-      if (answeredCall) {
-        console.log("HANGUP CALL KHI END CALLKIT")
-        //stringeeCall
-      } else {
-        console.log("REJECT CALL KHI END CALLKIT")
-        //reject
-      }
-    }
-
-    deleteSyncCallIfNeed()
   }
 
   useEffect(() => {
@@ -399,11 +272,21 @@ const useHookCallKitIOS = (updateClientId) => {
     // RNCallKeep.addEventListener("endCall", endCallListener)
   }, [])
 
-  const clientDidConnect = ({ userId }) => {
+  const clientDidConnect = async ({ userId }) => {
     console.log("clientDidConnect02 - " + userId, client?.current?.getId?.())
-
     if (iOS) {
       VoipPushNotification.registerVoipToken()
+    } else {
+      const token = await messaging().getToken()
+      console.log("UPDATE_TOKEN_ANDROID", token)
+      client?.current?.registerPush(
+        token,
+        false, // only for iOS
+        true, // only for iOS
+        (status, code, message) => {
+          console.log(message)
+        },
+      )
     }
     setUserId(userId)
 
@@ -443,88 +326,9 @@ const useHookCallKitIOS = (updateClientId) => {
     // Handle onIncomingCall event...
   }
 
-  const _callDidChangeSignalingState = ({ callId, code, reason, sipCode, sipReason }) => {
-    console.log(
-      "_callDidChangeSignalingState " +
-        " callId-" +
-        callId +
-        "code-" +
-        code +
-        " reason-" +
-        reason +
-        " sipCode-" +
-        sipCode +
-        " sipReason-" +
-        sipReason,
-    )
-    if (syncCall != null) {
-      const newSyncCall = syncCall
-      newSyncCall.callCode = code
-
-      // Neu la end hoac reject call thi cap nhat trang thai endedStringeeCall cho sync call
-      if (code == 3 || code == 4) {
-        newSyncCall.endedStringeeCall = true
-      }
-      setCallState(reason)
-      setSyncCall(newSyncCall)
-    } else {
-      setCallState(reason)
-    }
-
-    switch (code) {
-      case 3:
-        // Rejected
-        endCallAndUpdateView()
-        break
-      case 4:
-        // Ended
-        endCallAndUpdateView()
-        break
-    }
-  }
-
-  // Invoked when the call media state changes
-  const _callDidChangeMediaState = ({ callId, code, description }) => {
-    console.log(
-      "_callDidChangeMediaState" +
-        " callId-" +
-        callId +
-        "code-" +
-        code +
-        " description-" +
-        description,
-    )
-    switch (code) {
-      case 0:
-        setCallState("Started")
-        break
-      case 1:
-        break
-    }
-  }
   // Receive custom message
   const clientReceiveCustomMessage = ({ data }) => {
     console.log("_clientReceiveCustomMessage: " + data)
-  }
-
-  const _callDidReceiveLocalStream = (call) => {
-    // Handle onReceiveLocalStream event...
-  }
-
-  const _callDidReceiveRemoteStream = (call) => {
-    // Handle onReceiveRemoteStream event...
-  }
-
-  const _didReceiveDtmfDigit = (call, dtmf) => {
-    // Handle onReceiveDtmfDigit event...
-  }
-
-  const _didReceiveCallInfo = (call, callInfo) => {
-    // Handle onReceiveCallInfo event...
-  }
-
-  const _didHandleOnAnotherDevice = ({ callId, code, description }) => {
-    console.log("_didHandleOnAnotherDevice " + callId + "***" + code + "***" + description)
   }
 
   const registerTokenForStringee = (token) => {
@@ -571,15 +375,6 @@ const useHookCallKitIOS = (updateClientId) => {
     onIncomingCall: _callIncomingCall,
   }
 
-  const callEventHandlers = {
-    onChangeSignalingState: _callDidChangeSignalingState,
-    onChangeMediaState: _callDidChangeMediaState,
-    onReceiveLocalStream: _callDidReceiveLocalStream,
-    onReceiveRemoteStream: _callDidReceiveRemoteStream,
-    onReceiveDtmfDigit: _didReceiveDtmfDigit,
-    onReceiveCallInfo: _didReceiveCallInfo,
-    onHandleOnAnotherDevice: _didHandleOnAnotherDevice,
-  }
   const requestPermission = () => {
     PermissionsAndroid.requestMultiple([
       PermissionsAndroid.PERMISSIONS.CAMERA,
@@ -607,7 +402,6 @@ const useHookCallKitIOS = (updateClientId) => {
     permissionGranted,
     requestPermission,
     clientEventHandlers,
-    callEventHandlers,
   }
 }
 

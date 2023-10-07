@@ -70,7 +70,7 @@ const useHookLogin = (setCustomLoading?: (val: boolean) => void) => {
           setError(true)
           showToastMessage(translate("auth.verify_telephone_number_again"), EToastType.ERROR)
         }
-        console.log("resLogin_resLogin", body, resLogin?.data)
+        console.log("resLogin_resLogin", body, resLogin)
         setLoading(false)
       } catch (error) {
         showToastMessage(translate("auth.verify_telephone_number_again"), EToastType.ERROR)
