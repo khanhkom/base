@@ -32,15 +32,31 @@ export default function VerifyOTP({ route }: ScreenProps) {
   const [error, setError] = useState(false)
   const [time, setTime] = useState(30)
   const dispatch = useDispatch()
+  const tokenFi=useRef('')
+
+  useEffect(()=>{
+    async function getTokenFi() {
+      try {
+        const token = await messaging().getToken()
+        tokenFi.current = token;
+      } catch (error) {
+        console.warn(error)
+      }
+    }
+    getTokenFi()
+  },[])
+
   const _checkCode = async (codeFinal) => {
     try {
       setLoading(true)
-      const tokenFi = await messaging().getToken()
-
       const body = {
         phone,
         code: codeFinal,
-        fcmToken: tokenFi,
+      }
+      if(tokenFi.current!==''){
+        Object.assign(body,{
+          fcmToken: tokenFi.current,
+        })
       }
       const resOTP = await verifyOTP(body)
       console.log("body", body)
