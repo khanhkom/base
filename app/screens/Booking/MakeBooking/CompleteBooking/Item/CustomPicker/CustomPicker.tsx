@@ -11,7 +11,6 @@ interface ItemProps {
   placeholder: string
   required?: boolean
   value: string
-  setValue: (val: string) => void
   onPress: () => void
 }
 export default function CustomPicker({ title, placeholder, required, value, onPress }: ItemProps) {

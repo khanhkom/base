@@ -17,7 +17,6 @@ export default function DetailBooking({ route }) {
   const { detailOrder, loading, returnDataByField, getDetailOrderApi, updateDataCreateOrder } =
     useHookDetailBooking(id)
   const clientId = useSelector((state) => state.stringeeReducers.clientId)
-
   if (loading) return <LoadingScreen />
   return (
     <View style={styles.container}>

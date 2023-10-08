@@ -1,36 +1,42 @@
-import { StyleSheet, View, Image, FlatList } from "react-native"
-import React, { useState } from "react"
+import { StyleSheet, View, FlatList } from "react-native"
+import React, { useEffect } from "react"
 import { Header } from "@app/components/Header"
 import colors from "@app/assets/colors"
-import { HEIGHT, WIDTH } from "@app/config/functions"
-import R from "@app/assets"
-import { spacing } from "@app/theme/spacing"
-import { Button } from "react-native-paper"
-import ItemRecord from "@app/screens/Booking/MakeBooking/SelectPatientRecord/Item/ItemRecord"
 import { navigate } from "@app/navigators/navigationUtilities"
+import useHookExam from "./useHookExam"
+import LoadingScreen from "@app/components/loading/LoadingScreen"
+import ItemHistory from "../ExaminationHistory/Item/ItemHistory"
+import ItemEmpty from "@app/components/ItemEmpty"
+import { HEIGHT } from "@app/config/functions"
 
-export default function ExaminationResults() {
+export default function ExaminationHistory() {
+  const { loading, getAllResulsCall, listResults } = useHookExam()
+  useEffect(() => {
+    getAllResulsCall()
+  }, [])
+  console.log("listResults_listResults", listResults)
+  if (loading) return <LoadingScreen />
   return (
     <View style={styles.container}>
       <Header leftIcon="arrow_left" title="Kết quả khám" backgroundColor={colors.gray_1} />
+      {/* <ItemEmpty /> */}
       <FlatList
-        data={[1, 2, 3]}
+        data={listResults}
         renderItem={({ item, index }) => {
           return (
-            <ItemRecord
+            <ItemHistory
+              index={index}
               onPress={() => {
-                navigate("ExaminationHistory")
+                navigate("DetailExamination")
               }}
             />
           )
         }}
+        ListEmptyComponent={() => (
+          <ItemEmpty style={{ marginTop: HEIGHT(100) }} title="Bạn chưa có kết quả khám nào" />
+        )}
         ListFooterComponent={() => <View style={{ height: 16 }} />}
       />
-      <View style={styles.bottomButton}>
-        <Button style={styles.button} buttonColor={colors.primary_8} mode="contained">
-          Gửi đánh giá
-        </Button>
-      </View>
     </View>
   )
 }
@@ -39,20 +45,5 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.gray_1,
-  },
-
-  bottomButton: {
-    position: "absolute",
-    bottom: 0,
-    paddingVertical: HEIGHT(spacing.sm),
-    paddingHorizontal: WIDTH(spacing.md),
-    width: "100%",
-    backgroundColor: colors.white,
-    borderTopLeftRadius: 16,
-    borderTopRightRadius: 16,
-  },
-  button: {
-    borderRadius: 8,
-    flex: 1,
   },
 })

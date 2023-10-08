@@ -29,7 +29,7 @@ interface Education {
   id: string
 }
 export interface ISpecialList {
-  value: string
+  name: string
   code: string
 }
 export interface IDoctorCalendar {

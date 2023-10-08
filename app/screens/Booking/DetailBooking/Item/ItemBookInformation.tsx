@@ -6,11 +6,16 @@ import colors from "@app/assets/colors"
 import { HEIGHT, WIDTH } from "@app/config/functions"
 import { spacing } from "@app/theme/spacing"
 import { Icon } from "@app/components/Icon"
-const ItemValue = ({ title, value }) => {
+import { TYPE_FIELD } from "../useHookDetailBooking"
+const ItemValue = ({ title, value, type }) => {
   return (
     <Text size="ba" weight="normal" style={{ color: colors.gray_6, marginTop: HEIGHT(8) }}>
       {title}{" "}
-      <Text size="ba" weight="normal" style={{ color: colors.gray_9 }}>
+      <Text
+        size="ba"
+        weight="normal"
+        style={{ color: type === TYPE_FIELD?.code ? colors.primary : colors.gray_9 }}
+      >
         {value}
       </Text>
     </Text>
@@ -44,7 +49,14 @@ export default function ItemBookInformation({ item, returnDataByField }: ItemPro
         }}
       />
       {item?.data.map((item, index) => {
-        return <ItemValue key={index} title={item.title} value={returnDataByField(item.type)} />
+        return (
+          <ItemValue
+            type={item.type}
+            key={index}
+            title={item.title}
+            value={returnDataByField(item.type)}
+          />
+        )
       })}
     </Card>
   )

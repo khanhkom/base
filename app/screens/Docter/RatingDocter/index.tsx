@@ -9,46 +9,85 @@ import { Text } from "@app/components/Text"
 import { Icon } from "@app/components/Icon"
 import { TextField } from "@app/components/TextField"
 import { Button } from "react-native-paper"
-const ItemTotalStar = ({ star, setStar }: { star: number; setStar: (val: number) => void }) => {
-  return (
-    <View style={styles.flexRowStar}>
-      {[1, 2, 3, 4, 5].map((item, index) => {
-        return (
-          <Icon
-            icon="ic_start"
-            size={WIDTH(48)}
-            onPress={() => setStar(index)}
-            key={index}
-            color={index <= star ? colors.yellow_6 : colors.gray_4}
-          />
-        )
-      })}
-    </View>
-  )
-}
+import ItemTotalStar from "./Item/ItemTotalStar"
+import { EToastType, showToastMessage } from "@app/utils/library"
+import { sendRatingOrder } from "@app/services/api/functions/rating"
+import { goBack } from "@app/navigators/navigationUtilities"
+
 const LIST_DEFAULT_RATING = [
   "Chuyên môn tốt",
   "Giao tiếp thân thiện",
   "Tư vấn tận tình",
   "Phản hồi nhanh",
 ]
-export default function RatingDocter() {
+interface IScreenParams {
+  route: {
+    params: {
+      id: string
+      doctor: {
+        id: string
+        name: string
+      }
+    }
+  }
+}
+export default function RatingDocter({ route }: IScreenParams) {
   const [star, setStar] = useState(0)
+  const [listCriteria, setListCriteria] = useState([])
+  const [loading, setLoading] = useState(false)
+  const [description, setDescription] = useState("")
+  const onPressCriteria = (index) => {
+    if (listCriteria.includes(index)) {
+      const newList = listCriteria?.filter((it) => it !== index)
+      setListCriteria(newList)
+    } else {
+      setListCriteria([...listCriteria, index])
+    }
+  }
+  const onSubmitRating = async () => {
+    if (star === 0) {
+      showToastMessage("Vui lòng chọn điểm đánh giá", EToastType.ERROR)
+    } else {
+      setLoading(true)
+      const criteria = []
+      LIST_DEFAULT_RATING.forEach((it, index) => {
+        if (listCriteria.includes(index)) {
+          criteria.push(it.toLowerCase())
+        }
+      })
+      const body = {
+        orderId: route?.params?.id,
+        description: description === "" ? " " : description,
+        criteria: criteria,
+        score: star,
+      }
+      let resRating = await sendRatingOrder(body)
+      if (resRating.status === 201) {
+        showToastMessage("Gửi đánh giá thành công", EToastType.SUCCESS)
+        goBack()
+      } else {
+        showToastMessage("Gửi đánh giá thất bại! Vui lòng thử lại!", EToastType.ERROR)
+      }
+      console.log("resRating_resRating", resRating, body)
+      setLoading(false)
+    }
+  }
   return (
     <View style={styles.container}>
       <Header leftIcon="arrow_left" title="Đánh giá bác sĩ" backgroundColor={colors.white} />
       <Image source={R.images.avatar_docter_rec} style={styles.imageDocter} />
-      <Text size="xxl" weight="semiBold" style={{ color: colors.gray_9, textAlign: "center" }}>
-        B.s Nguyễn Văn A
+      <Text size="xxl" weight="semiBold" style={styles.doctorName}>
+        B.s {route?.params?.doctor?.name ?? ""}
       </Text>
       <Text size="md" weight="medium" style={styles.textDesc}>
-        Bạn có hài lòng với cuộc tư vấn? Hãy cho chúng tôi biết ý kiến của bạn!
+        {"Bạn có hài lòng với cuộc tư vấn?\nHãy cho chúng tôi biết ý kiến của bạn!"}
       </Text>
       <ItemTotalStar star={star} setStar={setStar} />
       <TextField
-        multiline
         placeholder="Chia sẻ thêm cảm nhận của bạn"
+        style={{ minHeight: HEIGHT(120) }}
         containerStyle={{ width: WIDTH(343), marginTop: HEIGHT(32) }}
+        onChangeText={setDescription}
       />
       <Text
         size="ba"
@@ -59,12 +98,14 @@ export default function RatingDocter() {
       </Text>
       <View style={styles.flexWrap}>
         {LIST_DEFAULT_RATING.map((item, index) => {
+          const isActive = listCriteria.includes(index)
           return (
             <Button
               key={index}
               mode="contained"
-              buttonColor={colors.gray_1}
-              textColor={colors.gray_9}
+              buttonColor={isActive ? colors.primary : colors.gray_1}
+              textColor={isActive ? colors.white : colors.gray_9}
+              onPress={() => onPressCriteria(index)}
               style={styles.buttonReviewSuggest}
             >
               {item}
@@ -73,7 +114,7 @@ export default function RatingDocter() {
         })}
       </View>
       <View style={styles.bottomButton}>
-        <Button style={styles.button} mode="contained">
+        <Button loading={loading} style={styles.button} mode="contained" onPress={onSubmitRating}>
           Gửi đánh giá
         </Button>
       </View>
@@ -82,48 +123,42 @@ export default function RatingDocter() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: colors.white,
-    alignItems: "center",
-  },
-  imageDocter: {
-    height: HEIGHT(138),
-    width: WIDTH(103.5),
-    borderRadius: 12,
-    marginTop: HEIGHT(spacing.xs),
-    marginBottom: HEIGHT(spacing.sm),
-  },
-  textDesc: {
-    marginTop: HEIGHT(spacing.xs),
-    color: colors.gray_9,
-    textAlign: "center",
-    width: WIDTH(289),
-  },
-  flexRowStar: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginTop: HEIGHT(spacing.lg),
-    width: WIDTH(304),
-    justifyContent: "space-between",
-  },
   bottomButton: {
-    position: "absolute",
     bottom: 0,
-    paddingVertical: HEIGHT(spacing.sm),
     paddingHorizontal: WIDTH(spacing.md),
+    paddingVertical: HEIGHT(spacing.sm),
+    position: "absolute",
     width: "100%",
   },
+  doctorName: { color: colors.gray_9, textAlign: "center" },
   button: {
     borderRadius: 8,
+    flex: 1,
+  },
+  buttonReviewSuggest: {
+    marginBottom: HEIGHT(spacing.sm),
+    marginLeft: WIDTH(spacing.md),
+  },
+  container: {
+    alignItems: "center",
+    backgroundColor: colors.white,
     flex: 1,
   },
   flexWrap: {
     flexDirection: "row",
     flexWrap: "wrap",
   },
-  buttonReviewSuggest: {
-    marginLeft: WIDTH(spacing.md),
+  imageDocter: {
+    borderRadius: 12,
+    height: HEIGHT(138),
     marginBottom: HEIGHT(spacing.sm),
+    marginTop: HEIGHT(spacing.xs),
+    width: WIDTH(103.5),
+  },
+  textDesc: {
+    color: colors.gray_9,
+    marginTop: HEIGHT(spacing.xs),
+    textAlign: "center",
+    width: WIDTH(289),
   },
 })

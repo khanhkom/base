@@ -2,10 +2,8 @@ import { StyleSheet, Image, View, FlatList } from "react-native"
 import React, { useEffect } from "react"
 import colors from "@app/assets/colors"
 import { Header, Icon } from "@app/components/index"
-import { navigate } from "@app/navigators/navigationUtilities"
 import Banner from "./Item/Banner"
 import BottonButton from "./Item/BottonButton"
-import { HEIGHT } from "@app/config/functions"
 import useHookDetailBooking, { DATA_BOOK } from "../DetailBooking/useHookDetailBooking"
 import ItemBookInformation from "../DetailBooking/Item/ItemBookInformation"
 import FileAttachment from "../DetailBooking/Item/FileAttachment"
@@ -26,6 +24,7 @@ export default function BookingSuccess({ route }: ScreenProps) {
   useEffect(() => {
     getDetailOrderApi()
   }, [])
+  console.log("detailOrder", detailOrder?.fileUpload)
   if (loading) return <LoadingScreen />
   return (
     <View style={styles.container}>

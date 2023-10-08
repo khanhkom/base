@@ -1,5 +1,5 @@
-import { Alert, Platform, ScrollView, StatusBar, StyleSheet, Text, View } from "react-native"
-import React, { useEffect, useState } from "react"
+import { Alert, Platform, StyleSheet } from "react-native"
+import React, { useEffect } from "react"
 import HeaderHome from "./Item/Header"
 import { Screen } from "@app/components/Screen"
 import ItemUtilities from "./Item/ItemUtilities"
@@ -16,7 +16,6 @@ import { getOrderHistory } from "@app/redux/actions/actionOrder"
 import useHookCallKitIOS from "@app/hooks/stringee/useHookCallKitIOS"
 import { StringeeClient } from "stringee-react-native"
 import notifee, { AuthorizationStatus } from "@notifee/react-native"
-import RNNotificationCall from "react-native-full-screen-notification-incoming-call"
 async function checkNotificationPermission() {
   const settings = await notifee.getNotificationSettings()
 
@@ -57,7 +56,7 @@ export default function HomeScreen() {
     }
   }
   useEffect(() => {
-    checkBatteryAndroid()
+    // checkBatteryAndroid()
     checkNotificationPermission()
   }, [])
   const {

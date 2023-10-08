@@ -27,6 +27,7 @@ interface ScreenProps {
   route: {
     params: {
       id?: string
+      type?: "update"
     }
   }
 }
@@ -34,9 +35,7 @@ export default function CompleteBooking({ route }: ScreenProps) {
   const [visible, setVisible] = React.useState(false)
   const [loading, setLoading] = React.useState(false)
   const [listImage, setListImage] = useState([])
-  const { detailOrder, getDetailOrderApi, updateDataCreateOrder } = useHookDetailBooking(
-    route?.params?.id,
-  )
+  const { detailOrder, getDetailOrderApi } = useHookDetailBooking(route?.params?.id)
   console.log("route")
   const docter = useSelector((state) => state.orderReducers.docter)
   const selectedDate = useSelector((state) => state.orderReducers.selectedDate)
@@ -46,6 +45,7 @@ export default function CompleteBooking({ route }: ScreenProps) {
   const [patientNotes, setPatientNotes] = useState("")
   const [visibleErros, setVisibleErros] = useState(false)
   const dispatch = useDispatch()
+  const isUpdate = route?.params?.type === "update"
   useEffect(() => {
     if (route?.params?.id) {
       getDetailOrderApi()
@@ -73,17 +73,17 @@ export default function CompleteBooking({ route }: ScreenProps) {
       .add(selectedTime.startHour - 7, "hour")
       .add(selectedTime.startMin + 15, "minute")
     setLoading(true)
-    let timeRange = {
+    const timeRange = {
       from: startDate.toISOString(),
       to: endDate.toISOString(),
     }
-    let formData = new FormData()
+    const formData = new FormData()
     formData.append("patientId", patient.id)
     formData.append("doctorId", docter.id)
     formData.append("specialist", specialist.code)
     formData.append("timeRange", JSON.stringify(timeRange))
     formData.append("patientNotes", patientNotes)
-    formData.append("inAppNotification", "false")
+    formData.append("inAppNotification", "true")
 
     listImage.map((item) => {
       formData.append("files", {
@@ -93,8 +93,9 @@ export default function CompleteBooking({ route }: ScreenProps) {
       })
     })
     let resCreate = {}
-    if (route?.params?.id) {
+    if (isUpdate) {
       resCreate = await updateOrder(route?.params?.id, formData)
+      console.log("resCreate_resCreate", resCreate)
       if (resCreate.status === 200) {
         dispatch(getOrderHistory())
         goBack()
@@ -115,7 +116,7 @@ export default function CompleteBooking({ route }: ScreenProps) {
         showToastMessage("Đặt lịch thành công!", EToastType.SUCCESS)
       } else {
         setVisibleErros(true)
-        showToastMessage("Đặt lịch thất bại!", EToastType.SUCCESS)
+        showToastMessage("Đặt lịch thất bại!", EToastType.ERROR)
       }
     }
 
@@ -228,7 +229,7 @@ export default function CompleteBooking({ route }: ScreenProps) {
               verifyData()
             }}
           >
-            Lưu
+            {isUpdate ? "Cập nhật" : "Đặt khám"}
           </Button>
         </View>
       </KeyboardAwareScrollView>

@@ -70,29 +70,29 @@ const CalendarPicker = ({ preScreen }) => {
         borderColor: R.colors.primary,
       },
     },
-    [currentDate.add(3, "days").format("YYYY-MM-DD")]: {
-      dotColor: R.colors.gray_5,
-      color: R.colors.gray_5,
-      textColor: "white",
-      endingDay: true,
-      startingDay: true,
-    },
-    [currentDate.add(4, "days").format("YYYY-MM-DD")]: {
-      marked: true,
-      dotColor: R.colors.gray_5,
-      color: R.colors.gray_5,
-      textColor: "white",
-      endingDay: true,
-      startingDay: true,
-    },
-    [currentDate.add(5, "days").format("YYYY-MM-DD")]: {
-      marked: true,
-      dotColor: R.colors.primary,
-      color: R.colors.primary,
-      textColor: "white",
-      endingDay: true,
-      startingDay: true,
-    },
+    // [currentDate.add(3, "days").format("YYYY-MM-DD")]: {
+    //   dotColor: R.colors.gray_5,
+    //   color: R.colors.gray_5,
+    //   textColor: "white",
+    //   endingDay: true,
+    //   startingDay: true,
+    // },
+    // [currentDate.add(4, "days").format("YYYY-MM-DD")]: {
+    //   marked: true,
+    //   dotColor: R.colors.gray_5,
+    //   color: R.colors.gray_5,
+    //   textColor: "white",
+    //   endingDay: true,
+    //   startingDay: true,
+    // },
+    // [currentDate.add(5, "days").format("YYYY-MM-DD")]: {
+    //   marked: true,
+    //   dotColor: R.colors.primary,
+    //   color: R.colors.primary,
+    //   textColor: "white",
+    //   endingDay: true,
+    //   startingDay: true,
+    // },
   })
   const dispatch = useDispatch()
   return (

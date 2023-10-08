@@ -1,7 +1,7 @@
-import { StyleSheet, Text, View } from "react-native"
+import { StyleSheet, View } from "react-native"
 import React from "react"
 import { Button } from "react-native-paper"
-import { HEIGHT, WIDTH } from "@app/config/functions"
+import { HEIGHT, TYPE_TIME_CALL, WIDTH, getTypeTimeInRangeCall } from "@app/config/functions"
 import { spacing } from "@app/theme/spacing"
 import colors from "@app/assets/colors"
 import { navigate } from "@app/navigators/navigationUtilities"
@@ -30,14 +30,19 @@ export default function BottonButton({
     // console.log("AAAAAA", clientId?.current?.getId?.())
     navigate("CallScreen", {
       callId: "",
-      clientId: clientId,
+      clientId,
       isVideoCall: true,
       from: userId,
-      to: to,
+      to,
       isIncoming: false,
-      detailOrder: detailOrder,
+      detailOrder,
     })
   }
+  const typeTimeCall = getTypeTimeInRangeCall(
+    detailOrder?.timeRange?.from,
+    detailOrder?.timeRange?.to,
+  )
+
   if (status === STATUS_ORDER.created)
     return (
       <View style={styles.container}>
@@ -54,7 +59,7 @@ export default function BottonButton({
         <Button
           onPress={() => {
             updateDataCreateOrder()
-            navigate("CompleteBooking", { id })
+            navigate("CompleteBooking", { id, type: "update" })
           }}
           mode="contained"
           style={styles.button}
@@ -64,20 +69,42 @@ export default function BottonButton({
       </View>
     )
   if (status === STATUS_ORDER.verified || status === STATUS_ORDER.examining)
+    if (typeTimeCall === TYPE_TIME_CALL.DA_DEN)
+      return (
+        <View style={styles.container}>
+          <Button
+            mode="contained"
+            style={styles.buttonHome}
+            textColor={colors.primary}
+            onPress={() => {}}
+          >
+            Nhắn tin
+          </Button>
+          <Button onPress={onPressCall} mode="contained" style={styles.button}>
+            Vào cuộc gọi
+          </Button>
+        </View>
+      )
+    else {
+      return (
+        <View style={styles.container}>
+          <Button mode="contained" style={styles.button}>
+            {typeTimeCall === TYPE_TIME_CALL.CHUA_DEN ? "Chưa đến giờ khám" : "Đã quá giờ khám"}
+          </Button>
+        </View>
+      )
+    }
+  if (status === STATUS_ORDER.result_processing)
     return (
       <View style={styles.container}>
         <Button
-          mode="contained"
-          style={styles.buttonHome}
-          textColor={colors.primary}
           onPress={() => {
-            navigate("Home")
+            navigate("DetailExamination", { id, specialist: detailOrder?.specialist })
           }}
+          mode="contained"
+          style={styles.button}
         >
-          Nhắn tin
-        </Button>
-        <Button onPress={onPressCall} mode="contained" style={styles.button}>
-          Vào cuộc gọi
+          Gửi đánh giá
         </Button>
       </View>
     )
@@ -86,7 +113,17 @@ export default function BottonButton({
       <View style={styles.container}>
         <Button
           onPress={() => {
-            navigate("CallVideo")
+            navigate("RatingDocter", { id, doctor: detailOrder?.doctor })
+          }}
+          mode="contained"
+          style={styles.buttonHome}
+          textColor={colors.primary}
+        >
+          Gửi đánh giá
+        </Button>
+        <Button
+          onPress={() => {
+            navigate("DetailExamination", { id, specialist: detailOrder?.specialist })
           }}
           mode="contained"
           style={styles.button}

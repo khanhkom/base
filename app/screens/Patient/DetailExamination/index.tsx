@@ -10,18 +10,31 @@ import { navigate } from "@app/navigators/navigationUtilities"
 import { Text } from "@app/components/Text"
 import { Icon } from "@app/components/Icon"
 import FileAttachment from "./Item/FileAttachment"
+import useHookDetailExam, { TYPE_INFO_RESULT } from "./useHookDetailExam"
+import LoadingScreen from "@app/components/loading/LoadingScreen"
+import { ISpecialList } from "@app/interface/docter"
+
 const DATA_INFO = [
   {
-    title: "Trạng thái: ",
+    title: "Mã phiếu khám: ",
+    type: TYPE_INFO_RESULT.MA_PHIEU,
+  },
+  {
+    title: "Bác sĩ: ",
     value: "Đặt lịch",
+    type: TYPE_INFO_RESULT.BAC_SI,
+  },
+  {
+    title: "Chuyên khoa: ",
+    type: TYPE_INFO_RESULT.CHUYEN_KHOA,
   },
   {
     title: "Ngày khám: ",
-    value: "01/01/2023",
+    type: TYPE_INFO_RESULT.NGAY_KHAM,
   },
   {
     title: "Giờ khám: ",
-    value: "16:00 - 16:30",
+    type: TYPE_INFO_RESULT.GIO_KHAM,
   },
 ]
 const ItemValue = ({ title, value }) => {
@@ -51,7 +64,22 @@ const ItemHeader = ({ title, icon, backgroundColor, iconColor }) => {
     />
   )
 }
-export default function DetailExamination() {
+interface IScreenParams {
+  route: {
+    params: {
+      id: string
+      specialist: ISpecialList
+    }
+  }
+}
+export default function DetailExamination({ route }: IScreenParams) {
+  console.log("route", route.params.id)
+  const id = route.params.id
+  const specialist = route.params.specialist
+
+  const { loading, detailResult, returnDataByField } = useHookDetailExam(id, specialist?.value)
+  console.log("detailResult", detailResult)
+  if (loading) return <LoadingScreen />
   return (
     <View style={styles.container}>
       <Header leftIcon="arrow_left" title="Kết quả khám" backgroundColor={colors.gray_1} />
@@ -61,6 +89,7 @@ export default function DetailExamination() {
           onPress={() => {
             navigate("ExaminationHistory")
           }}
+          item={detailResult?.order?.patient}
         />
         <View style={styles.body}>
           <ItemHeader
@@ -70,7 +99,7 @@ export default function DetailExamination() {
             iconColor={colors.primary_6}
           />
           {DATA_INFO.map((item, index) => {
-            return <ItemValue key={index} title={item.title} value={item.value} />
+            return <ItemValue key={index} title={item.title} value={returnDataByField(item.type)} />
           })}
           <ItemHeader
             icon={"department"}
@@ -80,7 +109,7 @@ export default function DetailExamination() {
           />
           <Card mode="contained" style={styles.cardDiagnose}>
             <Text size="ba" weight="medium">
-              Dị ứng do thời tiết, có dấu hiệu của bệnh viêm xoang cấp mãn tính
+              {detailResult?.result?.description}
             </Text>
           </Card>
 
@@ -91,10 +120,9 @@ export default function DetailExamination() {
             iconColor={colors.primary_6}
           />
           <Text size="ba" weight="normal">
-            Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum
-            has been the industry's standard dummy text ever since the 1500s
+            {detailResult?.result?.note}
           </Text>
-          <FileAttachment />
+          <FileAttachment data={detailResult?.result?.fileUpload ?? []} />
         </View>
       </ScrollView>
     </View>
@@ -119,6 +147,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: WIDTH(spacing.sm),
     paddingVertical: HEIGHT(spacing.sm),
     backgroundColor: colors.red_0,
+    marginBottom: HEIGHT(spacing.xs),
   },
   boxIcon: {
     height: WIDTH(32),

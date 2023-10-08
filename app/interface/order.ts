@@ -49,4 +49,5 @@ export interface IOrderHistory {
   updatedAt: string
   cancelDescription?: string
   id: string
+  code: string
 }

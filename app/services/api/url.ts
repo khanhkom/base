@@ -12,7 +12,7 @@ const URL_PATIENT = {
 const URL_DOCTER = {
   GET_DOCTER: "doctor",
   GET_DOCTER_DETAIL: "doctor/",
-  GET_LIST_SPECIAL_LIST: "doctor/specialist",
+  GET_LIST_SPECIAL_LIST: "specialist/specialist",
   GET_DOCTOR_CALENDAR: "doctor/",
 }
 const ORDER = {
@@ -22,10 +22,22 @@ const ORDER = {
   UPDATE_ORDER: "order/",
   CANCEL_ORDER: "order/cancel/",
 }
+const URL_RESULT = {
+  GET_RESULT_BY_ORDER: "result/order/",
+  GET_RESULT_BY_ID: "result/",
+  GET_RESULT_ALL: "result",
+}
 const LOCATION = {
   PROVINCES_GET_ALL: "provinces/getAll",
   DISTRICTS_GET_BY_PROVINCE: "districts/getByProvince",
   WARDS_GET_BY_DISTRICT: "wards/getByDistrict",
+}
+const RATING = {
+  SEND_RATING_ORDER: "rating",
+  GET_RATING_BY_ORDER: "rating/order/",
+}
+const NOTIFICATION = {
+  GET_NOTIFICATION: "notification",
 }
 const URL = {
   ...URL_LOGIN,
@@ -33,6 +45,9 @@ const URL = {
   ...LOCATION,
   ...URL_DOCTER,
   ...ORDER,
+  ...URL_RESULT,
+  ...RATING,
+  ...NOTIFICATION,
   LOGIN: `account/login`,
   CREATE_SESSION: "session/createSession",
   CREATE_SESSION_STRINGEE: "stringee/createClientSession",

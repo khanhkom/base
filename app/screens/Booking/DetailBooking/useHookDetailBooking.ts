@@ -21,6 +21,7 @@ export const TYPE_FIELD = {
   docterName: 5,
   specialList: 6,
   patientNotes: 7,
+  code: 8,
 }
 export const DATA_BOOK = [
   {
@@ -30,6 +31,10 @@ export const DATA_BOOK = [
       {
         title: "Trạng thái: ",
         type: TYPE_FIELD.status,
+      },
+      {
+        title: "Mã phiếu khám:: ",
+        type: TYPE_FIELD.code,
       },
       {
         title: "Ngày khám: ",
@@ -86,7 +91,6 @@ const useHookDetailBooking = (id) => {
   const getDetailOrderApi = async () => {
     setLoading(true)
     let resOrder = await getDetailOrder(id)
-    console.log("AAAAAAAAAA", resOrder)
     setDetailOrder(resOrder.data)
     setLoading(false)
   }
@@ -130,6 +134,9 @@ const useHookDetailBooking = (id) => {
         return detailOrder?.specialist?.value
       case TYPE_FIELD.patientNotes:
         return detailOrder?.patientNotes
+
+      case TYPE_FIELD.code:
+        return detailOrder?.code
       default:
         break
     }

@@ -90,3 +90,20 @@ export function returnStartEndDate(): {
     monthEnd,
   }
 }
+export const TYPE_TIME_CALL = {
+  CHUA_DEN: 0,
+  DA_DEN: 1,
+  QUA_GIO: 2,
+}
+export function getTypeTimeInRangeCall(timeFrom, timeTo) {
+  const currentTime = new Date()
+  const parsedTimeFrom = new Date(timeFrom)
+  const parsedTimeTo = new Date(timeTo)
+
+  const rangeBefore = new Date(parsedTimeFrom.getTime())
+  const rangeAfter = new Date(parsedTimeTo.getTime())
+  if (currentTime < rangeBefore) return TYPE_TIME_CALL.CHUA_DEN
+  if (currentTime > rangeAfter) return TYPE_TIME_CALL.QUA_GIO
+  else return TYPE_TIME_CALL.DA_DEN
+  // return currentTime >= rangeBefore && currentTime <= rangeAfter
+}

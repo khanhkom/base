@@ -84,9 +84,10 @@ interface AppProps {
 const { IncomingCall } = NativeModules
 
 export async function onMessageReceived(message) {
+  console.log("notification", message)
   const data = JSON.parse(message.data.data)
-  const callStatus = data.callStatus
-  const from = data.from.number
+  const callStatus = data?.callStatus
+  const from = data?.from?.number
   const notificationId = "11111" // YOUR_NOTIFICATION_ID
   console.log("data: " + callStatus)
   const channelId = await notifee.createChannel({

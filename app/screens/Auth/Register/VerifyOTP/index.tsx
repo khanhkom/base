@@ -15,6 +15,7 @@ import { useDispatch } from "react-redux"
 import { getOtp, verifyOTP } from "@app/services/api/functions/users"
 import { LoadingOpacity } from "@app/components/loading/LoadingOpacity"
 import { EToastType, showToastMessage } from "@app/utils/library"
+import messaging from "@react-native-firebase/messaging"
 import { translate } from "@app/i18n/translate"
 interface ScreenProps {
   route: {
@@ -34,10 +35,12 @@ export default function VerifyOTP({ route }: ScreenProps) {
   const _checkCode = async (codeFinal) => {
     try {
       setLoading(true)
+      const tokenFi = await messaging().getToken()
+
       const body = {
         phone,
         code: codeFinal,
-        role: "patient",
+        fcmToken: tokenFi,
       }
       const resOTP = await verifyOTP(body)
       console.log("body", body)

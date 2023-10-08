@@ -156,6 +156,7 @@ export const iconRegistry = {
   edit: require("./icons/edit.png"),
   microphone_slash: require("./icons/microphone-slash.png"),
   camera_slash: require("./icons/camera_slash.png"),
+  noti_edit: require("./icons/noti_edit.png"),
 }
 const $imageStyle: ImageStyle = {
   resizeMode: "contain",
