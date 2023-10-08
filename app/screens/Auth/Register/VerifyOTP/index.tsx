@@ -60,7 +60,7 @@ export default function VerifyOTP({ route }: ScreenProps) {
         showToastMessage(translate("otp.incorrect_login_code"), EToastType.ERROR)
       }
     } catch (error) {
-      showToastMessage(translate("otp.code_sent_successfully"), EToastType.ERROR)
+      showToastMessage(translate("otp.incorrect_login_code"), EToastType.ERROR)
       setError(true)
       setLoading(false)
       console.warn("_checkCode", error)

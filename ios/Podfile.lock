@@ -524,6 +524,8 @@ PODS:
     - FBSDKGamingServicesKit (~> 15.0.0)
     - FBSDKShareKit (~> 15.0.0)
     - React-Core
+  - react-native-full-screen-notification-incoming-call (0.1.12):
+    - React-Core
   - react-native-image-picker (7.0.0):
     - React-Core
   - react-native-pager-view (6.2.1):
@@ -773,6 +775,7 @@ DEPENDENCIES:
   - react-native-date-picker (from `../node_modules/react-native-date-picker`)
   - react-native-document-picker (from `../node_modules/react-native-document-picker`)
   - react-native-fbsdk-next (from `../node_modules/react-native-fbsdk-next`)
+  - react-native-full-screen-notification-incoming-call (from `../node_modules/react-native-full-screen-notification-incoming-call`)
   - react-native-image-picker (from `../node_modules/react-native-image-picker`)
   - react-native-pager-view (from `../node_modules/react-native-pager-view`)
   - react-native-render-html (from `../node_modules/react-native-render-html`)
@@ -926,6 +929,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-document-picker"
   react-native-fbsdk-next:
     :path: "../node_modules/react-native-fbsdk-next"
+  react-native-full-screen-notification-incoming-call:
+    :path: "../node_modules/react-native-full-screen-notification-incoming-call"
   react-native-image-picker:
     :path: "../node_modules/react-native-image-picker"
   react-native-pager-view:
@@ -1073,6 +1078,7 @@ SPEC CHECKSUMS:
   react-native-date-picker: 8847cb359cf259ddae5ed165217e15573a654519
   react-native-document-picker: 2b8f18667caee73a96708a82b284a4f40b30a156
   react-native-fbsdk-next: 16e652b5f1236492631185c58ec2ae15b029119d
+  react-native-full-screen-notification-incoming-call: c0a64a09e6e413eab704cc26b7190a65859ba629
   react-native-image-picker: ddbbe4d226d9c82a82360f5de66bf71a657a42e6
   react-native-pager-view: d211379f61895b6349bd7e571b44a26d005c2975
   react-native-render-html: 984dfe2294163d04bf5fe25d7c9f122e60e05ebe

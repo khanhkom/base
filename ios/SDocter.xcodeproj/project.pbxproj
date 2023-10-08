@@ -12,7 +12,7 @@
 		13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.mm */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
-		1C4968C22AB310DF008E6C5D /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1C4968C12AB310DF008E6C5D /* GoogleService-Info.plist */; };
+		1C1FC6FB2AD2E1DD008D9604 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1C1FC6FA2AD2E1DD008D9604 /* GoogleService-Info.plist */; };
 		1CDEC2BC2AC97D260018AD2A /* messenger_ringtone.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 1CDEC2BA2AC97D260018AD2A /* messenger_ringtone.mp3 */; };
 		1CDEC2BD2AC97D260018AD2A /* phone_call.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 1CDEC2BB2AC97D260018AD2A /* phone_call.mp3 */; };
 		2215ACBC1E62C44583DB69A9 /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5AFED2E09CC2E86D1338C0F /* ExpoModulesProvider.swift */; };
@@ -42,6 +42,8 @@
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = SDocter/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = SDocter/main.m; sourceTree = "<group>"; };
 		19F6CBCC0A4E27FBF8BF4A61 /* libPods-SDocter-SDocterTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-SDocter-SDocterTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		1C1FC6F92AD2C243008D9604 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "SDocter/GoogleService-Info.plist"; sourceTree = "<group>"; };
+		1C1FC6FA2AD2E1DD008D9604 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "SDocter/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		1C4968BE2AAEAF65008E6C5D /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "SDocter/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		1C4968C02AAEBDB4008E6C5D /* SDocter.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = SDocter.entitlements; path = SDocter/SDocter.entitlements; sourceTree = "<group>"; };
 		1C4968C12AB310DF008E6C5D /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "SDocter/GoogleService-Info.plist"; sourceTree = "<group>"; };
@@ -146,6 +148,8 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				1C1FC6F92AD2C243008D9604 /* GoogleService-Info.plist */,
+				1C1FC6FA2AD2E1DD008D9604 /* GoogleService-Info.plist */,
 				1CDEC2BA2AC97D260018AD2A /* messenger_ringtone.mp3 */,
 				1CDEC2BB2AC97D260018AD2A /* phone_call.mp3 */,
 				1C4968BE2AAEAF65008E6C5D /* GoogleService-Info.plist */,
@@ -288,9 +292,9 @@
 			files = (
 				BE406F562862D73000A81E39 /* BootSplash.storyboard in Resources */,
 				1CDEC2BC2AC97D260018AD2A /* messenger_ringtone.mp3 in Resources */,
+				1C1FC6FB2AD2E1DD008D9604 /* GoogleService-Info.plist in Resources */,
 				1CDEC2BD2AC97D260018AD2A /* phone_call.mp3 in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
-				1C4968C22AB310DF008E6C5D /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
