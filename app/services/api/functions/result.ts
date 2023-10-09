@@ -1,7 +1,7 @@
 import URL from "@app/services/api/url"
 import { api } from "../api"
 import { ApiResponse } from "apisauce"
-import { IOrderResult } from "@app/interface/result"
+import { IOrderResult, IOrderResultItem } from "@app/interface/result"
 import { IOrder, IOrderHistory } from "@app/interface/order"
 import { IBodyByPage } from "@app/interface/general"
 
@@ -15,7 +15,7 @@ export const getDetailResultByOrder = (
 
 export const getAllResults = (
   params: IBodyByPage,
-): Promise<ApiResponse<{ result: IOrderResult; order: IOrderHistory }[]>> =>
+): Promise<ApiResponse<{ items: IOrderResultItem[] }>> =>
   api.apisauce
     .get(URL.GET_RESULT_ALL, params)
     .then((res) => res)

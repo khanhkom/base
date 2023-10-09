@@ -17,6 +17,7 @@ export const STATUS_ORDER = {
   created: "created",
   verified: "verified",
   examining: "examining",
+  rating_processing: "rating_processing",
   result_processing: "result_processing",
   done: "done",
   cancel: "cancel",

@@ -17,6 +17,7 @@ import { getListOrder } from "@app/services/api/functions/order"
 import { translate } from "@app/i18n/translate"
 import { Text } from "@app/components/Text"
 import { FlashList } from "@shopify/flash-list"
+import ItemPlaceholderCommon from "@app/components/placeholder/ItemCalendar"
 const limit = 5
 
 export default function History() {
@@ -210,6 +211,30 @@ export default function History() {
       }
     })()
   }, [orderHistory, pagingRes])
+  if (loading) {
+    return (
+      <View style={styles.container}>
+        <Header
+          title="Lịch khám"
+          backgroundColor={colors.primary}
+          titleStyle={{ color: colors.white }}
+        />
+        <SearchFilter
+          isFiltered={isFiltered}
+          onPressFilter={() => {
+            refModal?.current?.show()
+          }}
+          value={keyword}
+          onChangeText={(txt) => setKeyword(txt)}
+          placeholder="Tìm tên bệnh nhân, bác sĩ"
+        />
+        <ItemPlaceholderCommon />
+        <ItemPlaceholderCommon />
+        <ItemPlaceholderCommon />
+      </View>
+    )
+  }
+  console.log("listData_listData", listData)
   return (
     <View style={styles.container}>
       <Header

@@ -31,6 +31,14 @@ export const LIST_ICON_BY_STATUS = [
     status: STATUS_ORDER.result_processing,
   },
   {
+    title: "Đã có kết quả",
+    icon: "tick_circle",
+    color: colors.primary,
+    backgroundColor: colors.blue_0,
+    status: STATUS_ORDER.rating_processing,
+  },
+
+  {
     title: "Đã khám",
     icon: "tick_circle",
     color: colors.green_7,

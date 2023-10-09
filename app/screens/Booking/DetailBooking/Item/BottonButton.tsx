@@ -108,7 +108,7 @@ export default function BottonButton({
         </Button>
       </View>
     )
-  if (status === STATUS_ORDER.done)
+  if (status === STATUS_ORDER.rating_processing)
     return (
       <View style={styles.container}>
         <Button
@@ -121,6 +121,20 @@ export default function BottonButton({
         >
           Gửi đánh giá
         </Button>
+        <Button
+          onPress={() => {
+            navigate("DetailExamination", { id, specialist: detailOrder?.specialist })
+          }}
+          mode="contained"
+          style={styles.button}
+        >
+          Xem kết quả khám
+        </Button>
+      </View>
+    )
+  if (status === STATUS_ORDER.done)
+    return (
+      <View style={styles.container}>
         <Button
           onPress={() => {
             navigate("DetailExamination", { id, specialist: detailOrder?.specialist })

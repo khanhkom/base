@@ -13,6 +13,8 @@ import ItemTotalStar from "./Item/ItemTotalStar"
 import { EToastType, showToastMessage } from "@app/utils/library"
 import { sendRatingOrder } from "@app/services/api/functions/rating"
 import { goBack } from "@app/navigators/navigationUtilities"
+import { getOrderHistory } from "@app/redux/actions/actionOrder"
+import { useDispatch } from "react-redux"
 
 const LIST_DEFAULT_RATING = [
   "Chuyên môn tốt",
@@ -36,6 +38,7 @@ export default function RatingDocter({ route }: IScreenParams) {
   const [listCriteria, setListCriteria] = useState([])
   const [loading, setLoading] = useState(false)
   const [description, setDescription] = useState("")
+  const dispatch = useDispatch()
   const onPressCriteria = (index) => {
     if (listCriteria.includes(index)) {
       const newList = listCriteria?.filter((it) => it !== index)
@@ -57,11 +60,12 @@ export default function RatingDocter({ route }: IScreenParams) {
       })
       const body = {
         orderId: route?.params?.id,
-        description: description === "" ? " " : description,
+        description: description,
         criteria: criteria,
         score: star,
       }
       let resRating = await sendRatingOrder(body)
+      dispatch(getOrderHistory())
       if (resRating.status === 201) {
         showToastMessage("Gửi đánh giá thành công", EToastType.SUCCESS)
         goBack()

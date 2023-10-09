@@ -67,7 +67,7 @@ export default function ItemUtilities() {
         navigate("CousultOnline")
         break
       case TYPE_FEATURES.KETQUA:
-        navigate("ExaminationResults")
+        navigate("SelectPatientHistory")
         break
 
       default:
