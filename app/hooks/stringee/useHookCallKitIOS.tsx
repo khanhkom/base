@@ -281,7 +281,7 @@ const useHookCallKitIOS = (updateClientId) => {
       console.log("UPDATE_TOKEN_ANDROID", token)
       client?.current?.registerPush(
         token,
-        false, // only for iOS
+        __DEV__?false:true, // isProduction: false: In development, true: In Production.
         true, // only for iOS
         (status, code, message) => {
           console.log(message)
@@ -335,7 +335,7 @@ const useHookCallKitIOS = (updateClientId) => {
     console.log("token_A", token)
     client?.current?.registerPush(
       token,
-      false, // isProduction: false: In development, true: In Production.
+      __DEV__?false:true, // isProduction: false: In development, true: In Production.
       true, // (iOS) isVoip: true: Voip PushNotification. Stringee supports this push notification.
       (status, code, message) => {
         console.log(message)

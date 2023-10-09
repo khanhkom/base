@@ -203,14 +203,6 @@ export default function Video({ route }) {
     async function updateTokenFi() {
       const token = await messaging().getToken()
       console.log("AAAAA", token)
-      client?.current?.registerPush(
-        token,
-        false, // only for iOS
-        false, // only for iOS
-        (status, code, message) => {
-          console.log(message)
-        },
-      )
     }
     if (session?.access_token !== "") {
       setTimeout(() => {
