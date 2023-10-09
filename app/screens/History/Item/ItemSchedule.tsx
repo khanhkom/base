@@ -42,7 +42,9 @@ interface ItemProps {
 export default function ItemSchedule({ item }: ItemProps) {
   const itemData =
     LIST_ICON_BY_STATUS.find((it) => it.status === item?.status) || LIST_ICON_BY_STATUS[0]
-  const isDoneSchedule = item?.status === STATUS_ORDER.done
+  const isDoneSchedule = item?.status === STATUS_ORDER.rating_processing
+
+  console.log("itemData_itemData", itemData)
   const returnDataByField = (index) => {
     switch (index) {
       case 0:
@@ -99,7 +101,7 @@ export default function ItemSchedule({ item }: ItemProps) {
           style={styles.buttonRate}
           mode="contained"
           onPress={() => {
-            navigate("RatingDocter")
+            navigate("RatingDocter", { id: item?.id, doctor: item?.doctor })
           }}
         >
           Đánh giá

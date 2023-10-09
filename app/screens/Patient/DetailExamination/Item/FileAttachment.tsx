@@ -1,4 +1,4 @@
-import { StyleSheet, View, Image, ScrollView } from "react-native"
+import { StyleSheet, View, Image, ScrollView, Pressable } from "react-native"
 import React from "react"
 import { Text } from "@app/components/Text"
 import { HEIGHT, WIDTH } from "@app/config/functions"
@@ -7,7 +7,13 @@ import colors from "@app/assets/colors"
 import { Icon } from "@app/components/Icon"
 import { Card, List } from "react-native-paper"
 import R from "@app/assets"
-export default function FileAttachment({ data }: { data: string[] }) {
+export default function FileAttachment({
+  data,
+  onPress,
+}: {
+  data: string[]
+  onPress: (val: number) => void
+}) {
   if (data.length > 0)
     return (
       <Card mode="contained" style={styles.container}>
@@ -29,7 +35,11 @@ export default function FileAttachment({ data }: { data: string[] }) {
         />
         <ScrollView horizontal style={styles.card}>
           {data.map((item, index) => {
-            return <Image key={index} source={{ uri: item }} style={styles.image} />
+            return (
+              <Pressable key={index} onPress={() => onPress(index)}>
+                <Image source={{ uri: item }} style={styles.image} />
+              </Pressable>
+            )
           })}
         </ScrollView>
       </Card>

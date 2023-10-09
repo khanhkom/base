@@ -13,6 +13,7 @@ import FileAttachment from "./Item/FileAttachment"
 import useHookDetailExam, { TYPE_INFO_RESULT } from "./useHookDetailExam"
 import LoadingScreen from "@app/components/loading/LoadingScreen"
 import { ISpecialList } from "@app/interface/docter"
+import ImageView from "react-native-image-viewing"
 
 const DATA_INFO = [
   {
@@ -75,7 +76,9 @@ interface IScreenParams {
 export default function DetailExamination({ route }: IScreenParams) {
   console.log("route", route.params.id)
   const id = route.params.id
-  const specialist = route.params.specialist
+  const specialist = route.params?.specialist
+  const [visible, setIsVisible] = useState(false)
+  const [imageIndex, setImageIndex] = useState(0)
 
   const { loading, detailResult, returnDataByField } = useHookDetailExam(id, specialist?.value)
   console.log("detailResult", detailResult)
@@ -112,7 +115,6 @@ export default function DetailExamination({ route }: IScreenParams) {
               {detailResult?.result?.description}
             </Text>
           </Card>
-
           <ItemHeader
             icon={"edit"}
             title={"Ghi chú"}
@@ -122,7 +124,21 @@ export default function DetailExamination({ route }: IScreenParams) {
           <Text size="ba" weight="normal">
             {detailResult?.result?.note}
           </Text>
-          <FileAttachment data={detailResult?.result?.fileUpload ?? []} />
+          <FileAttachment
+            data={detailResult?.result?.fileUpload ?? []}
+            onPress={(index) => {
+              setImageIndex(index)
+              setIsVisible(true)
+            }}
+          />
+          <ImageView
+            images={(detailResult?.result?.fileUpload ?? [])?.map((item) => {
+              return { uri: item }
+            })}
+            imageIndex={0}
+            visible={visible}
+            onRequestClose={() => setIsVisible(false)}
+          />
         </View>
       </ScrollView>
     </View>

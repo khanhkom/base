@@ -38,7 +38,8 @@ import CallVideo from "@app/screens/CallVideo"
 import RatingDocter from "@app/screens/Docter/RatingDocter"
 import CancelBooking from "@app/screens/Booking/CancelBooking"
 import ExaminationResults from "@app/screens/Patient/ExaminationResults"
-import ExaminationHistory from "@app/screens/Patient/ExaminationHistory"
+import ExaminationHistory from "@app/screens/Result/ExaminationHistory"
+import SelectPatientHistory from "@app/screens/Result/SelectPatientHistory"
 import DetailExamination from "@app/screens/Patient/DetailExamination"
 import SelectLocation from "@app/screens/Auth/Register/SelectLocation"
 import Notification from "@app/screens/Notification"
@@ -90,7 +91,7 @@ export type AppStackParamList = {
 
   SelectLocation: undefined
   Notification: undefined
-
+  SelectPatientHistory: undefined
   // 🔥 Your screens go here
   // IGNITE_GENERATOR_ANCHOR_APP_STACK_PARAM_LIST
 }
@@ -159,6 +160,7 @@ const AppStack = observer(function AppStack() {
       <Stack.Screen name="CancelBooking" component={CancelBooking} />
       <Stack.Screen name="ExaminationResults" component={ExaminationResults} />
       <Stack.Screen name="ExaminationHistory" component={ExaminationHistory} />
+      <Stack.Screen name="SelectPatientHistory" component={SelectPatientHistory} />
       <Stack.Screen name="DetailExamination" component={DetailExamination} />
       <Stack.Screen name="SelectLocation" component={SelectLocation} />
       <Stack.Screen name="Notification" component={Notification} />

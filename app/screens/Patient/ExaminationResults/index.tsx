@@ -5,9 +5,9 @@ import colors from "@app/assets/colors"
 import { navigate } from "@app/navigators/navigationUtilities"
 import useHookExam from "./useHookExam"
 import LoadingScreen from "@app/components/loading/LoadingScreen"
-import ItemHistory from "../ExaminationHistory/Item/ItemHistory"
 import ItemEmpty from "@app/components/ItemEmpty"
 import { HEIGHT } from "@app/config/functions"
+import ItemHistory from "@app/screens/Result/ExaminationHistory/Item/ItemHistory"
 
 export default function ExaminationHistory() {
   const { loading, getAllResulsCall, listResults } = useHookExam()

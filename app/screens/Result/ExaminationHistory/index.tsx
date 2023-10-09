@@ -7,9 +7,15 @@ import { navigate } from "@app/navigators/navigationUtilities"
 import ItemEmpty from "./Item/ItemEmpty"
 import useHookExam from "./useHookExam"
 import LoadingScreen from "@app/components/loading/LoadingScreen"
-
-export default function ExaminationHistory() {
-  const { loading, getAllResulsCall, listResults } = useHookExam()
+interface IScreenProps {
+  route: {
+    params: {
+      id: string
+    }
+  }
+}
+export default function ExaminationHistory({ route }: IScreenProps) {
+  const { loading, getAllResulsCall, listResults } = useHookExam(route?.params?.id)
   useEffect(() => {
     getAllResulsCall()
   }, [])
@@ -26,7 +32,7 @@ export default function ExaminationHistory() {
             <ItemHistory
               index={index}
               onPress={() => {
-                navigate("DetailExamination")
+                navigate("DetailExamination", { id: item?.id, specialist: { value: "Test" } })
               }}
             />
           )

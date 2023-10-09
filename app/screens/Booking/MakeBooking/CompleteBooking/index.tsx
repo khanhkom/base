@@ -94,7 +94,14 @@ export default function CompleteBooking({ route }: ScreenProps) {
     })
     let resCreate = {}
     if (isUpdate) {
-      resCreate = await updateOrder(route?.params?.id, formData)
+      let body = {
+        patientId: patient.id,
+        doctorId: docter.id,
+        specialist: specialist.code,
+        timeRange,
+        patientNotes,
+      }
+      resCreate = await updateOrder(route?.params?.id, body)
       console.log("resCreate_resCreate", resCreate)
       if (resCreate.status === 200) {
         dispatch(getOrderHistory())

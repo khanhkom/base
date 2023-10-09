@@ -7,6 +7,7 @@ import colors from "@app/assets/colors"
 import { Icon } from "@app/components/Icon"
 import DocumentPicker, { isCancel, isInProgress, types } from "react-native-document-picker"
 import { IconButton } from "react-native-paper"
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
 export default function FileAttachment({ listImage, setListImage }) {
   const handleError = (err: unknown) => {
     if (isCancel(err)) {
@@ -31,6 +32,11 @@ export default function FileAttachment({ listImage, setListImage }) {
       })
       .catch(handleError)
   }
+  const onDeleteImage = (index) => {
+    const newArray = [...listImage] // Create a copy of the current array
+    newArray.splice(index, 1) // Remove the item at index i
+    setListImage(newArray) // Update the state with the new array
+  }
   console.log("listImage", listImage)
   return (
     <View style={styles.container}>
@@ -48,7 +54,23 @@ export default function FileAttachment({ listImage, setListImage }) {
         <ScrollView horizontal>
           <View style={styles.wrapperImage}>
             {listImage.map((item, index) => {
-              return <Image key={index} style={styles.image} source={{ uri: item.uri }} />
+              return (
+                <View key={index}>
+                  <Image style={styles.image} source={{ uri: item.uri }} />
+                  <Pressable
+                    style={styles.icClose}
+                    onPress={() => {
+                      onDeleteImage(index)
+                    }}
+                  >
+                    <MaterialCommunityIcons
+                      name="close-circle-outline"
+                      color={colors.gray_7}
+                      size={WIDTH(20)}
+                    />
+                  </Pressable>
+                </View>
+              )
             })}
             <Pressable onPress={onPickFile} style={styles.buttonUpload}>
               <IconButton icon="upload" iconColor={colors.gray_5} />
@@ -100,5 +122,10 @@ const styles = StyleSheet.create({
     backgroundColor: colors.gray_2,
     justifyContent: "center",
     alignItems: "center",
+  },
+  icClose: {
+    position: "absolute",
+    top: HEIGHT(spacing.md),
+    right: WIDTH(spacing.sm),
   },
 })
