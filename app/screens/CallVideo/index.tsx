@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, ImageBackground, Image } from "react-native"
+import { StyleSheet, View, ImageBackground, Image } from "react-native"
 import React from "react"
 import R from "@app/assets"
 import Toolbar from "./Item/Toolbar"
