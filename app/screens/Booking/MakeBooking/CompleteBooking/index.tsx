@@ -15,7 +15,14 @@ import FileAttachment from "./Item/FileAttachment"
 import PopupVerify from "@app/components/PopupVerify"
 import { useSelector } from "@app/redux/reducers"
 import { useDispatch } from "react-redux"
-import { getOrderHistory } from "@app/redux/actions/actionOrder"
+import {
+  getOrderHistory,
+  updateDocterCreateOrder,
+  updatePatientOrder,
+  updateSelectedTimeOrder,
+  updateSeletedDateOrder,
+  updateSpecialListOrder,
+} from "@app/redux/actions/actionOrder"
 import moment from "moment"
 import { EToastType, showToastMessage } from "@app/utils/library"
 import { createOrder, updateOrder } from "@app/services/api/functions/order"
@@ -23,6 +30,7 @@ import { LoadingOpacity } from "@app/components/loading/LoadingOpacity"
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view"
 import useHookDetailBooking from "../../DetailBooking/useHookDetailBooking"
 import PopupErros from "@app/components/PopupErros"
+import { DATA_TIME } from "../SelectTimeBooking/Data"
 interface ScreenProps {
   route: {
     params: {
@@ -36,7 +44,6 @@ export default function CompleteBooking({ route }: ScreenProps) {
   const [loading, setLoading] = React.useState(false)
   const [listImage, setListImage] = useState([])
   const { detailOrder, getDetailOrderApi } = useHookDetailBooking(route?.params?.id)
-  console.log("route")
   const docter = useSelector((state) => state.orderReducers.docter)
   const selectedDate = useSelector((state) => state.orderReducers.selectedDate)
   const selectedTime = useSelector((state) => state.orderReducers.selectedTime)
@@ -53,7 +60,32 @@ export default function CompleteBooking({ route }: ScreenProps) {
   }, [])
   useEffect(() => {
     if (detailOrder?.patientNotes) {
+      console.log("ZOOOOOOOOO")
       setPatientNotes(detailOrder?.patientNotes)
+      dispatch(
+        updatePatientOrder({
+          ...detailOrder?.patient,
+          id: detailOrder?.patient?.profileId,
+        }),
+      )
+      dispatch(
+        updateDocterCreateOrder({
+          ...detailOrder?.doctor,
+          id: detailOrder?.doctor?.profileId,
+        }),
+      )
+      dispatch(updateSeletedDateOrder(moment(detailOrder?.timeRange?.from).format("YYYY-MM-DD")))
+      dispatch(updateSpecialListOrder(detailOrder?.specialist))
+
+      let timeSelected
+      DATA_TIME?.forEach((item, index) => {
+        item?.data?.forEach((it, id) => {
+          if (it.from === moment(detailOrder?.timeRange?.from).format("HH:mm")) {
+            timeSelected = it
+          }
+        })
+      })
+      dispatch(updateSelectedTimeOrder(timeSelected))
     }
   }, [detailOrder])
 
@@ -97,19 +129,19 @@ export default function CompleteBooking({ route }: ScreenProps) {
       let body = {
         patientId: patient.id,
         doctorId: docter.id,
-        specialist: specialist.code,
+        specialist: specialist?.code || specialist?.specialistCode,
         timeRange,
         patientNotes,
       }
       resCreate = await updateOrder(route?.params?.id, body)
-      console.log("resCreate_resCreate", resCreate)
+      console.log("ZOOOOOOOOO", 2, body, resCreate)
       if (resCreate.status === 200) {
         dispatch(getOrderHistory())
         goBack()
         goBack()
         showToastMessage("Cập nhật lịch thành công!", EToastType.SUCCESS)
       } else {
-        showToastMessage("Cập nhật lịch thất bại!", EToastType.SUCCESS)
+        showToastMessage("Cập nhật lịch thất bại!", EToastType.ERROR)
       }
     } else {
       resCreate = await createOrder(formData)
@@ -227,7 +259,7 @@ export default function CompleteBooking({ route }: ScreenProps) {
   -Tiền sử bệnh,...`}
             containerStyle={{ marginTop: HEIGHT(spacing.md) }}
           ></TextField>
-          <FileAttachment listImage={listImage} setListImage={setListImage} />
+          {!isUpdate && <FileAttachment listImage={listImage} setListImage={setListImage} />}
           <Button
             mode="contained"
             style={styles.button}

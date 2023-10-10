@@ -1,5 +1,5 @@
 import { StyleSheet, View, FlatList } from "react-native"
-import React from "react"
+import React, { useState } from "react"
 import colors from "@app/assets/colors"
 import { Header, Icon, Text } from "@app/components/index"
 import ItemBookInformation from "./Item/ItemBookInformation"
@@ -12,10 +12,13 @@ import LoadingScreen from "@app/components/loading/LoadingScreen"
 import useHookDetailBooking, { DATA_BOOK } from "./useHookDetailBooking"
 import { STATUS_ORDER } from "@app/interface/order"
 import { useSelector } from "@app/redux/reducers"
+import ImageView from "react-native-image-viewing"
 export default function DetailBooking({ route }) {
   const id = route?.params?.id
   const { detailOrder, loading, returnDataByField, getDetailOrderApi, updateDataCreateOrder } =
     useHookDetailBooking(id)
+  const [visible, setIsVisible] = useState(false)
+  const [imageIndex, setImageIndex] = useState(0)
   const clientId = useSelector((state) => state.stringeeReducers.clientId)
   if (loading) return <LoadingScreen />
   return (
@@ -26,7 +29,15 @@ export default function DetailBooking({ route }) {
         renderItem={({ item, index }) => {
           return <ItemBookInformation item={item} returnDataByField={returnDataByField} />
         }}
-        ListFooterComponent={() => <FileAttachment data={detailOrder?.fileUpload ?? []} />}
+        ListFooterComponent={() => (
+          <FileAttachment
+            data={detailOrder?.fileUpload ?? []}
+            onPress={(index) => {
+              setImageIndex(index)
+              setIsVisible(true)
+            }}
+          />
+        )}
         ListHeaderComponent={() => {
           if (detailOrder?.status === STATUS_ORDER.cancel)
             return (
@@ -54,6 +65,14 @@ export default function DetailBooking({ route }) {
             )
           return <View style={{ height: HEIGHT(spacing.md) }} />
         }}
+      />
+      <ImageView
+        images={(detailOrder?.fileUpload ?? [])?.map((item) => {
+          return { uri: item }
+        })}
+        imageIndex={0}
+        visible={visible}
+        onRequestClose={() => setIsVisible(false)}
       />
       <BottonButton
         status={detailOrder?.status}

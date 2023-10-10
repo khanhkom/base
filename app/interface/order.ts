@@ -29,11 +29,13 @@ export interface IOrderHistory {
     id: string
     name: string
     userId: string
+    profileId: string
   }
   doctor: {
     id: string
     name: string
     userId: string
+    profileId: string
   }
   timeRange: {
     from: string
