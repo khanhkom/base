@@ -6,7 +6,6 @@ import { spacing } from "@app/theme/spacing"
 import colors from "@app/assets/colors"
 import { Icon } from "@app/components/Icon"
 import { Card, List } from "react-native-paper"
-import R from "@app/assets"
 export default function FileAttachment({
   data,
   onPress,

@@ -70,7 +70,7 @@ export default function DetailBooking({ route }) {
         images={(detailOrder?.fileUpload ?? [])?.map((item) => {
           return { uri: item }
         })}
-        imageIndex={0}
+        imageIndex={imageIndex}
         visible={visible}
         onRequestClose={() => setIsVisible(false)}
       />

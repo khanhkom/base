@@ -4,7 +4,7 @@ import { Header } from "@app/components/Header"
 import colors from "@app/assets/colors"
 import { HEIGHT, WIDTH } from "@app/config/functions"
 import { spacing } from "@app/theme/spacing"
-import { Button, Card, List } from "react-native-paper"
+import { Card, List } from "react-native-paper"
 import ItemRecord from "@app/screens/Booking/MakeBooking/SelectPatientRecord/Item/ItemRecord"
 import { navigate } from "@app/navigators/navigationUtilities"
 import { Text } from "@app/components/Text"
@@ -135,7 +135,7 @@ export default function DetailExamination({ route }: IScreenParams) {
             images={(detailResult?.result?.fileUpload ?? [])?.map((item) => {
               return { uri: item }
             })}
-            imageIndex={0}
+            imageIndex={imageIndex}
             visible={visible}
             onRequestClose={() => setIsVisible(false)}
           />
