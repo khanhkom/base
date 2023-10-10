@@ -17,6 +17,9 @@ import { LoadingOpacity } from "@app/components/loading/LoadingOpacity"
 import { EToastType, showToastMessage } from "@app/utils/library"
 import messaging from "@react-native-firebase/messaging"
 import { translate } from "@app/i18n/translate"
+
+import { getHash, startOtpListener, useOtpVerify, removeListener } from "react-native-otp-verify"
+
 interface ScreenProps {
   route: {
     params: {
@@ -32,20 +35,38 @@ export default function VerifyOTP({ route }: ScreenProps) {
   const [error, setError] = useState(false)
   const [time, setTime] = useState(30)
   const dispatch = useDispatch()
-  const tokenFi=useRef('')
+  const tokenFi = useRef("")
 
-  useEffect(()=>{
+  useEffect(() => {
     async function getTokenFi() {
       try {
         const token = await messaging().getToken()
-        tokenFi.current = token;
+        tokenFi.current = token
       } catch (error) {
         console.warn(error)
       }
     }
     getTokenFi()
-  },[])
+  }, [])
+  // using methods
+  useEffect(() => {
+    getHash()
+      .then((hash) => {
+        console.log("HASHHHHHHHHHH", hash)
+        // use this hash in the message.
+      })
+      .catch(console.log)
 
+    startOtpListener((message) => {
+      console.log("message_message", message)
+      // extract the otp using regex e.g. the below regex extracts 4 digit otp from message
+      const otp = /(\d{6})/g.exec(message)[1]
+      setCode(otp)
+      _checkCode(otp)
+      console.log("otp_otp", otp)
+    })
+    return () => removeListener()
+  }, [])
   const _checkCode = async (codeFinal) => {
     try {
       setLoading(true)
@@ -53,8 +74,8 @@ export default function VerifyOTP({ route }: ScreenProps) {
         phone,
         code: codeFinal,
       }
-      if(tokenFi.current!==''){
-        Object.assign(body,{
+      if (tokenFi.current !== "") {
+        Object.assign(body, {
           fcmToken: tokenFi.current,
         })
       }
@@ -135,6 +156,8 @@ export default function VerifyOTP({ route }: ScreenProps) {
         cellStyle={styles.cellStyle}
         textStyle={styles.textPin}
         cellStyleFocused={styles.cellStyleFocused}
+        textContentType="oneTimeCode"
+        autoComplete="sms-otp"
       />
       {error && (
         <Text
