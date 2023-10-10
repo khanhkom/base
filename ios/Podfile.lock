@@ -528,6 +528,8 @@ PODS:
     - React-Core
   - react-native-image-picker (7.0.0):
     - React-Core
+  - react-native-otp-verify (1.1.6):
+    - React-Core
   - react-native-pager-view (6.2.1):
     - React-Core
   - react-native-render-html (6.3.4):
@@ -777,6 +779,7 @@ DEPENDENCIES:
   - react-native-fbsdk-next (from `../node_modules/react-native-fbsdk-next`)
   - react-native-full-screen-notification-incoming-call (from `../node_modules/react-native-full-screen-notification-incoming-call`)
   - react-native-image-picker (from `../node_modules/react-native-image-picker`)
+  - react-native-otp-verify (from `../node_modules/react-native-otp-verify`)
   - react-native-pager-view (from `../node_modules/react-native-pager-view`)
   - react-native-render-html (from `../node_modules/react-native-render-html`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
@@ -933,6 +936,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-full-screen-notification-incoming-call"
   react-native-image-picker:
     :path: "../node_modules/react-native-image-picker"
+  react-native-otp-verify:
+    :path: "../node_modules/react-native-otp-verify"
   react-native-pager-view:
     :path: "../node_modules/react-native-pager-view"
   react-native-render-html:
@@ -1080,6 +1085,7 @@ SPEC CHECKSUMS:
   react-native-fbsdk-next: 16e652b5f1236492631185c58ec2ae15b029119d
   react-native-full-screen-notification-incoming-call: c0a64a09e6e413eab704cc26b7190a65859ba629
   react-native-image-picker: ddbbe4d226d9c82a82360f5de66bf71a657a42e6
+  react-native-otp-verify: 3dbd8a52ceb8d4dfc775bddd6fc98a453091ed5f
   react-native-pager-view: d211379f61895b6349bd7e571b44a26d005c2975
   react-native-render-html: 984dfe2294163d04bf5fe25d7c9f122e60e05ebe
   react-native-safe-area-context: 39c2d8be3328df5d437ac1700f4f3a4f75716acc
