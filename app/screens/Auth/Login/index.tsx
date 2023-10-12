@@ -47,14 +47,14 @@ export default function Login() {
         <Text preset="xxxlsemibold">{translate("auth.greetings_to_you")}</Text>
         <View style={styles.tab}>
           <ButtonTab
-            text={translate("auth.register")}
+            text={translate("auth.login")}
             isActive={indexTab === 0}
             onPress={() => {
               setIndexTab(0)
             }}
           />
           <ButtonTab
-            text={translate("auth.login")}
+            text={translate("auth.register")}
             isActive={indexTab === 1}
             onPress={() => {
               setIndexTab(1)

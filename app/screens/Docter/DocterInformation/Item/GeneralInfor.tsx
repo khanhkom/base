@@ -14,9 +14,7 @@ export default function GeneralInfor({ data }: { data: IDocter }) {
       mode="contained"
       style={styles.item}
       contentStyle={{ flexDirection: "row" }}
-      onPress={() => {
-        navigate("DocterInformation")
-      }}
+      onPress={() => {}}
     >
       <Image source={R.images.avatar_docter_rec} style={styles.avatar} resizeMode="center" />
       <View>

@@ -39,7 +39,7 @@ export default function SearchDocter({ route }: ScreenProps) {
   const getListDoctersAPI = async (params) => {
     setLoading(true)
     const resDocters = await getListDocter(params)
-    console.log("resDocters_resDocters", resDocters.data.items, params)
+    console.log("resDocters_resDocters", resDocters, params)
     setLoading(false)
     setListDocters(resDocters?.data?.items)
   }

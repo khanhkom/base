@@ -16,7 +16,7 @@ export default function Profile() {
   const session = useSelector((state) => state.stringeeReducers.session)
   const [token, setToken] = useState("")
   const onLogout = async () => {
-    remove(KEYSTORAGE.LOGIN_DATA)
+    await remove(KEYSTORAGE.LOGIN_DATA)
     navigate("Login")
     api.apisauce.setHeader("access-token", "")
     await GoogleSignin.signOut()

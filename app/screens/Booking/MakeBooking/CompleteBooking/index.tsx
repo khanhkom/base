@@ -274,7 +274,11 @@ export default function CompleteBooking({ route }: ScreenProps) {
       </KeyboardAwareScrollView>
       <PopupVerify
         title="Xác nhận đặt lịch"
-        desc="Vui lòng kiểm tra kỹ các thông tin đặt lịch khám. Thông tin không chính xác có thể làm ảnh hướng đến quá trình khám bệnh!"
+        desc={`Xác nhận đặt lịch bác sĩ ${docter?.name} vào lúc ${selectedTime?.time} ngày ${moment(
+          selectedDate,
+        ).format(
+          "DD/MM/YYYY",
+        )}. Vui lòng kiểm tra kỹ các thông tin đặt lịch khám. Thông tin không chính xác có thể làm ảnh hướng đến quá trình khám bệnh!`}
         visible={visible}
         setVisible={setVisible}
         onRightPress={() => {

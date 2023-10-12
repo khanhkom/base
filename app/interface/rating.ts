@@ -8,3 +8,17 @@ export interface IRatingOrder {
   updatedAt: string
   id: string
 }
+export interface IRatingDoctorDetail {
+  orderDetail: {
+    orderId: string
+    patientProfileId: string
+    doctorUserId: string
+  }
+  createdBy: string
+  description: string
+  score: number
+  criteria: string[]
+  createdAt: string
+  updatedAt: string
+  id: string
+}

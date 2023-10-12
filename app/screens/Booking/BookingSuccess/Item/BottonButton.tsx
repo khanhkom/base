@@ -1,10 +1,11 @@
-import { StyleSheet, Text, View } from "react-native"
+import { StyleSheet, View } from "react-native"
 import React from "react"
 import { Button } from "react-native-paper"
 import { HEIGHT, WIDTH } from "@app/config/functions"
 import { spacing } from "@app/theme/spacing"
 import colors from "@app/assets/colors"
 import { navigate } from "@app/navigators/navigationUtilities"
+import { translate } from "@app/i18n/translate"
 
 export default function BottonButton() {
   return (
@@ -17,7 +18,7 @@ export default function BottonButton() {
           navigate("Home")
         }}
       >
-        Về trang chủ
+        {translate("booking.back_home")}
       </Button>
       <Button
         onPress={() => {
@@ -26,7 +27,7 @@ export default function BottonButton() {
         mode="contained"
         style={styles.button}
       >
-        Đặt lịch khác
+        {translate("booking.book_other_order")}
       </Button>
     </View>
   )

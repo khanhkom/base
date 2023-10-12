@@ -7,7 +7,7 @@ import { getOtp, loginSocial } from "@app/services/api/functions/users"
 import { EToastType, showToastMessage } from "@app/utils/library"
 import { KEYSTORAGE, save } from "@app/utils/storage"
 import { GoogleSignin } from "@react-native-google-signin/google-signin"
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { Keyboard } from "react-native"
 import { AccessToken, LoginManager } from "react-native-fbsdk-next"
 import { useDispatch } from "react-redux"
@@ -47,7 +47,7 @@ const useHookLogin = (setCustomLoading?: (val: boolean) => void) => {
               phone: countryCode + phoneNumber,
             }),
           )
-          const isRegisterTab = indexTab === 0
+          const isRegisterTab = indexTab === 1
           setNewUser(resLogin?.data?.isNewUser)
           if (isRegisterTab) {
             if (resLogin?.data?.isNewUser) {

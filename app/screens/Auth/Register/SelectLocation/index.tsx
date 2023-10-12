@@ -118,12 +118,11 @@ export default function SelectLocation({ route }: ScreenProps) {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     backgroundColor: colors.white,
+    flex: 1,
   },
   searchBar: {
-    marginVertical: HEIGHT(spacing.md),
     marginHorizontal: WIDTH(spacing.md),
+    marginVertical: HEIGHT(spacing.md),
   },
-  safeAreaView: {},
 })

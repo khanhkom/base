@@ -1,4 +1,4 @@
-import { StyleSheet, View } from "react-native"
+import { StyleSheet, View, Image } from "react-native"
 import React from "react"
 import { Card, List } from "react-native-paper"
 import { Icon } from "@app/components/Icon"
@@ -9,12 +9,23 @@ import { spacing } from "@app/theme/spacing"
 import moment from "moment"
 import { Inotification } from "@app/interface/notifications"
 import { navigate } from "@app/navigators/navigationUtilities"
+import R from "@app/assets"
 interface ItemProps {
   item: Inotification
 }
+const DATA_ICON_NOTI = [
+  {
+    iconName: "updateOrder",
+    icon: R.images.updateOrder,
+  },
+  {
+    iconName: "updateOrder",
+    icon: R.images.haveResult,
+  },
+]
 export default function ItemNotification({ item }: ItemProps) {
+  console.log("item", item?.icon)
   const onPressItem = () => {
-    console.log("item", item)
     switch (item?.clickAction?.actionType) {
       case "open_order":
         navigate("DetailBooking", {
@@ -26,14 +37,23 @@ export default function ItemNotification({ item }: ItemProps) {
         break
     }
   }
+  const returnIcon = (type) => {
+    switch (type) {
+      case "haveResult":
+        return R.images.haveResult
+      case "updateOrder":
+        return R.images.updateOrder
+      default:
+        return R.images.updateOrder
+    }
+  }
   return (
     <Card style={styles.card} mode="contained" onPress={onPressItem}>
       <List.Item
         left={() => {
           return (
             <View>
-              <Icon icon={"noti_edit"} size={WIDTH(24)} />
-              {/* <Icon icon={item.icon} size={WIDTH(24)} /> */}
+              <Image source={returnIcon(item?.icon)} style={styles.icon} resizeMode="contain" />
             </View>
           )
         }}
@@ -72,5 +92,9 @@ const styles = StyleSheet.create({
     marginHorizontal: WIDTH(spacing.md),
     marginBottom: HEIGHT(spacing.sm),
     paddingHorizontal: WIDTH(spacing.sm),
+  },
+  icon: {
+    width: WIDTH(24),
+    height: WIDTH(24),
   },
 })

@@ -11,5 +11,6 @@ export interface Inotification {
   }
   createdAt: string
   updatedAt: string
+  icon: "updateOrder" | "haveResult"
   id: string
 }

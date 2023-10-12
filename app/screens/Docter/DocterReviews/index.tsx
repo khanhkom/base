@@ -8,6 +8,8 @@ import StarStatistic from "./Item/StarStatistic"
 import { HEIGHT, WIDTH } from "@app/config/functions"
 import { spacing } from "@app/theme/spacing"
 import { Divider } from "react-native-paper"
+import { useHookRatingDetail } from "./useHookRatingDetail"
+import LoadingScreen from "@app/components/loading/LoadingScreen"
 export const DATA_STAR = [
   {
     star: 5,
@@ -30,7 +32,19 @@ export const DATA_STAR = [
     total: 0,
   },
 ]
-export default function DocterReviews() {
+interface ScreenProps {
+  route: {
+    params: {
+      userId: string
+    }
+  }
+}
+export default function DocterReviews({ route }: ScreenProps) {
+  const userId = route?.params?.userId
+
+  const { refreshState, listData, loading, onHeaderRefresh, onFooterRefresh } =
+    useHookRatingDetail(userId)
+  if (loading) return <LoadingScreen />
   return (
     <View style={styles.container}>
       <Header leftIcon="arrow_left" title="Tất cả đánh giá" backgroundColor={colors.white} />
@@ -66,9 +80,15 @@ export default function DocterReviews() {
         </View>
         <Divider />
         <FlatList
-          data={[1, 2, 3, 4]}
-          renderItem={() => {
-            return <ItemUserRating />
+          data={listData}
+          renderItem={({ item, index }) => {
+            return (
+              <ItemUserRating
+                criteria={item?.criteria ?? []}
+                description={item?.description}
+                createdAt={item?.createdAt}
+              />
+            )
           }}
           ListFooterComponent={<View style={{ height: HEIGHT(32) }} />}
         />

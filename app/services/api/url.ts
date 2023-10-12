@@ -35,6 +35,7 @@ const LOCATION = {
 const RATING = {
   SEND_RATING_ORDER: "rating",
   GET_RATING_BY_ORDER: "rating/order/",
+  GET_RATING_BY_DOCTOR: "rating",
 }
 const NOTIFICATION = {
   GET_NOTIFICATION: "notification",

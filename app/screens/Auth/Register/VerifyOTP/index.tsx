@@ -60,7 +60,7 @@ export default function VerifyOTP({ route }: ScreenProps) {
     startOtpListener((message) => {
       console.log("message_message", message)
       // extract the otp using regex e.g. the below regex extracts 4 digit otp from message
-      const otp = /(\d{6})/g.exec(message)[1]
+      const otp = /(\d{6})/g.exec(message)?.[1]
       setCode(otp)
       _checkCode(otp)
       console.log("otp_otp", otp)

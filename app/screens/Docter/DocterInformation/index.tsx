@@ -13,6 +13,7 @@ import { IDocter } from "@app/interface/docter"
 import { getDetailDocter } from "@app/services/api/functions/docter"
 import { useDispatch } from "react-redux"
 import { updateDocterCreateOrder } from "@app/redux/actions/actionOrder"
+import { translate } from "@app/i18n/translate"
 interface IScreenProps {
   route: {
     params: {
@@ -24,9 +25,12 @@ interface IScreenProps {
 export default function DocterInformation({ route }: IScreenProps) {
   const [loading, setLoading] = useState(false)
   const [detailDocter, setDetailDocter] = useState<IDocter>()
+  const doctorId = route.params?.item?.id
+  const userId = route.params?.item?.userId
+  console.log("detailDocter_detailDocter", route.params?.item)
   const loadDetailDocter = async () => {
     setLoading(true)
-    let resDetail = await getDetailDocter(route.params.item.id)
+    let resDetail = await getDetailDocter(doctorId)
     setDetailDocter(resDetail.data)
     setLoading(false)
   }
@@ -40,7 +44,11 @@ export default function DocterInformation({ route }: IScreenProps) {
       <ScrollView>
         <GeneralInfor data={detailDocter} />
         <Experience data={detailDocter} />
-        <Rating />
+        <Rating
+          averageRating={detailDocter?.averageRating}
+          countRating={detailDocter?.countRating}
+          userId={userId}
+        />
       </ScrollView>
       <View style={styles.buttonWrapper}>
         <Button
@@ -56,7 +64,7 @@ export default function DocterInformation({ route }: IScreenProps) {
             }
           }}
         >
-          Đặt khám
+          {translate("booking.book")}
         </Button>
       </View>
     </View>

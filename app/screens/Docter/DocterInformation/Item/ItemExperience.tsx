@@ -23,7 +23,6 @@ export default function ItemExperience({
   data: IExperience[] | string[]
 }) {
   const [isShow, setShow] = useState(false)
-  console.log("data", data)
   return (
     <View style={styles.container}>
       <List.Item

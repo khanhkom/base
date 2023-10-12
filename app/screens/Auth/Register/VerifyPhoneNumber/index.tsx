@@ -6,7 +6,7 @@ import { spacing } from "@app/theme/spacing"
 import colors from "@app/assets/colors"
 import { navigate } from "@app/navigators/navigationUtilities"
 import { useDispatch } from "react-redux"
-import { getOtp, verifyOTP } from "@app/services/api/functions/users"
+import { getOtp } from "@app/services/api/functions/users"
 import { LoadingOpacity } from "@app/components/loading/LoadingOpacity"
 import { EToastType, showToastMessage } from "@app/utils/library"
 import { updateUserField } from "@app/redux/actions"
@@ -15,6 +15,7 @@ import { Button } from "react-native-paper"
 import HeaderLogin from "../../Item/HeaderLogin"
 import R from "@app/assets"
 import ItemOTPMethod from "../../Item/ItemOTPMethod"
+import { translate } from "@app/i18n/translate"
 export default function VerifyPhoneNumber() {
   const [countryCode, setCountryCode] = useState("+84")
   const [phoneNumber, setPhoneNumber] = useState("")
@@ -47,12 +48,12 @@ export default function VerifyPhoneNumber() {
           })
         } else {
           setError(true)
-          showToastMessage("Vui lòng kiểm tra lại số điện thoại!", EToastType.ERROR)
+          showToastMessage(translate("auth.verify_telephone_number_again"), EToastType.ERROR)
         }
         console.log("resLogin_resLogin", body, resLogin?.data)
         setLoading(false)
       } catch (error) {
-        showToastMessage("Vui lòng kiểm tra lại số điện thoại!", EToastType.ERROR)
+        showToastMessage(translate("auth.verify_telephone_number_again"), EToastType.ERROR)
         setError(true)
         setLoading(false)
       }
@@ -63,7 +64,7 @@ export default function VerifyPhoneNumber() {
     <View style={styles.container}>
       <HeaderLogin />
       <View style={styles.body}>
-        <Text preset="xxxlsemibold">Chào mừng bạn,</Text>
+        <Text preset="xxxlsemibold">{translate("auth.greetings_to_you")}</Text>
         <InputPhone
           phoneNumber={phoneNumber}
           setPhoneNumber={setPhoneNumber}
@@ -81,7 +82,7 @@ export default function VerifyPhoneNumber() {
           buttonColor={colors.primary_8}
           onPress={onSubmit}
         >
-          Tiếp tục
+          {translate("common.continue")}
         </Button>
       </View>
 

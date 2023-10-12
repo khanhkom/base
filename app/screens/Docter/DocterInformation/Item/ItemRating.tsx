@@ -3,7 +3,7 @@ import React from "react"
 import colors from "@app/assets/colors"
 import { Avatar, Card, List } from "react-native-paper"
 import { Text } from "@app/components/Text"
-import { HEIGHT, WIDTH } from "@app/config/functions"
+import { HEIGHT, WIDTH, convertTimeToAgo } from "@app/config/functions"
 import { spacing } from "@app/theme/spacing"
 import { Icon } from "@app/components/Icon"
 import R from "@app/assets"
@@ -23,18 +23,18 @@ export const ItemTotalStar = ({ star }: { star: number }) => {
     </View>
   )
 }
-const ItemUserRating = () => {
+interface ItemProps {
+  criteria: string[]
+  description: string
+  createdAt: string
+}
+const ItemUserRating = ({ description, criteria, createdAt }: ItemProps) => {
+  const criteriaString = criteria.map((word) => {
+    return word.charAt(0).toUpperCase() + word.slice(1)
+  })
+  console.log("createdAt_createdAt", createdAt)
   return (
-    <Card
-      style={{
-        marginHorizontal: WIDTH(spacing.md),
-        paddingHorizontal: WIDTH(spacing.sm),
-        backgroundColor: colors.gray_0,
-        marginTop: HEIGHT(spacing.sm),
-        paddingBottom: HEIGHT(spacing.sm),
-      }}
-      mode="contained"
-    >
+    <Card style={styles.card} mode="contained">
       <List.Item
         left={() => {
           return <Avatar.Image source={R.images.avatar_docter} size={WIDTH(48)} />
@@ -46,7 +46,7 @@ const ItemUserRating = () => {
                 Thanh Bùi 😍
               </Text>
               <Text size="sm" weight="normal" style={{ color: colors.gray_6 }}>
-                1 tuần trước
+                {convertTimeToAgo(createdAt)}
               </Text>
             </View>
           )
@@ -55,17 +55,24 @@ const ItemUserRating = () => {
       <View style={styles.flexRow}>
         <ItemTotalStar star={4} />
         <Text size="sm" weight="medium" style={{ marginLeft: WIDTH(spacing.xxs) }}>
-          Chuyên môn tốt, Tư vấn tận tình
+          {criteriaString}
         </Text>
       </View>
       <Text size="ba" weight="normal" style={{ marginTop: HEIGHT(spacing.xs) }}>
-        Lorem Ipsum is simply dummy text of the printing and typesetting industry.
+        {description}
       </Text>
     </Card>
   )
 }
 export default ItemUserRating
 const styles = StyleSheet.create({
+  card: {
+    marginHorizontal: WIDTH(spacing.md),
+    paddingHorizontal: WIDTH(spacing.sm),
+    backgroundColor: colors.gray_0,
+    marginTop: HEIGHT(spacing.sm),
+    paddingBottom: HEIGHT(spacing.sm),
+  },
   flexRow: {
     flexDirection: "row",
     alignItems: "center",

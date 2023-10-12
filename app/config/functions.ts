@@ -107,3 +107,30 @@ export function getTypeTimeInRangeCall(timeFrom, timeTo) {
   else return TYPE_TIME_CALL.DA_DEN
   // return currentTime >= rangeBefore && currentTime <= rangeAfter
 }
+export function convertTimeToAgo(date) {
+  const currentTime = new Date()
+  const pastTime = new Date(date)
+
+  const timeDifference = currentTime.getTime() - pastTime.getTime()
+  const secondsAgo = Math.floor(timeDifference / 1000)
+  const minutesAgo = Math.floor(secondsAgo / 60)
+  const hoursAgo = Math.floor(minutesAgo / 60)
+  const daysAgo = Math.floor(hoursAgo / 24)
+  const weeksAgo = Math.floor(daysAgo / 7)
+
+  let convertedTime
+
+  if (weeksAgo > 0) {
+    convertedTime = `${weeksAgo} tuần trước`
+  } else if (daysAgo > 0) {
+    convertedTime = `${daysAgo} ngày trước`
+  } else if (hoursAgo > 0) {
+    convertedTime = `${hoursAgo} giờ trước`
+  } else if (minutesAgo > 0) {
+    convertedTime = `${minutesAgo} phút trước`
+  } else {
+    convertedTime = `${secondsAgo} giây trước`
+  }
+
+  return convertedTime
+}

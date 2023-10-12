@@ -17,6 +17,8 @@ const vi = {
     save: "Lưu",
     skip: "Bỏ qua",
     searching: "Tìm kiếm...",
+    file_attachement: "Tệp đính kèm",
+    view_all: "Xem tất cả",
   },
   auth: {
     verify_telephone_number_again: "Vui lòng kiểm tra lại số điện thoại!",
@@ -76,6 +78,15 @@ const vi = {
     example_address: "Ví dụ: Số nhà, đường, ...",
     create_patient_successful: "Tạo hồ sơ thành công!",
     create_patient_failure: "Tạo hồ sơ thất bại!",
+  },
+  booking: {
+    back_home: "Về trang chủ",
+    book_other_order: "Đặt lịch khác",
+    book: "Đặt khám",
+  },
+  rating: {
+    patient_rating: "Bệnh nhân đánh giá:",
+    rating: "đánh giá",
   },
 }
 

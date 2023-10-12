@@ -12,6 +12,7 @@ export interface IDocter {
   experience: IExperience[]
   education: Education[]
   averageRating: number
+  countRating: number
   createdAt?: string
   updatedAt?: string
   id: string
