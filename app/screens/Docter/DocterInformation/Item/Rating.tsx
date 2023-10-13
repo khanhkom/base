@@ -38,6 +38,8 @@ export default function Rating({ countRating, averageRating, userId }: ItemProps
               onPress={() => {
                 navigate("DocterReviews", {
                   userId,
+                  countRating,
+                  averageRating,
                 })
               }}
             >
@@ -67,6 +69,7 @@ export default function Rating({ countRating, averageRating, userId }: ItemProps
               criteria={item?.criteria ?? []}
               description={item?.description}
               createdAt={item?.createdAt}
+              score={item?.score}
             />
           )
         }}

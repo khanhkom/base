@@ -1,13 +1,11 @@
 import { useState, useEffect } from "react"
 import { RefreshState } from "@app/components/refresh-list"
-import { getListNotification } from "@app/services/api/functions/notification"
-import { Inotification } from "@app/interface/notifications"
 import { getRatingByOrderDoctorId } from "@app/services/api/functions/rating"
 import { IRatingDoctorDetail } from "@app/interface/rating"
 
 const limit = 5
 
-export function useHookRatingDetail(userId) {
+export function useHookRatingDetail(userId, starSelected) {
   const [refreshState, setRefreshState] = useState<number>(RefreshState.Idle)
   const [pagingRes, setPagingRes] = useState({})
   const [pageList, setPageList] = useState<number>(1)
@@ -40,6 +38,12 @@ export function useHookRatingDetail(userId) {
       perPage: limit,
       userId,
     }
+    if (starSelected > 0) {
+      Object.assign(body, {
+        score: starSelected,
+      })
+    }
+    console.log("body_body", body)
     isLoadMore
       ? setRefreshState(RefreshState.FooterRefreshing)
       : setRefreshState(RefreshState.HeaderRefreshing)
@@ -82,7 +86,7 @@ export function useHookRatingDetail(userId) {
 
   useEffect(() => {
     onHeaderRefresh()
-  }, [])
+  }, [starSelected])
 
   useEffect(() => {
     ;(function () {

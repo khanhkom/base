@@ -6,24 +6,40 @@ import { HEIGHT, WIDTH } from "@app/config/functions"
 import { spacing } from "@app/theme/spacing"
 import colors from "@app/assets/colors"
 import { ItemTotalStar } from "../../DocterInformation/Item/ItemRating"
+import { translate } from "@app/i18n/translate"
+import { IRatingDoctorDetail } from "@app/interface/rating"
 import { DATA_STAR } from ".."
-const totalStar = 210
 
-const ItemEachStar = ({ item }) => {
-  const widthActive = (item?.total / totalStar) * WIDTH(80)
+const ItemEachStar = ({ star, total, totalStar }) => {
+  const widthActive = (total / totalStar) * WIDTH(80)
   return (
     <View style={styles.itemEachStar}>
-      <ItemTotalStar star={item.star} />
+      <ItemTotalStar star={star} />
       <View style={styles.progress}>
         <View style={[styles.progressActive, { width: widthActive }]}></View>
       </View>
       <Text size="sm" weight="normal" style={{ color: colors.gray_5 }}>
-        {item.total}
+        {total}
       </Text>
     </View>
   )
 }
-export default function StarStatistic() {
+interface ItemProps {
+  averageRating: number
+  countRating: number
+  listData: IRatingDoctorDetail[]
+}
+export default function StarStatistic({ averageRating, countRating, listData }: ItemProps) {
+  const totalStar = listData?.length
+  const result = listData.reduce((stats, item) => {
+    const score = item.score
+    if (!stats[score]) {
+      stats[score] = { score, total: 0 }
+    }
+    stats[score].total++
+    return stats
+  }, {})
+
   return (
     <View style={styles.container}>
       <View style={styles.leftView}>
@@ -34,64 +50,67 @@ export default function StarStatistic() {
             weight="semiBold"
             style={{ color: colors.gray_9, marginHorizontal: WIDTH(6) }}
           >
-            4.7
+            {averageRating}
           </Text>
         </View>
-        <Text
-          size="ba"
-          weight="normal"
-          style={{ color: colors.gray_6, textAlignVertical: "center" }}
-        >
-          120 đánh giá
+        <Text size="ba" weight="normal" style={styles.countRating}>
+          {countRating} {translate("rating.rating")}
         </Text>
       </View>
-      <View
-        style={{
-          borderLeftWidth: 1,
-          borderLeftColor: colors.gray_2,
-        }}
-      >
+      <View style={styles.rightView}>
         {DATA_STAR.map((item, index) => {
-          return <ItemEachStar item={item} key={index} />
+          return (
+            <ItemEachStar
+              total={result?.[item?.star.toString()]?.total ?? 0}
+              star={item?.star}
+              key={index}
+              totalStar={totalStar || 1}
+            />
+          )
         })}
       </View>
     </View>
   )
 }
 const styles = StyleSheet.create({
-  headRating: {
-    flexDirection: "row",
-    alignItems: "center",
-    paddingHorizontal: WIDTH(spacing.md),
-    marginBottom: HEIGHT(4),
-  },
   container: {
-    marginHorizontal: WIDTH(spacing.md),
+    alignItems: "center",
     flexDirection: "row",
-    alignItems: "center",
+    marginHorizontal: WIDTH(spacing.md),
   },
-  leftView: {
-    justifyContent: "center",
+  countRating: { color: colors.gray_6, textAlignVertical: "center" },
+  headRating: {
     alignItems: "center",
+    flexDirection: "row",
+    marginBottom: HEIGHT(4),
     paddingHorizontal: WIDTH(spacing.md),
   },
   itemEachStar: {
-    flexDirection: "row",
     alignItems: "center",
-    paddingHorizontal: WIDTH(spacing.md),
+    flexDirection: "row",
     marginTop: HEIGHT(4),
+    paddingHorizontal: WIDTH(spacing.md),
+  },
+  leftView: {
+    alignItems: "center",
+    justifyContent: "center",
+    paddingHorizontal: WIDTH(spacing.md),
   },
   progress: {
-    width: WIDTH(80),
-    height: HEIGHT(4),
-    borderRadius: 100,
     backgroundColor: colors.gray_2,
+    borderRadius: 100,
+    height: HEIGHT(4),
     marginHorizontal: WIDTH(spacing.sm),
+    width: WIDTH(80),
   },
   progressActive: {
-    width: WIDTH(10),
-    height: HEIGHT(4),
-    borderRadius: 100,
     backgroundColor: colors.gray_5,
+    borderRadius: 100,
+    height: HEIGHT(4),
+    width: WIDTH(10),
+  },
+  rightView: {
+    borderLeftColor: colors.gray_2,
+    borderLeftWidth: 1,
   },
 })

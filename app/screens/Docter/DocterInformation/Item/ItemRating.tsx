@@ -26,13 +26,16 @@ export const ItemTotalStar = ({ star }: { star: number }) => {
 interface ItemProps {
   criteria: string[]
   description: string
+  score: number
   createdAt: string
 }
-const ItemUserRating = ({ description, criteria, createdAt }: ItemProps) => {
-  const criteriaString = criteria.map((word) => {
-    return word.charAt(0).toUpperCase() + word.slice(1)
+
+const ItemUserRating = ({ description, criteria, createdAt, score }: ItemProps) => {
+  const criteriaString = criteria.map((word, index) => {
+    return (
+      word.charAt(0).toUpperCase() + word.slice(1) + `${index === criteria.length - 1 ? "" : ", "}`
+    )
   })
-  console.log("createdAt_createdAt", createdAt)
   return (
     <Card style={styles.card} mode="contained">
       <List.Item
@@ -53,7 +56,7 @@ const ItemUserRating = ({ description, criteria, createdAt }: ItemProps) => {
         }}
       />
       <View style={styles.flexRow}>
-        <ItemTotalStar star={4} />
+        <ItemTotalStar star={score} />
         <Text size="sm" weight="medium" style={{ marginLeft: WIDTH(spacing.xxs) }}>
           {criteriaString}
         </Text>

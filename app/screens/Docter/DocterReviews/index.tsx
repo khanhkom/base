@@ -1,5 +1,5 @@
 import { FlatList, Pressable, ScrollView, StyleSheet, View } from "react-native"
-import React from "react"
+import React, { useState } from "react"
 import { Header, Icon, Text } from "@app/components/index"
 import colors from "@app/assets/colors"
 
@@ -10,57 +10,80 @@ import { spacing } from "@app/theme/spacing"
 import { Divider } from "react-native-paper"
 import { useHookRatingDetail } from "./useHookRatingDetail"
 import LoadingScreen from "@app/components/loading/LoadingScreen"
+import { useHookRating } from "./useHookRating"
+import ItemEmpty from "@app/components/ItemEmpty"
+import { RefreshState } from "@app/components/refresh-list"
 export const DATA_STAR = [
   {
     star: 5,
-    total: 120,
   },
   {
     star: 4,
-    total: 60,
   },
   {
     star: 3,
-    total: 30,
   },
   {
     star: 2,
-    total: 30,
   },
   {
     star: 1,
-    total: 0,
   },
 ]
 interface ScreenProps {
   route: {
     params: {
       userId: string
+      averageRating: number
+      countRating: number
     }
   }
 }
 export default function DocterReviews({ route }: ScreenProps) {
-  const userId = route?.params?.userId
+  const { userId, averageRating, countRating } = route?.params
+  const [starSelected, setStarSeleted] = useState(0)
+  const { refreshState, listData, loading, onHeaderRefresh, onFooterRefresh } = useHookRatingDetail(
+    userId,
+    starSelected,
+  )
 
-  const { refreshState, listData, loading, onHeaderRefresh, onFooterRefresh } =
-    useHookRatingDetail(userId)
+  const { listData: listAllData } = useHookRating(userId)
   if (loading) return <LoadingScreen />
   return (
     <View style={styles.container}>
       <Header leftIcon="arrow_left" title="Tất cả đánh giá" backgroundColor={colors.white} />
 
       <ScrollView>
-        <StarStatistic />
+        <StarStatistic
+          averageRating={averageRating}
+          countRating={countRating}
+          listData={listAllData}
+        />
         <View style={styles.flexRow}>
-          <Pressable style={styles.button}>
-            <Text size="ba" weight="normal" style={{ color: colors.gray_6 }}>
+          <Pressable
+            onPress={() => {
+              setStarSeleted(0)
+            }}
+            style={starSelected === 0 ? styles.buttonActive : styles.button}
+          >
+            <Text
+              size="ba"
+              weight="normal"
+              style={{ color: starSelected === 0 ? colors.white : colors.gray_6 }}
+            >
               Tất cả
             </Text>
           </Pressable>
           {DATA_STAR.map((item, index) => {
-            const isActive = index === 0
+            const isActive = item.star === starSelected
             return (
-              <Pressable style={!isActive ? styles.button : styles.buttonActive} key={index}>
+              <Pressable
+                onPress={() => {
+                  setStarSeleted(item.star)
+                }}
+                style={!isActive ? styles.button : styles.buttonActive}
+                key={index}
+              >
                 <Text
                   size="ba"
                   weight="normal"
@@ -87,10 +110,18 @@ export default function DocterReviews({ route }: ScreenProps) {
                 criteria={item?.criteria ?? []}
                 description={item?.description}
                 createdAt={item?.createdAt}
+                score={item?.score}
               />
             )
           }}
           ListFooterComponent={<View style={{ height: HEIGHT(32) }} />}
+          ListEmptyComponent={() => {
+            return <ItemEmpty title="Không có đánh giá nào!" />
+          }}
+          onRefresh={onHeaderRefresh}
+          onMomentumScrollEnd={onFooterRefresh}
+          keyExtractor={(item, index) => String(index)}
+          refreshing={refreshState === RefreshState.HeaderRefreshing}
         />
       </ScrollView>
     </View>
