@@ -215,7 +215,7 @@ export default function History() {
     return (
       <View style={styles.container}>
         <Header
-          title="Lịch khám"
+          titleTx="history.booking_history"
           backgroundColor={colors.primary}
           titleStyle={{ color: colors.white }}
         />
@@ -226,7 +226,7 @@ export default function History() {
           }}
           value={keyword}
           onChangeText={(txt) => setKeyword(txt)}
-          placeholder="Tìm tên bệnh nhân, bác sĩ"
+          placeholder={translate("history.search_patient_doctor")}
         />
         <ItemPlaceholderCommon />
         <ItemPlaceholderCommon />
@@ -238,7 +238,7 @@ export default function History() {
   return (
     <View style={styles.container}>
       <Header
-        title="Lịch khám"
+        titleTx="history.booking_history"
         backgroundColor={colors.primary}
         titleStyle={{ color: colors.white }}
       />
@@ -249,7 +249,7 @@ export default function History() {
         }}
         value={keyword}
         onChangeText={(txt) => setKeyword(txt)}
-        placeholder="Tìm tên bệnh nhân, bác sĩ"
+        placeholder={translate("history.search_patient_doctor")}
       />
       <FlashList
         data={listData}
@@ -258,7 +258,7 @@ export default function History() {
           return <ItemSchedule item={item} />
         }}
         ListEmptyComponent={() => {
-          return <ItemEmpty title="Bạn chưa có lịch khám nào!" />
+          return <ItemEmpty title={translate("history.empty_booking")} />
         }}
         // onEndReached={() => (callOnScrollEnd = true)}
         onRefresh={onHeaderRefresh}

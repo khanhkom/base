@@ -9,6 +9,7 @@ import { TextField } from "@app/components/TextField"
 import { Icon } from "@app/components/Icon"
 import moment from "moment"
 import { isToday } from "date-fns"
+import { translate } from "@app/i18n/translate"
 interface ItemProps {
   title: string
   onChangeDate: (val: Date) => void
@@ -58,10 +59,10 @@ export default function ItemDatePicker({ title, onChangeDate, minDate, date }: I
           }
         }}
         minimumDate={minDate}
-        confirmText="Đồng ý"
-        cancelText="Hủy"
+        confirmText={translate("common.ok")}
+        cancelText={translate("common.cancel")}
         mode="date"
-        title="Chọn ngày"
+        title={translate("history.select_date")}
         onCancel={() => {
           setOpen(false)
         }}

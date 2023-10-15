@@ -4,12 +4,13 @@ import { HEIGHT, WIDTH } from "@app/config/functions"
 import { Text } from "@app/components/Text"
 import colors from "@app/assets/colors"
 import R from "@app/assets"
+import { translate } from "@app/i18n/translate"
 export default function ItemEmpty() {
   return (
     <View style={styles.container}>
       <Image style={styles.image} source={R.images.empty_noti} resizeMode="contain" />
       <Text size="ba" weight="normal" style={{ color: colors.gray_6 }}>
-        Bạn chưa có thông báo nào!
+        {translate("notification.empty_noti")}
       </Text>
     </View>
   )

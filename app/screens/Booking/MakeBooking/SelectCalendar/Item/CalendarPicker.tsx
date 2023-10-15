@@ -13,6 +13,7 @@ import { DatePickerInput } from "react-native-paper-dates"
 import { goBack, navigate } from "@app/navigators/navigationUtilities"
 import { useDispatch } from "react-redux"
 import { updateSeletedDateOrder } from "@app/redux/actions/actionOrder"
+import { translate } from "@app/i18n/translate"
 export interface ItemTagetDayProps {
   markedDate: object
   userhabitid: any
@@ -103,27 +104,20 @@ const CalendarPicker = ({ preScreen }) => {
           weight="normal"
           style={{ color: R.colors.gray_9, marginLeft: WIDTH(4), marginTop: HEIGHT(4) }}
         >
-          Select date
+          {translate("booking.select_date")}
         </Text>
         <View style={styles.textInput}>
           <DatePickerInput
             locale="vi"
             mode="outlined"
-            label="Nhập ngày"
+            label={translate("booking.enter_date")}
             value={selectedValue}
             onChange={(d) => setSelectedValue(d)}
             inputMode="start"
             withModal={false}
           />
         </View>
-        <Divider
-          style={{
-            width: WIDTH(343),
-            marginLeft: -WIDTH(spacing.sm),
-            marginTop: HEIGHT(spacing.sm),
-          }}
-        />
-
+        <Divider style={styles.divider} />
         <Calendar
           // disableArrowRight={currentMonth == moment().format("MM/YYYY")}
           markingType={"period"}
@@ -158,7 +152,7 @@ const CalendarPicker = ({ preScreen }) => {
         />
       </View>
       <View style={styles.flexRow}>
-        <Button>Cancel</Button>
+        <Button>{translate("common.cancel")}</Button>
         <Button
           onPress={() => {
             dispatch(updateSeletedDateOrder(moment(selectedValue).format("YYYY-MM-DD")))
@@ -187,7 +181,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: WIDTH(spacing.sm),
     paddingVertical: HEIGHT(spacing.sm),
   },
-
+  divider: {
+    width: WIDTH(343),
+    marginLeft: -WIDTH(spacing.sm),
+    marginTop: HEIGHT(spacing.sm),
+  },
   flexRow: {
     flexDirection: "row",
     alignItems: "center",

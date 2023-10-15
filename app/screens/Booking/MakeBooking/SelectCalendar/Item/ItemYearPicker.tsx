@@ -95,12 +95,12 @@ export default function ItemYearPicker({ selectedValue, setSelectedValue }) {
 
 const styles = StyleSheet.create({
   container: {
-    width: WIDTH(311),
-    paddingVertical: 0,
-    marginLeft: -WIDTH(16),
-    justifyContent: "space-between",
-    flexDirection: "row",
     alignItems: "center",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginLeft: -WIDTH(16),
+    paddingVertical: 0,
+    width: WIDTH(311),
   },
-  flexRow: { flexDirection: "row", alignItems: "center", alignSelf: "center" },
+  flexRow: { alignItems: "center", alignSelf: "center", flexDirection: "row" },
 })

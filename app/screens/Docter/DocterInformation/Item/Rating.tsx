@@ -16,8 +16,10 @@ interface ItemProps {
   userId: string
 }
 export default function Rating({ countRating, averageRating, userId }: ItemProps) {
-  const { refreshState, listData, loading, onHeaderRefresh, onFooterRefresh } =
-    useHookRatingDetail(userId)
+  const { refreshState, listData, loading, onHeaderRefresh, onFooterRefresh } = useHookRatingDetail(
+    userId,
+    0,
+  )
   console.log("listData_listData", listData)
   return (
     <View style={styles.container}>

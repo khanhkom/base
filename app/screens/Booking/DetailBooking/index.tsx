@@ -13,6 +13,7 @@ import useHookDetailBooking, { DATA_BOOK } from "./useHookDetailBooking"
 import { STATUS_ORDER } from "@app/interface/order"
 import { useSelector } from "@app/redux/reducers"
 import ImageView from "react-native-image-viewing"
+import { translate } from "@app/i18n/translate"
 export default function DetailBooking({ route }) {
   const id = route?.params?.id
   const { detailOrder, loading, returnDataByField, getDetailOrderApi, updateDataCreateOrder } =
@@ -23,7 +24,11 @@ export default function DetailBooking({ route }) {
   if (loading) return <LoadingScreen />
   return (
     <View style={styles.container}>
-      <Header leftIcon="arrow_left" title="Chi tiết lịch khám" backgroundColor={colors.gray_1} />
+      <Header
+        leftIcon="arrow_left"
+        title={translate("booking.detail_booking")}
+        backgroundColor={colors.gray_1}
+      />
       <FlatList
         data={DATA_BOOK}
         renderItem={({ item, index }) => {
@@ -49,7 +54,7 @@ export default function DetailBooking({ route }) {
                 }}
                 left={() => {
                   return (
-                    <View style={{ alignSelf: "center" }}>
+                    <View style={styles.wrapperIcon}>
                       <Icon icon="refresh" size={WIDTH(20)} color={colors.white} />
                     </View>
                   )
@@ -57,7 +62,7 @@ export default function DetailBooking({ route }) {
                 title={() => {
                   return (
                     <Text size="ba" weight="normal" style={{ color: colors.white }}>
-                      Lý do hủy: {detailOrder?.cancelDescription}
+                      {translate("booking.cancel_reason")}: {detailOrder?.cancelDescription}
                     </Text>
                   )
                 }}
@@ -93,4 +98,5 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.gray_1,
   },
+  wrapperIcon: { alignSelf: "center" },
 })

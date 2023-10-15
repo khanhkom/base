@@ -10,6 +10,22 @@ import { navigate } from "@app/navigators/navigationUtilities"
 import { IOrderHistory, STATUS_ORDER } from "@app/interface/order"
 import moment from "moment"
 import { LIST_ICON_BY_STATUS } from "@app/config/constants"
+import { translate } from "@app/i18n/translate"
+const DATA_FIELD_SCHEDULE = [
+  {
+    title: translate("history.doctor"),
+  },
+  {
+    title: translate("history.time_exam"),
+  },
+  {
+    title: translate("history.specialist"),
+  },
+  {
+    title: translate("history.patient"),
+  },
+]
+
 const ItemValue = ({ title, value }) => {
   return (
     <Text
@@ -21,20 +37,6 @@ const ItemValue = ({ title, value }) => {
     </Text>
   )
 }
-const DATA_FIELD_SCHEDULE = [
-  {
-    title: "Bác sĩ: ",
-  },
-  {
-    title: "Thời gian khám: ",
-  },
-  {
-    title: "Chuyên khoa: ",
-  },
-  {
-    title: "Bệnh nhân: ",
-  },
-]
 
 interface ItemProps {
   item: IOrderHistory
@@ -104,7 +106,7 @@ export default function ItemSchedule({ item }: ItemProps) {
             navigate("RatingDocter", { id: item?.id, doctor: item?.doctor })
           }}
         >
-          Đánh giá
+          {translate("history.rating")}
         </Button>
       ) : (
         <View style={{ height: HEIGHT(spacing.sm) }} />
@@ -114,24 +116,24 @@ export default function ItemSchedule({ item }: ItemProps) {
 }
 
 const styles = StyleSheet.create({
-  card: {
-    backgroundColor: colors.white,
-    marginHorizontal: WIDTH(spacing.md),
-    marginBottom: HEIGHT(spacing.sm),
-  },
   boxIcon: {
-    height: WIDTH(32),
-    width: WIDTH(32),
-    borderRadius: 8,
-    justifyContent: "center",
     alignItems: "center",
     backgroundColor: colors.blue_0,
+    borderRadius: 8,
+    height: WIDTH(32),
+    justifyContent: "center",
+    width: WIDTH(32),
   },
   buttonRate: {
+    backgroundColor: colors.primary_8,
     borderBottomLeftRadius: 12,
     borderBottomRightRadius: 12,
     borderRadius: 0,
     marginTop: HEIGHT(spacing.md),
-    backgroundColor: colors.primary_8,
+  },
+  card: {
+    backgroundColor: colors.white,
+    marginBottom: HEIGHT(spacing.sm),
+    marginHorizontal: WIDTH(spacing.md),
   },
 })

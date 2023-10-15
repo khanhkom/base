@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from "react-native"
+import { StyleSheet, View } from "react-native"
 import React from "react"
 import { Button } from "react-native-paper"
 import { HEIGHT, WIDTH } from "@app/config/functions"
@@ -6,6 +6,7 @@ import { spacing } from "@app/theme/spacing"
 import colors from "@app/assets/colors"
 import { navigate } from "@app/navigators/navigationUtilities"
 import { iconRegistry } from "@app/components/Icon"
+import { translate } from "@app/i18n/translate"
 
 export default function BottonButton() {
   return (
@@ -19,33 +20,29 @@ export default function BottonButton() {
           navigate("CreatePatient")
         }}
       >
-        Thêm mới hồ sơ
+        {translate("booking.add_patient")}
       </Button>
     </View>
   )
 }
 
 const styles = StyleSheet.create({
-  container: {
-    position: "absolute",
-    bottom: 0,
-    backgroundColor: colors.white,
-    flexDirection: "row",
-    left: 0,
-    right: 0,
-    justifyContent: "space-between",
-    borderTopLeftRadius: 16,
-    borderTopRightRadius: 16,
-    paddingVertical: HEIGHT(spacing.sm),
-  },
   buttonHome: {
-    flex: 1,
-    borderRadius: 8,
     borderColor: colors.primary,
+    borderRadius: 8,
+    flex: 1,
     marginHorizontal: WIDTH(spacing.md),
   },
-  button: {
-    flex: 1,
-    borderRadius: 8,
+  container: {
+    backgroundColor: colors.white,
+    borderTopLeftRadius: 16,
+    borderTopRightRadius: 16,
+    bottom: 0,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    left: 0,
+    paddingVertical: HEIGHT(spacing.sm),
+    position: "absolute",
+    right: 0,
   },
 })

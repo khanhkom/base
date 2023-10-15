@@ -8,6 +8,7 @@ import LoadingScreen from "@app/components/loading/LoadingScreen"
 import ItemEmpty from "@app/components/ItemEmpty"
 import { HEIGHT } from "@app/config/functions"
 import ItemHistory from "@app/screens/Result/ExaminationHistory/Item/ItemHistory"
+import { translate } from "@app/i18n/translate"
 
 export default function ExaminationHistory() {
   const { loading, getAllResulsCall, listResults } = useHookExam()
@@ -18,7 +19,7 @@ export default function ExaminationHistory() {
   if (loading) return <LoadingScreen />
   return (
     <View style={styles.container}>
-      <Header leftIcon="arrow_left" title="Kết quả khám" backgroundColor={colors.gray_1} />
+      <Header leftIcon="arrow_left" titleTx="result.result" backgroundColor={colors.gray_1} />
       {/* <ItemEmpty /> */}
       <FlatList
         data={listResults}
@@ -33,7 +34,7 @@ export default function ExaminationHistory() {
           )
         }}
         ListEmptyComponent={() => (
-          <ItemEmpty style={{ marginTop: HEIGHT(100) }} title="Bạn chưa có kết quả khám nào" />
+          <ItemEmpty style={{ marginTop: HEIGHT(100) }} title={translate("result.empty_result")} />
         )}
         ListFooterComponent={() => <View style={{ height: 16 }} />}
       />

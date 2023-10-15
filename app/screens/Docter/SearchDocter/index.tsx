@@ -8,12 +8,12 @@ import { HEIGHT } from "@app/config/functions"
 import { spacing } from "@app/theme/spacing"
 import ModalFilter from "./Item/ModalFilter"
 import { getListDocter } from "@app/services/api/functions/docter"
-import { useFocusEffect } from "@react-navigation/native"
 import { ISpecialList } from "@app/interface/docter"
 import ItemEmpty from "@app/components/ItemEmpty"
 import { goBack, navigate } from "@app/navigators/navigationUtilities"
 import { useDispatch } from "react-redux"
 import { updateDocterCreateOrder } from "@app/redux/actions/actionOrder"
+import { translate } from "@app/i18n/translate"
 
 interface ScreenProps {
   route: {
@@ -39,7 +39,6 @@ export default function SearchDocter({ route }: ScreenProps) {
   const getListDoctersAPI = async (params) => {
     setLoading(true)
     const resDocters = await getListDocter(params)
-    console.log("resDocters_resDocters", resDocters, params)
     setLoading(false)
     setListDocters(resDocters?.data?.items)
   }
@@ -108,7 +107,11 @@ export default function SearchDocter({ route }: ScreenProps) {
   }
   return (
     <View style={styles.container}>
-      <Header leftIcon="arrow_left" title="Tư vấn ngay" backgroundColor={colors.white} />
+      <Header
+        leftIcon="arrow_left"
+        title={translate("booking.booking")}
+        backgroundColor={colors.white}
+      />
       <SearchFilter
         value={keyword}
         isFiltered={isFiltered}
@@ -119,12 +122,12 @@ export default function SearchDocter({ route }: ScreenProps) {
         }}
       />
       {loading ? (
-        <ActivityIndicator size={"small"} color={colors.gray_4} style={{ alignSelf: "center" }} />
+        <ActivityIndicator size={"small"} color={colors.gray_4} style={styles.loading} />
       ) : (
         <FlatList
           data={listDocters}
           extraData={listDocters}
-          renderItem={({ item, index }) => {
+          renderItem={({ item }) => {
             return (
               <ItemDocter
                 item={item}
@@ -134,7 +137,7 @@ export default function SearchDocter({ route }: ScreenProps) {
             )
           }}
           ListEmptyComponent={() => {
-            return <ItemEmpty title="Không có kết quả" />
+            return <ItemEmpty title={translate("common.empty_search")} />
           }}
           ListFooterComponent={() => <View style={{ height: HEIGHT(spacing.lg) }} />}
         />
@@ -151,7 +154,8 @@ export default function SearchDocter({ route }: ScreenProps) {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     backgroundColor: colors.gray_1,
+    flex: 1,
   },
+  loading: { alignSelf: "center" },
 })

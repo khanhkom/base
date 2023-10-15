@@ -6,6 +6,7 @@ import { spacing } from "@app/theme/spacing"
 import colors from "@app/assets/colors"
 import { navigate } from "@app/navigators/navigationUtilities"
 import { IOrderHistory, STATUS_ORDER } from "@app/interface/order"
+import { translate } from "@app/i18n/translate"
 interface ItemProps {
   id: string
   status: string
@@ -54,7 +55,7 @@ export default function BottonButton({
             navigate("CancelBooking", { id, getDetailOrderApi })
           }}
         >
-          Hủy
+          {translate("booking.button.cancel")}
         </Button>
         <Button
           onPress={() => {
@@ -64,7 +65,7 @@ export default function BottonButton({
           mode="contained"
           style={styles.button}
         >
-          Đổi lịch khám
+          {translate("booking.button.swap_order")}
         </Button>
       </View>
     )
@@ -78,10 +79,10 @@ export default function BottonButton({
             textColor={colors.primary}
             onPress={() => {}}
           >
-            Nhắn tin
+            {translate("booking.button.message")}
           </Button>
           <Button onPress={onPressCall} mode="contained" style={styles.button}>
-            Vào cuộc gọi
+            {translate("booking.button.enter_call")}
           </Button>
         </View>
       )
@@ -89,7 +90,9 @@ export default function BottonButton({
       return (
         <View style={styles.container}>
           <Button mode="contained" style={styles.button}>
-            {typeTimeCall === TYPE_TIME_CALL.CHUA_DEN ? "Chưa đến giờ khám" : "Đã quá giờ khám"}
+            {typeTimeCall === TYPE_TIME_CALL.CHUA_DEN
+              ? translate("booking.button.not_in_time_exam")
+              : translate("booking.button.over_time_exam")}
           </Button>
         </View>
       )
@@ -104,7 +107,7 @@ export default function BottonButton({
           mode="contained"
           style={styles.button}
         >
-          Gửi đánh giá
+          {translate("booking.button.send_rating")}
         </Button>
       </View>
     )
@@ -119,7 +122,7 @@ export default function BottonButton({
           style={styles.buttonHome}
           textColor={colors.primary}
         >
-          Gửi đánh giá
+          {translate("booking.button.send_rating")}
         </Button>
         <Button
           onPress={() => {
@@ -128,7 +131,7 @@ export default function BottonButton({
           mode="contained"
           style={styles.button}
         >
-          Xem kết quả khám
+          {translate("booking.button.view_result")}
         </Button>
       </View>
     )
@@ -142,7 +145,7 @@ export default function BottonButton({
           mode="contained"
           style={styles.button}
         >
-          Xem kết quả khám
+          {translate("booking.button.view_result")}
         </Button>
       </View>
     )

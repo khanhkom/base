@@ -14,27 +14,27 @@ import useHookDetailExam, { TYPE_INFO_RESULT } from "./useHookDetailExam"
 import LoadingScreen from "@app/components/loading/LoadingScreen"
 import { ISpecialList } from "@app/interface/docter"
 import ImageView from "react-native-image-viewing"
+import { translate } from "@app/i18n/translate"
 
 const DATA_INFO = [
   {
-    title: "Mã phiếu khám: ",
+    title: translate("booking.code"),
     type: TYPE_INFO_RESULT.MA_PHIEU,
   },
   {
-    title: "Bác sĩ: ",
-    value: "Đặt lịch",
+    title: translate("booking.status"),
     type: TYPE_INFO_RESULT.BAC_SI,
   },
   {
-    title: "Chuyên khoa: ",
+    title: translate("booking.specialist"),
     type: TYPE_INFO_RESULT.CHUYEN_KHOA,
   },
   {
-    title: "Ngày khám: ",
+    title: translate("booking.date_exam"),
     type: TYPE_INFO_RESULT.NGAY_KHAM,
   },
   {
-    title: "Giờ khám: ",
+    title: translate("booking.time_exam"),
     type: TYPE_INFO_RESULT.GIO_KHAM,
   },
 ]
@@ -97,7 +97,7 @@ export default function DetailExamination({ route }: IScreenParams) {
         <View style={styles.body}>
           <ItemHeader
             icon={"note"}
-            title={"Thông tin khám"}
+            title={translate("result.exam_information")}
             backgroundColor={colors.blue_0}
             iconColor={colors.primary_6}
           />
@@ -106,7 +106,7 @@ export default function DetailExamination({ route }: IScreenParams) {
           })}
           <ItemHeader
             icon={"department"}
-            title={"Chẩn đoán"}
+            title={translate("result.exam_information")}
             backgroundColor={colors.red_0}
             iconColor={colors.red_5}
           />
@@ -117,7 +117,7 @@ export default function DetailExamination({ route }: IScreenParams) {
           </Card>
           <ItemHeader
             icon={"edit"}
-            title={"Ghi chú"}
+            title={translate("result.note")}
             backgroundColor={colors.blue_0}
             iconColor={colors.primary_6}
           />

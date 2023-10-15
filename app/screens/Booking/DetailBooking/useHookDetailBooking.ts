@@ -9,9 +9,10 @@ import {
 } from "@app/redux/actions/actionOrder"
 import { getDetailOrder } from "@app/services/api/functions/order"
 import moment from "moment"
-import React, { useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 import { useDispatch } from "react-redux"
 import { DATA_TIME } from "../MakeBooking/SelectTimeBooking/Data"
+import { translate } from "@app/i18n/translate"
 export const TYPE_FIELD = {
   status: 0,
   date: 1,
@@ -26,57 +27,57 @@ export const TYPE_FIELD = {
 export const DATA_BOOK = [
   {
     icon: "calendar",
-    title: "Thông tin lịch khám",
+    title: translate("booking.booking_information"),
     data: [
       {
-        title: "Trạng thái: ",
+        title: translate("booking.status"),
         type: TYPE_FIELD.status,
       },
       {
-        title: "Mã phiếu khám:: ",
+        title: translate("booking.code"),
         type: TYPE_FIELD.code,
       },
       {
-        title: "Ngày khám: ",
+        title: translate("booking.date_exam"),
         type: TYPE_FIELD.date,
       },
       {
-        title: "Giờ khám: ",
+        title: translate("booking.time_exam"),
         type: TYPE_FIELD.time,
       },
     ],
   },
   {
     icon: "personalcard",
-    title: "Thông tin bệnh nhân",
+    title: translate("booking.patient_information"),
     data: [
       {
-        title: "Mã bệnh nhân: ",
+        title: translate("booking.code_patient"),
         type: TYPE_FIELD.patientId,
       },
       {
-        title: "Họ tên: ",
+        title: translate("booking.name"),
         type: TYPE_FIELD.patientName,
       },
     ],
   },
   {
     icon: "note",
-    title: "Thông tin đăng ký khám",
+    title: translate("booking.register_information"),
     data: [
       {
-        title: "Bác sĩ: ",
+        title: `${translate("booking.doctor")}: `,
         type: TYPE_FIELD.docterName,
       },
       {
-        title: "Chuyên khoa: ",
+        title: `${translate("booking.specialist")}: `,
         type: TYPE_FIELD.specialList,
       },
     ],
   },
   {
     icon: "ask",
-    title: "Lý do khám:",
+    title: `${translate("booking.reason_exam")}:`,
     data: [
       {
         title: "",

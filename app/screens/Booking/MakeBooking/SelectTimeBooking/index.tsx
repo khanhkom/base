@@ -17,6 +17,7 @@ import { getDocterCalendar } from "@app/services/api/functions/docter"
 import { IDoctorCalendar } from "@app/interface/docter"
 import LoadingScreen from "@app/components/loading/LoadingScreen"
 import moment from "moment"
+import { translate } from "@app/i18n/translate"
 interface ScreenProps {
   route: {
     params: {
@@ -62,9 +63,13 @@ export default function SelectTimeBooking({ route }: ScreenProps) {
   if (loading) return <LoadingScreen />
   return (
     <View style={styles.container}>
-      <Header leftIcon="arrow_left" title="Chọn giờ khám" backgroundColor={colors.white} />
+      <Header
+        leftIcon="arrow_left"
+        title={translate("booking.select_time")}
+        backgroundColor={colors.white}
+      />
       <TitleInfor
-        title="Thông tin giờ khám"
+        title={translate("booking.time_exam_information")}
         data={DATA_EXPLAIN}
         styleStatus={{ width: WIDTH(220) }}
       />
@@ -110,7 +115,7 @@ export default function SelectTimeBooking({ route }: ScreenProps) {
         mode="contained"
         style={{ marginBottom: HEIGHT(spacing.md), marginHorizontal: WIDTH(spacing.md) }}
       >
-        Tiếp theo
+        {translate("common.continue")}
       </Button>
     </View>
   )

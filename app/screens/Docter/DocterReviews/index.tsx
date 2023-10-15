@@ -2,7 +2,6 @@ import { FlatList, Pressable, ScrollView, StyleSheet, View } from "react-native"
 import React, { useState } from "react"
 import { Header, Icon, Text } from "@app/components/index"
 import colors from "@app/assets/colors"
-
 import ItemUserRating from "../DocterInformation/Item/ItemRating"
 import StarStatistic from "./Item/StarStatistic"
 import { HEIGHT, WIDTH } from "@app/config/functions"
@@ -13,6 +12,7 @@ import LoadingScreen from "@app/components/loading/LoadingScreen"
 import { useHookRating } from "./useHookRating"
 import ItemEmpty from "@app/components/ItemEmpty"
 import { RefreshState } from "@app/components/refresh-list"
+import { translate } from "@app/i18n/translate"
 export const DATA_STAR = [
   {
     star: 5,
@@ -51,7 +51,11 @@ export default function DocterReviews({ route }: ScreenProps) {
   if (loading) return <LoadingScreen />
   return (
     <View style={styles.container}>
-      <Header leftIcon="arrow_left" title="Tất cả đánh giá" backgroundColor={colors.white} />
+      <Header
+        leftIcon="arrow_left"
+        title={translate("doctor.rating.all_rating")}
+        backgroundColor={colors.white}
+      />
 
       <ScrollView>
         <StarStatistic
@@ -71,7 +75,7 @@ export default function DocterReviews({ route }: ScreenProps) {
               weight="normal"
               style={{ color: starSelected === 0 ? colors.white : colors.gray_6 }}
             >
-              Tất cả
+              {translate("common.all")}
             </Text>
           </Pressable>
           {DATA_STAR.map((item, index) => {
@@ -116,7 +120,7 @@ export default function DocterReviews({ route }: ScreenProps) {
           }}
           ListFooterComponent={<View style={{ height: HEIGHT(32) }} />}
           ListEmptyComponent={() => {
-            return <ItemEmpty title="Không có đánh giá nào!" />
+            return <ItemEmpty title={translate("doctor.rating.empty")} />
           }}
           onRefresh={onHeaderRefresh}
           onMomentumScrollEnd={onFooterRefresh}

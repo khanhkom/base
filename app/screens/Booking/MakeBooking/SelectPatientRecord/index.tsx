@@ -1,7 +1,7 @@
-import { StyleSheet, Image, View, FlatList } from "react-native"
-import React, { useEffect, useState } from "react"
+import { StyleSheet, View, FlatList } from "react-native"
+import React, { useEffect } from "react"
 import colors from "@app/assets/colors"
-import { Header, Icon } from "@app/components/index"
+import { Header } from "@app/components/index"
 import BottonButton from "./Item/BottonButton"
 import ItemRecord from "./Item/ItemRecord"
 import { useSelector } from "@app/redux/reducers"
@@ -25,7 +25,11 @@ export default function SelectPatientRecord({ route }: IScreenProps) {
   }, [])
   return (
     <View style={styles.container}>
-      <Header leftIcon="arrow_left" title="Chọn hồ sơ bệnh nhân" backgroundColor={colors.gray_1} />
+      <Header
+        leftIcon="arrow_left"
+        titleTx="booking.select_patient"
+        backgroundColor={colors.gray_1}
+      />
       <FlatList
         data={patients}
         renderItem={({ item, index }) => {
@@ -52,7 +56,7 @@ export default function SelectPatientRecord({ route }: IScreenProps) {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     backgroundColor: colors.gray_1,
+    flex: 1,
   },
 })

@@ -8,6 +8,7 @@ import { spacing } from "@app/theme/spacing"
 import { Button, Card } from "react-native-paper"
 import { Icon } from "@app/components/Icon"
 import { IDocter } from "@app/interface/docter"
+import { translate } from "@app/i18n/translate"
 interface ItemProps {
   item: IDocter
   onPress: () => void
@@ -15,19 +16,14 @@ interface ItemProps {
 }
 export default function ItemDocter({ item, onPress, onPressBook }: ItemProps) {
   return (
-    <Card
-      mode="contained"
-      style={styles.item}
-      contentStyle={{ flexDirection: "row" }}
-      onPress={onPress}
-    >
+    <Card mode="contained" style={styles.item} contentStyle={styles.contentCard} onPress={onPress}>
       <Image source={R.images.avatar_docter_rec} style={styles.avatar} resizeMode="center" />
       <View>
         <Text weight="medium" size="md" style={styles.textName}>
-          B.s {item?.name}
+          {translate("doctor.doctor")} {item?.name}
         </Text>
         <Text weight="normal" size="sm" style={styles.textDes}>
-          Khoa: {item?.specialist?.[0]?.value}
+          {translate("doctor.specialist")}: {item?.specialist?.[0]?.value}
         </Text>
         <View style={styles.wrapperStar}>
           <Icon icon="ic_start" size={WIDTH(16)} />
@@ -35,19 +31,16 @@ export default function ItemDocter({ item, onPress, onPressBook }: ItemProps) {
             {" "}
             {item?.averageRating}{" "}
           </Text>
-          {/* <Text weight="normal" size="xs" style={{ color: colors.gray_7 }}>
-            (120)
-          </Text> */}
         </View>
         <View style={styles.flexRow}>
           <Text style={{ color: colors.gray_6 }} size="sm" weight="normal">
-            Giá:{" "}
+            {translate("doctor.price")}:{" "}
             <Text weight="semiBold" size="md" style={{ color: colors.primary }}>
               {item?.price} đ
             </Text>
           </Text>
           <Button mode="contained" onPress={onPressBook} style={styles.button}>
-            Đặt khám
+            {translate("doctor.book")}
           </Button>
         </View>
       </View>
@@ -56,45 +49,46 @@ export default function ItemDocter({ item, onPress, onPressBook }: ItemProps) {
 }
 
 const styles = StyleSheet.create({
-  item: {
-    marginHorizontal: WIDTH(spacing.md),
-    paddingVertical: HEIGHT(spacing.sm),
-    backgroundColor: colors.white,
-    marginTop: HEIGHT(spacing.sm),
-    flexDirection: "row",
-    paddingHorizontal: WIDTH(spacing.sm),
-  },
-  flexRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    width: WIDTH(217),
-    marginTop: HEIGHT(spacing.xs),
-  },
   avatar: {
-    width: WIDTH(90),
-    height: HEIGHT(120),
     alignSelf: "center",
+    height: HEIGHT(120),
     marginRight: WIDTH(spacing.sm),
-  },
-  textName: {
-    color: colors.gray_9,
-    marginTop: HEIGHT(8),
-    marginBottom: HEIGHT(2),
-  },
-  textDes: { color: colors.gray_6, marginTop: 2 },
-  wrapperStar: {
-    paddingVertical: HEIGHT(2),
-    paddingHorizontal: WIDTH(4),
-    borderRadius: 20,
-    backgroundColor: colors.yellow_0,
-    flexDirection: "row",
-    alignItems: "center",
-    alignSelf: "flex-start",
-    marginTop: HEIGHT(spacing.xs),
+    width: WIDTH(90),
   },
   button: {
     borderRadius: WIDTH(8),
     margin: 0,
+  },
+  contentCard: { flexDirection: "row" },
+  flexRow: {
+    alignItems: "center",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginTop: HEIGHT(spacing.xs),
+    width: WIDTH(217),
+  },
+  item: {
+    backgroundColor: colors.white,
+    flexDirection: "row",
+    marginHorizontal: WIDTH(spacing.md),
+    marginTop: HEIGHT(spacing.sm),
+    paddingHorizontal: WIDTH(spacing.sm),
+    paddingVertical: HEIGHT(spacing.sm),
+  },
+  textDes: { color: colors.gray_6, marginTop: 2 },
+  textName: {
+    color: colors.gray_9,
+    marginBottom: HEIGHT(2),
+    marginTop: HEIGHT(8),
+  },
+  wrapperStar: {
+    alignItems: "center",
+    alignSelf: "flex-start",
+    backgroundColor: colors.yellow_0,
+    borderRadius: 20,
+    flexDirection: "row",
+    marginTop: HEIGHT(spacing.xs),
+    paddingHorizontal: WIDTH(4),
+    paddingVertical: HEIGHT(2),
   },
 })

@@ -6,8 +6,8 @@ import colors from "@app/assets/colors"
 import { HEIGHT, WIDTH } from "@app/config/functions"
 import { spacing } from "@app/theme/spacing"
 import { Card } from "react-native-paper"
-import { navigate } from "@app/navigators/navigationUtilities"
 import { IDocter } from "@app/interface/docter"
+import { translate } from "@app/i18n/translate"
 export default function GeneralInfor({ data }: { data: IDocter }) {
   return (
     <Card
@@ -19,17 +19,17 @@ export default function GeneralInfor({ data }: { data: IDocter }) {
       <Image source={R.images.avatar_docter_rec} style={styles.avatar} resizeMode="center" />
       <View>
         <Text weight="medium" size="md" style={styles.textName}>
-          B.s {data?.name}
+          {translate("doctor.doctor")} {data?.name}
         </Text>
         <Text weight="normal" size="sm" style={styles.textDes}>
-          Khoa: {data?.specialist?.[0]?.value}
+          {translate("doctor.specialist")}: {data?.specialist?.[0]?.value}
         </Text>
         <Text weight="normal" size="sm" style={styles.textDes}>
-          Trình độ: Thạc sĩ
+          {translate("doctor.level")}: Thạc sĩ
         </Text>
         <View style={styles.flexRow}>
           <Text style={{ color: colors.gray_6 }} size="sm" weight="normal">
-            Giá khám:{" "}
+            {translate("doctor.price_exam")}:{" "}
             <Text weight="semiBold" size="md" style={{ color: colors.primary }}>
               {data?.price} đ
             </Text>

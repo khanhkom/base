@@ -10,23 +10,24 @@ import { iconRegistry } from "@app/components/Icon"
 import { ISpecialList } from "@app/interface/docter"
 import * as Animatable from "react-native-animatable"
 import { useSelector } from "@app/redux/reducers"
+import { translate } from "@app/i18n/translate"
 const GENDER = [
   {
-    name: "Nam",
+    name: translate("doctor.male"),
     code: "male",
   },
   {
-    name: "Nữ",
+    name: translate("doctor.fe_male"),
     code: "female",
   },
 ]
 const SORTBY = [
   {
-    name: "Đánh giá từ cao đến thấp",
+    name: translate("doctor.sort_high_to_low"),
     code: -1,
   },
   {
-    name: "Đánh giá từ thấp đến cao",
+    name: translate("doctor.sort_low_to_high"),
     code: 1,
   },
 ]
@@ -93,18 +94,18 @@ const ModalFilter = forwardRef((props: Props, ref) => {
       <Animatable.View animation={"slideInRight"} duration={500} style={styles.container}>
         <View style={styles.head}>
           <Text size="xl" weight="semiBold" style={{ color: colors.gray_9 }}>
-            Bộ lọc
+            {translate("common.filter")}
           </Text>
         </View>
         <ScrollView>
           <View>
             <View style={styles.session}>
               <Text size="md" weight="medium" style={{ color: colors.gray_9 }}>
-                Chuyên khoa:
+                {translate("doctor.specialist")}:
               </Text>
               <Toggle
                 variant="radio"
-                label={"Tất cả"}
+                label={translate("common.all")}
                 value={filterDataTemp.specialist === ""}
                 onPress={() => {
                   setFilterDataTemp({
@@ -137,7 +138,7 @@ const ModalFilter = forwardRef((props: Props, ref) => {
           <View>
             <View style={styles.session}>
               <Text size="md" weight="medium" style={{ color: colors.gray_9 }}>
-                Giới tính:
+                {translate("common.gender")}:
               </Text>
               {GENDER.map((itemm, indx) => {
                 return (
@@ -162,7 +163,7 @@ const ModalFilter = forwardRef((props: Props, ref) => {
           <View>
             <View style={styles.session}>
               <Text size="md" weight="medium" style={{ color: colors.gray_9 }}>
-                Sắp xếp theo:
+                {translate("common.sort_by")}:
               </Text>
               {SORTBY.map((itemm, indx) => {
                 return (
@@ -184,18 +185,14 @@ const ModalFilter = forwardRef((props: Props, ref) => {
             </View>
             <Divider />
           </View>
-          <View style={{ height: 100 }} />
+          <View style={styles.spacing} />
         </ScrollView>
         <View style={styles.bottomButton}>
           <Button onPress={onReset} textColor={colors.gray_7} icon={iconRegistry.rotate_left}>
-            Đặt lại
+            {translate("common.reset")}
           </Button>
-          <Button
-            onPress={onHandlApply}
-            mode="contained"
-            style={{ borderRadius: 8, width: WIDTH(120) }}
-          >
-            Áp dụng
+          <Button onPress={onHandlApply} mode="contained" style={styles.buttonApply}>
+            {translate("common.apply")}
           </Button>
         </View>
       </Animatable.View>
@@ -206,41 +203,43 @@ export default ModalFilter
 ModalFilter.displayName = "ModalFilter"
 
 const styles = StyleSheet.create({
-  container: {
-    width: WIDTH(295),
+  backdrop: {
+    backgroundColor: colors.backdrop,
+    bottom: 0,
+    left: 0,
+    position: "absolute",
+    right: 0,
+    top: 0,
+  },
+  bottomButton: {
+    alignItems: "center",
     backgroundColor: colors.white,
-    height: getHeight(),
-    flex: 1,
+    bottom: 0,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    paddingBottom: HEIGHT(spacing.md),
+    paddingHorizontal: WIDTH(spacing.md),
+    paddingTop: HEIGHT(spacing.sm),
+    position: "absolute",
+    width: WIDTH(280),
+  },
+  buttonApply: { borderRadius: 8, width: WIDTH(120) },
+  container: {
     alignSelf: "flex-end",
+    backgroundColor: colors.white,
+    flex: 1,
+    height: getHeight(),
+    width: WIDTH(295),
   },
   head: {
     backgroundColor: colors.gray_0,
+    paddingBottom: HEIGHT(spacing.md),
     paddingHorizontal: WIDTH(spacing.md),
     paddingTop: HEIGHT(32),
-    paddingBottom: HEIGHT(spacing.md),
   },
   session: {
+    paddingHorizontal: WIDTH(spacing.md),
     paddingVertical: HEIGHT(spacing.md),
-    paddingHorizontal: WIDTH(spacing.md),
   },
-  bottomButton: {
-    position: "absolute",
-    bottom: 0,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    width: WIDTH(280),
-    paddingTop: HEIGHT(spacing.sm),
-    paddingHorizontal: WIDTH(spacing.md),
-    paddingBottom: HEIGHT(spacing.md),
-    backgroundColor: colors.white,
-  },
-  backdrop: {
-    backgroundColor: colors.backdrop,
-    position: "absolute",
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-  },
+  spacing: { height: 100 },
 })

@@ -6,7 +6,6 @@ import { HEIGHT, WIDTH } from "@app/config/functions"
 import R from "@app/assets"
 import { spacing } from "@app/theme/spacing"
 import { Text } from "@app/components/Text"
-import { Icon } from "@app/components/Icon"
 import { TextField } from "@app/components/TextField"
 import { Button } from "react-native-paper"
 import ItemTotalStar from "./Item/ItemTotalStar"
@@ -15,6 +14,7 @@ import { sendRatingOrder } from "@app/services/api/functions/rating"
 import { goBack } from "@app/navigators/navigationUtilities"
 import { getOrderHistory } from "@app/redux/actions/actionOrder"
 import { useDispatch } from "react-redux"
+import { translate } from "@app/i18n/translate"
 
 const LIST_DEFAULT_RATING = [
   "Chuyên môn tốt",
@@ -49,7 +49,7 @@ export default function RatingDocter({ route }: IScreenParams) {
   }
   const onSubmitRating = async () => {
     if (star === 0) {
-      showToastMessage("Vui lòng chọn điểm đánh giá", EToastType.ERROR)
+      showToastMessage(translate("rating.please_select_star"), EToastType.ERROR)
     } else {
       setLoading(true)
       const criteria = []
@@ -67,28 +67,31 @@ export default function RatingDocter({ route }: IScreenParams) {
       let resRating = await sendRatingOrder(body)
       dispatch(getOrderHistory())
       if (resRating.status === 201) {
-        showToastMessage("Gửi đánh giá thành công", EToastType.SUCCESS)
+        showToastMessage(translate("rating.sent_rating_success"), EToastType.SUCCESS)
         goBack()
       } else {
-        showToastMessage("Gửi đánh giá thất bại! Vui lòng thử lại!", EToastType.ERROR)
+        showToastMessage(translate("rating.sent_rating_fail"), EToastType.ERROR)
       }
-      console.log("resRating_resRating", resRating, body)
       setLoading(false)
     }
   }
   return (
     <View style={styles.container}>
-      <Header leftIcon="arrow_left" title="Đánh giá bác sĩ" backgroundColor={colors.white} />
+      <Header
+        leftIcon="arrow_left"
+        title={translate("rating.rating_doctor")}
+        backgroundColor={colors.white}
+      />
       <Image source={R.images.avatar_docter_rec} style={styles.imageDocter} />
       <Text size="xxl" weight="semiBold" style={styles.doctorName}>
-        B.s {route?.params?.doctor?.name ?? ""}
+        {translate("doctor.doctor")} {route?.params?.doctor?.name ?? ""}
       </Text>
       <Text size="md" weight="medium" style={styles.textDesc}>
-        {"Bạn có hài lòng với cuộc tư vấn?\nHãy cho chúng tôi biết ý kiến của bạn!"}
+        {translate("rating.do_you_satisfy")}
       </Text>
       <ItemTotalStar star={star} setStar={setStar} />
       <TextField
-        placeholder="Chia sẻ thêm cảm nhận của bạn"
+        placeholder={translate("rating.share_your_feel")}
         style={{ minHeight: HEIGHT(120) }}
         containerStyle={{ width: WIDTH(343), marginTop: HEIGHT(32) }}
         onChangeText={setDescription}
@@ -98,7 +101,7 @@ export default function RatingDocter({ route }: IScreenParams) {
         weight="medium"
         style={{ color: colors.gray_9, marginVertical: HEIGHT(spacing.md) }}
       >
-        Bạn có thể chọn nhiều hơn một tiêu chí đánh giá
+        {translate("rating.you_can_choose_more_option")}
       </Text>
       <View style={styles.flexWrap}>
         {LIST_DEFAULT_RATING.map((item, index) => {
@@ -119,7 +122,7 @@ export default function RatingDocter({ route }: IScreenParams) {
       </View>
       <View style={styles.bottomButton}>
         <Button loading={loading} style={styles.button} mode="contained" onPress={onSubmitRating}>
-          Gửi đánh giá
+          {translate("booking.button.send_rating")}
         </Button>
       </View>
     </View>

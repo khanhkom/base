@@ -37,7 +37,6 @@ const useCallApiHistory = (bodySendReq?: IApiCallBody) => {
   const [isLimited, setIsLimited] = useState<boolean>(false)
   const { search, statusFilter, timeFilter, startDate, endDate } = bodySendReq
   useEffect(() => {
-    console.log("ZZZZZZZZZZZ")
     onHeaderRefresh()
   }, [bodySendReq])
 
@@ -99,7 +98,6 @@ const useCallApiHistory = (bodySendReq?: IApiCallBody) => {
         } else dataListOld = dataListRes
         setListData(dataListOld)
         const nextPage = page + 1
-        console.log("dataListOld_dataListOld", dataListOld)
         setPagingRes({
           page: pageList,
           limit: limit,

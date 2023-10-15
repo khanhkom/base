@@ -8,7 +8,7 @@ import DatePicker from "react-native-date-picker"
 import { TextField } from "@app/components/TextField"
 import { Icon } from "@app/components/Icon"
 import moment from "moment"
-import { isToday } from "date-fns"
+import { translate } from "@app/i18n/translate"
 interface ItemProps {
   title: string
   onSelectDate: (val: Date) => void
@@ -67,9 +67,9 @@ export default function SelectBirthday({ title, onSelectDate, value, helper, sta
           }
         }}
         mode="date"
-        cancelText="Huỷ"
-        confirmText="Xác nhận"
-        title="Chọn ngày sinh"
+        cancelText={translate("common.cancel")}
+        confirmText={translate("common.ok")}
+        title={translate("create_patient.select_birthday")}
         onCancel={() => {
           setOpen(false)
         }}

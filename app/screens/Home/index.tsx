@@ -16,6 +16,7 @@ import { getOrderHistory } from "@app/redux/actions/actionOrder"
 import useHookCallKitIOS from "@app/hooks/stringee/useHookCallKitIOS"
 import { StringeeClient } from "stringee-react-native"
 import notifee, { AuthorizationStatus } from "@notifee/react-native"
+import { translate } from "@app/i18n/translate"
 async function checkNotificationPermission() {
   const settings = await notifee.getNotificationSettings()
 
@@ -37,16 +38,16 @@ export default function HomeScreen() {
     if (batteryOptimizationEnabled) {
       // 2. ask your users to disable the feature
       Alert.alert(
-        "Tắt hạn chế tối ưu pin cho SDoctor",
-        "Để đảm bảo nhận thông báo cuộc gọi, vui lòng tắt tính năng tối ưu hóa pin cho ứng dụng.",
+        translate("home.optimize_pin"),
+        translate("home.optimize_pin_desc"),
         [
           // 3. launch intent to navigate the user to the appropriate screen
           {
-            text: "Cài đặt",
+            text: translate("common.setting"),
             onPress: async () => await notifee.openBatteryOptimizationSettings(),
           },
           {
-            text: "Hủy",
+            text: translate("common.cancel"),
             onPress: () => console.log("Cancel Pressed"),
             style: "cancel",
           },

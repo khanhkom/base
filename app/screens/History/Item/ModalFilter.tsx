@@ -1,16 +1,16 @@
 import { StyleSheet, View } from "react-native"
 import React, { forwardRef, useImperativeHandle, useState } from "react"
 import Modal from "react-native-modal"
-import { HEIGHT, WIDTH, getHeight, returnStartEndDate } from "@app/config/functions"
+import { HEIGHT, WIDTH, getHeight } from "@app/config/functions"
 import colors from "@app/assets/colors"
-import { Button, Divider, List, Searchbar } from "react-native-paper"
+import { Button, Divider } from "react-native-paper"
 import { spacing } from "@app/theme/spacing"
 import { Text } from "@app/components/Text"
 import { Toggle } from "@app/components/Toggle"
 import { iconRegistry } from "@app/components/Icon"
 import ItemDatePicker from "./ItemDatePicker"
 import { STATUS_ORDER } from "@app/interface/order"
-import { useDispatch } from "react-redux"
+import { translate } from "@app/i18n/translate"
 
 type Props = {
   filterSelected: any
@@ -18,41 +18,41 @@ type Props = {
 }
 export const LIST_SPECIALIST = [
   {
-    title: "Tất cả",
+    title: translate("history.all"),
     status: "",
   },
   {
-    title: "Đã đặt khám",
+    title: translate("history.verified"),
     status: STATUS_ORDER.verified,
   },
   {
-    title: "Đã khám",
+    title: translate("history.done"),
     status: STATUS_ORDER.done,
   },
   {
-    title: "Đã hủy",
+    title: translate("history.cancel"),
     status: STATUS_ORDER.cancel,
   },
 ]
 const SORTBY = [
   {
-    title: "Hôm nay",
+    title: translate("history.today"),
   },
   {
-    title: "Tuần này",
+    title: translate("history.this_week"),
   },
   {
-    title: "Tháng này",
+    title: translate("history.this_month"),
   },
-  { title: "Chọn thời gian" },
+  { title: translate("history.select_date_custom") },
 ]
 const DATA_SESSION = [
   {
-    title: "Trạng thái lịch khám",
+    title: translate("history.order_status"),
     data: LIST_SPECIALIST,
   },
   {
-    title: "Thời gian",
+    title: translate("history.time"),
     data: SORTBY,
   },
 ]
@@ -95,10 +95,7 @@ const ModalFilter = forwardRef((props: Props, ref) => {
       }}
       animationIn={"slideInRight"}
       animationOut={"slideOutRight"}
-      style={{
-        alignItems: "flex-end",
-        margin: 0,
-      }}
+      style={styles.modal}
       coverScreen={true}
       onBackdropPress={() => {
         setVisible(false)
@@ -109,7 +106,7 @@ const ModalFilter = forwardRef((props: Props, ref) => {
       <View style={styles.container}>
         <View style={styles.head}>
           <Text size="xl" weight="semiBold" style={{ color: colors.gray_9 }}>
-            Bộ lọc
+            {translate("common.filter")}
           </Text>
         </View>
         {DATA_SESSION.map((item, id) => {
@@ -145,9 +142,13 @@ const ModalFilter = forwardRef((props: Props, ref) => {
         })}
         {timeFilter === 3 && (
           <View>
-            <ItemDatePicker title="Từ ngày" onChangeDate={setStartDate} date={startDate} />
             <ItemDatePicker
-              title="Đến ngày"
+              title={translate("history.from_date")}
+              onChangeDate={setStartDate}
+              date={startDate}
+            />
+            <ItemDatePicker
+              title={translate("history.to_date")}
               onChangeDate={setEndDate}
               minDate={startDate}
               date={endDate}
@@ -171,14 +172,14 @@ const ModalFilter = forwardRef((props: Props, ref) => {
             }}
             icon={iconRegistry.rotate_left}
           >
-            Đặt lại
+            {translate("common.reset")}
           </Button>
           <Button
             onPress={onApplyFilter}
             mode="contained"
             style={{ borderRadius: 8, width: WIDTH(120) }}
           >
-            Áp dụng
+            {translate("common.apply")}
           </Button>
         </View>
       </View>
@@ -189,6 +190,10 @@ export default ModalFilter
 ModalFilter.displayName = "ModalFilter"
 
 const styles = StyleSheet.create({
+  modal: {
+    alignItems: "flex-end",
+    margin: 0,
+  },
   container: {
     width: WIDTH(295),
     backgroundColor: colors.white,

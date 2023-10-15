@@ -46,34 +46,34 @@ const styles = StyleSheet.create({
     paddingHorizontal: WIDTH(spacing.md),
     paddingVertical: HEIGHT(spacing.sm),
   },
-  wrapperStatus: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    marginTop: HEIGHT(spacing.md),
-  },
-  flexRow: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  dotToday: {
+  dotCancel: {
+    backgroundColor: colors.gray_3,
+    borderRadius: WIDTH(16),
     height: WIDTH(16),
     width: WIDTH(16),
-    borderRadius: WIDTH(16),
-    borderWidth: 1,
-    borderColor: colors.primary,
   },
   dotEmpty: {
-    height: WIDTH(16),
-    width: WIDTH(16),
+    borderColor: colors.gray_3,
     borderRadius: WIDTH(16),
     borderWidth: 1,
-    borderColor: colors.gray_3,
-  },
-  dotCancel: {
     height: WIDTH(16),
     width: WIDTH(16),
+  },
+  dotToday: {
+    borderColor: colors.primary,
     borderRadius: WIDTH(16),
-    backgroundColor: colors.gray_3,
+    borderWidth: 1,
+    height: WIDTH(16),
+    width: WIDTH(16),
+  },
+  flexRow: {
+    alignItems: "center",
+    flexDirection: "row",
+  },
+  wrapperStatus: {
+    alignItems: "center",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginTop: HEIGHT(spacing.md),
   },
 })

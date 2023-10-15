@@ -1,5 +1,5 @@
 import { StyleSheet, Image, View, FlatList } from "react-native"
-import React, { useEffect, useState } from "react"
+import React, { useEffect } from "react"
 import colors from "@app/assets/colors"
 import { Header, Icon } from "@app/components/index"
 import { List } from "react-native-paper"
@@ -30,10 +30,14 @@ export default function SelectSpecialist({ route }: ScreenProps) {
   if (loading) return <LoadingScreen />
   return (
     <View style={styles.container}>
-      <Header leftIcon="arrow_left" title="Chọn chuyên khoa" backgroundColor={colors.gray_1} />
+      <Header
+        leftIcon="arrow_left"
+        titleTx="booking.select_specialist"
+        backgroundColor={colors.gray_1}
+      />
       <FlatList
         data={specialList}
-        renderItem={({ item, index }) => {
+        renderItem={({ item }) => {
           return (
             <List.Item
               title={item.name}
@@ -55,7 +59,7 @@ export default function SelectSpecialist({ route }: ScreenProps) {
               }}
               right={() => {
                 return (
-                  <View style={{ alignSelf: "center" }}>
+                  <View style={styles.wrapperIcon}>
                     <Icon icon="arrow_right" size={20} />
                   </View>
                 )
@@ -69,19 +73,20 @@ export default function SelectSpecialist({ route }: ScreenProps) {
 }
 
 const styles = StyleSheet.create({
-  item: {
-    marginHorizontal: WIDTH(spacing.md),
-    backgroundColor: colors.white,
-    borderRadius: WIDTH(8),
-    paddingLeft: WIDTH(spacing.sm),
-    marginTop: HEIGHT(spacing.sm),
-  },
   container: {
-    flex: 1,
     backgroundColor: colors.gray_1,
+    flex: 1,
   },
   icon: {
     height: WIDTH(32),
     width: WIDTH(32),
   },
+  item: {
+    backgroundColor: colors.white,
+    borderRadius: WIDTH(8),
+    marginHorizontal: WIDTH(spacing.md),
+    marginTop: HEIGHT(spacing.sm),
+    paddingLeft: WIDTH(spacing.sm),
+  },
+  wrapperIcon: { alignSelf: "center" },
 })

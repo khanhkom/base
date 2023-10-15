@@ -54,7 +54,11 @@ export default function HistoryScreen() {
 
   return (
     <View style={styles.container}>
-      <Header leftIcon="arrow_left" title="Thông báo" backgroundColor={colors.gray_1} />
+      <Header
+        leftIcon="arrow_left"
+        title={translate("notification.noti")}
+        backgroundColor={colors.gray_1}
+      />
       <FlashList
         data={listData}
         contentContainerStyle={{ paddingTop: HEIGHT(spacing.sm) }}
@@ -79,20 +83,20 @@ export default function HistoryScreen() {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     backgroundColor: colors.gray_1,
+    flex: 1,
   },
   footerContainer: {
-    flexDirection: "row",
-    justifyContent: "center",
     alignItems: "center",
+    flexDirection: "row",
     height: HEIGHT(spacing.lg),
+    justifyContent: "center",
   },
   wraper: {
-    flexDirection: "row",
     alignItems: "center",
+    flexDirection: "row",
     height: HEIGHT(spacing.xl),
-    marginVertical: HEIGHT(spacing.md),
     justifyContent: "center",
+    marginVertical: HEIGHT(spacing.md),
   },
 })

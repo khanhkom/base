@@ -12,8 +12,8 @@ interface ItemProps {
   desc?: string
   leftText?: string
   rightText?: string
-  onRightPress: () => void
-  onLeftPress: () => void
+  onRightPress?: () => void
+  onLeftPress?: () => void
 }
 export default function PopupVerify({
   visible,

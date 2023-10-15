@@ -1,10 +1,12 @@
+import { translate } from "@app/i18n/translate"
+
 export const DATA_EXPLAIN = [
   {
-    title: "Còn trống",
+    title: translate("booking.available"),
     type: 1,
   },
   {
-    title: "Kín lịch",
+    title: translate("booking.full_order"),
     type: 2,
   },
 ]
@@ -14,7 +16,7 @@ export enum STATUS_DOCTER {
 }
 export const DATA_TIME = [
   {
-    title: "Buổi sáng",
+    title: translate("booking.morning"),
     data: [
       {
         time: "10:00 - 10:15",
@@ -59,7 +61,7 @@ export const DATA_TIME = [
     ],
   },
   {
-    title: "Buổi chiều",
+    title: translate("booking.afternoon"),
     data: [
       {
         time: "13:00 - 13:15",
@@ -96,7 +98,7 @@ export const DATA_TIME = [
     ],
   },
   {
-    title: "Buổi tối",
+    title: translate("booking.dinner"),
     data: [
       {
         time: "18:00 - 18:15",

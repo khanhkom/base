@@ -9,6 +9,7 @@ import ItemBookInformation from "../DetailBooking/Item/ItemBookInformation"
 import FileAttachment from "../DetailBooking/Item/FileAttachment"
 import LoadingScreen from "@app/components/loading/LoadingScreen"
 import ImageView from "react-native-image-viewing"
+import { translate } from "@app/i18n/translate"
 
 interface ScreenProps {
   route: {
@@ -31,7 +32,7 @@ export default function BookingSuccess({ route }: ScreenProps) {
   if (loading) return <LoadingScreen />
   return (
     <View style={styles.container}>
-      <Header leftIcon="arrow_left" title="Đặt lịch khám thành công" />
+      <Header leftIcon="arrow_left" title={translate("booking.booking_exam_success")} />
 
       <FlatList
         data={DATA_BOOK}

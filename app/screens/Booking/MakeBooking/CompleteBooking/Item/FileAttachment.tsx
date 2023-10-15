@@ -1,5 +1,5 @@
 import { Pressable, ScrollView, StyleSheet, View, Image } from "react-native"
-import React, { useState } from "react"
+import React from "react"
 import { Text } from "@app/components/Text"
 import { HEIGHT, WIDTH } from "@app/config/functions"
 import { spacing } from "@app/theme/spacing"
@@ -8,6 +8,7 @@ import { Icon } from "@app/components/Icon"
 import DocumentPicker, { isCancel, isInProgress, types } from "react-native-document-picker"
 import { IconButton } from "react-native-paper"
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
+import { translate } from "@app/i18n/translate"
 export default function FileAttachment({ listImage, setListImage }) {
   const handleError = (err: unknown) => {
     if (isCancel(err)) {
@@ -40,14 +41,14 @@ export default function FileAttachment({ listImage, setListImage }) {
   console.log("listImage", listImage)
   return (
     <View style={styles.container}>
-      <Text preset="formLabel">Tệp đính kèm</Text>
+      <Text preset="formLabel">{translate("common.file_attach")}</Text>
       {listImage.length === 0 ? (
         <Pressable onPress={onPickFile} style={styles.card}>
           <View style={styles.boxIcon}>
             <Icon icon="directbox_send" size={WIDTH(24)} color={colors.gray_5} />
           </View>
           <Text size="sm" weight="normal" style={{ color: colors.gray_7 }}>
-            Tải lên hồ sơ bệnh án, đơn thuốc (nếu có)
+            {translate("booking.file_attach_desc")}
           </Text>
         </Pressable>
       ) : (
@@ -83,49 +84,49 @@ export default function FileAttachment({ listImage, setListImage }) {
 }
 
 const styles = StyleSheet.create({
+  boxIcon: {
+    alignItems: "center",
+    backgroundColor: colors.gray_0,
+    borderRadius: WIDTH(20),
+    height: WIDTH(40),
+    justifyContent: "center",
+    marginBottom: HEIGHT(4),
+    width: WIDTH(40),
+  },
+  buttonUpload: {
+    alignItems: "center",
+    backgroundColor: colors.gray_2,
+    borderRadius: 8,
+    height: HEIGHT(140),
+    justifyContent: "center",
+    marginRight: WIDTH(spacing.xs),
+    marginTop: WIDTH(spacing.xs),
+    width: WIDTH(109),
+  },
+  card: {
+    alignItems: "center",
+    borderColor: colors.gray_3,
+    borderRadius: WIDTH(8),
+    borderStyle: "dashed",
+    borderWidth: 1,
+    justifyContent: "center",
+    marginTop: HEIGHT(spacing.md),
+    paddingVertical: HEIGHT(spacing.sm),
+  },
   container: {
     marginTop: HEIGHT(spacing.md),
   },
-  card: {
-    borderRadius: WIDTH(8),
-    borderWidth: 1,
-    borderColor: colors.gray_3,
-    marginTop: HEIGHT(spacing.md),
-    paddingVertical: HEIGHT(spacing.sm),
-    justifyContent: "center",
-    alignItems: "center",
-    borderStyle: "dashed",
-  },
-  boxIcon: {
-    width: WIDTH(40),
-    height: WIDTH(40),
-    borderRadius: WIDTH(20),
-    backgroundColor: colors.gray_0,
-    marginBottom: HEIGHT(4),
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  wrapperImage: { flexDirection: "row", alignItems: "center", marginBottom: HEIGHT(spacing.md) },
-  image: {
-    height: HEIGHT(140),
-    width: WIDTH(109),
-    borderRadius: 8,
-    marginRight: WIDTH(spacing.xs),
-    marginTop: WIDTH(spacing.xs),
-  },
-  buttonUpload: {
-    height: HEIGHT(140),
-    width: WIDTH(109),
-    borderRadius: 8,
-    marginRight: WIDTH(spacing.xs),
-    marginTop: WIDTH(spacing.xs),
-    backgroundColor: colors.gray_2,
-    justifyContent: "center",
-    alignItems: "center",
-  },
   icClose: {
     position: "absolute",
-    top: HEIGHT(spacing.md),
     right: WIDTH(spacing.sm),
+    top: HEIGHT(spacing.md),
   },
+  image: {
+    borderRadius: 8,
+    height: HEIGHT(140),
+    marginRight: WIDTH(spacing.xs),
+    marginTop: WIDTH(spacing.xs),
+    width: WIDTH(109),
+  },
+  wrapperImage: { alignItems: "center", flexDirection: "row", marginBottom: HEIGHT(spacing.md) },
 })

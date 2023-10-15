@@ -9,6 +9,7 @@ import colors from "@app/assets/colors"
 import { navigate } from "@app/navigators/navigationUtilities"
 import { Icon } from "@app/components/Icon"
 import useHookHome from "../useHookHome"
+import { translate } from "@app/i18n/translate"
 const TYPE_FEATURES = {
   DATLICH: 0,
   TUVAN: 1,
@@ -20,40 +21,40 @@ const TYPE_FEATURES = {
 const DATA_FEATURES = [
   {
     id: TYPE_FEATURES.DATLICH,
-    title: "Đặt khám tại phòng khám",
+    title: translate("home.schedule_clinics"),
     image: R.images.ic_khamlai,
   },
   {
     id: TYPE_FEATURES.TUVAN,
-    title: " Tư vấn trực tuyến ",
+    title: translate("home.online_consultations"),
     image: R.images.ic_tuvan,
   },
   {
     id: TYPE_FEATURES.HOIDAP,
-    title: "Hỏi đáp cộng đồng",
+    title: translate("home.community_qa"),
     image: R.images.ic_hoidap,
   },
   {
     id: TYPE_FEATURES.KETQUA,
-    title: "Kết quả khám bệnh",
+    title: translate("home.medical_test_results"),
     image: R.images.ic_ketqua,
   },
   {
     id: TYPE_FEATURES.NHATHUOC,
-    title: "Nhà thuốc",
+    title: translate("home.pharmacy"),
     image: R.images.ic_nhathuoc,
   },
   {
     id: TYPE_FEATURES.KIENTHUC,
-    title: "Kiến thức sơ cấp cứu",
+    title: translate("home.first_aid_knowledge"),
     image: R.images.ic_kienthuc,
   },
 ]
-const Item = ({ item, index, onPress }) => {
+const Item = ({ item, onPress }) => {
   return (
     <Pressable onPress={onPress} style={styles.item}>
       <Image source={item.image} style={styles.icFeature} />
-      <Text weight="normal" size="sm" style={{ width: WIDTH(96), textAlign: "center" }}>
+      <Text weight="normal" size="sm" style={styles.title}>
         {item.title}
       </Text>
     </Pressable>
@@ -83,7 +84,7 @@ export default function ItemUtilities() {
         data={DATA_FEATURES}
         numColumns={3}
         renderItem={({ item, index }) => {
-          return <Item item={item} index={index} onPress={() => onPresItem(index)} />
+          return <Item item={item} onPress={() => onPresItem(index)} />
         }}
         ItemSeparatorComponent={() => <View style={{ height: HEIGHT(spacing.md) }} />}
       />
@@ -99,8 +100,10 @@ export default function ItemUtilities() {
             return (
               <Text size="sm" weight="medium" style={{ color: colors.white }}>
                 {timeFromNow?.day === 0 && timeFromNow.hour === 0 && timeFromNow.min < 5
-                  ? "Đã đến giờ khám bệnh, vào khám"
-                  : `Bạn có lịch khám sắp tới trong ${timeFromNow?.hour} giờ ${timeFromNow?.min} phút tới`}
+                  ? translate("home.time_to_exam")
+                  : `${translate("home.have_exam_in_next")} ${timeFromNow?.hour} ${translate(
+                      "home.hour",
+                    )} ${timeFromNow?.min} ${translate("home.minute")}`}
               </Text>
             )
           }}
@@ -123,33 +126,33 @@ export default function ItemUtilities() {
 }
 
 const styles = StyleSheet.create({
-  icFeature: {
-    height: WIDTH(36),
-    width: WIDTH(36),
-    marginBottom: HEIGHT(6),
-  },
   card: {
+    backgroundColor: colors.white,
     marginHorizontal: WIDTH(spacing.md),
+    marginTop: -HEIGHT(85),
     paddingHorizontal: WIDTH(spacing.sm),
     paddingVertical: HEIGHT(spacing.sm),
-    backgroundColor: colors.white,
-    marginTop: -HEIGHT(85),
   },
-  item: {
-    // width: WIDTH(96),
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+  icFeature: {
+    height: WIDTH(36),
+    marginBottom: HEIGHT(6),
+    width: WIDTH(36),
   },
   iconRemind: {
     height: HEIGHT(32),
     width: WIDTH(44),
   },
+  item: {
+    alignItems: "center",
+    flex: 1,
+    justifyContent: "center",
+  },
   itemRemind: {
     backgroundColor: colors.main_7,
     borderRadius: 12,
+    marginTop: HEIGHT(spacing.md),
     paddingLeft: WIDTH(spacing.sm),
     paddingRight: WIDTH(8),
-    marginTop: HEIGHT(spacing.md),
   },
+  title: { textAlign: "center", width: WIDTH(96) },
 })

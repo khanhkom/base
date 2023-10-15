@@ -1,7 +1,6 @@
 import { StyleSheet, View, Image } from "react-native"
 import React from "react"
 import { Card, List } from "react-native-paper"
-import { Icon } from "@app/components/Icon"
 import { HEIGHT, WIDTH } from "@app/config/functions"
 import { Text } from "@app/components/Text"
 import colors from "@app/assets/colors"
@@ -57,7 +56,7 @@ export default function ItemNotification({ item }: ItemProps) {
             </View>
           )
         }}
-        style={{ paddingRight: 0 }}
+        style={styles.item}
         title={() => {
           return (
             <View>
@@ -75,7 +74,7 @@ export default function ItemNotification({ item }: ItemProps) {
               >
                 {item.body}
               </Text>
-              <Text size="sm" style={{ color: colors.gray_6, textAlign: "right" }}>
+              <Text size="sm" style={styles.time}>
                 {moment(item?.createdAt).format("HH:mm:ss, DD/MM/YYYY")}
               </Text>
             </View>
@@ -89,12 +88,14 @@ export default function ItemNotification({ item }: ItemProps) {
 const styles = StyleSheet.create({
   card: {
     backgroundColor: colors.white,
-    marginHorizontal: WIDTH(spacing.md),
     marginBottom: HEIGHT(spacing.sm),
+    marginHorizontal: WIDTH(spacing.md),
     paddingHorizontal: WIDTH(spacing.sm),
   },
   icon: {
-    width: WIDTH(24),
     height: WIDTH(24),
+    width: WIDTH(24),
   },
+  item: { paddingRight: 0 },
+  time: { color: colors.gray_6, textAlign: "right" },
 })

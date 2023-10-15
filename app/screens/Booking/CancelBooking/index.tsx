@@ -1,4 +1,4 @@
-import { StyleSheet, Image, View, FlatList } from "react-native"
+import { StyleSheet, View } from "react-native"
 import React, { useState } from "react"
 import colors from "@app/assets/colors"
 import { Header, Text, TextField, Toggle } from "@app/components/index"
@@ -12,6 +12,7 @@ import { useDispatch } from "react-redux"
 import { getOrderHistory } from "@app/redux/actions/actionOrder"
 import { LoadingOpacity } from "@app/components/loading/LoadingOpacity"
 import { KeyboardAwareFlatList } from "react-native-keyboard-aware-scroll-view"
+import { translate } from "@app/i18n/translate"
 
 const LIST_REASON = [
   "Không còn nhu cầu khám bệnh",
@@ -35,7 +36,7 @@ export default function CancelBooking({ route }: ScreenProps) {
   const dispatch = useDispatch()
   const cancelBooking = async () => {
     if (indexSelected === 4 && otherText === "") {
-      showToastMessage("Vui lòng nhập lý do", EToastType.ERROR)
+      showToastMessage(translate("booking.please_enter_reason"), EToastType.ERROR)
     } else {
       let body = {
         description: LIST_REASON?.[indexSelected] ?? otherText,
@@ -47,12 +48,16 @@ export default function CancelBooking({ route }: ScreenProps) {
       route?.params?.getDetailOrderApi?.()
       goBack()
       dispatch(getOrderHistory())
-      showToastMessage("Hủy lịch khám thành công", EToastType.SUCCESS)
+      showToastMessage(translate("cancel_booking.cancel_booking_success"), EToastType.SUCCESS)
     }
   }
   return (
     <View style={styles.container}>
-      <Header leftIcon="arrow_left" title="Xác nhận hủy lịch khám" backgroundColor={colors.white} />
+      <Header
+        leftIcon="arrow_left"
+        title={translate("cancel_booking.confirm_cancel_booking")}
+        backgroundColor={colors.white}
+      />
       <KeyboardAwareFlatList
         data={LIST_REASON}
         ListHeaderComponent={() => {
@@ -66,7 +71,7 @@ export default function CancelBooking({ route }: ScreenProps) {
                 marginTop: HEIGHT(spacing.sm),
               }}
             >
-              Lý do hủy khám
+              {translate("cancel_booking.cancel_reason")}
             </Text>
           )
         }}
@@ -92,7 +97,7 @@ export default function CancelBooking({ route }: ScreenProps) {
                   multiline
                   value={otherText}
                   onChangeText={setOtherText}
-                  placeholder="Nhập lý do"
+                  placeholder={translate("cancel_booking.enter_reason")}
                   containerStyle={{ marginTop: HEIGHT(spacing.lg) }}
                 />
               )}
@@ -108,7 +113,7 @@ export default function CancelBooking({ route }: ScreenProps) {
           textColor={colors.primary}
           onPress={goBack}
         >
-          Quay lại
+          {translate("common.go_back")}
         </Button>
         <Button
           onPress={cancelBooking}
@@ -117,7 +122,7 @@ export default function CancelBooking({ route }: ScreenProps) {
           style={styles.button}
           loading={loading}
         >
-          Xác nhận hủy
+          {translate("cancel_booking.confirm_button")}
         </Button>
       </View>
       {loading && <LoadingOpacity />}
