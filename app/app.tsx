@@ -152,8 +152,9 @@ export async function onMessageReceived(message) {
       // })
       await notifee.displayNotification({
         id: notificationId,
-        title: "Incoming Call",
-        body: "Call from " + from,
+        title: "Cuộc gọi video đến",
+        // body: "Bác sĩ đang gọi cho bạn" + from,
+        body: "Bác sĩ đang gọi cho bạn",
         android: {
           channelId,
           pressAction: {
