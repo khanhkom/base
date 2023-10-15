@@ -1,4 +1,4 @@
-import { Alert, Platform, StyleSheet } from "react-native"
+import { Alert, PermissionsAndroid, Platform, StyleSheet } from "react-native"
 import React, { useEffect } from "react"
 import HeaderHome from "./Item/Header"
 import { Screen } from "@app/components/Screen"
@@ -17,6 +17,7 @@ import useHookCallKitIOS from "@app/hooks/stringee/useHookCallKitIOS"
 import { StringeeClient } from "stringee-react-native"
 import notifee, { AuthorizationStatus } from "@notifee/react-native"
 import { translate } from "@app/i18n/translate"
+import messaging from "@react-native-firebase/messaging"
 async function checkNotificationPermission() {
   const settings = await notifee.getNotificationSettings()
 
@@ -33,6 +34,19 @@ export default function HomeScreen() {
   const updateClientId = (id: string) => {
     dispatch(updateStringeeClientId(id))
   }
+  async function requestUserPermission() {
+    PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS)
+
+    const authStatus = await messaging().requestPermission()
+    const enabled =
+      authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+      authStatus === messaging.AuthorizationStatus.PROVISIONAL
+
+    if (enabled) {
+      console.log("Authorization status:", authStatus)
+    }
+  }
+
   const checkBatteryAndroid = async () => {
     const batteryOptimizationEnabled = await notifee.isBatteryOptimizationEnabled()
     if (batteryOptimizationEnabled) {
@@ -58,6 +72,7 @@ export default function HomeScreen() {
   }
   useEffect(() => {
     // checkBatteryAndroid()
+    requestUserPermission()
     checkNotificationPermission()
   }, [])
   const {

@@ -66,6 +66,7 @@ export default function SelectBirthday({ title, onSelectDate, value, helper, sta
             setSeleted(true)
           }
         }}
+        maximumDate={new Date()}
         mode="date"
         cancelText={translate("common.cancel")}
         confirmText={translate("common.ok")}

@@ -1,4 +1,4 @@
-import { Alert, StyleSheet, View, PermissionsAndroid, Clipboard } from "react-native"
+import { StyleSheet, View, Clipboard } from "react-native"
 import React, { useEffect, useState } from "react"
 import { Button, IconButton } from "react-native-paper"
 import { navigate } from "@app/navigators/navigationUtilities"
@@ -21,20 +21,8 @@ export default function Profile() {
     api.apisauce.setHeader("access-token", "")
     await GoogleSignin.signOut()
   }
-  async function requestUserPermission() {
-    PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS)
 
-    const authStatus = await messaging().requestPermission()
-    const enabled =
-      authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
-      authStatus === messaging.AuthorizationStatus.PROVISIONAL
-
-    if (enabled) {
-      console.log("Authorization status:", authStatus)
-    }
-  }
   const getTokenFirebase = async () => {
-    requestUserPermission()
     const tokenFi = await messaging().getToken()
     console.log("tokenFi", tokenFi)
     setToken(tokenFi)
