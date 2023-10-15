@@ -33,8 +33,11 @@ const useHookLogin = (setCustomLoading?: (val: boolean) => void) => {
       showToastMessage(translate("common.provide_complete_information"), EToastType.ERROR)
     } else {
       try {
+        const result = phoneNumber.replace(/^0+/, "")
+        console.log("result_result", result)
+        setPhoneNumber(result)
         const body = {
-          phone: countryCode + phoneNumber,
+          phone: countryCode + result,
         }
         setLoading(true)
         setError(false)
@@ -44,7 +47,7 @@ const useHookLogin = (setCustomLoading?: (val: boolean) => void) => {
         if (resLogin?.status === 201) {
           dispatch(
             updateUserField({
-              phone: countryCode + phoneNumber,
+              phone: countryCode + result,
             }),
           )
           const isRegisterTab = indexTab === 1
@@ -52,7 +55,7 @@ const useHookLogin = (setCustomLoading?: (val: boolean) => void) => {
           if (isRegisterTab) {
             if (resLogin?.data?.isNewUser) {
               navigate("VerifyOTP", {
-                phone: countryCode + phoneNumber,
+                phone: countryCode + result,
               })
             } else {
               showModal()
@@ -62,7 +65,7 @@ const useHookLogin = (setCustomLoading?: (val: boolean) => void) => {
               showModal()
             } else {
               navigate("VerifyOTP", {
-                phone: countryCode + phoneNumber,
+                phone: countryCode + result,
               })
             }
           }

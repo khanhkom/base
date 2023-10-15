@@ -26,25 +26,27 @@ export default function VerifyPhoneNumber() {
   const onSubmit = async () => {
     // showModal()
     if (phoneNumber === "") {
-      showToastMessage("Vui lòng nhập đủ thông tin!", EToastType.ERROR)
+      showToastMessage(translate("common.provide_complete_information"), EToastType.ERROR)
     } else {
       try {
-        let body = {
-          phone: countryCode + phoneNumber,
+        const result = phoneNumber.replace(/^0+/, "")
+        setPhoneNumber(result)
+        const body = {
+          phone: countryCode + result,
         }
         setLoading(true)
         setError(false)
-        let resLogin = await getOtp(body)
+        const resLogin = await getOtp(body)
 
         console.log("resLogin_resLogin", resLogin?.data)
         if (resLogin?.status === 201) {
           dispatch(
             updateUserField({
-              phone: countryCode + phoneNumber,
+              phone: countryCode + result,
             }),
           )
           navigate("VerifyOTP", {
-            phone: countryCode + phoneNumber,
+            phone: countryCode + result,
           })
         } else {
           setError(true)
@@ -73,7 +75,6 @@ export default function VerifyPhoneNumber() {
           error={error}
         />
         <ItemOTPMethod setOTPMethod={setOTPMethod} otpMethod={otpMethod} />
-
         <Button
           mode="contained"
           style={styles.buttonNext}
@@ -93,26 +94,23 @@ export default function VerifyPhoneNumber() {
 
 const styles = StyleSheet.create({
   body: {
-    width: getWidth(),
+    backgroundColor: R.colors.white,
+    borderTopLeftRadius: 24,
+    borderTopRightRadius: 24,
     flex: 1,
     marginTop: -HEIGHT(80),
-    backgroundColor: R.colors.white,
-    borderTopRightRadius: 24,
-    borderTopLeftRadius: 24,
     paddingHorizontal: WIDTH(spacing.md),
     paddingTop: HEIGHT(20),
-  },
-  container: {
-    flex: 1,
-    alignItems: "center",
-    backgroundColor: colors.white,
+    width: getWidth(),
   },
   buttonNext: {
-    width: WIDTH(343),
     borderRadius: 8,
     marginTop: HEIGHT(spacing.lg),
-    position: "absolute",
-    bottom: HEIGHT(spacing.md),
-    left: WIDTH(spacing.md),
+    width: WIDTH(343),
+  },
+  container: {
+    alignItems: "center",
+    backgroundColor: colors.white,
+    flex: 1,
   },
 })
