@@ -39,7 +39,7 @@ export default function Login() {
   return (
     <Screen
       preset="auto"
-      safeAreaEdges={["bottom"]}
+      // safeAreaEdges={["bottom"]}
       contentContainerStyle={Platform.OS === "ios" ? { height: getHeight() } : styles.container}
     >
       <HeaderLogin />

@@ -39,7 +39,7 @@ export default function Video({ route }) {
     }
   }, [])
   useEffect(() => {
-    if (session?.access_token !== "") {
+    if (session?.access_token&&session?.access_token !== "") {
       client?.current?.connect(session?.access_token)
     }
   }, [session?.access_token])
@@ -204,7 +204,7 @@ export default function Video({ route }) {
       const token = await messaging().getToken()
       console.log("AAAAA", token)
     }
-    if (session?.access_token !== "") {
+    if (session?.access_token&&session?.access_token !== "") {
       setTimeout(() => {
         updateTokenFi()
       }, 500)
