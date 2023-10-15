@@ -21,16 +21,16 @@ import "./utils/ignoreWarnings"
 import { useFonts } from "expo-font"
 import React, { useEffect } from "react"
 import { initialWindowMetrics, SafeAreaProvider } from "react-native-safe-area-context"
-import { Appearance, NativeModules, Platform } from "react-native"
+import { Appearance, Platform } from "react-native"
 import * as Linking from "expo-linking"
 import { useInitialRootStore } from "./models"
 import { AppNavigator, useNavigationPersistence } from "./navigators"
 import * as storage from "./utils/storage"
-import { colors, customFontsToLoad } from "./theme"
+import { customFontsToLoad } from "./theme"
 import { setLangInApp } from "./i18n"
 import { PreferencesContext } from "./context/themeContext"
 import { PaperProvider } from "react-native-paper"
-import { colorExpandDark, colorExpandLight, darkTheme, lightTheme } from "./theme/colors/index"
+import { colorExpandLight, lightTheme } from "./theme/colors/index"
 import { createThemeFromSourceColor } from "./utils/m3/createMaterial3Theme"
 import { GestureHandlerRootView } from "react-native-gesture-handler"
 import { Provider } from "react-redux"
@@ -39,15 +39,10 @@ import createSagaMiddleware from "redux-saga"
 import rootReducers from "./redux/reducers"
 import Toast from "react-native-toast-message"
 import rootSaga from "@app/redux/sagas"
-import notifee, {
-  AndroidCategory,
-  AndroidImportance,
-  AndroidVisibility,
-} from "@notifee/react-native"
+import notifee, { AndroidImportance, AndroidVisibility } from "@notifee/react-native"
 import messaging from "@react-native-firebase/messaging"
 import RNCallKeep from "react-native-callkeep"
 import RNNotificationCall from "react-native-full-screen-notification-incoming-call"
-import R from "@app/assets"
 export const NAVIGATION_PERSISTENCE_KEY = "NAVIGATION_STATE"
 const sagaMiddleware = createSagaMiddleware()
 const store = createStore(rootReducers, applyMiddleware(sagaMiddleware))
@@ -81,7 +76,6 @@ interface AppProps {
 /**
  * This is the root component of our app.
  */
-const { IncomingCall } = NativeModules
 
 export async function onMessageReceived(message) {
   console.log("notification", message)
@@ -137,19 +131,6 @@ export async function onMessageReceived(message) {
           console.log("press endCall", callUUID)
         })
       }
-      // await notifee.displayNotification({
-      //   body: "Full-screen notification",
-      //   android: {
-      //     // Recommended to set a category
-      //     channelId,
-      //     category: AndroidCategory.CALL,
-      //     // Recommended to set importance to high
-      //     importance: AndroidImportance.HIGH,
-      //     fullScreenAction: {
-      //       id: "default",
-      //     },
-      //   },
-      // })
       await notifee.displayNotification({
         id: notificationId,
         title: "Cuộc gọi video đến",
