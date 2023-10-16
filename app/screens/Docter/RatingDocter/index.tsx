@@ -94,7 +94,9 @@ export default function RatingDocter({ route }: IScreenParams) {
         placeholder={translate("rating.share_your_feel")}
         style={{ minHeight: HEIGHT(120) }}
         containerStyle={{ width: WIDTH(343), marginTop: HEIGHT(32) }}
+        textAlignVertical="top"
         onChangeText={setDescription}
+        multiline
       />
       <Text
         size="ba"
