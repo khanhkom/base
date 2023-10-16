@@ -180,9 +180,7 @@ export const AppNavigator = observer(function AppNavigator(props: NavigationProp
   useEffect(() => {
     async function loadDataLocal() {
       const dataTokenLocal = await load(KEYSTORAGE.LOGIN_DATA)
-      console.log("dataTokenLocal", dataTokenLocal)
       if (dataTokenLocal !== null) {
-        console.log("dataTokenLocal", dataTokenLocal)
         api.apisauce.setHeader("access-token", dataTokenLocal?.accessToken)
         dispatch(setLoginedApp(true))
         setLoadToken(false)

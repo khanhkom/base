@@ -59,7 +59,6 @@ export default function SelectLocation({ route }: ScreenProps) {
         break
     }
     setLoading(false)
-    console.log("resData_resData", resData)
     setListData(resData?.data?.data?.data)
   }
 
@@ -79,7 +78,6 @@ export default function SelectLocation({ route }: ScreenProps) {
     timerId = setTimeout(() => {
       // Code to trigger the search
       getDataList(keyword)
-      console.log("Searching...")
     }, 300)
   }
   const title =

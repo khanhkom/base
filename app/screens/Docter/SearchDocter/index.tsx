@@ -54,7 +54,6 @@ export default function SearchDocter({ route }: ScreenProps) {
     timerId = setTimeout(() => {
       // Code to trigger the search
       onApplyFilter(filterData.current)
-      console.log("Searching...")
     }, 300)
   }
   const onApplyFilter = (dataFilter) => {

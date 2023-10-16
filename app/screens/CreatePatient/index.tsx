@@ -28,7 +28,6 @@ const SignupSchema = Yup.object().shape({
 })
 export default function CreatePatient({ route }) {
   const user = useSelector((state) => state.userReducers.user)
-  console.log("user", user)
   const [gender, setGender] = useState(0)
   const [email, setEmail] = useState("")
   const [address, setAddress] = useState("")
@@ -80,7 +79,6 @@ export default function CreatePatient({ route }) {
       phone: values.phone,
     }
     const resUpdate = await createPatient(bodyCreate)
-    console.log("resUpdate", resUpdate, bodyCreate)
     setLoading(false)
     if (resUpdate?.status === 201) {
       showToastMessage(translate("create_patient.create_patient_successful"))

@@ -1,3 +1,5 @@
+import { IPatient } from "./patient"
+
 export interface IRatingOrder {
   orderId: string
   createdBy: string
@@ -14,6 +16,7 @@ export interface IRatingDoctorDetail {
     patientProfileId: string
     doctorUserId: string
   }
+  patient: IPatient
   createdBy: string
   description: string
   score: number

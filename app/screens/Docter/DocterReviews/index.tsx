@@ -115,6 +115,7 @@ export default function DocterReviews({ route }: ScreenProps) {
                 description={item?.description}
                 createdAt={item?.createdAt}
                 score={item?.score}
+                patient={item?.patient}
               />
             )
           }}

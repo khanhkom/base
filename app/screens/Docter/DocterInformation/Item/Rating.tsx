@@ -20,7 +20,6 @@ export default function Rating({ countRating, averageRating, userId }: ItemProps
     userId,
     0,
   )
-  console.log("listData_listData", listData)
   return (
     <View style={styles.container}>
       <List.Item
@@ -72,6 +71,7 @@ export default function Rating({ countRating, averageRating, userId }: ItemProps
               description={item?.description}
               createdAt={item?.createdAt}
               score={item?.score}
+              patient={item?.patient}
             />
           )
         }}

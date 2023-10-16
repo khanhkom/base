@@ -27,7 +27,6 @@ export default function FileAttachment({ listImage, setListImage }) {
       type: [types.images, types.docx],
     })
       .then((val) => {
-        console.log("val_val", val)
         const newList = [...listImage, ...val]
         setListImage(newList)
       })
@@ -38,7 +37,6 @@ export default function FileAttachment({ listImage, setListImage }) {
     newArray.splice(index, 1) // Remove the item at index i
     setListImage(newArray) // Update the state with the new array
   }
-  console.log("listImage", listImage)
   return (
     <View style={styles.container}>
       <Text preset="formLabel">{translate("common.file_attach")}</Text>

@@ -31,8 +31,6 @@ export default function SelectTimeBooking({ route }: ScreenProps) {
   const [loading, setLoading] = useState(false)
   const docter = useSelector((state) => state.orderReducers?.docter)
   const selectedDate = useSelector((state) => state.orderReducers?.selectedDate)
-  console.log("selectedDate", selectedDate)
-  console.log("docter", docter)
   const dispatch = useDispatch()
   const getDoctorCalendarAvailable = async () => {
     setLoading(true)
@@ -41,7 +39,6 @@ export default function SelectTimeBooking({ route }: ScreenProps) {
     })
     setDataCalendar(resCal?.data?.calendar ?? [])
     setLoading(false)
-    console.log("resCal", resCal?.data?.calendar)
   }
   useEffect(() => {
     getDoctorCalendarAvailable()

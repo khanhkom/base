@@ -46,7 +46,6 @@ export default function ItemSchedule({ item }: ItemProps) {
     LIST_ICON_BY_STATUS.find((it) => it.status === item?.status) || LIST_ICON_BY_STATUS[0]
   const isDoneSchedule = item?.status === STATUS_ORDER.rating_processing
 
-  console.log("itemData_itemData", itemData)
   const returnDataByField = (index) => {
     switch (index) {
       case 0:

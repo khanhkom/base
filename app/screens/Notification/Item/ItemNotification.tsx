@@ -23,7 +23,6 @@ const DATA_ICON_NOTI = [
   },
 ]
 export default function ItemNotification({ item }: ItemProps) {
-  console.log("item", item?.icon)
   const onPressItem = () => {
     switch (item?.clickAction?.actionType) {
       case "open_order":

@@ -31,7 +31,6 @@ export default function Home() {
       setHits(data)
     }
   }
-  console.log("user_user", hits)
   return (
     <Screen style={{ flex: 1, paddingTop: 40, paddingHorizontal: spacing.md }}>
       <Searchbar placeholder="Search" onChangeText={onChangeSearch} value={searchQuery} />

@@ -27,7 +27,6 @@ export default function DocterInformation({ route }: IScreenProps) {
   const [detailDocter, setDetailDocter] = useState<IDocter>()
   const doctorId = route.params?.item?.id
   const userId = route.params?.item?.userId
-  console.log("detailDocter_detailDocter", route.params?.item)
   const loadDetailDocter = async () => {
     setLoading(true)
     let resDetail = await getDetailDocter(doctorId)

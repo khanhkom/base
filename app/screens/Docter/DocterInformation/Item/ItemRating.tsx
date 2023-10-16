@@ -7,6 +7,7 @@ import { HEIGHT, WIDTH, convertTimeToAgo } from "@app/config/functions"
 import { spacing } from "@app/theme/spacing"
 import { Icon } from "@app/components/Icon"
 import R from "@app/assets"
+import { IPatient } from "@app/interface/patient"
 export const ItemTotalStar = ({ star }: { star: number }) => {
   return (
     <View style={styles.flexRowStar}>
@@ -28,9 +29,10 @@ interface ItemProps {
   description: string
   score: number
   createdAt: string
+  patient: IPatient
 }
 
-const ItemUserRating = ({ description, criteria, createdAt, score }: ItemProps) => {
+const ItemUserRating = ({ description, criteria, createdAt, score, patient }: ItemProps) => {
   const criteriaString = criteria.map((word, index) => {
     return (
       word.charAt(0).toUpperCase() + word.slice(1) + `${index === criteria.length - 1 ? "" : ", "}`
@@ -46,7 +48,7 @@ const ItemUserRating = ({ description, criteria, createdAt, score }: ItemProps) 
           return (
             <View>
               <Text size="ba" weight="medium" style={{ color: colors.gray_9 }}>
-                Thanh Bùi 😍
+                {patient?.name}
               </Text>
               <Text size="sm" weight="normal" style={{ color: colors.gray_6 }}>
                 {convertTimeToAgo(createdAt)}

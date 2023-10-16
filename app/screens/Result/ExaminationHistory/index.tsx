@@ -19,7 +19,6 @@ export default function ExaminationHistory({ route }: IScreenProps) {
   useEffect(() => {
     getAllResulsCall()
   }, [])
-  console.log("listResults_listResults", listResults)
   if (loading) return <LoadingScreen />
   return (
     <View style={styles.container}>

@@ -122,7 +122,6 @@ const CalendarPicker = ({ preScreen }) => {
           // disableArrowRight={currentMonth == moment().format("MM/YYYY")}
           markingType={"period"}
           onDayPress={(value) => {
-            console.log("value", value)
             setSelectedValue(new Date(value.dateString))
           }}
           minDate={moment(new Date()).format("YYYY-MM-DD")}

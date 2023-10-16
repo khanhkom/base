@@ -74,14 +74,12 @@ interface IScreenParams {
   }
 }
 export default function DetailExamination({ route }: IScreenParams) {
-  console.log("route", route.params.id)
   const id = route.params.id
   const specialist = route.params?.specialist
   const [visible, setIsVisible] = useState(false)
   const [imageIndex, setImageIndex] = useState(0)
 
   const { loading, detailResult, returnDataByField } = useHookDetailExam(id, specialist?.value)
-  console.log("detailResult", detailResult)
   if (loading) return <LoadingScreen />
   return (
     <View style={styles.container}>

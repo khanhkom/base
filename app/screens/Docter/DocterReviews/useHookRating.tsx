@@ -9,7 +9,7 @@ export function useHookRating(userId) {
     const body = {
       page: 1,
       perPage: 100,
-      userId,
+      doctorId: userId,
     }
 
     try {

@@ -19,7 +19,6 @@ const useHookDetailExam = (id, specialistName) => {
     setDetailResult(resOrder.data)
     setLoading(false)
   }
-  console.log("detailResult", detailResult)
   const returnDataByField = (field) => {
     if (!detailResult?.result) return ""
     switch (field) {

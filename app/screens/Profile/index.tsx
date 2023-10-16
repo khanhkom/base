@@ -24,7 +24,6 @@ export default function Profile() {
 
   const getTokenFirebase = async () => {
     const tokenFi = await messaging().getToken()
-    console.log("tokenFi", tokenFi)
     setToken(tokenFi)
   }
   useEffect(() => {

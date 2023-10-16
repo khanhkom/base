@@ -15,7 +15,6 @@ const useHookExam = (id: string) => {
     }
     setLoading(true)
     const resResults = await getAllResults(params)
-    console.log("resResults_resResults", resResults?.data?.items)
     if (resResults.status === 200) {
       setListResults(resResults?.data?.items ?? [])
     } else {

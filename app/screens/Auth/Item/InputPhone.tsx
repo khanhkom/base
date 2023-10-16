@@ -82,7 +82,6 @@ export default function InputPhone({
         inputPlaceholder="Nhập tên nước"
         // when picker button press you will get the country object with dial code
         pickerButtonOnPress={(item) => {
-          console.log("dial_code", item.dial_code)
           setCountryCode(item.dial_code)
           setShow(false)
         }}

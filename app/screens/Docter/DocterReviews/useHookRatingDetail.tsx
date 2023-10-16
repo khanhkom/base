@@ -36,14 +36,13 @@ export function useHookRatingDetail(userId, starSelected) {
     const body = {
       page: page,
       perPage: limit,
-      userId,
+      doctorId: userId,
     }
     if (starSelected > 0) {
       Object.assign(body, {
         score: starSelected,
       })
     }
-    console.log("body_body", body)
     isLoadMore
       ? setRefreshState(RefreshState.FooterRefreshing)
       : setRefreshState(RefreshState.HeaderRefreshing)

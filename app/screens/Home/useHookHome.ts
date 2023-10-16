@@ -12,20 +12,17 @@ const useHookHome = () => {
     const nearestOrder = orderFilter
       .map((order) => {
         const fromTimestamp = new Date(moment(order.timeRange.from).toISOString()).getTime()
-        console.log("fromTimestamp", moment(fromTimestamp).format("HH:mm"))
         const timeDifference = Math.abs(
           currentTimestamp - fromTimestamp < 0
             ? fromTimestamp - currentTimestamp
             : 24 * 60 * 60 * 1000,
         )
-        console.log("timeDifference_timeDifference", timeDifference)
         return {
           ...order,
           timeDifference,
         }
       })
       .sort((a, b) => a.timeDifference - b.timeDifference)
-    console.log("nearestOrder", nearestOrder)
     return nearestOrder[0]
   }
   return { returnNearestOrder }

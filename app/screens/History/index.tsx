@@ -234,7 +234,6 @@ export default function History() {
       </View>
     )
   }
-  console.log("listData_listData", listData)
   return (
     <View style={styles.container}>
       <Header

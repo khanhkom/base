@@ -18,7 +18,6 @@ export default function ItemRecord({ onPress, item }: ItemProps) {
       style={styles.item}
       onPress={() => {
         onPress && onPress()
-        console.log("AAAAAAA")
       }}
     >
       <Image source={R.images.avatar_patient} style={styles.avatar} resizeMode="center" />
