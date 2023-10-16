@@ -104,7 +104,7 @@ export default function HomeScreen() {
     dispatch(getOrderHistory())
   }, [])
   useEffect(() => {
-    if (session?.access_token&&session?.access_token !== "") {
+    if (session?.access_token && session?.access_token !== "") {
       client?.current?.connect(session?.access_token)
     }
   }, [session?.access_token])
@@ -114,7 +114,7 @@ export default function HomeScreen() {
       <ItemUtilities />
       <BannerCarousel />
       <TopDocter />
-      <TopPackage />
+      {/* <TopPackage /> */}
       <HotNews />
       <StringeeClient
         ref={client}

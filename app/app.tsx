@@ -21,7 +21,7 @@ import "./utils/ignoreWarnings"
 import { useFonts } from "expo-font"
 import React, { useEffect } from "react"
 import { initialWindowMetrics, SafeAreaProvider } from "react-native-safe-area-context"
-import { Appearance, Platform } from "react-native"
+import { Alert, Appearance, Platform } from "react-native"
 import * as Linking from "expo-linking"
 import { useInitialRootStore } from "./models"
 import { AppNavigator, useNavigationPersistence } from "./navigators"
@@ -44,6 +44,8 @@ import messaging from "@react-native-firebase/messaging"
 import RNCallKeep from "react-native-callkeep"
 import RNNotificationCall from "react-native-full-screen-notification-incoming-call"
 export const NAVIGATION_PERSISTENCE_KEY = "NAVIGATION_STATE"
+import codePush from "react-native-code-push"
+
 const sagaMiddleware = createSagaMiddleware()
 const store = createStore(rootReducers, applyMiddleware(sagaMiddleware))
 sagaMiddleware.run(rootSaga)
@@ -225,21 +227,9 @@ function App(props: AppProps) {
     [toggleTheme, isThemeDark, isDefaultSystem, setDefaultSystem, sourceColor, setSourceColorM3],
   )
   const { rehydrated } = useInitialRootStore(() => {
-    // This runs after the root store has been initialized and rehydrated.
-
-    // If your initialization scripts run very fast, it's good to show the splash screen for just a bit longer to prevent flicker.
-    // Slightly delaying splash screen hiding for better UX; can be customized or removed as needed,
-    // Note: (vanilla Android) The splash-screen will not appear if you launch your app via the terminal or Android Studio. Kill the app and launch it normally by tapping on the launcher icon. https://stackoverflow.com/a/69831106
-    // Note: (vanilla iOS) You might notice the splash-screen logo change size. This happens in debug/development mode. Try building the app for release.
     setTimeout(hideSplashScreen, 500)
   })
 
-  // Before we show the app, we have to wait for our state to be ready.
-  // In the meantime, don't render anything. This will be the background
-  // color set in native by rootView's background color.
-  // In iOS: application:didFinishLaunchingWithOptions:
-  // In Android: https://stackoverflow.com/a/45838109/204044
-  // You can replace with your own loading component if you wish.
   if (!rehydrated || !isNavigationStateRestored || !areFontsLoaded) return null
 
   const linking = {
@@ -247,6 +237,24 @@ function App(props: AppProps) {
     config,
   }
   const customTheme = createThemeFromSourceColor(sourceColor)
+  codePush.checkForUpdate().then((update) => {
+    if (!update) {
+      console.log("The app is up to date!")
+    } else {
+      Alert.alert("Cập nhật", "Cập nhật phiên bản mới ngay!", [
+        {
+          text: "Ok",
+          onPress: () => {
+            codePush.sync()
+          },
+        },
+        {
+          text: "Hủy",
+        },
+      ])
+      console.log("An update is available! Should we download it?")
+    }
+  })
 
   // const theme = isThemeDark
   //   ? { ...darkTheme, colors: { ...customTheme.dark, ...colorExpandDark } }
@@ -273,4 +281,4 @@ function App(props: AppProps) {
   )
 }
 
-export default App
+export default codePush(App)
