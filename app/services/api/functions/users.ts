@@ -28,3 +28,8 @@ export const verifyOTP = (body: { phone: string; code: string; role: "patient" |
     .post(URL.VERIFY_OTP, body)
     .then((res) => res)
     .catch((err) => err)
+export const refreshSession = (token: string) =>
+  api.apisauce
+    .get(URL.REFRESH_SESSION, { token })
+    .then((res) => res)
+    .catch((err) => err)

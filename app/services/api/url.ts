@@ -51,6 +51,7 @@ const URL = {
   ...NOTIFICATION,
   LOGIN: `account/login`,
   CREATE_SESSION: "session/createSession",
+  REFRESH_SESSION: "session/refreshSession",
   CREATE_SESSION_STRINGEE: "stringee/createClientSession",
 }
 export default URL
