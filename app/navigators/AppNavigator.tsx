@@ -44,6 +44,7 @@ import DetailExamination from "@app/screens/Patient/DetailExamination"
 import SelectLocation from "@app/screens/Auth/Register/SelectLocation"
 import Notification from "@app/screens/Notification"
 import VerifyPhoneNumber from "@app/screens/Auth/Register/VerifyPhoneNumber"
+import Account from "@app/screens/Account"
 
 export type AppStackParamList = {
   TabNavigator: undefined
@@ -55,7 +56,7 @@ export type AppStackParamList = {
   VerifyOTP: undefined
   ConfirmName: undefined
   VerifyPhoneNumber: undefined
-
+  Account: undefined
   CreatePatient: undefined
   CallScreen: undefined
 
@@ -138,6 +139,7 @@ const AppStack = observer(function AppStack() {
       <Stack.Screen name="CousultOnline" component={CousultOnline} />
       <Stack.Screen name="SearchDocter" component={SearchDocter} />
       <Stack.Screen name="SearchDocterAgain" component={SearchDocter} />
+      <Stack.Screen name="Account" component={Account} />
 
       <Stack.Screen name="DocterInformation" component={DocterInformation} />
       <Stack.Screen name="SelectCalendar" component={SelectCalendar} />
