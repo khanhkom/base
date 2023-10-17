@@ -11,12 +11,16 @@ import { spacing } from "@app/theme/spacing"
 import { EToastType, showToastMessage } from "@app/utils/library"
 import { api } from "@app/services/api"
 import { GoogleSignin } from "@react-native-google-signin/google-signin"
+import { useDispatch } from "react-redux"
+import { removeUserData } from "@app/redux/actions"
 
 export default function Profile() {
   const session = useSelector((state) => state.stringeeReducers.session)
   const [token, setToken] = useState("")
+  const dispatch = useDispatch()
   const onLogout = async () => {
     await remove(KEYSTORAGE.LOGIN_DATA)
+    dispatch(removeUserData())
     navigate("Login")
     api.apisauce.setHeader("access-token", "")
     await GoogleSignin.signOut()

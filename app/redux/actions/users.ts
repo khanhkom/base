@@ -31,3 +31,8 @@ export function updateUserField(data) {
     data: data,
   }
 }
+export function removeUserData() {
+  return {
+    type: "REMOVE_USER_DATA",
+  }
+}

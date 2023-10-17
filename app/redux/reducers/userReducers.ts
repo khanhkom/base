@@ -26,6 +26,21 @@ export default (state = defaultState, action) => {
           ...action.data,
         },
       }
+    case "REMOVE_USER_DATA":
+      return {
+        ...state,
+        user: {
+          name: "",
+          gender: "",
+          birthday: "",
+          mail: "",
+          province: "",
+          city: "",
+          ward: "",
+          address: "",
+          phone: "",
+        },
+      }
     default:
       break
   }

@@ -24,7 +24,7 @@ export default function BookingSuccess({ route }: ScreenProps) {
   )
   const [visible, setIsVisible] = useState(false)
   const [imageIndex, setImageIndex] = useState(0)
-  console.log("id", route?.params?.id)
+  console.log("id", detailOrder)
   useEffect(() => {
     getDetailOrderApi()
   }, [])

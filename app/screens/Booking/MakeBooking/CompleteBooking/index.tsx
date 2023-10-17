@@ -31,6 +31,12 @@ import useHookDetailBooking from "../../DetailBooking/useHookDetailBooking"
 import PopupErros from "@app/components/PopupErros"
 import { DATA_TIME } from "../SelectTimeBooking/Data"
 import { translate } from "@app/i18n/translate"
+const VALIDATE_MESSAGE = [
+  "Vui lòng chọn chuyên khoa!",
+  "Vui lòng chọn ngày khám!",
+  "Vui lòng chọn giờ khám!",
+  "Vui lòng chọn hồ sơ bệnh nhân!",
+]
 interface ScreenProps {
   route: {
     params: {
@@ -89,7 +95,15 @@ export default function CompleteBooking({ route }: ScreenProps) {
   }, [detailOrder])
 
   const verifyData = () => {
-    if (patientNotes === "") {
+    if (specialist?.code === "") {
+      showToastMessage(VALIDATE_MESSAGE[0], EToastType.ERROR)
+    } else if (selectedDate === "") {
+      showToastMessage(VALIDATE_MESSAGE[1], EToastType.ERROR)
+    } else if (selectedTime?.time === "") {
+      showToastMessage(VALIDATE_MESSAGE[2], EToastType.ERROR)
+    } else if (patient?.id === "") {
+      showToastMessage(VALIDATE_MESSAGE[3], EToastType.ERROR)
+    } else if (patientNotes === "") {
       showToastMessage(translate("booking.please_enter_reason"), EToastType.ERROR)
     } else {
       setVisible(true)
@@ -117,11 +131,13 @@ export default function CompleteBooking({ route }: ScreenProps) {
     formData.append("inAppNotification", "true")
 
     listImage.map((item) => {
-      formData.append("files", {
-        name: item.name,
+      const bodyImage = {
+        name: item.fileName || item.uri,
         type: item.type,
         uri: Platform.OS === "ios" ? item.uri.replace("file://", "") : item.uri,
-      })
+      }
+      console.log("bodyImage_bodyImage", bodyImage)
+      formData.append("files", bodyImage)
     })
     let resCreate: any = {}
     if (isUpdate) {
@@ -143,12 +159,12 @@ export default function CompleteBooking({ route }: ScreenProps) {
       }
     } else {
       resCreate = await createOrder(formData)
+      console.log("resCreate_resCreate", resCreate, formData)
       if (resCreate.status === 201) {
-        navigate("BookingSuccess", {
-          id: resCreate.data?.[0]?.id,
-        })
+        // navigate("BookingSuccess", {
+        //   id: resCreate.data?.[0]?.id,
+        // })
         dispatch(getOrderHistory())
-
         showToastMessage(translate("booking.booking_success"), EToastType.SUCCESS)
       } else {
         setVisibleErros(true)
@@ -259,18 +275,20 @@ export default function CompleteBooking({ route }: ScreenProps) {
             containerStyle={{ marginTop: HEIGHT(spacing.md) }}
           ></TextField>
           {!isUpdate && <FileAttachment listImage={listImage} setListImage={setListImage} />}
-          <Button
-            mode="contained"
-            style={styles.button}
-            loading={loading}
-            onPress={() => {
-              verifyData()
-            }}
-          >
-            {isUpdate ? translate("common.update") : translate("common.book")}
-          </Button>
         </View>
       </KeyboardAwareScrollView>
+      <View style={styles.bottomButton}>
+        <Button
+          mode="contained"
+          style={styles.button}
+          loading={loading}
+          onPress={() => {
+            verifyData()
+          }}
+        >
+          {isUpdate ? translate("common.update") : translate("common.book")}
+        </Button>
+      </View>
       <PopupVerify
         title={translate("booking.verify_booking")}
         desc={`${translate("booking.confirm_booking")} ${docter?.name} ${translate("booking.in")} ${
@@ -300,12 +318,11 @@ export default function CompleteBooking({ route }: ScreenProps) {
 
 const styles = StyleSheet.create({
   body: {
-    paddingBottom: HEIGHT(28),
+    paddingBottom: HEIGHT(80),
     paddingHorizontal: WIDTH(spacing.md),
   },
   button: {
     borderRadius: 8,
-    marginTop: HEIGHT(28),
     width: WIDTH(343),
   },
   container: {
@@ -317,6 +334,19 @@ const styles = StyleSheet.create({
     marginHorizontal: WIDTH(spacing.md),
     marginTop: HEIGHT(spacing.md),
     paddingHorizontal: WIDTH(spacing.md),
+    paddingVertical: HEIGHT(spacing.sm),
+  },
+  bottomButton: {
+    position: "absolute",
+    bottom: 0,
+    backgroundColor: colors.white,
+    flexDirection: "row",
+    left: 0,
+    right: 0,
+    justifyContent: "space-between",
+    paddingHorizontal: WIDTH(spacing.md),
+    borderTopLeftRadius: 16,
+    borderTopRightRadius: 16,
     paddingVertical: HEIGHT(spacing.sm),
   },
 })

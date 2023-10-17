@@ -1,5 +1,5 @@
 import { Pressable, ScrollView, StyleSheet, View, Image } from "react-native"
-import React from "react"
+import React, { useRef } from "react"
 import { Text } from "@app/components/Text"
 import { HEIGHT, WIDTH } from "@app/config/functions"
 import { spacing } from "@app/theme/spacing"
@@ -9,6 +9,7 @@ import DocumentPicker, { isCancel, isInProgress, types } from "react-native-docu
 import { IconButton } from "react-native-paper"
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
 import { translate } from "@app/i18n/translate"
+import ModalImagePicker from "@app/components/image-picker"
 export default function FileAttachment({ listImage, setListImage }) {
   const handleError = (err: unknown) => {
     if (isCancel(err)) {
@@ -20,17 +21,19 @@ export default function FileAttachment({ listImage, setListImage }) {
       throw err
     }
   }
+  const refSelect = useRef(null)
 
   const onPickFile = () => {
-    DocumentPicker.pick({
-      allowMultiSelection: true,
-      type: [types.images, types.docx],
-    })
-      .then((val) => {
-        const newList = [...listImage, ...val]
-        setListImage(newList)
-      })
-      .catch(handleError)
+    // DocumentPicker.pick({
+    //   allowMultiSelection: true,
+    //   type: [types.images, types.docx],
+    // })
+    //   .then((val) => {
+    // const newList = [...listImage, ...val]
+    // setListImage(newList)
+    //   })
+    //   .catch(handleError)
+    refSelect.current.show()
   }
   const onDeleteImage = (index) => {
     const newArray = [...listImage] // Create a copy of the current array
@@ -77,6 +80,15 @@ export default function FileAttachment({ listImage, setListImage }) {
           </View>
         </ScrollView>
       )}
+      <ModalImagePicker
+        ref={refSelect}
+        turnOffModal={() => {}}
+        onResult={(assets) => {
+          // setImage(asset);
+          const newList = [...listImage, ...assets]
+          setListImage(newList)
+        }}
+      />
     </View>
   )
 }

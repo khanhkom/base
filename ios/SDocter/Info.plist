@@ -61,7 +61,8 @@
 			</dict>
 		</dict>
 		<key>NSPhotoLibraryUsageDescription</key>
-		<string>Your message to user when the photo library is accessed for the first time</string>
+		<string>SDoctor needs access to your photo library to upload and share medical images
+			securely.</string>
 		<key>NSCameraUsageDescription</key>
 		<string>We take your privacy very seriously and use camera services for uploading your
 			avatar or attach video into your post</string>

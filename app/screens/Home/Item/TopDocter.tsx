@@ -34,7 +34,7 @@ export default function TopDocter() {
     <View>
       <View style={styles.flexRow}>
         <Text weight="semiBold" size="xl">
-          Gói dịch vụ nổi bật
+          Top Bác sĩ
         </Text>
         <Icon icon="arrow_circle_right" size={WIDTH(24)} />
       </View>

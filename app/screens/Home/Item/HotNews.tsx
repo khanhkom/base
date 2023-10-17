@@ -35,7 +35,7 @@ export default function HotNews() {
     <View style={styles.container}>
       <View style={styles.itemHead}>
         <Text weight="semiBold" size="xl">
-          Gói dịch vụ nổi bật
+          Tin tức y tế
         </Text>
         <Icon icon="arrow_circle_right" size={WIDTH(24)} />
       </View>

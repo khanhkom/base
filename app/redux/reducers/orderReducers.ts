@@ -41,7 +41,7 @@ const defaultState: IState = {
   },
   specialist: {
     title: "",
-    id: "",
+    code: "",
   },
   orderHistory: [],
   loading: false,
