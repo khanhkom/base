@@ -26,9 +26,45 @@
           "client_type": 1,
           "android_info": {
             "package_name": "com.sdocter",
-            "certificate_hash": "f415cb626405ba0c31da861ee595a081b8d820f6"
+            "certificate_hash": "b72b8c7f99a456e1cfcbf81c80560c6f553a625f"
           }
         },
+        {
+          "client_id": "717467473090-4imm3uqsc7rdtg7qgrfs5bnhr3svf1d3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAneNdelpphd8b7QTnABxtiaxLt9zBeGM4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "717467473090-4imm3uqsc7rdtg7qgrfs5bnhr3svf1d3.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "717467473090-o7am9q1r2v01kclj0rk4vnmcl98m4tc7.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.sdocter"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:717467473090:android:a84a95d000a53739c8575b",
+        "android_client_info": {
+          "package_name": "com.sdocter.docter"
+        }
+      },
+      "oauth_client": [
         {
           "client_id": "717467473090-4imm3uqsc7rdtg7qgrfs5bnhr3svf1d3.apps.googleusercontent.com",
           "client_type": 3
