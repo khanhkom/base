@@ -23,3 +23,17 @@ export const getListPatient = (body: IBodyByPage): Promise<ApiResponse<{ items: 
     .get(URL.GET_PATIENT, body)
     .then((res) => res)
     .catch((err) => err)
+export const getDetailPatient = (id: string): Promise<ApiResponse<IPatient>> =>
+  api.apisauce
+    .get(URL.GET_PATIENT_BY_ID + id)
+    .then((res) => res)
+    .catch((err) => err)
+
+export const updatePatient = (
+  id: string,
+  body: IBodyCreatePatient,
+): Promise<ApiResponse<IPatient>> =>
+  api.apisauce
+    .put(URL.UPDATE_PATIENT + id, body)
+    .then((res) => res)
+    .catch((err) => err)

@@ -389,7 +389,7 @@ function Switch(props: ToggleInputProps) {
   const offBackgroundColor = [
     disabled && colors.palette.neutral400,
     status === "error" && colors.errorBackground,
-    colors.palette.neutral300,
+    R.colors.gray_5,
   ].filter(Boolean)[0]
 
   const onBackgroundColor = [

@@ -45,6 +45,9 @@ import SelectLocation from "@app/screens/Auth/Register/SelectLocation"
 import Notification from "@app/screens/Notification"
 import VerifyPhoneNumber from "@app/screens/Auth/Register/VerifyPhoneNumber"
 import Account from "@app/screens/Account"
+import PatientProfile from "@app/screens/Patient/PatientProfile"
+import DetailPatient from "@app/screens/Patient/DetailPatient"
+import UpdateAccount from "@app/screens/Account/UpdateAccount"
 
 export type AppStackParamList = {
   TabNavigator: undefined
@@ -93,6 +96,9 @@ export type AppStackParamList = {
   SelectLocation: undefined
   Notification: undefined
   SelectPatientHistory: undefined
+  PatientProfile: undefined
+  DetailPatient: undefined
+  UpdateAccount: undefined
   // 🔥 Your screens go here
   // IGNITE_GENERATOR_ANCHOR_APP_STACK_PARAM_LIST
 }
@@ -140,6 +146,9 @@ const AppStack = observer(function AppStack() {
       <Stack.Screen name="SearchDocter" component={SearchDocter} />
       <Stack.Screen name="SearchDocterAgain" component={SearchDocter} />
       <Stack.Screen name="Account" component={Account} />
+      <Stack.Screen name="PatientProfile" component={PatientProfile} />
+      <Stack.Screen name="DetailPatient" component={DetailPatient} />
+      <Stack.Screen name="UpdateAccount" component={UpdateAccount} />
 
       <Stack.Screen name="DocterInformation" component={DocterInformation} />
       <Stack.Screen name="SelectCalendar" component={SelectCalendar} />

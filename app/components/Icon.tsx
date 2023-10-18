@@ -159,6 +159,7 @@ export const iconRegistry = {
   noti_edit: require("./icons/noti_edit.png"),
   edit_2: require("./icons/edit_2.png"),
   ic_logout: require("./icons/ic_logout.png"),
+  camera: require("./icons/camera.png"),
 }
 const $imageStyle: ImageStyle = {
   resizeMode: "contain",

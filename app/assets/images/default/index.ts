@@ -5,5 +5,7 @@ const HOME_DEFAULTS = {
   empty: require("./empty.png"),
   empty_noti: require("./empty_noti.png"),
   call_avatar: require("./call_avatar.png"),
+  patient_female: require("./patient_female.png"),
+  patient_male: require("./patient_male.png"),
 }
 export default HOME_DEFAULTS

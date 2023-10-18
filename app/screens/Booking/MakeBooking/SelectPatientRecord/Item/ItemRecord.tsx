@@ -12,6 +12,7 @@ interface ItemProps {
   item: IPatient
 }
 export default function ItemRecord({ onPress, item }: ItemProps) {
+  const isMale = item?.gender === "male"
   return (
     <Pressable
       style={styles.item}
@@ -19,7 +20,11 @@ export default function ItemRecord({ onPress, item }: ItemProps) {
         onPress && onPress()
       }}
     >
-      <Image source={R.images.avatar_patient} style={styles.avatar} resizeMode="center" />
+      <Image
+        source={isMale ? R.images.patient_male : R.images.patient_female}
+        style={styles.avatar}
+        resizeMode="center"
+      />
       <View>
         <Text weight="medium" size="md" style={styles.textName}>
           {item?.name}
@@ -30,7 +35,7 @@ export default function ItemRecord({ onPress, item }: ItemProps) {
         </Text>
         <Text weight="normal" size="sm" style={styles.textDes}>
           {translate("create_patient.gender")}:{" "}
-          <Text style={{ color: colors.gray_9 }}>{item?.gender === "male" ? "Nam" : "Nữ"}</Text>
+          <Text style={{ color: colors.gray_9 }}>{isMale ? "Nam" : "Nữ"}</Text>
         </Text>
       </View>
     </Pressable>
@@ -39,10 +44,9 @@ export default function ItemRecord({ onPress, item }: ItemProps) {
 
 const styles = StyleSheet.create({
   avatar: {
-    alignSelf: "center",
-    height: HEIGHT(72),
+    height: HEIGHT(32),
     marginRight: WIDTH(spacing.sm),
-    width: WIDTH(72),
+    width: WIDTH(32),
   },
   item: {
     backgroundColor: colors.white,
@@ -57,6 +61,5 @@ const styles = StyleSheet.create({
   textName: {
     color: colors.gray_9,
     marginBottom: HEIGHT(2),
-    marginTop: HEIGHT(8),
   },
 })

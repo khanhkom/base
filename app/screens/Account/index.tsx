@@ -1,5 +1,5 @@
 import { StyleSheet, View } from "react-native"
-import React from "react"
+import React, { useState } from "react"
 import { KEYSTORAGE, remove } from "@app/utils/storage"
 import { removeUserData } from "@app/redux/actions"
 import { navigate } from "@app/navigators/navigationUtilities"
@@ -14,8 +14,12 @@ import { Text } from "@app/components/Text"
 import { HEIGHT, WIDTH } from "@app/config/functions"
 import colors from "@app/assets/colors"
 import { spacing } from "@app/theme/spacing"
+import SocialConnect from "./Item/SocialConnect"
+import PopupConnectError from "./Item/PopupConnectError"
 
 export default function Account() {
+  const [visible, setVisible] = useState(false)
+  const [indexSocial, setIndexSocial] = useState(0)
   const dispatch = useDispatch()
   const onLogout = async () => {
     await remove(KEYSTORAGE.LOGIN_DATA)
@@ -26,8 +30,16 @@ export default function Account() {
   }
   return (
     <View style={styles.container}>
-      <Header title="Thông tin tài khoản" leftIcon="arrow_left" rightIcon="edit_2" />
+      <Header
+        title="Thông tin tài khoản"
+        leftIcon="arrow_left"
+        rightIcon="edit_2"
+        onRightPress={() => {
+          navigate("UpdateAccount")
+        }}
+      />
       <BaseInfor />
+      <SocialConnect setIndexSocial={setIndexSocial} setVisible={setVisible} />
       <List.Item
         style={styles.buttonLogout}
         onPress={onLogout}
@@ -42,6 +54,7 @@ export default function Account() {
           return <Icon icon="ic_logout" size={WIDTH(24)} />
         }}
       />
+      <PopupConnectError visible={visible} setVisible={setVisible} indexSocial={indexSocial} />
     </View>
   )
 }

@@ -1,5 +1,5 @@
 import { StyleSheet, View } from "react-native"
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import { Header } from "@app/components/Header"
 import colors from "@app/assets/colors"
 import { Button, Card } from "react-native-paper"
@@ -14,20 +14,32 @@ import { goBack, navigate } from "@app/navigators/navigationUtilities"
 import { useSelector } from "@app/redux/reducers"
 import moment from "moment"
 import { EToastType, showToastMessage } from "@app/utils/library"
-import { createPatient } from "@app/services/api/functions/patient"
+import { createPatient, updatePatient } from "@app/services/api/functions/patient"
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view"
 import { getListPatientRequest } from "@app/redux/actions/patient"
 import { useDispatch } from "react-redux"
 import { Formik } from "formik"
 import * as Yup from "yup"
 import { translate } from "@app/i18n/translate"
+import useDetailPatient from "../Patient/DetailPatient/useDetailPatient"
 const SignupSchema = Yup.object().shape({
   name: Yup.string().required(translate("create_patient.please_enter_fullname")),
   phone: Yup.string().required(translate("create_patient.please_enter_phone")),
   birthday: Yup.string().required(translate("create_patient.please_enter_date_birth")),
 })
-export default function CreatePatient({ route }) {
+interface ScreenProps {
+  route: {
+    params: {
+      fromRegister?: boolean
+      id?: string
+      getDetailOrderApi?: () => void
+    }
+  }
+}
+export default function CreatePatient({ route }: ScreenProps) {
   const user = useSelector((state) => state.userReducers.user)
+  const id = route?.params?.id
+  const { loading: loadingDetail, detailPatient, returnDataByField } = useDetailPatient(id)
   const [gender, setGender] = useState(0)
   const [email, setEmail] = useState("")
   const [address, setAddress] = useState("")
@@ -64,8 +76,15 @@ export default function CreatePatient({ route }) {
     parent_code: "",
     isDeleted: false,
   })
+  useEffect(() => {
+    if (id) {
+      setEmail(detailPatient?.mail)
+      setGender(detailPatient?.gender === "male" ? 0 : 1)
+      setAddress(detailPatient?.address)
+    }
+  }, [detailPatient])
   const isNavigateFromRegister = route?.params?.fromRegister
-  const onCreateProfile = async (values: { name: string; phone: string; birthday: Date }) => {
+  const handleCreateProfile = async (values: { name: string; phone: string; birthday: Date }) => {
     setLoading(true)
     const bodyCreate = {
       name: values.name,
@@ -78,6 +97,14 @@ export default function CreatePatient({ route }) {
       address: address,
       phone: values.phone,
     }
+    // update patient
+    if (id) {
+      onUpdatePatient(bodyCreate)
+    } else {
+      onCreatePatient(bodyCreate)
+    }
+  }
+  const onCreatePatient = async (bodyCreate) => {
     const resUpdate = await createPatient(bodyCreate)
     setLoading(false)
     if (resUpdate?.status === 201) {
@@ -88,6 +115,18 @@ export default function CreatePatient({ route }) {
         dispatch(getListPatientRequest())
         goBack()
       }
+    } else {
+      showToastMessage(translate("create_patient.create_patient_failure"), EToastType.ERROR)
+    }
+  }
+  const onUpdatePatient = async (bodyCreate) => {
+    const resUpdate = await updatePatient(id, bodyCreate)
+    setLoading(false)
+    if (resUpdate?.status === 200) {
+      showToastMessage(translate("create_patient.update_patient_successful"))
+      route?.params?.getDetailOrderApi()
+      dispatch(getListPatientRequest())
+      goBack()
     } else {
       showToastMessage(translate("create_patient.create_patient_failure"), EToastType.ERROR)
     }
@@ -123,9 +162,17 @@ export default function CreatePatient({ route }) {
         </Card>
         <Formik
           validationSchema={SignupSchema}
-          initialValues={{ name: user?.name, phone: user?.phone, birthday: "" }}
+          enableReinitialize
+          initialValues={{
+            name: user?.name || detailPatient?.name,
+            phone: user?.phone || detailPatient?.phone,
+            birthday: moment(
+              detailPatient?.birthday || moment().format("DD/MM/YYYY"),
+              "DD/MM/YYYY",
+            ).toDate(),
+          }}
           onSubmit={(values) => {
-            onCreateProfile(values)
+            handleCreateProfile(values)
           }}
         >
           {({ handleChange, handleBlur, handleSubmit, values, errors, touched, setFieldValue }) => (

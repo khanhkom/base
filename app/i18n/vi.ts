@@ -90,6 +90,7 @@ const vi = {
     detail_address: "Địa chỉ chi tiết",
     example_address: "Ví dụ: Số nhà, đường, ...",
     create_patient_successful: "Tạo hồ sơ thành công!",
+    update_patient_successful: "Lưu thông tin thành công!",
     create_patient_failure: "Tạo hồ sơ thất bại!",
     select_birthday: "Chọn ngày sinh",
   },

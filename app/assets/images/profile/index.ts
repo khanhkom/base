@@ -6,5 +6,7 @@ const IMAGES_PROFILE = {
   security_safe: require("./security-safe.png"),
   star: require("./star.png"),
   tag_user: require("./tag-user.png"),
+  facebook_error: require("./facebook_error.png"),
+  google_error: require("./google_error.png"),
 }
 export default IMAGES_PROFILE

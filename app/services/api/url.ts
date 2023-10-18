@@ -8,6 +8,8 @@ const URL_LOGIN = {
 const URL_PATIENT = {
   CREATE_PATIENT: "patient",
   GET_PATIENT: "patient",
+  GET_PATIENT_BY_ID: "patient/",
+  UPDATE_PATIENT: "patient/",
 }
 const URL_DOCTER = {
   GET_DOCTER: "doctor",

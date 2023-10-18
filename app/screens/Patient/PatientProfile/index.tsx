@@ -2,22 +2,15 @@ import { StyleSheet, View, FlatList } from "react-native"
 import React, { useEffect } from "react"
 import colors from "@app/assets/colors"
 import { Header } from "@app/components/index"
-import BottonButton from "./Item/BottonButton"
-import ItemRecord from "./Item/ItemRecord"
 import { useSelector } from "@app/redux/reducers"
 import { useDispatch } from "react-redux"
 import { getListPatientRequest } from "@app/redux/actions/patient"
-import { updatePatientOrder } from "@app/redux/actions/actionOrder"
-import { goBack, navigate } from "@app/navigators/navigationUtilities"
+import { navigate } from "@app/navigators/navigationUtilities"
 import { HEIGHT } from "@app/config/functions"
-interface IScreenProps {
-  route: {
-    params: {
-      preScreen?: string
-    }
-  }
-}
-export default function SelectPatientRecord({ route }: IScreenProps) {
+import ItemRecord from "@app/screens/Booking/MakeBooking/SelectPatientRecord/Item/ItemRecord"
+import BottonButton from "@app/screens/Booking/MakeBooking/SelectPatientRecord/Item/BottonButton"
+
+export default function PatientProfile() {
   const patients = useSelector((state) => state.patientReducers.patients)
   const dispatch = useDispatch()
   useEffect(() => {
@@ -33,12 +26,7 @@ export default function SelectPatientRecord({ route }: IScreenProps) {
             <ItemRecord
               item={item}
               onPress={() => {
-                dispatch(updatePatientOrder(item))
-                if (route?.params?.preScreen) {
-                  goBack()
-                } else {
-                  navigate("SelectSpecialist")
-                }
+                navigate("DetailPatient", { id: item?.id })
               }}
             />
           )

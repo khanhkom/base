@@ -9,6 +9,7 @@ function* fetchListPatient() {
       perPage: 20,
     }
     const resData = yield call(getListPatient, params)
+    console.log("resData_resData", resData)
     yield put({
       type: "FETCH_LIST_PATIENT_SUCCESS",
       data: resData?.data?.items ?? [],
