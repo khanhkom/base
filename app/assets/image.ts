@@ -7,6 +7,7 @@ import IMAGE_TABBAR from "./images/tabbar"
 import IMAGE_NOTIFICATIONS from "./images/notification"
 import IMAGES_PROFILE from "./images/profile"
 import IMAGES_CHAT from "./images/chat"
+import IMAGE_SEARCH from "./images/search"
 
 const IMAGE = {
   ...AUTH_IMAGE,
@@ -18,5 +19,6 @@ const IMAGE = {
   ...IMAGE_NOTIFICATIONS,
   ...IMAGES_PROFILE,
   ...IMAGES_CHAT,
+  ...IMAGE_SEARCH,
 }
 export default IMAGE

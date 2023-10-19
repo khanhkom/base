@@ -30,5 +30,6 @@ const colors = {
   green_7: "#37B24D",
   green_8: "#2F9E44",
   green_0: "#EBFBEE",
+  green_d7: "#D7F1DF",
 }
 export default colors

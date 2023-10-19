@@ -1,4 +1,4 @@
-import { StyleSheet, Image, View } from "react-native"
+import { StyleSheet, Image, View, Pressable } from "react-native"
 import React, { useState } from "react"
 import { HEIGHT, WIDTH } from "@app/config/functions"
 import R from "@app/assets"
@@ -24,16 +24,23 @@ export default function HeaderHome() {
           }}
         />
       </View>
-      <Searchbar
-        onClearIconPress={() => setKeyword("")}
-        value={keyword}
-        icon={R.images.search_normal}
-        style={styles.searchBar}
-        iconColor={colors.white}
-        placeholderTextColor={colors.primary_2}
-        placeholder="Tìm kiếm"
-        onChangeText={(txt) => setKeyword(txt)}
-      />
+      <Pressable
+        onPress={() => {
+          navigate("SearchHome")
+        }}
+      >
+        <Searchbar
+          onClearIconPress={() => setKeyword("")}
+          value={keyword}
+          editable={false}
+          icon={R.images.search_normal}
+          style={styles.searchBar}
+          iconColor={colors.white}
+          placeholderTextColor={colors.primary_2}
+          placeholder="Tìm kiếm"
+          onChangeText={(txt) => setKeyword(txt)}
+        />
+      </Pressable>
     </View>
   )
 }
