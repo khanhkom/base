@@ -164,6 +164,14 @@ export const iconRegistry = {
   ic_question: require("./icons/ic_question.png"),
   ic_news: require("./icons/ic_news.png"),
   ic_know: require("./icons/ic_know.png"),
+  ic_chat_support: require("./icons/ic_chat_support.png"),
+  call_calling: require("./icons/call_calling.png"),
+  ic_search: require("./icons/ic_search.png"),
+  send: require("./icons/send.png"),
+  ic_attach: require("./icons/ic_attach.png"),
+  gallery: require("./icons/gallery.png"),
+  take_photo: require("./icons/take_photo.png"),
+  view_more: require("./icons/view_more.png"),
 }
 const $imageStyle: ImageStyle = {
   resizeMode: "contain",
