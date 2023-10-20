@@ -16,6 +16,7 @@ if (__DEV__) {
   // to only execute this in development.
   require("./devtools/ReactotronConfig.ts")
 }
+import { OrientationLocker, LANDSCAPE, PORTRAIT } from "react-native-orientation-locker"
 import "./i18n"
 import "./utils/ignoreWarnings"
 import { useFonts } from "expo-font"
@@ -156,7 +157,6 @@ export async function onMessageReceived(message) {
       break
   }
 }
-
 messaging().onMessage(onMessageReceived)
 function App(props: AppProps) {
   const { hideSplashScreen } = props
@@ -273,6 +273,7 @@ function App(props: AppProps) {
                 onStateChange={onNavigationStateChange}
               />
               <Toast />
+              <OrientationLocker orientation={PORTRAIT} />
             </GestureHandlerRootView>
           </PaperProvider>
         </Provider>
