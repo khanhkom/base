@@ -12,7 +12,7 @@ import { ISpecialList } from "@app/interface/docter"
 import ItemEmpty from "@app/components/ItemEmpty"
 import { goBack, navigate } from "@app/navigators/navigationUtilities"
 import { useDispatch } from "react-redux"
-import { updateDocterCreateOrder } from "@app/redux/actions/actionOrder"
+import { resetOrderInfor, updateDocterCreateOrder } from "@app/redux/actions/actionOrder"
 import { translate } from "@app/i18n/translate"
 
 interface ScreenProps {
@@ -102,6 +102,7 @@ export default function SearchDocter({ route }: ScreenProps) {
       goBack()
     } else {
       navigate("SelectCalendar")
+      dispatch(resetOrderInfor())
     }
   }
   return (

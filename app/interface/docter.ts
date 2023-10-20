@@ -13,6 +13,9 @@ export interface IDocter {
   education: Education[]
   averageRating: number
   countRating: number
+  degree: string
+  avatarUrl: string
+  introduce: string
   createdAt?: string
   updatedAt?: string
   id: string

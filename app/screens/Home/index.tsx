@@ -114,7 +114,7 @@ export default function HomeScreen() {
       <ItemUtilities />
       <BannerCarousel />
       <TopDocter />
-      {/* <TopPackage /> */}
+      <TopPackage />
       <HotNews />
       <StringeeClient
         ref={client}

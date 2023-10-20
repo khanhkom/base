@@ -36,3 +36,8 @@ export function getOrderHistory() {
     type: "FETCH_ORDER_HISTORY_REQUEST",
   }
 }
+export function resetOrderInfor() {
+  return {
+    type: "RESET_ORDER_INFOR",
+  }
+}

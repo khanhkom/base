@@ -16,7 +16,11 @@ export default function GeneralInfor({ data }: { data: IDocter }) {
       contentStyle={{ flexDirection: "row" }}
       onPress={() => {}}
     >
-      <Image source={R.images.avatar_docter_rec} style={styles.avatar} resizeMode="center" />
+      <Image
+        source={data?.avatarUrl ? { uri: data?.avatarUrl } : R.images.avatar_docter_rec}
+        style={styles.avatar}
+        resizeMode="cover"
+      />
       <View>
         <Text weight="medium" size="md" style={styles.textName}>
           {translate("doctor.doctor")} {data?.name}
@@ -25,7 +29,7 @@ export default function GeneralInfor({ data }: { data: IDocter }) {
           {translate("doctor.specialist")}: {data?.specialist?.[0]?.value}
         </Text>
         <Text weight="normal" size="sm" style={styles.textDes}>
-          {translate("doctor.level")}: Thạc sĩ
+          {translate("doctor.level")}: {data?.degree}
         </Text>
         <View style={styles.flexRow}>
           <Text style={{ color: colors.gray_6 }} size="sm" weight="normal">

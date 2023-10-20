@@ -11,8 +11,8 @@ import { IExperience } from "@app/interface/docter"
 interface Item {
   title: string
   icon: string
+  field: string
   type: "text" | "list"
-  data: string | string[]
 }
 
 export default function ItemExperience({
@@ -20,7 +20,7 @@ export default function ItemExperience({
   data,
 }: {
   item: Item
-  data: IExperience[] | string[]
+  data: IExperience[] | string[] | string
 }) {
   const [isShow, setShow] = useState(false)
   return (
@@ -69,8 +69,7 @@ export default function ItemExperience({
         </View>
       ) : (
         <Text weight="normal" size="ba" style={{ color: colors.gray_7 }}>
-          Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has
-          been the industry's standard dummy text ever since
+          {data}
         </Text>
       )}
     </View>

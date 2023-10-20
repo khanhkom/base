@@ -161,9 +161,9 @@ export default function CompleteBooking({ route }: ScreenProps) {
       resCreate = await createOrder(formData)
       console.log("resCreate_resCreate", resCreate, formData)
       if (resCreate.status === 201) {
-        // navigate("BookingSuccess", {
-        //   id: resCreate.data?.[0]?.id,
-        // })
+        navigate("BookingSuccess", {
+          id: resCreate.data?.[0]?.id,
+        })
         dispatch(getOrderHistory())
         showToastMessage(translate("booking.booking_success"), EToastType.SUCCESS)
       } else {

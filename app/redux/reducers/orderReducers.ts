@@ -115,7 +115,29 @@ export default (state = defaultState, action) => {
         loading: false,
       }
     }
-
+    case "RESET_ORDER_INFOR": {
+      return {
+        ...state,
+        specialist: {
+          title: "",
+          code: "",
+        },
+        patient: {
+          userId: "",
+          name: "",
+          gender: "",
+          birthday: "",
+          mail: "",
+          address: "",
+          province: "",
+          city: "",
+          ward: "",
+          createdAt: "",
+          updatedAt: "",
+          id: "",
+        },
+      }
+    }
     default:
       break
   }

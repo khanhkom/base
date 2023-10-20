@@ -9,6 +9,7 @@ const DATA_EXPERIENCE = [
   {
     title: "Giới thiệu",
     icon: "user_search",
+    field: "introduce",
     type: "text",
   },
   {
@@ -33,13 +34,13 @@ const DATA_EXPERIENCE = [
 
 export default function Experience({ data }: { data: IDocter }) {
   const returnData = (type) => {
+    if (type === "introduce") return data?.introduce
     if (type === "briefcase") return data?.experience
     if (type === "award") return data?.education
     if (type === "department") return data?.specialist.map((item) => item.value)
   }
   return (
     <View style={styles.container}>
-      <Text>Experience</Text>
       <FlatList
         data={DATA_EXPERIENCE}
         renderItem={({ item, index }) => {
