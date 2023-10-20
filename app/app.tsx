@@ -153,6 +153,7 @@ export async function onMessageReceived(message) {
     case "ended":
       RNCallKeep.endAllCalls()
       RNNotificationCall.hideNotification()
+      notifee.cancelAllNotifications()
       break
   }
 }

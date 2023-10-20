@@ -194,7 +194,7 @@ const useHookCallKitIOS = (updateClientId) => {
         customDataFromYourServer,
       serial,
     )
-    navigate("CallScreen", {
+    navigate("CallScreenHook", {
       callId: callId,
       clientId: client?.current?.getId(),
       isVideoCall: true,
@@ -264,12 +264,6 @@ const useHookCallKitIOS = (updateClientId) => {
       VoipPushNotification.addEventListener("register", registerListener)
       VoipPushNotification.addEventListener("notification", notificationListener)
     }
-    // RNCallKeep.addEventListener("didDisplayIncomingCall", displayIncomingCallListener)
-    // RNCallKeep.addEventListener("didActivateAudioSession", activateAudioSessionListener)
-    // RNCallKeep.addEventListener("didReceiveStartCallAction", startCallActionListener)
-    // RNCallKeep.addEventListener("didPerformSetMutedCallAction", setMutedCallActionListener)
-    // RNCallKeep.addEventListener("answerCall", answerCallListener)
-    // RNCallKeep.addEventListener("endCall", endCallListener)
   }, [])
 
   const clientDidConnect = async ({ userId }) => {
@@ -281,7 +275,7 @@ const useHookCallKitIOS = (updateClientId) => {
       console.log("UPDATE_TOKEN_ANDROID", token)
       client?.current?.registerPush(
         token,
-        __DEV__?false:true, // isProduction: false: In development, true: In Production.
+        __DEV__ ? false : true, // isProduction: false: In development, true: In Production.
         true, // only for iOS
         (status, code, message) => {
           console.log(message)
@@ -335,7 +329,7 @@ const useHookCallKitIOS = (updateClientId) => {
     console.log("token_A", token)
     client?.current?.registerPush(
       token,
-      __DEV__?false:true, // isProduction: false: In development, true: In Production.
+      __DEV__ ? false : true, // isProduction: false: In development, true: In Production.
       true, // (iOS) isVoip: true: Voip PushNotification. Stringee supports this push notification.
       (status, code, message) => {
         console.log(message)
@@ -381,14 +375,19 @@ const useHookCallKitIOS = (updateClientId) => {
       PermissionsAndroid.PERMISSIONS.RECORD_AUDIO,
       PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS,
       PermissionsAndroid.PERMISSIONS.BLUETOOTH_CONNECT,
-    ]).then((result) => {
-      if (
-        result["android.permission.CAMERA"] &&
-        result["android.permission.RECORD_AUDIO"] === "granted"
-      ) {
-        setPermissionGranted(true)
-      }
-    })
+    ])
+      .then((result) => {
+        console.log("result_result", result)
+        if (
+          result["android.permission.CAMERA"] &&
+          result["android.permission.RECORD_AUDIO"] === "granted"
+        ) {
+          setPermissionGranted(true)
+        }
+      })
+      .catch((err) => {
+        console.log("requestPermission_error", err)
+      })
   }
 
   return {

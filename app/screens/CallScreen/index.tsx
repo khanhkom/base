@@ -14,9 +14,10 @@ import { goBack } from "@app/navigators/navigationUtilities"
 import RNCallKeep from "react-native-callkeep"
 import ItemUserTarget from "./Item/ItemUserTarget"
 import useHookCall from "./useHookCall"
+import R from "@app/assets"
 const CallScreen = ({ route }) => {
   const params = route.params
-  const { isVideoCall, isIncoming, detailOrder, callId } = params
+  const { isVideoCall, isIncoming, detailOrder, callId, clientId, from, to } = params
   const {
     call2,
     status,
@@ -42,9 +43,10 @@ const CallScreen = ({ route }) => {
     callDidReceiveCallInfo,
     callDidHandleOnAnotherDevice,
     callDidAudioDeviceChange,
-  } = useHookCall(callId)
+  } = useHookCall(callId, isIncoming, from, to)
   console.log("STATUS_", status, isVideoCall, callId, receivedRemoteStream)
   console.log("STATUS_1", status, isVideoCall, callId, receivedLocalStream)
+
   return (
     <View style={styles.container}>
       <Header
@@ -75,6 +77,7 @@ const CallScreen = ({ route }) => {
             local={true}
             overlay={true}
           />
+          {!isVideoEnable && <Image source={R.images.client} style={styles.userTargetDefault} />}
           <Pressable onPress={switchPress} style={styles.iconSwith}>
             <Icon icon="switch_camera" size={WIDTH(20)} />
           </Pressable>
@@ -114,6 +117,7 @@ const CallScreen = ({ route }) => {
 
       <StringeeCall2
         ref={call2}
+        clientId={clientId}
         eventHandlers={{
           onChangeSignalingState: callDidChangeSignalingState,
           onChangeMediaState: callDidChangeMediaState,
@@ -150,12 +154,15 @@ const styles = StyleSheet.create({
   },
 
   remoteView: {
-    backgroundColor: colors.black,
+    backgroundColor: colors.gray_5,
     position: "absolute",
     top: 0,
     left: 0,
     width: Dimensions.get("window").width,
-    height: Dimensions.get("window").height,
+    height:
+      Platform.OS === "ios"
+        ? Dimensions.get("window").height
+        : Dimensions.get("window").height + HEIGHT(80),
     zIndex: 0,
   },
   wrapperUserTarget: {
@@ -179,6 +186,16 @@ const styles = StyleSheet.create({
     borderRadius: 24,
     // borderWidth: 3,
     // borderColor: colors.white,
-    backgroundColor: colors.black,
+    backgroundColor: colors.gray_2,
+  },
+  userTargetDefault: {
+    width: WIDTH(100),
+    height: WIDTH(132),
+    borderRadius: 12,
+    // borderWidth: 3,
+    // borderColor: colors.white,
+    backgroundColor: colors.gray_2,
+    position: "absolute",
+    top: 0,
   },
 })

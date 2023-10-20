@@ -63,7 +63,7 @@ const useHookStringee = (updateClientId) => {
         "customDataFromYourServer-" +
         customDataFromYourServer,
     )
-    navigate("CallScreen", {
+    navigate("CallScreenHook", {
       callId: callId,
       clientId: client?.current?.getId(),
       isVideoCall: isVideoCall,

@@ -14,6 +14,7 @@ import VerifyOTP from "@app/screens/Auth/Register/VerifyOTP"
 import ConfirmName from "@app/screens/Auth/Register/ConfirmName"
 import CreatePatient from "@app/screens/CreatePatient"
 import CallScreen from "@app/screens/CallScreen/Call2Screen"
+import CallScreenHook from "@app/screens/CallScreen"
 import R from "@app/assets"
 import { KEYSTORAGE, load } from "@app/utils/storage"
 import { setLoginedApp } from "@app/redux/actions"
@@ -67,6 +68,7 @@ export type AppStackParamList = {
   Account: undefined
   CreatePatient: undefined
   CallScreen: undefined
+  CallScreenHook: undefined
 
   ChatScreen: undefined
   Conversations: undefined
@@ -149,6 +151,8 @@ const AppStack = observer(function AppStack() {
       <Stack.Screen name="ConfirmName" component={ConfirmName} />
       <Stack.Screen name="CreatePatient" component={CreatePatient} />
       <Stack.Screen name="CallScreen" component={CallScreen} />
+      <Stack.Screen name="CallScreenHook" component={CallScreenHook} />
+
       <Stack.Screen name="ChatScreen" component={ChatScreen} />
       <Stack.Screen name="Conversations" component={Conversations} />
       <Stack.Screen name="ChatDetail" component={ChatDetail} />

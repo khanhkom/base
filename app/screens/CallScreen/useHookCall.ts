@@ -1,10 +1,12 @@
+import RNNotificationCall from "react-native-full-screen-notification-incoming-call"
 import { goBack } from "@app/navigators/navigationUtilities"
 import MediaManager from "@app/utils/MediaManager"
 import React, { useState, useEffect, useRef } from "react"
-import { Platform } from "react-native"
+import { Alert, Platform } from "react-native"
 import RNCallKeep from "react-native-callkeep"
+import notifee from "@notifee/react-native"
 
-const useHookCall = (callId) => {
+const useHookCall = (callId, isIncoming, from, to) => {
   const [status, setStatus] = useState("")
   const [isMute, setIsMute] = useState(false)
   const [isVideoEnable, setIsVideoEnable] = useState(true)
@@ -19,12 +21,36 @@ const useHookCall = (callId) => {
   useEffect(() => {
     MediaManager.initSound("messenger_ringtone.mp3", true, () => {})
     MediaManager.playMusicBackGround("messenger_ringtone.mp3", true)
-    call2.current.initAnswer(callId, (status, code, message) => {
-      console.log("initAnswer " + message)
-    })
     return () => MediaManager.stopMusicBackground()
   }, [])
 
+  useEffect(() => {
+    if (call2.current) {
+      if (isIncoming) {
+        call2.current.initAnswer(callId, (status, code, message) => {
+          console.log("initAnswer " + message)
+        })
+      } else {
+        const callParams = JSON.stringify({
+          from: from,
+          to: to,
+          isVideoCall: true,
+          videoResolution: "NORMAL",
+        })
+        console.log("ZZZZZZZZ", callParams)
+        call2.current.makeCall(callParams, (status, code, message, callId) => {
+          console.log(
+            "status-" + status + " code-" + code + " message-" + message + " callId-" + callId,
+          )
+          if (status) {
+            MediaManager.playMusicBackGround("phone_call.mp3", true)
+          } else {
+            Alert.alert("Make call fail: " + message)
+          }
+        })
+      }
+    }
+  }, [call2])
   const callDidChangeSignalingState = ({ callId, code, reason, sipCode, sipReason }) => {
     console.log(
       "callDidChangeSignalingState " +
@@ -166,9 +192,11 @@ const useHookCall = (callId) => {
   const answerCall = () => {
     console.log("AAAAAAAA", callId)
     RNCallKeep.endAllCalls()
-
+    RNNotificationCall.hideNotification()
+    MediaManager.stopMusicBackground()
+    notifee.cancelAllNotifications()
     call2.current.answer(callId, (status, code, message) => {
-      console.log("answer: " + message)
+      console.log("answer: " + message, status)
       if (status) {
         setShowAnswerBtn(false)
         setSignalingState(2)

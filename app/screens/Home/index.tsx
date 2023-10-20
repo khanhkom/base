@@ -86,7 +86,7 @@ export default function HomeScreen() {
     permissionGranted,
     requestPermission,
   } = useHookCallKitIOS(updateClientId)
-
+  console.log("permissionGranted", permissionGranted)
   React.useEffect(() => {
     if (!permissionGranted) {
       if (Platform.OS === "android") {
