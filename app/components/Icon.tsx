@@ -172,6 +172,7 @@ export const iconRegistry = {
   gallery: require("./icons/gallery.png"),
   take_photo: require("./icons/take_photo.png"),
   view_more: require("./icons/view_more.png"),
+  no_wifi: require("./icons/no_wifi.png"),
 }
 const $imageStyle: ImageStyle = {
   resizeMode: "contain",

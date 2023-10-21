@@ -45,6 +45,7 @@ import RNCallKeep from "react-native-callkeep"
 import RNNotificationCall from "react-native-full-screen-notification-incoming-call"
 export const NAVIGATION_PERSISTENCE_KEY = "NAVIGATION_STATE"
 import codePush from "react-native-code-push"
+import NoInternetComponent from "./components/no-internet"
 
 const sagaMiddleware = createSagaMiddleware()
 const store = createStore(rootReducers, applyMiddleware(sagaMiddleware))
@@ -133,22 +134,22 @@ export async function onMessageReceived(message) {
           console.log("press endCall", callUUID)
         })
       }
-      await notifee.displayNotification({
-        id: notificationId,
-        title: "Cuộc gọi video đến",
-        // body: "Bác sĩ đang gọi cho bạn" + from,
-        body: "Bác sĩ đang gọi cho bạn",
-        android: {
-          channelId,
-          pressAction: {
-            id: "default",
-            mainComponent: "SDocter",
-          },
-          importance: AndroidImportance.HIGH,
-          loopSound: true,
-          visibility: AndroidVisibility.PUBLIC,
-        },
-      })
+      // await notifee.displayNotification({
+      //   id: notificationId,
+      //   title: "Cuộc gọi video đến",
+      //   // body: "Bác sĩ đang gọi cho bạn" + from,
+      //   body: "Bác sĩ đang gọi cho bạn",
+      //   android: {
+      //     channelId,
+      //     pressAction: {
+      //       id: "default",
+      //       mainComponent: "SDocter",
+      //     },
+      //     importance: AndroidImportance.HIGH,
+      //     loopSound: true,
+      //     visibility: AndroidVisibility.PUBLIC,
+      //   },
+      // })
       break
     case "ended":
       RNCallKeep.endAllCalls()
@@ -158,7 +159,7 @@ export async function onMessageReceived(message) {
   }
 }
 
-messaging().onMessage(onMessageReceived)
+// messaging().onMessage(onMessageReceived)
 function App(props: AppProps) {
   const { hideSplashScreen } = props
   const {
@@ -274,6 +275,7 @@ function App(props: AppProps) {
                 onStateChange={onNavigationStateChange}
               />
               <Toast />
+              <NoInternetComponent />
             </GestureHandlerRootView>
           </PaperProvider>
         </Provider>
