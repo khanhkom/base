@@ -13,7 +13,8 @@ import { translate } from "@app/i18n/translate"
 
 export default function ConfirmName() {
   const nameRedux = useSelector((state) => state.userReducers.user?.name)
-  const [name, setText] = React.useState(nameRedux || "")
+  // const [name, setText] = React.useState(nameRedux || "")
+  const [name, setText] = React.useState("")
   const dispatch = useDispatch()
   return (
     <View style={styles.container}>

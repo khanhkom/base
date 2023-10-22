@@ -80,6 +80,7 @@ export async function onMessageReceived(message) {
   const dataName = await getNameById(from)
   const notificationId = "11111" // YOUR_NOTIFICATION_ID
   console.log("data: " + callStatus, AppState.currentState)
+  const isShowNotification = AppState.currentState !== "active"
   const channelId = await notifee.createChannel({
     id: "sdocter",
     name: "sdocter",
@@ -90,49 +91,52 @@ export async function onMessageReceived(message) {
   })
   switch (callStatus) {
     case "started":
-      console.log("started_started")
-      RNCallKeep.displayIncomingCall(
-        notificationId,
-        dataName?.fullname ?? from,
-        channelId,
-        "number",
-        false,
-      )
+      console.log("started_started", isShowNotification)
+      if (isShowNotification) {
+        RNCallKeep.displayIncomingCall(
+          notificationId,
+          dataName?.fullname ?? from,
+          channelId,
+          "number",
+          false,
+        )
 
-      if (Platform.OS === "android") {
-        RNCallKeep.addEventListener("didDisplayIncomingCall", ({ callUUID }) => {
-          console.log("didDisplayIncomingCall", callUUID)
-        })
-        RNCallKeep.addEventListener("showIncomingCallUi", ({ callUUID: uuid }) => {
-          console.log("showIncomingCallUi_showIncomingCallUi", uuid)
-          RNNotificationCall.displayNotification(
-            "22221a97-8eb4-4ac2-b2cf-0a3c0b9100ad",
-            null,
-            30000,
-            {
-              channelId: "sdocter",
-              channelName: "sdocter",
-              notificationIcon: "ic_launcher", //mipmap
-              notificationTitle: "Bác sĩ " + dataName?.fullname ?? "",
-              notificationBody: "Cuộc gọi video đến",
-              answerText: "Nghe",
-              declineText: "Từ chối",
-              notificationColor: "colorAccent",
-              //mainComponent:'MyReactNativeApp',//AppRegistry.registerComponent('MyReactNativeApp', () => CustomIncomingCall);
-              // payload:{name:'Test',Body:'test'}
-            },
-          )
-        })
-        RNNotificationCall.addEventListener("answer", (data) => {
-          RNNotificationCall.backToApp()
-          const { callUUID, payload } = data
-          console.log("press answer", callUUID)
-        })
-        RNNotificationCall.addEventListener("endCall", (data) => {
-          const { callUUID, endAction, payload } = data
-          console.log("press endCall", callUUID)
-        })
+        if (Platform.OS === "android") {
+          RNCallKeep.addEventListener("didDisplayIncomingCall", ({ callUUID }) => {
+            console.log("didDisplayIncomingCall", callUUID)
+          })
+          RNCallKeep.addEventListener("showIncomingCallUi", ({ callUUID: uuid }) => {
+            console.log("showIncomingCallUi_showIncomingCallUi", uuid)
+            RNNotificationCall.displayNotification(
+              "22221a97-8eb4-4ac2-b2cf-0a3c0b9100ad",
+              null,
+              30000,
+              {
+                channelId: "sdocter",
+                channelName: "sdocter",
+                notificationIcon: "ic_launcher", //mipmap
+                notificationTitle: "Bác sĩ " + dataName?.fullname ?? "",
+                notificationBody: "Cuộc gọi video đến",
+                answerText: "Nghe",
+                declineText: "Từ chối",
+                notificationColor: "colorAccent",
+                //mainComponent:'MyReactNativeApp',//AppRegistry.registerComponent('MyReactNativeApp', () => CustomIncomingCall);
+                // payload:{name:'Test',Body:'test'}
+              },
+            )
+          })
+          RNNotificationCall.addEventListener("answer", (data) => {
+            RNNotificationCall.backToApp()
+            const { callUUID, payload } = data
+            console.log("press answer", callUUID)
+          })
+          RNNotificationCall.addEventListener("endCall", (data) => {
+            const { callUUID, endAction, payload } = data
+            console.log("press endCall", callUUID)
+          })
+        }
       }
+
       break
     case "ended":
       RNCallKeep.endAllCalls()
