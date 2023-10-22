@@ -1,6 +1,7 @@
 #import "AppDelegate.h"
 #import "RNBootSplash.h"
 #import <Firebase.h>
+#import "Orientation.h"
 
 #import <AppCenterReactNative.h>
 #import <AppCenterReactNativeAnalytics.h>
@@ -174,6 +175,9 @@
   return [super application:application didFailToRegisterForRemoteNotificationsWithError:error];
 }
 
+- (UIInterfaceOrientationMask)application:(UIApplication *)application supportedInterfaceOrientationsForWindow:(UIWindow *)window {
+  return [Orientation getOrientation];
+}
 // Explicitly define remote notification delegates to ensure compatibility with some third-party libraries
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler
 {

@@ -6,12 +6,13 @@ if (__DEV__) {
   // to only execute this in development.
   require("./devtools/ReactotronConfig.ts")
 }
+import { OrientationLocker, PORTRAIT } from "react-native-orientation-locker"
 import "./i18n"
 import "./utils/ignoreWarnings"
 import { useFonts } from "expo-font"
 import React, { useEffect } from "react"
 import { initialWindowMetrics, SafeAreaProvider } from "react-native-safe-area-context"
-import { Alert, Appearance, Platform, AppState } from "react-native"
+import { Alert, Platform, AppState } from "react-native"
 import * as Linking from "expo-linking"
 import { useInitialRootStore } from "./models"
 import { AppNavigator, useNavigationPersistence } from "./navigators"
@@ -140,7 +141,6 @@ export async function onMessageReceived(message) {
       break
   }
 }
-
 messaging().onMessage(onMessageReceived)
 function App(props: AppProps) {
   const { hideSplashScreen } = props
@@ -172,32 +172,9 @@ function App(props: AppProps) {
     },
     [isThemeDark],
   )
-  const getDataDarkMode = async () => {
-    const dataDarkMode: any = await storage.load(storage.KEYSTORAGE.DATA_DARKMODE)
-    const dataSourceColor = await storage.load(storage.KEYSTORAGE.SOURCE_COLOR)
-
-    const token = await messaging().getToken()
-    console.log("token_token", token)
-
-    if (dataSourceColor !== null) {
-      setSourceColor(dataSourceColor)
-    }
-    if (!dataDarkMode || (dataDarkMode && dataDarkMode?.isDefaultSystem)) {
-      setDefaultSystem(true)
-      const colorScheme = Appearance.getColorScheme()
-      if (colorScheme === "dark") {
-        toggleTheme(true)
-      } else toggleTheme(false)
-    } else {
-      if (dataDarkMode && dataDarkMode?.isThemeDark) {
-        toggleTheme(true)
-      } else toggleTheme(false)
-    }
-  }
 
   useEffect(() => {
     setLangInApp()
-    getDataDarkMode()
   }, [])
   const preferences = React.useMemo(
     () => ({
@@ -258,6 +235,7 @@ function App(props: AppProps) {
               />
               <Toast />
               <NoInternetComponent />
+              <OrientationLocker orientation={PORTRAIT} />
             </GestureHandlerRootView>
           </PaperProvider>
         </Provider>
