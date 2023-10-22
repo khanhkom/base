@@ -34,7 +34,6 @@ const useHookLogin = (setCustomLoading?: (val: boolean) => void) => {
     } else {
       try {
         const result = phoneNumber.replace(/^0+/, "")
-        console.log("result_result", result)
         setPhoneNumber(result)
         const body = {
           phone: countryCode + result,

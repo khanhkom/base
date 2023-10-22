@@ -10,9 +10,10 @@ type ItemProps = {
   top?: number
   styleText?: StyleProp<TextStyle>
   testID?: string
+  text?: string
 }
 
-export const LoadingOpacity = ({ styleLoading, top, styleText, testID }: ItemProps) => {
+export const LoadingOpacity = ({ styleLoading, top, styleText, testID, text }: ItemProps) => {
   return (
     <View testID={testID} style={styles.loading}>
       <View
@@ -38,7 +39,7 @@ export const LoadingOpacity = ({ styleLoading, top, styleText, testID }: ItemPro
             styleText,
           ]}
         >
-          Loading...
+          {text || "Loading..."}
         </Text>
       </View>
     </View>

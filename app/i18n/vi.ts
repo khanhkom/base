@@ -46,6 +46,7 @@ const vi = {
     zalo: "Tin nhắn Zalo",
     sms: "SMS OTP",
     or_register_by: "Hoặc đăng ký bằng",
+    or_signin_by: "Hoặc đăng nhập bằng",
     exists_in_our_system: " tồn tại trong hệ thống của chúng tôi!",
     register_now: "Đăng ký ngay",
     log_in_now: "Đăng nhập ngay",

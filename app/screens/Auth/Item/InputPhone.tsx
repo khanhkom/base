@@ -40,6 +40,8 @@ export default function InputPhone({
       keyboardDidShowListener.remove()
     }
   }, [])
+  const firstString = phoneNumber?.[0] ?? ""
+  const inputLimit = firstString === "0" ? 10 : 9
   return (
     <>
       <View style={[styles.containerInput, focus && { borderColor: colors.primary_0 }]}>
@@ -72,7 +74,8 @@ export default function InputPhone({
             onBlur={() => {
               setFocus(false)
             }}
-            phoneNumber={phoneNumber}
+            value={phoneNumber}
+            maxLength={inputLimit}
             onChangeText={(val) => setPhoneNumber(val)}
           />
         </View>

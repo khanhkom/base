@@ -1,15 +1,5 @@
 /* eslint-disable import/first */
-/**
- * Welcome to the main entry point of the app. In this file, we'll
- * be kicking off our app.
- *
- * Most of this file is boilerplate and you shouldn't need to modify
- * it very often. But take some time to look through and understand
- * what is going on here.
- *
- * The app navigation resides in ./app/navigators, so head over there
- * if you're interested in adding screens and navigators.
- */
+
 if (__DEV__) {
   // Load Reactotron configuration in development. We don't want to
   // include this in our production bundle, so we are using `if (__DEV__)`
@@ -21,7 +11,7 @@ import "./utils/ignoreWarnings"
 import { useFonts } from "expo-font"
 import React, { useEffect } from "react"
 import { initialWindowMetrics, SafeAreaProvider } from "react-native-safe-area-context"
-import { Alert, Appearance, Platform } from "react-native"
+import { Alert, Appearance, Platform, AppState } from "react-native"
 import * as Linking from "expo-linking"
 import { useInitialRootStore } from "./models"
 import { AppNavigator, useNavigationPersistence } from "./navigators"
@@ -39,13 +29,14 @@ import createSagaMiddleware from "redux-saga"
 import rootReducers from "./redux/reducers"
 import Toast from "react-native-toast-message"
 import rootSaga from "@app/redux/sagas"
-import notifee, { AndroidImportance, AndroidVisibility } from "@notifee/react-native"
+import notifee, { AndroidVisibility } from "@notifee/react-native"
 import messaging from "@react-native-firebase/messaging"
 import RNCallKeep from "react-native-callkeep"
 import RNNotificationCall from "react-native-full-screen-notification-incoming-call"
 export const NAVIGATION_PERSISTENCE_KEY = "NAVIGATION_STATE"
 import codePush from "react-native-code-push"
 import NoInternetComponent from "./components/no-internet"
+import { getNameById } from "./services/api/functions/stringee"
 
 const sagaMiddleware = createSagaMiddleware()
 const store = createStore(rootReducers, applyMiddleware(sagaMiddleware))
@@ -85,8 +76,9 @@ export async function onMessageReceived(message) {
   const data = JSON.parse(message.data.data)
   const callStatus = data?.callStatus
   const from = data?.from?.number
+  const dataName = await getNameById(from)
   const notificationId = "11111" // YOUR_NOTIFICATION_ID
-  console.log("data: " + callStatus)
+  console.log("data: " + callStatus, AppState.currentState)
   const channelId = await notifee.createChannel({
     id: "sdocter",
     name: "sdocter",
@@ -98,7 +90,13 @@ export async function onMessageReceived(message) {
   switch (callStatus) {
     case "started":
       console.log("started_started")
-      RNCallKeep.displayIncomingCall(notificationId, from, channelId, "number", false)
+      RNCallKeep.displayIncomingCall(
+        notificationId,
+        dataName?.fullname ?? from,
+        channelId,
+        "number",
+        false,
+      )
 
       if (Platform.OS === "android") {
         RNCallKeep.addEventListener("didDisplayIncomingCall", ({ callUUID }) => {
@@ -114,7 +112,7 @@ export async function onMessageReceived(message) {
               channelId: "sdocter",
               channelName: "sdocter",
               notificationIcon: "ic_launcher", //mipmap
-              notificationTitle: "Bác sĩ",
+              notificationTitle: "Bác sĩ " + dataName?.fullname ?? "",
               notificationBody: "Cuộc gọi video đến",
               answerText: "Nghe",
               declineText: "Từ chối",
@@ -134,22 +132,6 @@ export async function onMessageReceived(message) {
           console.log("press endCall", callUUID)
         })
       }
-      // await notifee.displayNotification({
-      //   id: notificationId,
-      //   title: "Cuộc gọi video đến",
-      //   // body: "Bác sĩ đang gọi cho bạn" + from,
-      //   body: "Bác sĩ đang gọi cho bạn",
-      //   android: {
-      //     channelId,
-      //     pressAction: {
-      //       id: "default",
-      //       mainComponent: "SDocter",
-      //     },
-      //     importance: AndroidImportance.HIGH,
-      //     loopSound: true,
-      //     visibility: AndroidVisibility.PUBLIC,
-      //   },
-      // })
       break
     case "ended":
       RNCallKeep.endAllCalls()
@@ -159,7 +141,7 @@ export async function onMessageReceived(message) {
   }
 }
 
-// messaging().onMessage(onMessageReceived)
+messaging().onMessage(onMessageReceived)
 function App(props: AppProps) {
   const { hideSplashScreen } = props
   const {

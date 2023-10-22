@@ -8,7 +8,7 @@ import { Text } from "@app/components/Text"
 import { translate } from "@app/i18n/translate"
 import useHookLogin from "../Login/useHookLogin"
 
-export default function FooterLogin({ setLoading }) {
+export default function FooterLogin({ setLoading, isRegister }) {
   const { loginWithGoogle, loginWithFacebook } = useHookLogin(setLoading)
 
   return (
@@ -19,7 +19,7 @@ export default function FooterLogin({ setLoading }) {
           preset="baRegular"
           style={{ marginHorizontal: WIDTH(spacing.xs), color: colors.gray_7 }}
         >
-          {translate("auth.or_register_by")}
+          {isRegister ? translate("auth.or_register_by") : translate("auth.or_signin_by")}
         </Text>
         <View style={styles.line} />
       </View>

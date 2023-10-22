@@ -63,7 +63,10 @@ export default function Login() {
         </View>
         <InputPhone
           phoneNumber={phoneNumber}
-          setPhoneNumber={setPhoneNumber}
+          setPhoneNumber={(number) => {
+            console.log("number", number, number.replace(/\s/g, ""))
+            setPhoneNumber(number.replace(/\s/g, ""))
+          }}
           setCountryCode={setCountryCode}
           countryCode={countryCode}
           error={error}
@@ -87,14 +90,14 @@ export default function Login() {
           {translate("auth.of_sdoctor")}
         </Text>
       </View>
-      <FooterLogin setLoading={setLoading} />
+      <FooterLogin setLoading={setLoading} isRegister={indexTab === 1} />
       <PopupVerify
         visible={visible}
         setVisible={setVisible}
         isNewUser={isNewUser}
-        phone={countryCode + phoneNumber}
+        phone={countryCode + phoneNumber.replace(/^0+/, "")}
       />
-      {loading && <LoadingOpacity />}
+      {loading && <LoadingOpacity text=" " />}
     </Screen>
   )
 }

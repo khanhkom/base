@@ -7,7 +7,7 @@ import { HEIGHT, WIDTH } from "@app/config/functions"
 import { spacing } from "@app/theme/spacing"
 import colors from "@app/assets/colors"
 import BackgroundTimer from "react-native-background-timer"
-import { navigate } from "@app/navigators/navigationUtilities"
+import { navigate, resetRoot } from "@app/navigators/navigationUtilities"
 import { api } from "@app/services/api"
 import { KEYSTORAGE, save } from "@app/utils/storage"
 import { getStringeeToken } from "@app/redux/actions/stringee"
@@ -88,9 +88,17 @@ export default function VerifyOTP({ route }: ScreenProps) {
         save(KEYSTORAGE.LOGIN_DATA, dataLogin)
         dispatch(getStringeeToken())
         if (dataLogin?.isNewUser) {
-          navigate("ConfirmName")
+          // navigate("ConfirmName")
+          resetRoot({
+            index: 0,
+            routes: [{ name: "ConfirmName" }],
+          })
         } else {
-          navigate("TabNavigator")
+          resetRoot({
+            index: 0,
+            routes: [{ name: "TabNavigator" }],
+          })
+          // navigate("TabNavigator")
         }
       } else {
         setError(true)

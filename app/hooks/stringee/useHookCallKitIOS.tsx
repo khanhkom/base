@@ -377,7 +377,6 @@ const useHookCallKitIOS = (updateClientId) => {
       PermissionsAndroid.PERMISSIONS.BLUETOOTH_CONNECT,
     ])
       .then((result) => {
-        console.log("result_result", result)
         if (
           result["android.permission.CAMERA"] &&
           result["android.permission.RECORD_AUDIO"] === "granted"

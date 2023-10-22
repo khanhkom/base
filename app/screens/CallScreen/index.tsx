@@ -83,9 +83,7 @@ const CallScreen = ({ route }) => {
           </Pressable>
         </View>
       )}
-      {!receivedRemoteStream && (
-        <ItemUserTarget detailOrder={detailOrder} isIncoming={isIncoming} />
-      )}
+      {!receivedRemoteStream && <ItemUserTarget isIncoming={isIncoming} from={from} />}
 
       {!showAnswerBtn && (
         <View style={styles.bottomContainer}>
