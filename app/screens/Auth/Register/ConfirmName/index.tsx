@@ -19,7 +19,7 @@ export default function ConfirmName() {
   return (
     <View style={styles.container}>
       <Header
-        leftIcon="arrow_left"
+        // leftIcon="arrow_left"
         title={translate("auth.name_confirmation")}
         backgroundColor={colors.white}
       />

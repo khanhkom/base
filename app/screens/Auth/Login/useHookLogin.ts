@@ -130,9 +130,9 @@ const useHookLogin = (setCustomLoading?: (val: boolean) => void) => {
     const resLogin = await loginSocial(body)
     setCustomLoading(false)
     const dataLogin = resLogin?.data
-    console.log("resLogin_resLogin", resLogin)
+    console.log("_hanldeLoginServer::", dataLogin)
     if (resLogin.data.accessToken) {
-      if (resLogin.data.isNewUser) {
+      if (resLogin.data.isNewUser || !resLogin.data?.isVerified) {
         api.apisauce.setHeader("access-token", resLogin.data.accessToken)
         navigate("VerifyPhoneNumber")
       } else {

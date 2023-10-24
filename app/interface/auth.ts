@@ -4,4 +4,5 @@ export interface ISession {
   expiresIn: number
   refreshExpiresIn: number
   isNewUser?: boolean
+  isVerified?: boolean
 }
