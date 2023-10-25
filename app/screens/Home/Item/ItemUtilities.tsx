@@ -29,26 +29,26 @@ const DATA_FEATURES = [
     title: translate("home.online_consultations"),
     image: R.images.ic_tuvan,
   },
-  {
-    id: TYPE_FEATURES.HOIDAP,
-    title: translate("home.community_qa"),
-    image: R.images.ic_hoidap,
-  },
+  // {
+  //   id: TYPE_FEATURES.HOIDAP,
+  //   title: translate("home.community_qa"),
+  //   image: R.images.ic_hoidap,
+  // },
   {
     id: TYPE_FEATURES.KETQUA,
     title: translate("home.medical_test_results"),
     image: R.images.ic_ketqua,
   },
-  {
-    id: TYPE_FEATURES.NHATHUOC,
-    title: translate("home.pharmacy"),
-    image: R.images.ic_nhathuoc,
-  },
-  {
-    id: TYPE_FEATURES.KIENTHUC,
-    title: translate("home.first_aid_knowledge"),
-    image: R.images.ic_kienthuc,
-  },
+  // {
+  //   id: TYPE_FEATURES.NHATHUOC,
+  //   title: translate("home.pharmacy"),
+  //   image: R.images.ic_nhathuoc,
+  // },
+  // {
+  //   id: TYPE_FEATURES.KIENTHUC,
+  //   title: translate("home.first_aid_knowledge"),
+  //   image: R.images.ic_kienthuc,
+  // },
 ]
 const Item = ({ item, onPress }) => {
   return (
@@ -64,6 +64,9 @@ export default function ItemUtilities() {
   const { returnNearestOrder } = useHookHome()
   const onPresItem = (index) => {
     switch (index) {
+      case TYPE_FEATURES.DATLICH:
+        navigate("CousultOnline")
+        break
       case TYPE_FEATURES.TUVAN:
         navigate("CousultOnline")
         break
@@ -84,7 +87,7 @@ export default function ItemUtilities() {
         data={DATA_FEATURES}
         numColumns={3}
         renderItem={({ item, index }) => {
-          return <Item item={item} onPress={() => onPresItem(index)} />
+          return <Item item={item} onPress={() => onPresItem(item.id)} />
         }}
         ItemSeparatorComponent={() => <View style={{ height: HEIGHT(spacing.md) }} />}
       />

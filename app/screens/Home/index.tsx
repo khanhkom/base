@@ -112,9 +112,9 @@ export default function HomeScreen() {
     <Screen preset="scroll" style={styles.container}>
       <HeaderHome onSearch={onSearch} />
       <ItemUtilities />
-      <BannerCarousel />
+      {/* <BannerCarousel />
       <TopDocter />
-      <TopPackage />
+      <TopPackage /> */}
       <HotNews />
       <StringeeClient
         ref={client}
