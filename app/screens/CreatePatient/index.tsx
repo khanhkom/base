@@ -1,10 +1,10 @@
-import { StyleSheet, View } from "react-native"
-import React, { useEffect, useState } from "react"
+import { Platform, StyleSheet, View } from "react-native"
+import React, { useEffect, useRef, useState } from "react"
 import { Header } from "@app/components/Header"
 import colors from "@app/assets/colors"
 import { Button, Card } from "react-native-paper"
 import { Text } from "@app/components/Text"
-import { HEIGHT, WIDTH } from "@app/config/functions"
+import { HEIGHT, WIDTH, getWidth } from "@app/config/functions"
 import { spacing } from "@app/theme/spacing"
 import { TextField } from "@app/components/TextField"
 import { Toggle } from "@app/components/Toggle"
@@ -18,10 +18,11 @@ import { createPatient, updatePatient } from "@app/services/api/functions/patien
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view"
 import { getListPatientRequest } from "@app/redux/actions/patient"
 import { useDispatch } from "react-redux"
-import { Formik } from "formik"
+import { Formik, useFormikContext } from "formik"
 import * as Yup from "yup"
 import { translate } from "@app/i18n/translate"
 import useDetailPatient from "../Patient/DetailPatient/useDetailPatient"
+import { Screen } from "@app/components/Screen"
 const SignupSchema = Yup.object().shape({
   name: Yup.string().required(translate("create_patient.please_enter_fullname")),
   phone: Yup.string().required(translate("create_patient.please_enter_phone")),
@@ -40,6 +41,8 @@ export default function CreatePatient({ route }: ScreenProps) {
   const user = useSelector((state) => state.userReducers.user)
   const id = route?.params?.id
   const { loading: loadingDetail, detailPatient, returnDataByField } = useDetailPatient(id)
+  const formRef = useRef()
+
   const [gender, setGender] = useState(0)
   const [email, setEmail] = useState("")
   const [address, setAddress] = useState("")
@@ -132,7 +135,10 @@ export default function CreatePatient({ route }: ScreenProps) {
     }
   }
   return (
-    <View style={styles.container}>
+    <Screen
+      safeAreaEdges={Platform.OS === "android" && ["bottom"]}
+      contentContainerStyle={styles.container}
+    >
       <Header
         title={translate("create_patient.create_new_patient")}
         leftIcon="arrow_left"
@@ -162,6 +168,7 @@ export default function CreatePatient({ route }: ScreenProps) {
         </Card>
         <Formik
           validationSchema={SignupSchema}
+          innerRef={formRef}
           enableReinitialize
           initialValues={{
             name: user?.name || detailPatient?.name,
@@ -278,19 +285,25 @@ export default function CreatePatient({ route }: ScreenProps) {
                 onChangeText={setAddress}
                 containerStyle={{ marginTop: HEIGHT(spacing.md) }}
               ></TextField>
-              <Button
-                mode="contained"
-                style={styles.button}
-                onPress={handleSubmit}
-                loading={loading}
-              >
-                {translate("common.save")}
-              </Button>
             </View>
           )}
         </Formik>
       </KeyboardAwareScrollView>
-    </View>
+      <View style={styles.bottomView}>
+        <Button
+          mode="contained"
+          style={styles.button}
+          onPress={() => {
+            if (formRef.current) {
+              formRef.current?.handleSubmit()
+            }
+          }}
+          loading={loading}
+        >
+          {translate("common.save")}
+        </Button>
+      </View>
+    </Screen>
   )
 }
 
@@ -315,9 +328,8 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
   button: {
-    width: WIDTH(343),
-    marginTop: HEIGHT(28),
     borderRadius: 8,
+    width: WIDTH(343),
   },
   nodeCard: {
     marginTop: HEIGHT(spacing.md),
@@ -325,5 +337,19 @@ const styles = StyleSheet.create({
     paddingHorizontal: WIDTH(spacing.md),
     paddingVertical: HEIGHT(spacing.sm),
     backgroundColor: colors.gray_1,
+  },
+  bottomView: {
+    position: "absolute",
+    bottom: 0,
+    backgroundColor: colors.white,
+    flexDirection: "row",
+    left: 0,
+    right: 0,
+    justifyContent: "space-between",
+    paddingHorizontal: WIDTH(spacing.md),
+    borderTopLeftRadius: 16,
+    borderTopRightRadius: 16,
+    paddingVertical: HEIGHT(spacing.sm),
+    width: getWidth(),
   },
 })

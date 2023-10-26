@@ -1,7 +1,7 @@
-import { StyleSheet, View, FlatList } from "react-native"
+import { StyleSheet, View, FlatList, Platform } from "react-native"
 import React, { useEffect } from "react"
 import colors from "@app/assets/colors"
-import { Header } from "@app/components/index"
+import { Header, Screen } from "@app/components/index"
 import BottonButton from "./Item/BottonButton"
 import ItemRecord from "./Item/ItemRecord"
 import { useSelector } from "@app/redux/reducers"
@@ -24,7 +24,10 @@ export default function SelectPatientRecord({ route }: IScreenProps) {
     dispatch(getListPatientRequest())
   }, [])
   return (
-    <View style={styles.container}>
+    <Screen
+      safeAreaEdges={Platform.OS === "android" && ["bottom"]}
+      contentContainerStyle={styles.container}
+    >
       <Header leftIcon="arrow_left" title="Hồ sơ y tế" backgroundColor={colors.gray_1} />
       <FlatList
         data={patients}
@@ -46,7 +49,7 @@ export default function SelectPatientRecord({ route }: IScreenProps) {
         ListFooterComponent={() => <View style={{ height: HEIGHT(100) }} />}
       />
       <BottonButton />
-    </View>
+    </Screen>
   )
 }
 

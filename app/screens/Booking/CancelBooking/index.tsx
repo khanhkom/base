@@ -1,7 +1,7 @@
-import { StyleSheet, View } from "react-native"
+import { Platform, StyleSheet, View } from "react-native"
 import React, { useState } from "react"
 import colors from "@app/assets/colors"
-import { Header, Text, TextField, Toggle } from "@app/components/index"
+import { Header, Screen, Text, TextField, Toggle } from "@app/components/index"
 import { Button } from "react-native-paper"
 import { goBack } from "@app/navigators/navigationUtilities"
 import { HEIGHT, WIDTH } from "@app/config/functions"
@@ -52,7 +52,10 @@ export default function CancelBooking({ route }: ScreenProps) {
     }
   }
   return (
-    <View style={styles.container}>
+    <Screen
+      safeAreaEdges={Platform.OS === "android" && ["bottom"]}
+      contentContainerStyle={styles.container}
+    >
       <Header
         leftIcon="arrow_left"
         title={translate("cancel_booking.confirm_cancel_booking")}
@@ -126,7 +129,7 @@ export default function CancelBooking({ route }: ScreenProps) {
         </Button>
       </View>
       {loading && <LoadingOpacity />}
-    </View>
+    </Screen>
   )
 }
 

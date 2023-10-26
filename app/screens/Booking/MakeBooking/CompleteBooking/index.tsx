@@ -31,6 +31,7 @@ import useHookDetailBooking from "../../DetailBooking/useHookDetailBooking"
 import PopupErros from "@app/components/PopupErros"
 import { DATA_TIME } from "../SelectTimeBooking/Data"
 import { translate } from "@app/i18n/translate"
+import { Screen } from "@app/components/Screen"
 const VALIDATE_MESSAGE = [
   "Vui lòng chọn chuyên khoa!",
   "Vui lòng chọn ngày khám!",
@@ -172,7 +173,10 @@ export default function CompleteBooking({ route }: ScreenProps) {
     setLoading(false)
   }
   return (
-    <View style={styles.container}>
+    <Screen
+      safeAreaEdges={Platform.OS === "android" && ["bottom"]}
+      contentContainerStyle={styles.container}
+    >
       <Header
         title={translate("booking.select_exam_information")}
         leftIcon="arrow_left"
@@ -309,7 +313,7 @@ export default function CompleteBooking({ route }: ScreenProps) {
         visible={visibleErros}
       />
       {loading && <LoadingOpacity />}
-    </View>
+    </Screen>
   )
 }
 

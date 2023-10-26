@@ -1,7 +1,7 @@
-import { StyleSheet, View, FlatList } from "react-native"
+import { StyleSheet, View, FlatList, Platform } from "react-native"
 import React, { useState } from "react"
 import colors from "@app/assets/colors"
-import { Header, Icon, Text } from "@app/components/index"
+import { Header, Icon, Screen, Text } from "@app/components/index"
 import ItemBookInformation from "./Item/ItemBookInformation"
 import BottonButton from "./Item/BottonButton"
 import FileAttachment from "./Item/FileAttachment"
@@ -23,7 +23,10 @@ export default function DetailBooking({ route }) {
   const clientId = useSelector((state) => state.stringeeReducers.clientId)
   if (loading) return <LoadingScreen />
   return (
-    <View style={styles.container}>
+    <Screen
+      safeAreaEdges={Platform.OS === "android" && ["bottom"]}
+      contentContainerStyle={styles.container}
+    >
       <Header
         leftIcon="arrow_left"
         title={translate("booking.detail_booking")}
@@ -89,7 +92,7 @@ export default function DetailBooking({ route }) {
         to={detailOrder?.doctor?.userId}
         detailOrder={detailOrder}
       />
-    </View>
+    </Screen>
   )
 }
 
