@@ -49,6 +49,7 @@ export default function SelectSpecialist({ route }: ScreenProps) {
                 } else {
                   navigate("SearchDocter", {
                     speciallist: item,
+                    preScreen: "SelectSpecialist",
                   })
                 }
               }}

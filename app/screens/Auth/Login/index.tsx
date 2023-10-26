@@ -64,8 +64,7 @@ export default function Login() {
         <InputPhone
           phoneNumber={phoneNumber}
           setPhoneNumber={(number) => {
-            console.log("number", number, number.replace(/\s/g, ""))
-            setPhoneNumber(number.replace(/\s/g, ""))
+            setPhoneNumber(number.replace(/[^0-9]/g, ""))
           }}
           setCountryCode={setCountryCode}
           countryCode={countryCode}

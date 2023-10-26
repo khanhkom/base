@@ -143,7 +143,9 @@ const useHookDetailBooking = (id) => {
     }
   }
   useEffect(() => {
-    getDetailOrderApi()
+    if (id) {
+      getDetailOrderApi()
+    }
   }, [])
   return { loading, detailOrder, returnDataByField, getDetailOrderApi, updateDataCreateOrder }
 }

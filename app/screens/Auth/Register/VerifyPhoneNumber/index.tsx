@@ -16,6 +16,7 @@ import HeaderLogin from "../../Item/HeaderLogin"
 import R from "@app/assets"
 import ItemOTPMethod from "../../Item/ItemOTPMethod"
 import { translate } from "@app/i18n/translate"
+import { validatePhoneNumber } from "@app/utils/validate"
 export default function VerifyPhoneNumber() {
   const [countryCode, setCountryCode] = useState("+84")
   const [phoneNumber, setPhoneNumber] = useState("")
@@ -25,8 +26,11 @@ export default function VerifyPhoneNumber() {
   const dispatch = useDispatch()
   const onSubmit = async () => {
     // showModal()
+    const isValidNumber = validatePhoneNumber(phoneNumber)
     if (phoneNumber === "") {
       showToastMessage(translate("common.provide_complete_information"), EToastType.ERROR)
+    } else if (!isValidNumber) {
+      setError(true)
     } else {
       try {
         const result = phoneNumber.replace(/^0+/, "")

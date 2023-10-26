@@ -6,6 +6,7 @@ import { api } from "@app/services/api"
 import { getOtp, loginSocial } from "@app/services/api/functions/users"
 import { EToastType, showToastMessage } from "@app/utils/library"
 import { KEYSTORAGE, save } from "@app/utils/storage"
+import { validatePhoneNumber } from "@app/utils/validate"
 import { GoogleSignin } from "@react-native-google-signin/google-signin"
 import { useState } from "react"
 import { Keyboard } from "react-native"
@@ -28,9 +29,12 @@ const useHookLogin = (setCustomLoading?: (val: boolean) => void) => {
 
   const onSubmit = async () => {
     // showModal();
+    const isValidNumber = validatePhoneNumber(phoneNumber)
     Keyboard.dismiss()
     if (phoneNumber === "") {
       showToastMessage(translate("common.provide_complete_information"), EToastType.ERROR)
+    } else if (!isValidNumber) {
+      setError(true)
     } else {
       try {
         const result = phoneNumber.replace(/^0+/, "")

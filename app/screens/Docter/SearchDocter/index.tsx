@@ -19,7 +19,7 @@ interface ScreenProps {
   route: {
     params: {
       speciallist: ISpecialList
-      preScreen?: string
+      preScreen?: string | "SelectSpecialist"
     }
   }
 }
@@ -98,9 +98,13 @@ export default function SearchDocter({ route }: ScreenProps) {
   const dispatch = useDispatch()
   const onPressBook = (item) => {
     dispatch(updateDocterCreateOrder(item))
-    if (route?.params?.preScreen) {
+
+    if (route?.params?.preScreen === "SelectSpecialist") {
+      navigate("SelectCalendar")
+    } else if (route?.params?.preScreen) {
       goBack()
     } else {
+      // reset data when user back to this screen
       navigate("SelectCalendar")
       dispatch(resetOrderInfor())
     }

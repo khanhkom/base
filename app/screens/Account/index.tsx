@@ -2,7 +2,7 @@ import { StyleSheet, View } from "react-native"
 import React, { useState } from "react"
 import { KEYSTORAGE, remove } from "@app/utils/storage"
 import { removeUserData } from "@app/redux/actions"
-import { navigate } from "@app/navigators/navigationUtilities"
+import { navigate, resetRoot } from "@app/navigators/navigationUtilities"
 import { api } from "@app/services/api"
 import { GoogleSignin } from "@react-native-google-signin/google-signin"
 import { useDispatch } from "react-redux"
@@ -24,7 +24,11 @@ export default function Account() {
   const onLogout = async () => {
     await remove(KEYSTORAGE.LOGIN_DATA)
     dispatch(removeUserData())
-    navigate("Login")
+    // navigate("Login")
+    resetRoot({
+      index: 0,
+      routes: [{ name: "Login" }],
+    })
     api.apisauce.setHeader("access-token", "")
     await GoogleSignin.signOut()
   }

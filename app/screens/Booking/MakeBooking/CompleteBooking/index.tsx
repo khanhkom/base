@@ -49,7 +49,7 @@ export default function CompleteBooking({ route }: ScreenProps) {
   const [visible, setVisible] = React.useState(false)
   const [loading, setLoading] = React.useState(false)
   const [listImage, setListImage] = useState([])
-  const { detailOrder, getDetailOrderApi } = useHookDetailBooking(route?.params?.id)
+  const { detailOrder } = useHookDetailBooking(route?.params?.id)
   const docter = useSelector((state) => state.orderReducers.docter)
   const selectedDate = useSelector((state) => state.orderReducers.selectedDate)
   const selectedTime = useSelector((state) => state.orderReducers.selectedTime)
@@ -59,11 +59,8 @@ export default function CompleteBooking({ route }: ScreenProps) {
   const [visibleErros, setVisibleErros] = useState(false)
   const dispatch = useDispatch()
   const isUpdate = route?.params?.type === "update"
-  useEffect(() => {
-    if (route?.params?.id) {
-      getDetailOrderApi()
-    }
-  }, [])
+
+  console.log("detailOrder_detailOrder", patient, specialist)
   useEffect(() => {
     if (detailOrder?.patientNotes) {
       setPatientNotes(detailOrder?.patientNotes)
