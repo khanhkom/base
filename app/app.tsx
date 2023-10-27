@@ -38,7 +38,8 @@ export const NAVIGATION_PERSISTENCE_KEY = "NAVIGATION_STATE"
 import codePush from "react-native-code-push"
 import NoInternetComponent from "./components/no-internet"
 import { getNameById } from "./services/api/functions/stringee"
-
+import { Mixpanel } from "mixpanel-react-native"
+import "@app/services/mixpanel"
 const sagaMiddleware = createSagaMiddleware()
 const store = createStore(rootReducers, applyMiddleware(sagaMiddleware))
 sagaMiddleware.run(rootSaga)

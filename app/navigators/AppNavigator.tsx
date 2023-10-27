@@ -54,6 +54,8 @@ import { DetailConversation } from "@app/screens/Conversation/DetailConversation
 import { ChatWithSupport } from "@app/screens/Conversation/ChatWithSupport"
 import ChatProfile from "@app/screens/Conversation/ChatProfile"
 import SearchConversation from "@app/screens/Conversation/SearchConversation"
+import { trackEvent } from "@app/services/mixpanel"
+import { EventName } from "@app/services/mixpanel/eventName"
 
 export type AppStackParamList = {
   TabNavigator: undefined
@@ -235,6 +237,12 @@ export const AppNavigator = observer(function AppNavigator(props: NavigationProp
     <NavigationContainer
       ref={navigationRef}
       theme={colorScheme === "dark" ? DarkTheme : DefaultTheme}
+      onStateChange={() => {
+        console.log("onStateChange")
+        trackEvent(EventName.page_view, {
+          screenname: navigationRef.current.getCurrentRoute().name.toLowerCase(),
+        })
+      }}
       {...props}
     >
       <AppStack />

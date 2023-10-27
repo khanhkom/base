@@ -7,6 +7,8 @@ import { goBack, navigate } from "@app/navigators/navigationUtilities"
 import SyncCall from "@app/screens/Demo/SyncCall"
 import UUIDGenerator from "react-native-uuid-generator"
 import messaging from "@react-native-firebase/messaging"
+import { trackEvent } from "@app/services/mixpanel"
+import { EventName } from "@app/services/mixpanel/eventName"
 
 const iOS = Platform.OS === "ios" ? true : false
 
@@ -268,6 +270,7 @@ const useHookCallKitIOS = (updateClientId) => {
 
   const clientDidConnect = async ({ userId }) => {
     console.log("clientDidConnect02 - " + userId, client?.current?.getId?.())
+    trackEvent(EventName.stringee_connect_success, userId)
     if (iOS) {
       VoipPushNotification.registerVoipToken()
     } else {
@@ -283,9 +286,7 @@ const useHookCallKitIOS = (updateClientId) => {
       )
     }
     setUserId(userId)
-
     updateClientId(client?.current?.getId?.())
-
     /*
               Handle cho truong hop A goi B, nhung A end call rat nhanh, B nhan duoc push nhung khong nhan duoc incoming call
               ==> Sau khi ket noi den Stringee server 3s ma chua nhan duoc cuoc goi thi xoa Callkit Call va syncCall
@@ -309,7 +310,7 @@ const useHookCallKitIOS = (updateClientId) => {
   }
 
   const clientDidFailWithError = (error) => {
-    // Handle onFailWithError event...
+    trackEvent(EventName.stringee_connect_failure, error)
   }
 
   const clientRequestAccessToken = () => {

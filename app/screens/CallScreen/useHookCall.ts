@@ -5,6 +5,8 @@ import React, { useState, useEffect, useRef } from "react"
 import { Alert, Platform } from "react-native"
 import RNCallKeep from "react-native-callkeep"
 import notifee from "@notifee/react-native"
+import { trackEvent } from "@app/services/mixpanel"
+import { EventName } from "@app/services/mixpanel/eventName"
 
 const useHookCall = (callId, isIncoming, from, to) => {
   const [status, setStatus] = useState("")
@@ -44,8 +46,10 @@ const useHookCall = (callId, isIncoming, from, to) => {
           )
           if (status) {
             MediaManager.playMusicBackGround("phone_call.mp3", true)
+            trackEvent(EventName.stringee_make_call_success)
           } else {
             Alert.alert("Make call fail: " + message)
+            trackEvent(EventName.stringee_make_call_failure, { message, code })
           }
         })
       }
@@ -200,8 +204,10 @@ const useHookCall = (callId, isIncoming, from, to) => {
       if (status) {
         setShowAnswerBtn(false)
         setSignalingState(2)
+        trackEvent(EventName.stringee_answer_call_success)
       } else {
         endPress(false)
+        trackEvent(EventName.stringee_answer_call_failure, { message, code })
       }
     })
   }

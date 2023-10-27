@@ -15,9 +15,12 @@ import RNCallKeep from "react-native-callkeep"
 import ItemUserTarget from "./Item/ItemUserTarget"
 import useHookCall from "./useHookCall"
 import R from "@app/assets"
+import { useSelector } from "@app/redux/reducers"
 const CallScreen = ({ route }) => {
   const params = route.params
   const { isVideoCall, isIncoming, detailOrder, callId, clientId, from, to } = params
+  const session = useSelector((state) => state.stringeeReducers.session)
+  console.log("session", session)
   const {
     call2,
     status,

@@ -4,6 +4,7 @@ import { updateUserField } from "@app/redux/actions"
 import { getStringeeToken } from "@app/redux/actions/stringee"
 import { api } from "@app/services/api"
 import { getOtp, loginSocial } from "@app/services/api/functions/users"
+import { trackEvent } from "@app/services/mixpanel"
 import { EToastType, showToastMessage } from "@app/utils/library"
 import { KEYSTORAGE, save } from "@app/utils/storage"
 import { validatePhoneNumber } from "@app/utils/validate"
@@ -28,6 +29,7 @@ const useHookLogin = (setCustomLoading?: (val: boolean) => void) => {
   const showModal = () => setVisible(true)
 
   const onSubmit = async () => {
+    trackEvent("login_press")
     // showModal();
     const isValidNumber = validatePhoneNumber(phoneNumber)
     Keyboard.dismiss()
