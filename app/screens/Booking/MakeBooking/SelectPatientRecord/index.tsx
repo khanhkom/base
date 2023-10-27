@@ -25,7 +25,7 @@ export default function SelectPatientRecord({ route }: IScreenProps) {
   }, [])
   return (
     <Screen
-      safeAreaEdges={Platform.OS === "android" && ["bottom"]}
+      safeAreaEdges={Platform.OS === "android" ?["bottom"]:[]}
       contentContainerStyle={styles.container}
     >
       <Header leftIcon="arrow_left" title="Hồ sơ y tế" backgroundColor={colors.gray_1} />

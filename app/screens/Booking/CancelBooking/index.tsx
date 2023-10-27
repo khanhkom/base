@@ -53,7 +53,7 @@ export default function CancelBooking({ route }: ScreenProps) {
   }
   return (
     <Screen
-      safeAreaEdges={Platform.OS === "android" && ["bottom"]}
+      safeAreaEdges={Platform.OS === "android" ?["bottom"]:[]}
       contentContainerStyle={styles.container}
     >
       <Header

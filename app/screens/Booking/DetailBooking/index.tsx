@@ -24,7 +24,7 @@ export default function DetailBooking({ route }) {
   if (loading) return <LoadingScreen />
   return (
     <Screen
-      safeAreaEdges={Platform.OS === "android" && ["bottom"]}
+      safeAreaEdges={Platform.OS === "android" ?["bottom"]:[]}
       contentContainerStyle={styles.container}
     >
       <Header

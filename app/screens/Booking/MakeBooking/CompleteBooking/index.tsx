@@ -174,7 +174,7 @@ export default function CompleteBooking({ route }: ScreenProps) {
   }
   return (
     <Screen
-      safeAreaEdges={Platform.OS === "android" && ["bottom"]}
+      safeAreaEdges={Platform.OS === "android" ?["bottom"]:[]}
       contentContainerStyle={styles.container}
     >
       <Header

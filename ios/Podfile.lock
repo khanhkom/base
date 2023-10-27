@@ -552,7 +552,7 @@ PODS:
     - React-Core
   - react-native-full-screen-notification-incoming-call (0.1.12):
     - React-Core
-  - react-native-image-picker (7.0.1):
+  - react-native-image-picker (5.7.0):
     - React-Core
   - react-native-netinfo (9.4.1):
     - React-Core
@@ -1146,7 +1146,7 @@ SPEC CHECKSUMS:
   react-native-document-picker: 2b8f18667caee73a96708a82b284a4f40b30a156
   react-native-fbsdk-next: 16e652b5f1236492631185c58ec2ae15b029119d
   react-native-full-screen-notification-incoming-call: c0a64a09e6e413eab704cc26b7190a65859ba629
-  react-native-image-picker: 1569cfade34b3a011191ce262423e6ce2f8db5a1
+  react-native-image-picker: 3269f75c251cdcd61ab51b911dd30d6fff8c6169
   react-native-netinfo: fefd4e98d75cbdd6e85fc530f7111a8afdf2b0c5
   react-native-orientation-locker: 851f6510d8046ea2f14aa169b1e01fcd309a94ba
   react-native-otp-verify: 3dbd8a52ceb8d4dfc775bddd6fc98a453091ed5f

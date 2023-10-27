@@ -136,7 +136,7 @@ export default function CreatePatient({ route }: ScreenProps) {
   }
   return (
     <Screen
-      safeAreaEdges={Platform.OS === "android" && ["bottom"]}
+      safeAreaEdges={Platform.OS === "android" ?["bottom"]:[]}
       contentContainerStyle={styles.container}
     >
       <Header
@@ -314,6 +314,7 @@ const styles = StyleSheet.create({
   },
   container: {
     backgroundColor: colors.white,
+    paddingBottom: HEIGHT(56),
     flex: 1,
   },
   flexGender: {

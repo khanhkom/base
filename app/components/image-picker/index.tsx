@@ -57,16 +57,17 @@ const ModalImagePicker = forwardRef((props: Props, _ref) => {
       } else onChonAnh()
     }
   }
-  const onChonAnh = () => {
+  const onChonAnh = async() => {
+    console.log("onChonAnh::")
     const options: any = {
       selectionLimit: 0,
       mediaType: "photo",
       includeBase64: false,
     }
-    if (Platform.OS === "android") {
-      turnOffModal && turnOffModal()
-    }
-    launchImageLibrary(options, onFinishPickImage)
+     turnOffModal && turnOffModal()
+     setTimeout(() => {
+     launchImageLibrary(options, onFinishPickImage)
+    }, 500)
   }
 
   const onChupAnh = async () => {
