@@ -153,6 +153,7 @@ export default function CompleteBooking({ route }: ScreenProps) {
         goBack()
         showToastMessage(translate("booking.update_booking_success"), EToastType.SUCCESS)
       } else {
+        
         showToastMessage(translate("booking.update_booking_fail"), EToastType.ERROR)
       }
     } else {
