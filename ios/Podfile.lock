@@ -554,6 +554,8 @@ PODS:
     - React-Core
   - react-native-image-picker (7.0.1):
     - React-Core
+  - react-native-netinfo (9.4.1):
+    - React-Core
   - react-native-orientation-locker (1.5.0):
     - React-Core
   - react-native-otp-verify (1.1.6):
@@ -812,6 +814,7 @@ DEPENDENCIES:
   - react-native-fbsdk-next (from `../node_modules/react-native-fbsdk-next`)
   - react-native-full-screen-notification-incoming-call (from `../node_modules/react-native-full-screen-notification-incoming-call`)
   - react-native-image-picker (from `../node_modules/react-native-image-picker`)
+  - "react-native-netinfo (from `../node_modules/@react-native-community/netinfo`)"
   - react-native-orientation-locker (from `../node_modules/react-native-orientation-locker`)
   - react-native-otp-verify (from `../node_modules/react-native-otp-verify`)
   - react-native-pager-view (from `../node_modules/react-native-pager-view`)
@@ -983,6 +986,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-full-screen-notification-incoming-call"
   react-native-image-picker:
     :path: "../node_modules/react-native-image-picker"
+  react-native-netinfo:
+    :path: "../node_modules/@react-native-community/netinfo"
   react-native-orientation-locker:
     :path: "../node_modules/react-native-orientation-locker"
   react-native-otp-verify:
@@ -1142,6 +1147,7 @@ SPEC CHECKSUMS:
   react-native-fbsdk-next: 16e652b5f1236492631185c58ec2ae15b029119d
   react-native-full-screen-notification-incoming-call: c0a64a09e6e413eab704cc26b7190a65859ba629
   react-native-image-picker: 1569cfade34b3a011191ce262423e6ce2f8db5a1
+  react-native-netinfo: fefd4e98d75cbdd6e85fc530f7111a8afdf2b0c5
   react-native-orientation-locker: 851f6510d8046ea2f14aa169b1e01fcd309a94ba
   react-native-otp-verify: 3dbd8a52ceb8d4dfc775bddd6fc98a453091ed5f
   react-native-pager-view: d211379f61895b6349bd7e571b44a26d005c2975
