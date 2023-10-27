@@ -11,11 +11,12 @@ const useHookCall = (callId, isIncoming, from, to) => {
   const [isMute, setIsMute] = useState(false)
   const [isVideoEnable, setIsVideoEnable] = useState(true)
   const [isSpeaker, setIsSpeaker] = useState(true)
-  const [showAnswerBtn, setShowAnswerBtn] = useState(true)
+  const [showAnswerBtn, setShowAnswerBtn] = useState(isIncoming)
   const [receivedLocalStream, setReceivedLocalStream] = useState(false)
   const [receivedRemoteStream, setReceivedRemoteStream] = useState(false)
   const [signalingState, setSignalingState] = useState(-1)
   const [mediaState, setMediaState] = useState(-1)
+  const [callIdNew, setCallIdNew] = useState(callId || "")
   const call2 = useRef(React.createRef())
 
   useEffect(() => {
@@ -43,6 +44,7 @@ const useHookCall = (callId, isIncoming, from, to) => {
             "status-" + status + " code-" + code + " message-" + message + " callId-" + callId,
           )
           if (status) {
+            setCallIdNew(callId)
             MediaManager.playMusicBackGround("phone_call.mp3", true)
           } else {
             Alert.alert("Make call fail: " + message)
@@ -123,12 +125,12 @@ const useHookCall = (callId, isIncoming, from, to) => {
   const callDidReceiveRemoteStream = ({ callId }) => {
     console.log("callDidReceiveRemoteStream")
     MediaManager.stopMusicBackground()
-    if (receivedRemoteStream) {
-      setReceivedRemoteStream(false)
-      setReceivedRemoteStream(true)
-    } else {
-      setReceivedRemoteStream(true)
-    }
+    setReceivedRemoteStream(true)
+    //   if (receivedRemoteStream) {
+    //   setReceivedRemoteStream(false)
+    // } else {
+    //   setReceivedRemoteStream(true)
+    // }
   }
 
   const callDidReceiveCallInfo = ({ callId, data }) => {
@@ -155,17 +157,17 @@ const useHookCall = (callId, isIncoming, from, to) => {
 
   const startCall = () => {
     setStatus("started")
-    call2.current.setSpeakerphoneOn(callId, isSpeaker, (status, code, message) => {})
+    call2.current.setSpeakerphoneOn(callIdNew, isSpeaker, (status, code, message) => {})
   }
 
   const switchPress = () => {
-    call2.current.switchCamera(callId, (status, code, message) => {
+    call2.current.switchCamera(callIdNew, (status, code, message) => {
       console.log("switch - " + message)
     })
   }
 
   const mutePress = () => {
-    call2.current.mute(callId, !isMute, (status, code, message) => {
+    call2.current.mute(callIdNew, !isMute, (status, code, message) => {
       if (status) {
         setIsMute((val) => !val)
       }
@@ -173,7 +175,7 @@ const useHookCall = (callId, isIncoming, from, to) => {
   }
 
   const speakerPress = () => {
-    call2.current.setSpeakerphoneOn(callId, !isSpeaker, (status, code, message) => {
+    call2.current.setSpeakerphoneOn(callIdNew, !isSpeaker, (status, code, message) => {
       console.log("setSpeakerphoneOn: " + message)
       if (status) {
         setIsSpeaker((val) => !val)
@@ -182,7 +184,7 @@ const useHookCall = (callId, isIncoming, from, to) => {
   }
 
   const videoPress = () => {
-    call2.current.enableVideo(callId, !isVideoEnable, (status, code, message) => {
+    call2.current.enableVideo(callIdNew, !isVideoEnable, (status, code, message) => {
       if (status) {
         setIsVideoEnable((val) => !val)
       }
@@ -208,14 +210,14 @@ const useHookCall = (callId, isIncoming, from, to) => {
 
   const endPress = (isHangup) => {
     if (isHangup) {
-      call2.current.hangup(callId, (status, code, message) => {
+      call2.current.hangup(callIdNew, (status, code, message) => {
         console.log("hangup: " + message)
         if (Platform.OS === "android") {
           dismissCallingView()
         }
       })
     } else {
-      call2.current.reject(callId, (status, code, message) => {
+      call2.current.reject(callIdNew, (status, code, message) => {
         console.log("reject: " + message)
         if (Platform.OS === "android") {
           dismissCallingView()
@@ -255,6 +257,7 @@ const useHookCall = (callId, isIncoming, from, to) => {
     callDidReceiveCallInfo,
     callDidHandleOnAnotherDevice,
     callDidAudioDeviceChange,
+    callIdNew,
   }
 }
 

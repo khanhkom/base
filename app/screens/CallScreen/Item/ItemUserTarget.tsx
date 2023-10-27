@@ -22,7 +22,7 @@ export default function ItemUserTarget({ isIncoming, from }) {
       {!isIncoming ? (
         <View>
           <Text size="xxl" weight="semiBold" style={styles.textName}>
-            B.n {name}
+            B.s {name}
           </Text>
           <Text size="sm" weight="normal" style={styles.textStatus}>
             Đang kết nối...

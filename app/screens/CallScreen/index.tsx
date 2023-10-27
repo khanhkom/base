@@ -1,7 +1,16 @@
 /* eslint-disable react-native/no-unused-styles */
 import { Icon } from "@app/components/Icon"
 import React, { Component, useEffect, useState } from "react"
-import { StyleSheet, View, Alert, Image, Dimensions, Platform, Pressable } from "react-native"
+import {
+  StyleSheet,
+  View,
+  Alert,
+  Image,
+  Dimensions,
+  Platform,
+  Pressable,
+  PermissionsAndroid,
+} from "react-native"
 
 import { StringeeCall2, StringeeVideoView } from "stringee-react-native"
 import Toolbar from "../CallVideo/Item/Toolbar"
@@ -18,10 +27,33 @@ import R from "@app/assets"
 const CallScreen = ({ route }) => {
   const params = route.params
   const { isVideoCall, isIncoming, detailOrder, callId, clientId, from, to } = params
+  const [permissionGranted, setPermissionGranted] = useState(false)
+  const requestPermission = () => {
+    PermissionsAndroid.requestMultiple([
+      PermissionsAndroid.PERMISSIONS.CAMERA,
+      PermissionsAndroid.PERMISSIONS.RECORD_AUDIO,
+      PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS,
+      PermissionsAndroid.PERMISSIONS.BLUETOOTH_CONNECT,
+    ])
+      .then((result) => {
+        if (
+          result["android.permission.CAMERA"] &&
+          result["android.permission.RECORD_AUDIO"] === "granted"
+        ) {
+          setPermissionGranted(true)
+        }
+      })
+      .catch((err) => {
+        console.log("requestPermission_error", err)
+      })
+  }
+  useEffect(() => {
+    requestPermission()
+  }, [])
   const {
     call2,
     status,
-    isMute,
+    callIdNew,
     isVideoEnable,
     isSpeaker,
     showAnswerBtn,
@@ -30,6 +62,7 @@ const CallScreen = ({ route }) => {
     signalingState,
     mediaState,
     startCall,
+    isMute,
     switchPress,
     mutePress,
     speakerPress,
@@ -60,20 +93,20 @@ const CallScreen = ({ route }) => {
         leftIconColor={colors.white}
         titleStyle={{ color: colors.white }}
       />
-      {isVideoCall && callId !== "" && receivedRemoteStream && (
+      {isVideoCall && callIdNew !== "" && receivedRemoteStream && (
         <StringeeVideoView
           style={styles.remoteView}
-          callId={callId}
+          callId={callIdNew}
           local={false}
           overlay={false}
         />
       )}
 
-      {receivedLocalStream && callId !== "" && isVideoCall && (
+      {receivedLocalStream && callIdNew !== "" && isVideoCall && (
         <View style={styles.wrapperUserTarget}>
           <StringeeVideoView
             style={styles.userTarget}
-            callId={callId}
+            callId={callIdNew}
             local={true}
             overlay={true}
           />
@@ -83,7 +116,9 @@ const CallScreen = ({ route }) => {
           </Pressable>
         </View>
       )}
-      {!receivedRemoteStream && <ItemUserTarget isIncoming={isIncoming} from={from} />}
+      {!receivedRemoteStream && (
+        <ItemUserTarget isIncoming={isIncoming} from={isIncoming ? from : to} />
+      )}
 
       {!showAnswerBtn && (
         <View style={styles.bottomContainer}>
