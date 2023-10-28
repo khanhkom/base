@@ -23,7 +23,7 @@ export default function ItemRecord({ onPress, item }: ItemProps) {
       <Image
         source={isMale ? R.images.patient_male : R.images.patient_female}
         style={styles.avatar}
-        resizeMode="center"
+        resizeMode='contain'
       />
       <View>
         <Text weight="medium" size="md" style={styles.textName}>

@@ -17,7 +17,7 @@ interface ItemProps {
 export default function ItemDocter({ item, onPress, onPressBook }: ItemProps) {
   return (
     <Card mode="contained" style={styles.item} contentStyle={styles.contentCard} onPress={onPress}>
-      <Image source={R.images.avatar_docter_rec} style={styles.avatar} resizeMode="center" />
+      <Image source={R.images.avatar_docter_rec} style={styles.avatar} resizeMode='contain' />
       <View>
         <Text weight="medium" size="md" style={styles.textName}>
           {translate("doctor.doctor")} {item?.name}

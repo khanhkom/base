@@ -19,7 +19,7 @@ export default function GeneralInfor({ data }: { data: IDocter }) {
       <Image
         source={data?.avatarUrl ? { uri: data?.avatarUrl } : R.images.avatar_docter_rec}
         style={styles.avatar}
-        resizeMode="cover"
+        resizeMode='contain'
       />
       <View>
         <Text weight="medium" size="md" style={styles.textName}>
