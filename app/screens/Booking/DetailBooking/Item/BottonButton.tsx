@@ -70,7 +70,7 @@ export default function BottonButton({
       </View>
     )
   if (status === STATUS_ORDER.verified || status === STATUS_ORDER.examining)
-    if (typeTimeCall !== TYPE_TIME_CALL.DA_DEN)
+    if (typeTimeCall === TYPE_TIME_CALL.DA_DEN)
       return (
         <View style={styles.container}>
           <Button
@@ -87,15 +87,16 @@ export default function BottonButton({
         </View>
       )
     else {
-      return (
-        <View style={styles.container}>
-          <Button mode="contained" style={styles.button}>
-            {typeTimeCall === TYPE_TIME_CALL.CHUA_DEN
-              ? translate("booking.button.not_in_time_exam")
-              : translate("booking.button.over_time_exam")}
-          </Button>
-        </View>
-      )
+      return <View />
+      // return (
+      //   <View style={styles.container}>
+      //     <Button mode="contained" style={styles.button}>
+      //       {typeTimeCall === TYPE_TIME_CALL.CHUA_DEN
+      //         ? translate("booking.button.not_in_time_exam")
+      //         : translate("booking.button.over_time_exam")}
+      //     </Button>
+      //   </View>
+      // )
     }
   if (status === STATUS_ORDER.result_processing)
     return (
