@@ -24,6 +24,7 @@ import RNCallKeep from "react-native-callkeep"
 import ItemUserTarget from "./Item/ItemUserTarget"
 import useHookCall from "./useHookCall"
 import R from "@app/assets"
+import { Screen } from "@app/components/Screen"
 const CallScreen = ({ route }) => {
   const params = route.params
   const { isVideoCall, isIncoming, detailOrder, callId, clientId, from, to } = params
@@ -81,7 +82,10 @@ const CallScreen = ({ route }) => {
   console.log("STATUS_1", status, isVideoCall, callId, receivedLocalStream)
 
   return (
-    <View style={styles.container}>
+    <Screen
+      safeAreaEdges={Platform.OS === "android" ? ["bottom"] : []}
+      contentContainerStyle={styles.container}
+    >
       <Header
         title="Cuộc gọi"
         backgroundColor={colors.primary_8}
@@ -161,7 +165,7 @@ const CallScreen = ({ route }) => {
           onAudioDeviceChange: callDidAudioDeviceChange, ///only available on android
         }}
       />
-    </View>
+    </Screen>
   )
 }
 export default CallScreen

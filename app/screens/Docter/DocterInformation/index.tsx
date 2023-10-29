@@ -1,6 +1,6 @@
-import { ScrollView, StyleSheet, View } from "react-native"
+import { Platform, ScrollView, StyleSheet, View } from "react-native"
 import React, { useEffect, useState } from "react"
-import { Header } from "@app/components/index"
+import { Header, Screen } from "@app/components/index"
 import colors from "@app/assets/colors"
 import GeneralInfor from "./Item/GeneralInfor"
 import Experience from "./Item/Experience"
@@ -39,7 +39,10 @@ export default function DocterInformation({ route }: IScreenProps) {
   }, [])
   const dispatch = useDispatch()
   return (
-    <View style={styles.container}>
+    <Screen
+      safeAreaEdges={Platform.OS === "android" ? ["bottom"] : []}
+      contentContainerStyle={styles.container}
+    >
       <Header leftIcon="arrow_left" title="Thông tin bác sĩ" backgroundColor={colors.gray_1} />
       <ScrollView>
         <GeneralInfor data={detailDocter} />
@@ -67,7 +70,7 @@ export default function DocterInformation({ route }: IScreenProps) {
           {translate("booking.book")}
         </Button>
       </View>
-    </View>
+    </Screen>
   )
 }
 

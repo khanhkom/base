@@ -1,4 +1,4 @@
-import { KeyboardAvoidingView, StyleSheet, View, Image } from "react-native"
+import { KeyboardAvoidingView, StyleSheet, View, Image, Platform } from "react-native"
 import React from "react"
 import { Header } from "@app/components/Header"
 import { Button, TextInput } from "react-native-paper"
@@ -11,11 +11,15 @@ import { translate } from "@app/i18n/translate"
 import { Text } from "@app/components/Text"
 import R from "@app/assets"
 import { Icon } from "@app/components/Icon"
+import { Screen } from "@app/components/Screen"
 export default function UpdateAccount() {
   const nameRedux = useSelector((state) => state.userReducers.user?.name)
   const [name, setText] = React.useState(nameRedux || "")
   return (
-    <View style={styles.container}>
+    <Screen
+      safeAreaEdges={Platform.OS === "android" ? ["bottom"] : []}
+      contentContainerStyle={styles.container}
+    >
       <Header leftIcon="arrow_left" title={"Cập nhật thông tin"} backgroundColor={colors.white} />
       <View style={{ flex: 1 }}>
         <View
@@ -64,7 +68,7 @@ export default function UpdateAccount() {
           {translate("common.save")}
         </Button>
       </KeyboardAvoidingView>
-    </View>
+    </Screen>
   )
 }
 

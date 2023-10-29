@@ -1,6 +1,6 @@
-import { StyleSheet, View, FlatList } from "react-native"
+import { StyleSheet, View, FlatList, Platform } from "react-native"
 import React, { useEffect, useState } from "react"
-import { Header, Text } from "@app/components/index"
+import { Header, Screen, Text } from "@app/components/index"
 import colors from "@app/assets/colors"
 import TitleInfor from "../Item/TitleInfor"
 import { HEIGHT, WIDTH } from "@app/config/functions"
@@ -59,7 +59,10 @@ export default function SelectTimeBooking({ route }: ScreenProps) {
   }
   if (loading) return <LoadingScreen />
   return (
-    <View style={styles.container}>
+    <Screen
+      safeAreaEdges={Platform.OS === "android" ? ["bottom"] : []}
+      contentContainerStyle={styles.container}
+    >
       <Header
         leftIcon="arrow_left"
         title={translate("booking.select_time")}
@@ -114,7 +117,7 @@ export default function SelectTimeBooking({ route }: ScreenProps) {
       >
         {translate("common.continue")}
       </Button>
-    </View>
+    </Screen>
   )
 }
 

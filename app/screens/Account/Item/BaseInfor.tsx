@@ -54,7 +54,7 @@ export default function BaseInfor() {
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: HEIGHT(32),
+    marginTop: HEIGHT(16),
     marginBottom: HEIGHT(spacing.md),
     alignSelf: "center",
     width: "100%",

@@ -1,7 +1,7 @@
-import { StyleSheet, View, FlatList } from "react-native"
+import { StyleSheet, View, FlatList, Platform } from "react-native"
 import React, { useEffect, useState } from "react"
 import colors from "@app/assets/colors"
-import { Header } from "@app/components/index"
+import { Header, Screen } from "@app/components/index"
 import Banner from "./Item/Banner"
 import BottonButton from "./Item/BottonButton"
 import useHookDetailBooking, { DATA_BOOK } from "../DetailBooking/useHookDetailBooking"
@@ -31,7 +31,10 @@ export default function BookingSuccess({ route }: ScreenProps) {
   console.log("detailOrder", detailOrder?.fileUpload)
   if (loading) return <LoadingScreen />
   return (
-    <View style={styles.container}>
+    <Screen
+      safeAreaEdges={Platform.OS === "android" ? ["bottom"] : []}
+      contentContainerStyle={styles.container}
+    >
       <Header leftIcon="arrow_left" title={translate("booking.booking_exam_success")} />
 
       <FlatList
@@ -59,7 +62,7 @@ export default function BookingSuccess({ route }: ScreenProps) {
         onRequestClose={() => setIsVisible(false)}
       />
       <BottonButton />
-    </View>
+    </Screen>
   )
 }
 

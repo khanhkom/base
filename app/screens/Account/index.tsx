@@ -1,4 +1,4 @@
-import { StyleSheet, View } from "react-native"
+import { Platform, StyleSheet, View } from "react-native"
 import React, { useState } from "react"
 import { KEYSTORAGE, remove } from "@app/utils/storage"
 import { removeUserData } from "@app/redux/actions"
@@ -16,6 +16,7 @@ import colors from "@app/assets/colors"
 import { spacing } from "@app/theme/spacing"
 import SocialConnect from "./Item/SocialConnect"
 import PopupConnectError from "./Item/PopupConnectError"
+import { Screen } from "@app/components/Screen"
 
 export default function Account() {
   const [visible, setVisible] = useState(false)
@@ -33,7 +34,10 @@ export default function Account() {
     await GoogleSignin.signOut()
   }
   return (
-    <View style={styles.container}>
+    <Screen
+      safeAreaEdges={Platform.OS === "android" ? ["bottom"] : []}
+      contentContainerStyle={styles.container}
+    >
       <Header
         title="Thông tin tài khoản"
         leftIcon="arrow_left"
@@ -41,6 +45,7 @@ export default function Account() {
         onRightPress={() => {
           navigate("UpdateAccount")
         }}
+        backgroundColor={colors.gray_1}
       />
       <BaseInfor />
       <SocialConnect setIndexSocial={setIndexSocial} setVisible={setVisible} />
@@ -59,7 +64,7 @@ export default function Account() {
         }}
       />
       <PopupConnectError visible={visible} setVisible={setVisible} indexSocial={indexSocial} />
-    </View>
+    </Screen>
   )
 }
 

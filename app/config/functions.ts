@@ -96,14 +96,12 @@ export const TYPE_TIME_CALL = {
   QUA_GIO: 2,
 }
 export function getTypeTimeInRangeCall(timeFrom, timeTo) {
-  const currentTime = new Date()
+  const currentTime = new Date().getTime()
   const parsedTimeFrom = new Date(timeFrom)
   const parsedTimeTo = new Date(timeTo)
-
-  const rangeBefore = new Date(parsedTimeFrom.getTime())
-  const rangeAfter = new Date(parsedTimeTo.getTime())
-  if (currentTime < rangeBefore) return TYPE_TIME_CALL.CHUA_DEN
-  if (currentTime > rangeAfter) return TYPE_TIME_CALL.QUA_GIO
+  console.log("currentTime_currentTime", currentTime, parsedTimeFrom, parsedTimeTo)
+  if (currentTime < parsedTimeFrom.getTime()) return TYPE_TIME_CALL.CHUA_DEN
+  if (currentTime > parsedTimeTo.getTime()) return TYPE_TIME_CALL.QUA_GIO
   else return TYPE_TIME_CALL.DA_DEN
   // return currentTime >= rangeBefore && currentTime <= rangeAfter
 }
