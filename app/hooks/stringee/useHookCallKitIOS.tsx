@@ -204,57 +204,57 @@ const useHookCallKitIOS = (updateClientId) => {
     })
     console.log("syncCall_syncCall", syncCall)
 
-    if (syncCall == null) {
-      console.log("Call + Show new call kit")
-      const newSyncCall = new SyncCall()
-      newSyncCall.callId = callId
-      newSyncCall.serial = serial
-      // newSyncCall.callkitId = uuid.v1()
-      newSyncCall.callkitId = Math.round(Math.random() * 100).toString()
-      newSyncCall.receivedStringeeCall = true
-      let uuid = await UUIDGenerator.getRandomUUID()
-      console.log("uuid_uuid", uuid)
-      // Callkit
-      // RNCallKeep.displayIncomingCall(uuid, "Stringee", fromAlias, "generic", true)
-      setSyncCall(newSyncCall)
+    // if (syncCall == null) {
+    //   console.log("Call + Show new call kit")
+    //   const newSyncCall = new SyncCall()
+    //   newSyncCall.callId = callId
+    //   newSyncCall.serial = serial
+    //   // newSyncCall.callkitId = uuid.v1()
+    //   newSyncCall.callkitId = Math.round(Math.random() * 100).toString()
+    //   newSyncCall.receivedStringeeCall = true
+    //   let uuid = await UUIDGenerator.getRandomUUID()
+    //   console.log("uuid_uuid", uuid)
+    //   // Callkit
+    //   // RNCallKeep.displayIncomingCall(uuid, "Stringee", fromAlias, "generic", true)
+    //   setSyncCall(newSyncCall)
 
-      // answerCallAction()
-      return
-    }
-    // Cuoc goi moi toi khong phai la current sync call
-    // Alert.alert('INCOMING CALL, callId: ' + this.state.syncCall?.callId + ' serial: ' + this.state.syncCall.serial);
+    //   // answerCallAction()
+    //   return
+    // }
+    // // Cuoc goi moi toi khong phai la current sync call
+    // // Alert.alert('INCOMING CALL, callId: ' + this.state.syncCall?.callId + ' serial: ' + this.state.syncCall.serial);
 
-    if (!syncCall.isThisCall(callId, serial)) {
-      console.log("INCOMING CALL -> REJECT, CUOC GOI MOI KHONG TRUNG VOI SYNC CALL")
-      stringeeCall?.current.reject(callId, (status, code, message) => {})
-      return
-    }
-    if (syncCall.rejected) {
-      // nguoi dung da click nut reject cuoc goi
-      console.log("INCOMING CALL -> REJECT, NGUOI DUNG DA REJECT CUOC GOI")
-      stringeeCall?.current.reject(callId, (status, code, message) => {})
-      return
-    }
-    // Da show callkit => update UI
-    if (syncCall.callkitId !== "") {
-      console.log("Call + Update")
-      RNCallKeep.updateDisplay(syncCall.callkitId, fromAlias, "")
+    // if (!syncCall.isThisCall(callId, serial)) {
+    //   console.log("INCOMING CALL -> REJECT, CUOC GOI MOI KHONG TRUNG VOI SYNC CALL")
+    //   stringeeCall?.current.reject(callId, (status, code, message) => {})
+    //   return
+    // }
+    // if (syncCall.rejected) {
+    //   // nguoi dung da click nut reject cuoc goi
+    //   console.log("INCOMING CALL -> REJECT, NGUOI DUNG DA REJECT CUOC GOI")
+    //   stringeeCall?.current.reject(callId, (status, code, message) => {})
+    //   return
+    // }
+    // // Da show callkit => update UI
+    // if (syncCall.callkitId !== "") {
+    //   console.log("Call + Update")
+    //   RNCallKeep.updateDisplay(syncCall.callkitId, fromAlias, "")
 
-      const newSyncCall = syncCall
-      newSyncCall.callId = callId
-      newSyncCall.receivedStringeeCall = true
-      setSyncCall(newSyncCall)
-      return
-    }
+    //   const newSyncCall = syncCall
+    //   newSyncCall.callId = callId
+    //   newSyncCall.receivedStringeeCall = true
+    //   setSyncCall(newSyncCall)
+    //   return
+    // }
 
-    // Chua show callkit thi show
-    const newSyncCall = syncCall
-    newSyncCall.callId = callId
-    newSyncCall.serial = serial
-    // newSyncCall.callkitId = uuid.v1()
-    newSyncCall.callkitId = Math.round(Math.random() * 100).toString()
-    newSyncCall.receivedStringeeCall = true
-    setSyncCall(newSyncCall)
+    // // Chua show callkit thi show
+    // const newSyncCall = syncCall
+    // newSyncCall.callId = callId
+    // newSyncCall.serial = serial
+    // // newSyncCall.callkitId = uuid.v1()
+    // newSyncCall.callkitId = Math.round(Math.random() * 100).toString()
+    // newSyncCall.receivedStringeeCall = true
+    // setSyncCall(newSyncCall)
   }
 
   useEffect(() => {
