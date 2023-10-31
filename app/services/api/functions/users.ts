@@ -22,12 +22,27 @@ export const getOtp = (body: { phone: string }) =>
     .post(URL.GET_OTP, body)
     .then((res) => res)
     .catch((err) => err)
-
-export const verifyOTP = (body: { phone: string; code: string; role: "patient" | "doctor" }) =>
+export const verifyOTP = (body: { phone: string; code: string; fcmToken?: string }) =>
   api.apisauce
     .post(URL.VERIFY_OTP, body)
     .then((res) => res)
     .catch((err) => err)
+export const getOtpV2 = (body: { phone: string; deviceId: string; otpMethod: string }) =>
+  api.apisauce
+    .post(URL.GET_OTP_V2, body)
+    .then((res) => res)
+    .catch((err) => err)
+export const verifyOTPV2 = (body: {
+  phone: string
+  otp: string
+  deviceId: string
+  fcmToken?: string
+}) =>
+  api.apisauce
+    .get(URL.VERIFY_OTP_V2, body)
+    .then((res) => res)
+    .catch((err) => err)
+
 export const refreshSession = (token: string) =>
   api.apisauce
     .get(URL.REFRESH_SESSION, { token })

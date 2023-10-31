@@ -3,7 +3,7 @@ import { navigate } from "@app/navigators/navigationUtilities"
 import { updateUserField } from "@app/redux/actions"
 import { getStringeeToken } from "@app/redux/actions/stringee"
 import { api } from "@app/services/api"
-import { getOtp, loginSocial } from "@app/services/api/functions/users"
+import { getOtp, getOtpV2, loginSocial } from "@app/services/api/functions/users"
 import { EToastType, showToastMessage } from "@app/utils/library"
 import { KEYSTORAGE, save } from "@app/utils/storage"
 import { validatePhoneNumber } from "@app/utils/validate"
@@ -12,10 +12,14 @@ import { useState } from "react"
 import { Keyboard } from "react-native"
 import { AccessToken, LoginManager } from "react-native-fbsdk-next"
 import { useDispatch } from "react-redux"
-
+import DeviceInfo from "react-native-device-info"
+export const OTP_TYPE = {
+  ZNS: 0,
+  PHONE: 1,
+}
 const useHookLogin = (setCustomLoading?: (val: boolean) => void) => {
   const [indexTab, setIndexTab] = useState(0)
-  const [otpMethod, setOTPMethod] = useState(0)
+  const [otpMethod, setOTPMethod] = useState(OTP_TYPE.ZNS)
   const [countryCode, setCountryCode] = useState("+84")
   const [phoneNumber, setPhoneNumber] = useState("")
   const [loading, setLoading] = useState(false)
@@ -38,13 +42,24 @@ const useHookLogin = (setCustomLoading?: (val: boolean) => void) => {
     } else {
       try {
         const result = phoneNumber.replace(/^0+/, "")
+        const deviceId = await DeviceInfo.getUniqueId()
+        console.log("deviceId_deviceId", deviceId)
         setPhoneNumber(result)
         const body = {
           phone: countryCode + result,
+          otpMethod: otpMethod === 0 ? "ZNS" : "PHONE",
+          deviceId,
         }
         setLoading(true)
         setError(false)
-        const resLogin = await getOtp(body)
+        let resLogin = null
+        if (otpMethod !== OTP_TYPE.ZNS) {
+          resLogin = await getOtp(body)
+        } else {
+          resLogin = await getOtpV2(body)
+        }
+        // const resLogin = await getOtp(body)
+        // const resLogin = await getOtpV2(body)
 
         console.log("resLogin_resLogin", resLogin?.data)
         if (resLogin?.status === 201) {
@@ -59,6 +74,7 @@ const useHookLogin = (setCustomLoading?: (val: boolean) => void) => {
             if (resLogin?.data?.isNewUser) {
               navigate("VerifyOTP", {
                 phone: countryCode + result,
+                otpMethod,
               })
             } else {
               showModal()
@@ -69,6 +85,7 @@ const useHookLogin = (setCustomLoading?: (val: boolean) => void) => {
             } else {
               navigate("VerifyOTP", {
                 phone: countryCode + result,
+                otpMethod,
               })
             }
           }

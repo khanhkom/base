@@ -12,23 +12,27 @@ import { api } from "@app/services/api"
 import { KEYSTORAGE, save } from "@app/utils/storage"
 import { getStringeeToken } from "@app/redux/actions/stringee"
 import { useDispatch } from "react-redux"
-import { getOtp, verifyOTP } from "@app/services/api/functions/users"
+import { getOtp, getOtpV2, verifyOTP, verifyOTPV2 } from "@app/services/api/functions/users"
 import { LoadingOpacity } from "@app/components/loading/LoadingOpacity"
 import { EToastType, showToastMessage } from "@app/utils/library"
 import messaging from "@react-native-firebase/messaging"
 import { translate } from "@app/i18n/translate"
 
 import { getHash, startOtpListener, useOtpVerify, removeListener } from "react-native-otp-verify"
+import DeviceInfo from "react-native-device-info"
+import { OTP_TYPE } from "../../Login/useHookLogin"
 
 interface ScreenProps {
   route: {
     params: {
       phone: string
+      otpMethod: number
     }
   }
 }
 export default function VerifyOTP({ route }: ScreenProps) {
   const phone = route?.params?.phone
+  const otpMethod = route?.params?.otpMethod
   const pinInput = useRef(null)
   const [code, setCode] = useState("")
   const [loading, setLoading] = useState(false)
@@ -70,17 +74,33 @@ export default function VerifyOTP({ route }: ScreenProps) {
   const _checkCode = async (codeFinal) => {
     try {
       setLoading(true)
+      const deviceId = await DeviceInfo.getUniqueId()
       const body = {
         phone,
-        code: codeFinal,
+        otp: codeFinal,
+        deviceId,
       }
       if (tokenFi.current !== "") {
         Object.assign(body, {
           fcmToken: tokenFi.current,
         })
       }
-      const resOTP = await verifyOTP(body)
-      console.log("body", body)
+      let resOTP = null
+      if (otpMethod === OTP_TYPE.ZNS) {
+        resOTP = await verifyOTPV2(body)
+      } else {
+        const newBody = {
+          phone,
+          code: codeFinal,
+        }
+        if (tokenFi.current !== "") {
+          Object.assign(newBody, {
+            fcmToken: tokenFi.current,
+          })
+        }
+        resOTP = await verifyOTP(newBody)
+      }
+      console.log("body", body, resOTP)
       const dataLogin = resOTP?.data
       setLoading(false)
       if (resOTP?.data?.accessToken) {
@@ -113,12 +133,22 @@ export default function VerifyOTP({ route }: ScreenProps) {
   }
   const reSendCode = async () => {
     try {
+      const deviceId = await DeviceInfo.getUniqueId()
       const body = {
         phone,
+        otpMethod: otpMethod === 0 ? "ZNS" : "PHONE",
+        deviceId,
       }
       setLoading(true)
       setCode("")
-      const resLogin = await getOtp(body)
+      // const resLogin = await getOtpV2(body)
+      let resLogin = null
+      if (otpMethod !== 0) {
+        resLogin = await getOtp(body)
+      } else {
+        resLogin = await getOtpV2(body)
+      }
+      console.log("resLogin", resLogin)
       setTime(30)
       if (resLogin?.status === 201) {
         showToastMessage(translate("otp.code_sent_successfully"), EToastType.SUCCESS)

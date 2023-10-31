@@ -2,7 +2,9 @@ import { DEFAULT_API_CONFIG } from "./api-config"
 export const ROOT = DEFAULT_API_CONFIG.url_prod
 const URL_LOGIN = {
   GET_OTP: "pin/getOtp",
+  GET_OTP_V2: "pin/v2/generateOtp",
   VERIFY_OTP: "pin/verifyOtp",
+  VERIFY_OTP_V2: "pin/v2/verifyOtpForLogin",
   LOGIN_SOCIAL: "session/createSessionWithOAuth2",
 }
 const URL_PATIENT = {
