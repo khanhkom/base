@@ -14,6 +14,7 @@ const useHookCall = (callId, isIncoming, from, to) => {
   const [showAnswerBtn, setShowAnswerBtn] = useState(isIncoming)
   const [receivedLocalStream, setReceivedLocalStream] = useState(false)
   const [receivedRemoteStream, setReceivedRemoteStream] = useState(false)
+  const [isVideoEnableRemote, setIsVideoEnableRemote] = useState(true)
   const [signalingState, setSignalingState] = useState(-1)
   const [mediaState, setMediaState] = useState(-1)
   const [callIdNew, setCallIdNew] = useState(callId || "")
@@ -135,6 +136,9 @@ const useHookCall = (callId, isIncoming, from, to) => {
 
   const callDidReceiveCallInfo = ({ callId, data }) => {
     console.log("didReceiveCallInfo - " + JSON.stringify(data))
+    const remoteInfor = JSON.parse(data)
+    const isRemoteEnableVideo = remoteInfor?.isVideoEnable
+    setIsVideoEnableRemote(isRemoteEnableVideo)
   }
 
   const callDidHandleOnAnotherDevice = ({ callId, code, description }) => {
@@ -184,6 +188,10 @@ const useHookCall = (callId, isIncoming, from, to) => {
   }
 
   const videoPress = () => {
+    let obj = JSON.stringify({ isVideoEnable: !isVideoEnable })
+    call2.current.sendCallInfo(callIdNew, obj, (status, code, message) => {
+      console.log("SENT_INFOR", status, code, message)
+    })
     call2.current.enableVideo(callIdNew, !isVideoEnable, (status, code, message) => {
       if (status) {
         setIsVideoEnable((val) => !val)
@@ -258,6 +266,7 @@ const useHookCall = (callId, isIncoming, from, to) => {
     callDidHandleOnAnotherDevice,
     callDidAudioDeviceChange,
     callIdNew,
+    isVideoEnableRemote,
   }
 }
 

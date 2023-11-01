@@ -17,7 +17,7 @@ interface ItemProps {
 export default function ItemDocter({ item, onPress, onPressBook }: ItemProps) {
   return (
     <Card mode="contained" style={styles.item} contentStyle={styles.contentCard} onPress={onPress}>
-      <Image source={R.images.avatar_docter_rec} style={styles.avatar} resizeMode='contain' />
+      <Image source={R.images.avatar_docter_rec} style={styles.avatar} resizeMode="contain" />
       <View>
         <Text weight="medium" size="md" style={styles.textName}>
           {translate("doctor.doctor")} {item?.name}
@@ -33,7 +33,7 @@ export default function ItemDocter({ item, onPress, onPressBook }: ItemProps) {
           </Text>
         </View>
         <View style={styles.flexRow}>
-          <Text style={{ color: colors.gray_6 }} size="sm" weight="normal">
+          <Text style={{ color: colors.gray_6, width: WIDTH(100) }} size="sm" weight="normal">
             {translate("doctor.price")}:{" "}
             <Text weight="semiBold" size="md" style={{ color: colors.primary }}>
               {item?.price} đ
@@ -80,6 +80,7 @@ const styles = StyleSheet.create({
     color: colors.gray_9,
     marginBottom: HEIGHT(2),
     marginTop: HEIGHT(8),
+    width: WIDTH(220),
   },
   wrapperStar: {
     alignItems: "center",

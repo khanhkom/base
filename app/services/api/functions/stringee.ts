@@ -6,7 +6,7 @@ export const createStringeeSession = () =>
     .then((res) => res)
     .catch((err) => err)
 export const getNameById = (userId) =>
-  fetch(`https://api-dev.sdoctor.vn/api/san-review/authentication/${userId}/fullname`, {
+  fetch(`https://api.sdoctor.vn/api/san-review/authentication/${userId}/fullname`, {
     method: "GET",
     headers: {
       Accept: "*/*",

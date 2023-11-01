@@ -108,6 +108,7 @@ const useHookLogin = (setCustomLoading?: (val: boolean) => void) => {
         showPlayServicesUpdateDialog: true,
       })
       const userInfo = await GoogleSignin.signIn()
+      console.log("userInfo", userInfo)
       setCustomLoading(false)
       _hanldeLoginServer({
         token: userInfo.serverAuthCode,

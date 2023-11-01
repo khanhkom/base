@@ -11,12 +11,13 @@ import {
   Pressable,
   PermissionsAndroid,
 } from "react-native"
+import KeepAwake from "react-native-keep-awake"
 
 import { StringeeCall2, StringeeVideoView } from "stringee-react-native"
 import Toolbar from "../CallVideo/Item/Toolbar"
 import colors from "@app/assets/colors"
 import BottomButton from "../CallVideo/Item/BottomButton"
-import { HEIGHT, WIDTH } from "@app/config/functions"
+import { HEIGHT, WIDTH, getHeight, getWidth } from "@app/config/functions"
 import { spacing } from "@app/theme/spacing"
 import { Header } from "@app/components/Header"
 import { goBack } from "@app/navigators/navigationUtilities"
@@ -50,6 +51,7 @@ const CallScreen = ({ route }) => {
   }
   useEffect(() => {
     requestPermission()
+    KeepAwake.activate()
   }, [])
   const {
     call2,
@@ -77,6 +79,7 @@ const CallScreen = ({ route }) => {
     callDidReceiveCallInfo,
     callDidHandleOnAnotherDevice,
     callDidAudioDeviceChange,
+    isVideoEnableRemote,
   } = useHookCall(callId, isIncoming, from, to)
   console.log("STATUS_", status, isVideoCall, callId, receivedRemoteStream)
   console.log("STATUS_1", status, isVideoCall, callId, receivedLocalStream)
@@ -98,12 +101,17 @@ const CallScreen = ({ route }) => {
         titleStyle={{ color: colors.white }}
       />
       {isVideoCall && callIdNew !== "" && receivedRemoteStream && (
-        <StringeeVideoView
-          style={styles.remoteView}
-          callId={callIdNew}
-          local={false}
-          overlay={false}
-        />
+        <View style={styles.wrapperRemoteView}>
+          <StringeeVideoView
+            style={styles.remoteView}
+            callId={callIdNew}
+            local={false}
+            overlay={false}
+          />
+          {!isVideoEnableRemote && (
+            <Image source={R.images.avatar_docter_rec} style={styles.userDoctorDefault} />
+          )}
+        </View>
       )}
 
       {receivedLocalStream && callIdNew !== "" && isVideoCall && (
@@ -189,12 +197,13 @@ const styles = StyleSheet.create({
     bottom: HEIGHT(0),
     zIndex: 1,
   },
-
-  remoteView: {
+  wrapperRemoteView: {
     backgroundColor: colors.gray_5,
     position: "absolute",
     top: 0,
     left: 0,
+  },
+  remoteView: {
     width: Dimensions.get("window").width,
     height:
       Platform.OS === "ios"
@@ -224,6 +233,17 @@ const styles = StyleSheet.create({
     // borderWidth: 3,
     // borderColor: colors.white,
     backgroundColor: colors.gray_2,
+  },
+  userDoctorDefault: {
+    width: getWidth(),
+    height:
+      Platform.OS === "ios"
+        ? Dimensions.get("window").height
+        : Dimensions.get("window").height + HEIGHT(80),
+    borderRadius: 12,
+    backgroundColor: colors.gray_2,
+    position: "absolute",
+    top: 0,
   },
   userTargetDefault: {
     width: WIDTH(100),

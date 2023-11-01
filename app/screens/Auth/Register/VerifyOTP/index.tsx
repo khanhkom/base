@@ -148,7 +148,7 @@ export default function VerifyOTP({ route }: ScreenProps) {
       } else {
         resLogin = await getOtpV2(body)
       }
-      console.log("resLogin", resLogin)
+      // console.log("resLogin", resLogin)
       setTime(30)
       if (resLogin?.status === 201) {
         showToastMessage(translate("otp.code_sent_successfully"), EToastType.SUCCESS)
@@ -187,8 +187,20 @@ export default function VerifyOTP({ route }: ScreenProps) {
         // placeholder="•"
         placeholder={<View style={styles.dot_placeholder} />}
         value={code}
-        onTextChange={(code) => setCode(code)}
+        onTextChange={(code) => {
+          console.log("error", error)
+          if (error) {
+            setError(false)
+            setCode("")
+          } else {
+            setCode(code)
+          }
+        }}
         onFulfill={(code) => _checkCode(code)}
+        // onFulfill={(code) => {
+        //   console.log("code_code", code)
+        //   setError(true)
+        // }}
         cellSize={WIDTH(48)}
         codeLength={6}
         cellStyle={styles.cellStyle}

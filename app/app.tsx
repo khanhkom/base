@@ -38,6 +38,7 @@ export const NAVIGATION_PERSISTENCE_KEY = "NAVIGATION_STATE"
 import codePush from "react-native-code-push"
 import NoInternetComponent from "./components/no-internet"
 import { getNameById } from "./services/api/functions/stringee"
+import KeepAwake from "react-native-keep-awake"
 
 const sagaMiddleware = createSagaMiddleware()
 const store = createStore(rootReducers, applyMiddleware(sagaMiddleware))
@@ -89,6 +90,7 @@ export async function onMessageReceived(message) {
     visibility: AndroidVisibility.PUBLIC,
     vibrationPattern: [300, 500],
   })
+  KeepAwake.activate()
   switch (callStatus) {
     case "started":
       console.log("started_started", isShowNotification)
