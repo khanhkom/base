@@ -17,6 +17,7 @@ import { spacing } from "@app/theme/spacing"
 import SocialConnect from "./Item/SocialConnect"
 import PopupConnectError from "./Item/PopupConnectError"
 import { Screen } from "@app/components/Screen"
+import { unregisterPush } from "@app/redux/actions/stringee"
 
 export default function Account() {
   const [visible, setVisible] = useState(false)
@@ -25,13 +26,17 @@ export default function Account() {
   const onLogout = async () => {
     await remove(KEYSTORAGE.LOGIN_DATA)
     dispatch(removeUserData())
+    dispatch(unregisterPush())
     // navigate("Login")
-    resetRoot({
-      index: 0,
-      routes: [{ name: "Login" }],
-    })
+
     api.apisauce.setHeader("access-token", "")
     await GoogleSignin.signOut()
+    setTimeout(() => {
+      resetRoot({
+        index: 0,
+        routes: [{ name: "Login" }],
+      })
+    }, 500)
   }
   return (
     <Screen

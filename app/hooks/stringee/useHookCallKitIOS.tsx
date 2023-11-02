@@ -14,6 +14,7 @@ const useHookCallKitIOS = (updateClientId) => {
   const client = useRef(null)
 
   const [pushToken, setPushToken] = useState("")
+  const [androidPushToken, setAndroidPushToken] = useState("")
   const [syncCall, setSyncCall] = useState(null)
   const [permissionGranted, setPermissionGranted] = useState(false)
 
@@ -110,7 +111,12 @@ const useHookCallKitIOS = (updateClientId) => {
     setPushToken(token)
     registerTokenForStringee(token)
   }
-
+  const unregisterPush = () => {
+    const token = Platform.OS === "android" ? androidPushToken : pushToken
+    client?.current?.unregisterPush(token, (status, code, message) => {
+      console.log("unregisterPush", status, code, message)
+    })
+  }
   const notificationListener = (notification) => {
     const callKitUUID = notification.getData().uuid
     const callSerial = notification.getData().serial
@@ -283,6 +289,7 @@ const useHookCallKitIOS = (updateClientId) => {
       VoipPushNotification.registerVoipToken()
     } else {
       const token = await messaging().getToken()
+      setAndroidPushToken(token)
       console.log("UPDATE_TOKEN_ANDROID", token)
       client?.current?.registerPush(
         token,
@@ -411,6 +418,7 @@ const useHookCallKitIOS = (updateClientId) => {
     permissionGranted,
     requestPermission,
     clientEventHandlers,
+    unregisterPush,
   }
 }
 

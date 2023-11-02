@@ -9,3 +9,18 @@ export function updateStringeeClientId(data: string) {
     data,
   }
 }
+export function unregisterPush() {
+  return {
+    type: "UN_REGISTER_PUSH",
+  }
+}
+export function refreshClient() {
+  return {
+    type: "REFRESH_CLIENT",
+  }
+}
+export function removeActionClient() {
+  return {
+    type: "REMOVE_ACTION_CLIENT",
+  }
+}

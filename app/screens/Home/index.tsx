@@ -9,7 +9,12 @@ import TopPackage from "./Item/TopPackage"
 import HotNews from "./Item/HotNews"
 import colors from "@app/assets/colors"
 // import useHookStringee from "./useHookStringee"
-import { getStringeeToken, updateStringeeClientId } from "@app/redux/actions/stringee"
+import {
+  getStringeeToken,
+  removeActionClient,
+  unregisterPush,
+  updateStringeeClientId,
+} from "@app/redux/actions/stringee"
 import { useSelector } from "@app/redux/reducers"
 import { useDispatch } from "react-redux"
 import { getOrderHistory } from "@app/redux/actions/actionOrder"
@@ -30,6 +35,8 @@ async function checkNotificationPermission() {
 
 export default function HomeScreen() {
   const session = useSelector((state) => state.stringeeReducers.session)
+
+  const actionClient = useSelector((state) => state.stringeeReducers.actionClient)
   const dispatch = useDispatch()
   const updateClientId = (id: string) => {
     dispatch(updateStringeeClientId(id))
@@ -85,6 +92,7 @@ export default function HomeScreen() {
     client,
     permissionGranted,
     requestPermission,
+    unregisterPush,
   } = useHookCallKitIOS(updateClientId)
   console.log("permissionGranted", permissionGranted)
   React.useEffect(() => {
@@ -105,9 +113,23 @@ export default function HomeScreen() {
   }, [])
   useEffect(() => {
     if (session?.access_token && session?.access_token !== "") {
+      dispatch(removeActionClient())
       client?.current?.connect(session?.access_token)
     }
   }, [session?.access_token])
+
+  useEffect(() => {
+    if (actionClient === "REFRESH_CLIENT") {
+      if (session?.access_token && session?.access_token !== "") {
+        client?.current?.connect(session?.access_token)
+      }
+      // dispatch(refreshClient())
+    }
+    if (actionClient === "UN_REGISTER_PUSH") {
+      unregisterPush()
+      // dispatch(unregisterPush())
+    }
+  }, [actionClient])
   return (
     <Screen preset="scroll" style={styles.container}>
       <HeaderHome onSearch={onSearch} />

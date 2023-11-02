@@ -4,6 +4,8 @@ const defaultState = {
     exp: 0,
   },
   clientId: "",
+  // REFRESH_CLIENT, UN_REGISTER_PUSH,
+  actionClient: "",
 }
 export default (state = defaultState, action) => {
   switch (action.type) {
@@ -17,6 +19,24 @@ export default (state = defaultState, action) => {
       return {
         ...state,
         clientId: action.data,
+      }
+    }
+    case "UN_REGISTER_PUSH": {
+      return {
+        ...state,
+        actionClient: "UN_REGISTER_PUSH",
+      }
+    }
+    case "REFRESH_CLIENT": {
+      return {
+        ...state,
+        actionClient: "REFRESH_CLIENT",
+      }
+    }
+    case "REMOVE_ACTION_CLIENT": {
+      return {
+        ...state,
+        actionClient: "",
       }
     }
     default:

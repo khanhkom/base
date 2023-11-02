@@ -254,15 +254,7 @@ export default function VerifyOTP({ route }: ScreenProps) {
         autoComplete="sms-otp"
       />
       {error && (
-        <Text
-          preset="smRegular"
-          style={{
-            color: colors.red_5,
-            marginTop: HEIGHT(spacing.sm),
-            marginBottom: -HEIGHT(spacing.md),
-            textAlign: "center",
-          }}
-        >
+        <Text preset="smRegular" style={styles.textError}>
           {isBlock
             ? "Bạn đã nhập sai quá nhiều lần, vui lòng thử lại trong ít phút!"
             : translate("otp.incorrectCode")}
@@ -321,5 +313,11 @@ const styles = StyleSheet.create({
     color: colors.main_6,
     fontSize: 18,
     fontWeight: "600",
+  },
+  textError: {
+    color: colors.red_5,
+    marginTop: HEIGHT(spacing.sm),
+    marginBottom: -HEIGHT(spacing.md),
+    textAlign: "center",
   },
 })
