@@ -3,6 +3,16 @@ export const ROOT = DEFAULT_API_CONFIG.url_prod
 const URL_LOGIN = {
   GET_OTP: "pin/getOtp",
   GET_OTP_V2: "pin/v2/generateOtp",
+
+  GET_OTP_LOGIN_V2: "pin/v2/generateLoginOtp",
+  VERIFY_OTP_LOGIN_V2: "pin/v2/verifyOtpForLogin",
+
+  GET_OTP_CREATE_V2: "pin/v2/generateCreateAccountOtp",
+  VERIFY_OTP_CREATE_V2: "pin/v2/verifyOtpForCreateAccount",
+
+  GET_OTP_SOCIAL_V2: "pin/v2/generateOtpForLinkAccountWithPhone",
+  VERIFY_OTP_SOCIAL_V2: "pin/v2/verifyOtpForCreateAccount",
+
   VERIFY_OTP: "pin/verifyOtp",
   VERIFY_OTP_V2: "pin/v2/verifyOtpForLogin",
   LOGIN_SOCIAL: "session/createSessionWithOAuth2",

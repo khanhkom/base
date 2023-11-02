@@ -11,8 +11,9 @@ interface ItemProps {
   setVisible: (val: boolean) => void
   isNewUser: boolean
   phone: string
+  onPress: () => void
 }
-export default function PopupVerify({ visible, setVisible, isNewUser, phone }: ItemProps) {
+export default function PopupVerify({ visible, setVisible, isNewUser, phone, onPress }: ItemProps) {
   const hideModal = () => setVisible(false)
   return (
     <Modal visible={visible} onDismiss={hideModal}>
@@ -32,14 +33,7 @@ export default function PopupVerify({ visible, setVisible, isNewUser, phone }: I
           >
             {translate("common.close")}
           </Button>
-          <Button
-            onPress={() => {
-              hideModal()
-              navigate("VerifyOTP", { phone })
-            }}
-            mode="contained"
-            style={styles.buttonRight}
-          >
+          <Button onPress={onPress} mode="contained" style={styles.buttonRight}>
             {isNewUser ? translate("auth.register_now") : translate("auth.log_in_now")}
           </Button>
         </View>

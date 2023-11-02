@@ -6,7 +6,7 @@ import { spacing } from "@app/theme/spacing"
 import colors from "@app/assets/colors"
 import { navigate } from "@app/navigators/navigationUtilities"
 import { useDispatch } from "react-redux"
-import { getOtp } from "@app/services/api/functions/users"
+import { getOtp, getOtpSocial } from "@app/services/api/functions/users"
 import { LoadingOpacity } from "@app/components/loading/LoadingOpacity"
 import { EToastType, showToastMessage } from "@app/utils/library"
 import { updateUserField } from "@app/redux/actions"
@@ -17,6 +17,8 @@ import R from "@app/assets"
 import ItemOTPMethod from "../../Item/ItemOTPMethod"
 import { translate } from "@app/i18n/translate"
 import { validatePhoneNumber } from "@app/utils/validate"
+import DeviceInfo from "react-native-device-info"
+import { OTP_TYPE } from "../../Login/useHookLogin"
 export default function VerifyPhoneNumber() {
   const [countryCode, setCountryCode] = useState("+84")
   const [phoneNumber, setPhoneNumber] = useState("")
@@ -34,14 +36,21 @@ export default function VerifyPhoneNumber() {
     } else {
       try {
         const result = phoneNumber.replace(/^0+/, "")
+        const deviceId = await DeviceInfo.getUniqueId()
         setPhoneNumber(result)
         const body = {
           phone: countryCode + result,
+          deviceId,
+          otpMethod: otpMethod === 0 ? "ZNS" : "PHONE",
         }
         setLoading(true)
         setError(false)
-        const resLogin = await getOtp(body)
-
+        let resLogin = null
+        if (otpMethod === OTP_TYPE.ZNS) {
+          resLogin = await getOtpSocial(body)
+        } else {
+          resLogin = await getOtp(body)
+        }
         console.log("resLogin_resLogin", resLogin?.data)
         if (resLogin?.status === 201) {
           dispatch(
@@ -51,10 +60,18 @@ export default function VerifyPhoneNumber() {
           )
           navigate("VerifyOTP", {
             phone: countryCode + result,
+            type: "SOCIAL",
+            otpMethod,
           })
         } else {
-          setError(true)
-          showToastMessage(translate("auth.verify_telephone_number_again"), EToastType.ERROR)
+          const message = resLogin?.data?.message
+          if (message === "Phone not existed in system") {
+            setError(true)
+            showToastMessage("Số điện thoại đã được liên kết!", EToastType.ERROR)
+          } else {
+            setError(true)
+            showToastMessage(translate("auth.verify_telephone_number_again"), EToastType.ERROR)
+          }
         }
         console.log("resLogin_resLogin", body, resLogin?.data)
         setLoading(false)

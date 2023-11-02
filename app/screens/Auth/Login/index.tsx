@@ -34,12 +34,13 @@ export default function Login() {
     setVisible,
     isNewUser,
     onSubmit,
+    onModalConfirm,
   } = useHookLogin()
 
   return (
     <Screen
       preset="auto"
-      safeAreaEdges={Platform.OS === "android" ?["bottom"]:[]}
+      safeAreaEdges={Platform.OS === "android" ? ["bottom"] : []}
       contentContainerStyle={Platform.OS === "ios" ? { height: getHeight() } : styles.container}
     >
       <HeaderLogin />
@@ -95,6 +96,7 @@ export default function Login() {
         setVisible={setVisible}
         isNewUser={isNewUser}
         phone={countryCode + phoneNumber.replace(/^0+/, "")}
+        onPress={onModalConfirm}
       />
       {loading && <LoadingOpacity text=" " />}
     </Screen>

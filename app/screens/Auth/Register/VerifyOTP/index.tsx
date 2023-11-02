@@ -12,13 +12,24 @@ import { api } from "@app/services/api"
 import { KEYSTORAGE, save } from "@app/utils/storage"
 import { getStringeeToken } from "@app/redux/actions/stringee"
 import { useDispatch } from "react-redux"
-import { getOtp, getOtpV2, verifyOTP, verifyOTPV2 } from "@app/services/api/functions/users"
+import {
+  getOtp,
+  getOtpLogin,
+  getOtpRegister,
+  getOtpSocial,
+  getOtpV2,
+  verifyOTP,
+  verifyOTPLogin,
+  verifyOTPRegister,
+  verifyOTPSocial,
+  verifyOTPV2,
+} from "@app/services/api/functions/users"
 import { LoadingOpacity } from "@app/components/loading/LoadingOpacity"
 import { EToastType, showToastMessage } from "@app/utils/library"
 import messaging from "@react-native-firebase/messaging"
 import { translate } from "@app/i18n/translate"
 
-import { getHash, startOtpListener, useOtpVerify, removeListener } from "react-native-otp-verify"
+import { getHash, startOtpListener, removeListener } from "react-native-otp-verify"
 import DeviceInfo from "react-native-device-info"
 import { OTP_TYPE } from "../../Login/useHookLogin"
 
@@ -27,17 +38,20 @@ interface ScreenProps {
     params: {
       phone: string
       otpMethod: number
+      type: "REGISTER" | "LOGIN" | "SOCIAL"
     }
   }
 }
 export default function VerifyOTP({ route }: ScreenProps) {
   const phone = route?.params?.phone
   const otpMethod = route?.params?.otpMethod
+  const type = route?.params?.type
   const pinInput = useRef(null)
   const [code, setCode] = useState("")
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(false)
   const [time, setTime] = useState(30)
+  const [isBlock, setBlock] = useState(false)
   const dispatch = useDispatch()
   const tokenFi = useRef("")
 
@@ -87,7 +101,19 @@ export default function VerifyOTP({ route }: ScreenProps) {
       }
       let resOTP = null
       if (otpMethod === OTP_TYPE.ZNS) {
-        resOTP = await verifyOTPV2(body)
+        switch (type) {
+          case "LOGIN":
+            resOTP = await verifyOTPLogin(body)
+            break
+          case "REGISTER":
+            resOTP = await verifyOTPRegister(body)
+            break
+          case "SOCIAL":
+            resOTP = await verifyOTPSocial(body)
+            break
+          default:
+            break
+        }
       } else {
         const newBody = {
           phone,
@@ -121,8 +147,14 @@ export default function VerifyOTP({ route }: ScreenProps) {
           // navigate("TabNavigator")
         }
       } else {
-        setError(true)
-        showToastMessage(translate("otp.incorrect_login_code"), EToastType.ERROR)
+        if (resOTP?.status === 429) {
+          setError(true)
+          setBlock(true)
+          showToastMessage("Bạn đã nhập sai quá nhiều lần!", EToastType.ERROR)
+        } else {
+          setError(true)
+          showToastMessage(translate("otp.incorrect_login_code"), EToastType.ERROR)
+        }
       }
     } catch (error) {
       showToastMessage(translate("otp.incorrect_login_code"), EToastType.ERROR)
@@ -146,7 +178,19 @@ export default function VerifyOTP({ route }: ScreenProps) {
       if (otpMethod !== 0) {
         resLogin = await getOtp(body)
       } else {
-        resLogin = await getOtpV2(body)
+        switch (type) {
+          case "LOGIN":
+            resLogin = await getOtpLogin(body)
+            break
+          case "REGISTER":
+            resLogin = await getOtpRegister(body)
+            break
+          case "SOCIAL":
+            resLogin = await getOtpSocial(body)
+            break
+          default:
+            break
+        }
       }
       // console.log("resLogin", resLogin)
       setTime(30)
@@ -216,9 +260,12 @@ export default function VerifyOTP({ route }: ScreenProps) {
             color: colors.red_5,
             marginTop: HEIGHT(spacing.sm),
             marginBottom: -HEIGHT(spacing.md),
+            textAlign: "center",
           }}
         >
-          {translate("otp.incorrectCode")}
+          {isBlock
+            ? "Bạn đã nhập sai quá nhiều lần, vui lòng thử lại trong ít phút!"
+            : translate("otp.incorrectCode")}
         </Text>
       )}
 

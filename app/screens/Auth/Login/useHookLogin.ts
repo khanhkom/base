@@ -3,7 +3,7 @@ import { navigate } from "@app/navigators/navigationUtilities"
 import { updateUserField } from "@app/redux/actions"
 import { getStringeeToken } from "@app/redux/actions/stringee"
 import { api } from "@app/services/api"
-import { getOtp, getOtpV2, loginSocial } from "@app/services/api/functions/users"
+import { getOtp, getOtpLogin, getOtpRegister, loginSocial } from "@app/services/api/functions/users"
 import { EToastType, showToastMessage } from "@app/utils/library"
 import { KEYSTORAGE, save } from "@app/utils/storage"
 import { validatePhoneNumber } from "@app/utils/validate"
@@ -13,10 +13,12 @@ import { Keyboard } from "react-native"
 import { AccessToken, LoginManager } from "react-native-fbsdk-next"
 import { useDispatch } from "react-redux"
 import DeviceInfo from "react-native-device-info"
+import { TYPE_MESSAGE_LOGIN } from "@app/services/api/apiErrorMessage"
 export const OTP_TYPE = {
   ZNS: 0,
   PHONE: 1,
 }
+
 const useHookLogin = (setCustomLoading?: (val: boolean) => void) => {
   const [indexTab, setIndexTab] = useState(0)
   const [otpMethod, setOTPMethod] = useState(OTP_TYPE.ZNS)
@@ -34,6 +36,7 @@ const useHookLogin = (setCustomLoading?: (val: boolean) => void) => {
   const onSubmit = async () => {
     // showModal();
     const isValidNumber = validatePhoneNumber(phoneNumber)
+    const isLogin = indexTab === 0
     Keyboard.dismiss()
     if (phoneNumber === "") {
       showToastMessage(translate("common.provide_complete_information"), EToastType.ERROR)
@@ -43,7 +46,6 @@ const useHookLogin = (setCustomLoading?: (val: boolean) => void) => {
       try {
         const result = phoneNumber.replace(/^0+/, "")
         const deviceId = await DeviceInfo.getUniqueId()
-        console.log("deviceId_deviceId", deviceId)
         setPhoneNumber(result)
         const body = {
           phone: countryCode + result,
@@ -52,54 +54,93 @@ const useHookLogin = (setCustomLoading?: (val: boolean) => void) => {
         }
         setLoading(true)
         setError(false)
-        let resLogin = null
-        if (otpMethod !== OTP_TYPE.ZNS) {
-          resLogin = await getOtp(body)
+        if (isLogin) {
+          handleCaseLogin(body)
         } else {
-          resLogin = await getOtpV2(body)
+          handleCaseRegister(body)
         }
-        // const resLogin = await getOtp(body)
-        // const resLogin = await getOtpV2(body)
-
-        console.log("resLogin_resLogin", resLogin?.data)
-        if (resLogin?.status === 201) {
-          dispatch(
-            updateUserField({
-              phone: countryCode + result,
-            }),
-          )
-          const isRegisterTab = indexTab === 1
-          setNewUser(resLogin?.data?.isNewUser)
-          if (isRegisterTab) {
-            if (resLogin?.data?.isNewUser) {
-              navigate("VerifyOTP", {
-                phone: countryCode + result,
-                otpMethod,
-              })
-            } else {
-              showModal()
-            }
-          } else {
-            if (resLogin?.data?.isNewUser) {
-              showModal()
-            } else {
-              navigate("VerifyOTP", {
-                phone: countryCode + result,
-                otpMethod,
-              })
-            }
-          }
-        } else {
-          setError(true)
-          showToastMessage(translate("auth.verify_telephone_number_again"), EToastType.ERROR)
-        }
-        console.log("resLogin_resLogin", body, resLogin)
-        setLoading(false)
       } catch (error) {
         showToastMessage(translate("auth.verify_telephone_number_again"), EToastType.ERROR)
         setError(true)
         setLoading(false)
       }
+    }
+  }
+  const handleCaseLogin = async (body: { phone: string; otpMethod: string; deviceId: string }) => {
+    console.log("resLogin::::", isNewUser)
+    let resLogin = null
+    if (otpMethod === OTP_TYPE.ZNS) {
+      resLogin = await getOtpLogin(body)
+    } else {
+      resLogin = await getOtp(body)
+    }
+    setLoading(false)
+    //1. check if not exist in db
+    if (resLogin?.status === 201) {
+      navigate("VerifyOTP", {
+        phone: body.phone,
+        otpMethod,
+        type: "LOGIN",
+      })
+    } else {
+      setNewUser(true)
+      showModal()
+    }
+    console.log("resLogin_resLogin", resLogin)
+  }
+  const handleCaseRegister = async (body: {
+    phone: string
+    otpMethod: string
+    deviceId: string
+  }) => {
+    console.log("resRegister::::", isNewUser)
+    let resRegister = null
+    if (otpMethod === OTP_TYPE.ZNS) {
+      resRegister = await getOtpRegister(body)
+    } else {
+      resRegister = await getOtp(body)
+    }
+    setLoading(false)
+    //1. check if not exist in db
+    if (resRegister?.status === 201) {
+      navigate("VerifyOTP", {
+        phone: body.phone,
+        otpMethod,
+        type: "REGISTER",
+      })
+    } else {
+      // check error;
+      const message = resRegister?.data?.message
+      if (message === TYPE_MESSAGE_LOGIN.PHONE_EXIST) {
+        setNewUser(false)
+        showModal()
+      } else if (message === TYPE_MESSAGE_LOGIN.ZALO_NOT_FOUND) {
+        setError(true)
+        showToastMessage("Tài khoản Zalo không tồn tại!", EToastType.ERROR)
+      } else {
+        setError(true)
+        showToastMessage(translate("auth.verify_telephone_number_again"), EToastType.ERROR)
+      }
+    }
+    console.log("resRegister_resRegister:::", resRegister)
+  }
+  const onModalConfirm = async () => {
+    setVisible(false)
+    setIndexTab(indexTab ? 0 : 1)
+    const result = phoneNumber.replace(/^0+/, "")
+    const deviceId = await DeviceInfo.getUniqueId()
+    setPhoneNumber(result)
+    const body = {
+      phone: countryCode + result,
+      otpMethod: otpMethod === 0 ? "ZNS" : "PHONE",
+      deviceId,
+    }
+    setLoading(true)
+    setError(false)
+    if (!isNewUser) {
+      handleCaseLogin(body)
+    } else {
+      handleCaseRegister(body)
     }
   }
   const loginWithGoogle = async () => {
@@ -185,6 +226,7 @@ const useHookLogin = (setCustomLoading?: (val: boolean) => void) => {
     onSubmit,
     loginWithGoogle,
     loginWithFacebook,
+    onModalConfirm,
   }
 }
 export default useHookLogin

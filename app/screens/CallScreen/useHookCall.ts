@@ -235,6 +235,7 @@ const useHookCall = (callId, isIncoming, from, to) => {
   }
 
   const dismissCallingView = () => {
+    RNCallKeep.endAllCalls()
     goBack()
     // props.navigation.goBack()
   }
