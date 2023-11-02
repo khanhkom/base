@@ -263,6 +263,17 @@ const useHookCallKitIOS = (updateClientId) => {
 
       VoipPushNotification.addEventListener("register", registerListener)
       VoipPushNotification.addEventListener("notification", notificationListener)
+
+      // ===== Step 3: subscribe `didLoadWithEvents` event =====
+      VoipPushNotification.addEventListener("didLoadWithEvents", (events) => {
+        // --- this will fire when there are events occured before js bridge initialized
+        // --- use this event to execute your event handler manually by event type
+
+        if (!events || !Array.isArray(events) || events.length < 1) {
+          return
+        }
+        console.log("events_events", events)
+      })
     }
   }, [])
 
