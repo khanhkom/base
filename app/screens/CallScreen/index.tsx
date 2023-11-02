@@ -26,7 +26,22 @@ import ItemUserTarget from "./Item/ItemUserTarget"
 import useHookCall from "./useHookCall"
 import R from "@app/assets"
 import { Screen } from "@app/components/Screen"
-const CallScreen = ({ route }) => {
+import { IOrderHistory } from "@app/interface/order"
+interface ScreenProps {
+  route: {
+    params: {
+      isVideoCall: boolean
+
+      isIncoming: boolean
+      detailOrder?: IOrderHistory
+      callId: string
+      clientId: string
+      from: string
+      to: string
+    }
+  }
+}
+const CallScreen = ({ route }: ScreenProps) => {
   const params = route.params
   const { isVideoCall, isIncoming, detailOrder, callId, clientId, from, to } = params
   const [permissionGranted, setPermissionGranted] = useState(false)
@@ -49,6 +64,7 @@ const CallScreen = ({ route }) => {
         console.log("requestPermission_error", err)
       })
   }
+
   useEffect(() => {
     requestPermission()
     KeepAwake.activate()

@@ -1,10 +1,9 @@
-import { ActivityIndicator, FlatList, StyleSheet, View } from "react-native"
+import { ActivityIndicator, FlatList, Platform, Pressable, StyleSheet, View } from "react-native"
 import React, { useEffect, useRef, useState } from "react"
 import colors from "@app/assets/colors"
 import { Header } from "@app/components/Header"
-import SearchFilter from "@app/components/SearchFilter"
 import ItemSchedule from "./Item/ItemSchedule"
-import { HEIGHT, returnStartEndDate } from "@app/config/functions"
+import { HEIGHT, WIDTH, returnStartEndDate } from "@app/config/functions"
 import { spacing } from "@app/theme/spacing"
 import ModalFilter, { LIST_SPECIALIST } from "./Item/ModalFilter"
 import { useSelector } from "@app/redux/reducers"
@@ -18,6 +17,11 @@ import { translate } from "@app/i18n/translate"
 import { Text } from "@app/components/Text"
 import { FlashList } from "@shopify/flash-list"
 import ItemPlaceholderCommon from "@app/components/placeholder/ItemCalendar"
+import SearchFilter from "./Item/SearchFilter"
+import DateTimePicker from "@react-native-community/datetimepicker"
+import DatePickerIOS from "react-native-date-picker"
+// import SearchFilter from "@app/components/SearchFilter"
+import useDebounce from "@app/hooks/search"
 const limit = 5
 
 export default function History() {
@@ -31,6 +35,7 @@ export default function History() {
   const [isLimited, setIsLimited] = useState<boolean>(false)
   const [listData, setListData] = useState<Array<IOrderHistory>>([])
   const [loading, setLoading] = useState<boolean>(true)
+  const [status, setStatus] = useState(0)
 
   const dateStartEnd = returnStartEndDate()
   const filterSelected = useRef({
@@ -40,35 +45,23 @@ export default function History() {
     endDate: new Date(),
   })
   const [keyword, setKeyword] = useState("")
+  const [open, setOpen] = useState(false)
+  const [date, setDate] = useState(new Date())
+
   let timerId
   const returnBody = () => {
-    const { statusFilter, timeFilter, startDate, endDate } = filterSelected?.current
+    const todayStart = moment(date).startOf("day").toISOString()
+    const todayEnd = moment(date).endOf("day").toISOString()
+
     let body = {
-      timeFrom: dateStartEnd.todayStart,
-      timeTo: dateStartEnd.todayEnd,
+      timeFrom: todayStart,
+      timeTo: todayEnd,
+      search: keyword,
     }
-    if (timeFilter === -1) {
-      body = {}
-    }
-    if (timeFilter === 1) {
-      body = {
-        timeFrom: dateStartEnd.weekStart,
-        timeTo: dateStartEnd.weekEnd,
-      }
-    } else if (timeFilter === 2) {
-      body = {
-        timeFrom: dateStartEnd.monthStart,
-        timeTo: dateStartEnd.monthEnd,
-      }
-    } else if (timeFilter === 3) {
-      body = {
-        timeFrom: startDate.toISOString(),
-        timeTo: moment(endDate).endOf("day").toISOString(),
-      }
-    }
-    if (statusFilter !== 0) {
+
+    if (status > 0) {
       Object.assign(body, {
-        status: LIST_SPECIALIST[statusFilter]?.status,
+        status: LIST_SPECIALIST[status]?.status,
       })
     }
     Object.assign(body, {
@@ -108,7 +101,6 @@ export default function History() {
   }
   async function getList(isLoadMore = false, page = pageList) {
     const bodySearch = returnBody()
-
     if (isLoadMore && isLimited) return
     const body = {
       ...bodySearch,
@@ -154,14 +146,14 @@ export default function History() {
       setRefreshState(RefreshState.Failure)
     }
   }
-  function bounceToSearch() {
-    clearTimeout(timerId)
-
-    timerId = setTimeout(() => {
-      // Code to trigger the search
+  useDebounce(
+    () => {
       onApplyFilter(filterSelected.current)
-    }, 300)
-  }
+    },
+    [keyword],
+    300,
+  )
+
   const renderFooter = () => {
     let footer = <></>
     switch (refreshState) {
@@ -190,8 +182,8 @@ export default function History() {
     return footer
   }
   useEffect(() => {
-    bounceToSearch()
-  }, [keyword, orderHistory])
+    getList(false, 1)
+  }, [orderHistory, status, date])
   useEffect(() => {
     ;(function () {
       !orderHistory || orderHistory.length < 1
@@ -211,6 +203,31 @@ export default function History() {
       }
     })()
   }, [orderHistory, pagingRes])
+  const ItemFilterHead = () => {
+    return (
+      <View style={styles.wrapperFilter}>
+        {LIST_SPECIALIST.map((item, index) => {
+          return (
+            <Pressable
+              onPress={() => {
+                setStatus(index)
+              }}
+              style={[styles.button, index !== status && { backgroundColor: colors.main_7 }]}
+              key={index}
+            >
+              <Text
+                size="ba"
+                weight="normal"
+                style={{ color: index !== status ? colors.primary_2 : colors.primary_8 }}
+              >
+                {item.title}
+              </Text>
+            </Pressable>
+          )
+        })}
+      </View>
+    )
+  }
   if (loading) {
     return (
       <View style={styles.container}>
@@ -219,14 +236,15 @@ export default function History() {
           backgroundColor={colors.primary}
           titleStyle={{ color: colors.white }}
         />
+        <ItemFilterHead />
         <SearchFilter
-          isFiltered={isFiltered}
+          keyword={keyword}
+          setKeyword={setKeyword}
           onPressFilter={() => {
-            refModal?.current?.show()
+            setOpen(true)
           }}
-          value={keyword}
-          onChangeText={(txt) => setKeyword(txt)}
-          placeholder={translate("history.search_patient_doctor")}
+          date={moment(date).format("DD/MM/YYYY")}
+          placeholder="Tên bệnh nhân"
         />
         <ItemPlaceholderCommon />
         <ItemPlaceholderCommon />
@@ -241,15 +259,17 @@ export default function History() {
         backgroundColor={colors.primary}
         titleStyle={{ color: colors.white }}
       />
+      <ItemFilterHead />
       <SearchFilter
-        isFiltered={isFiltered}
+        keyword={keyword}
+        setKeyword={setKeyword}
         onPressFilter={() => {
-          refModal?.current?.show()
+          setOpen(true)
         }}
-        value={keyword}
-        onChangeText={(txt) => setKeyword(txt)}
-        placeholder={translate("history.search_patient_doctor")}
+        date={moment(date).format("DD/MM/YYYY")}
+        placeholder="Tên bệnh nhân"
       />
+
       <FlashList
         data={listData}
         contentContainerStyle={{ paddingTop: HEIGHT(spacing.sm) }}
@@ -272,6 +292,37 @@ export default function History() {
         ListFooterComponent={renderFooter}
       />
       <ModalFilter ref={refModal} filterSelected={filterSelected} onApplyFilter={onApplyFilter} />
+      {Platform.OS == "android" ? (
+        open && (
+          <DateTimePicker
+            mode="date"
+            value={date}
+            onChange={(event, date) => {
+              setOpen(false)
+              if (event.type === "set") {
+                setDate(date)
+              }
+            }}
+          />
+        )
+      ) : (
+        <DatePickerIOS
+          modal
+          date={new Date(date) ?? new Date()}
+          // maximumDate={new Date()}
+          mode="date"
+          is24hourSource="device"
+          onConfirm={(date) => {
+            setOpen(false)
+            setDate(date)
+          }}
+          locale="vi"
+          open={open}
+          onCancel={() => {
+            setOpen(false)
+          }}
+        />
+      )}
     </View>
   )
 }
@@ -293,5 +344,18 @@ const styles = StyleSheet.create({
     height: HEIGHT(spacing.xl),
     marginVertical: HEIGHT(spacing.md),
     justifyContent: "center",
+  },
+  wrapperFilter: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    backgroundColor: colors.primary_8,
+    paddingVertical: HEIGHT(spacing.sm),
+    paddingHorizontal: WIDTH(spacing.md),
+  },
+  button: {
+    paddingHorizontal: WIDTH(10),
+    paddingVertical: HEIGHT(6),
+    borderRadius: 30,
+    backgroundColor: colors.white,
   },
 })

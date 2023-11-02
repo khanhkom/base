@@ -47,10 +47,10 @@ const SORTBY = [
   { title: translate("history.select_date_custom") },
 ]
 const DATA_SESSION = [
-  {
-    title: translate("history.order_status"),
-    data: LIST_SPECIALIST,
-  },
+  // {
+  //   title: translate("history.order_status"),
+  //   data: LIST_SPECIALIST,
+  // },
   {
     title: translate("history.time"),
     data: SORTBY,
@@ -117,15 +117,17 @@ const ModalFilter = forwardRef((props: Props, ref) => {
                   {item.title}:
                 </Text>
                 {item.data.map((item, index) => {
-                  const isActive = id === 0 ? statusFilter === index : timeFilter === index
+                  // const isActive = id === 0 ? statusFilter === index : timeFilter === index
+                  const isActive = timeFilter === index
                   return (
                     <Toggle
                       onPress={() => {
-                        if (id === 0) {
-                          setStatusFilter(index)
-                        } else {
-                          setTimeFilter(index)
-                        }
+                        setTimeFilter(index)
+                        // if (id === 0) {
+                        //   setStatusFilter(index)
+                        // } else {
+                        //   setTimeFilter(index)
+                        // }
                       }}
                       key={index}
                       variant="radio"
