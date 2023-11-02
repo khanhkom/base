@@ -1,4 +1,4 @@
-import { FlatList, StyleSheet, View } from "react-native"
+import { FlatList, Platform, StyleSheet, View } from "react-native"
 import React from "react"
 import { Header } from "@app/components/Header"
 import colors from "@app/assets/colors"
@@ -8,6 +8,7 @@ import { Button, Divider } from "react-native-paper"
 import { HEIGHT, WIDTH } from "@app/config/functions"
 import { spacing } from "@app/theme/spacing"
 import { navigate } from "@app/navigators/navigationUtilities"
+import { Screen } from "@app/components/Screen"
 
 interface ScreenProps {
   route: {
@@ -20,7 +21,10 @@ export default function DetailPatient({ route }: ScreenProps) {
   const id = route?.params?.id
   const { loading, getDetailOrderApi, returnDataByField } = useDetailPatient(id)
   return (
-    <View style={styles.container}>
+    <Screen
+      safeAreaEdges={Platform.OS === "android" ? ["bottom"] : []}
+      contentContainerStyle={styles.container}
+    >
       <Header
         leftIcon="arrow_left"
         title="Thông tin hồ sơ y tế"
@@ -67,7 +71,7 @@ export default function DetailPatient({ route }: ScreenProps) {
           Xem lịch sử khám
         </Button>
       </View>
-    </View>
+    </Screen>
   )
 }
 
