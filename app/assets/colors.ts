@@ -32,5 +32,8 @@ const colors = {
   green_8: "#2F9E44",
   green_0: "#EBFBEE",
   green_d7: "#D7F1DF",
+
+  violet_0: "#F3F0FF",
+  violet_8: "#6741D9",
 }
 export default colors

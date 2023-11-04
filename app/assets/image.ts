@@ -8,6 +8,7 @@ import IMAGE_NOTIFICATIONS from "./images/notification"
 import IMAGES_PROFILE from "./images/profile"
 import IMAGES_CHAT from "./images/chat"
 import IMAGE_SEARCH from "./images/search"
+import IMAGE_ORDER from "./images/order"
 
 const IMAGE = {
   ...AUTH_IMAGE,
@@ -20,5 +21,6 @@ const IMAGE = {
   ...IMAGES_PROFILE,
   ...IMAGES_CHAT,
   ...IMAGE_SEARCH,
+  ...IMAGE_ORDER,
 }
 export default IMAGE

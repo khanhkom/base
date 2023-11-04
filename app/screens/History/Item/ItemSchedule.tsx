@@ -47,7 +47,9 @@ export default function ItemSchedule({ item }: ItemProps) {
               B.s {item?.doctor?.name}
             </Text>
             <View style={[styles.boxIcon, { backgroundColor: itemData.backgroundColor }]}>
-              <Icon icon={itemData.icon} size={WIDTH(16)} color={itemData.color} />
+              {/* <Icon icon={itemData.icon} size={WIDTH(16)} color={itemData.color} /> */}
+              <Image source={itemData.image} style={styles.icStatus} resizeMode="contain" />
+
               <Text
                 size="sm"
                 weight="normal"
@@ -125,5 +127,10 @@ const styles = StyleSheet.create({
     height: HEIGHT(120),
     alignSelf: "center",
     marginHorizontal: WIDTH(spacing.sm),
+  },
+  icStatus: {
+    height: WIDTH(16),
+    width: WIDTH(16),
+    marginRight: WIDTH(spacing.xxs),
   },
 })
