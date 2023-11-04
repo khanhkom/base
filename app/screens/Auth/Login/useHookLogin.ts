@@ -83,8 +83,13 @@ const useHookLogin = (setCustomLoading?: (val: boolean) => void) => {
         type: "LOGIN",
       })
     } else {
-      setNewUser(true)
-      showModal()
+      if (resLogin?.status === 400) {
+        setNewUser(true)
+        showModal()
+      } else {
+        setError(true)
+        showToastMessage(translate("auth.verify_telephone_number_again"), EToastType.ERROR)
+      }
     }
     console.log("resLogin_resLogin", resLogin)
   }
