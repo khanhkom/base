@@ -70,7 +70,8 @@ export default function BottonButton({
       </View>
     )
   if (status === STATUS_ORDER.verified || status === STATUS_ORDER.examining)
-    if (typeTimeCall !== TYPE_TIME_CALL.DA_DEN)
+    if (typeTimeCall === TYPE_TIME_CALL.DA_DEN)
+      //origin ===
       return (
         <View style={styles.container}>
           <Button
