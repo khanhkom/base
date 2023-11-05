@@ -65,6 +65,7 @@ const Item = ({ item, onPress }) => {
 export default function ItemUtilities() {
   const [nearestOrder, setNearestOrder] = useState({ timeDifference: 0 })
   const [timeFromNow, setTimeFromNow] = useState(convertDuration(nearestOrder?.timeDifference))
+  const [isBeforeNow, setIsBeforeNow] = useState(true)
 
   useEffect(() => {
     async function getOrderNearest() {
@@ -73,9 +74,9 @@ export default function ItemUtilities() {
       if (nearestOrderTemp?.data?.id) {
         const dataOrder = nearestOrderTemp?.data
         const timeDifference = await moment(nearestOrderTemp.data.timeRange?.from).diff(new Date())
+        setIsBeforeNow(moment(nearestOrderTemp.data.timeRange?.to).isBefore(new Date()))
         Object.assign(dataOrder, { timeDifference })
         setTimeFromNow(convertDuration(nearestOrder?.timeDifference))
-
         setNearestOrder(dataOrder)
       } else {
         console.log("none_order")
@@ -106,7 +107,7 @@ export default function ItemUtilities() {
         break
     }
   }
-
+  console.log("timeToNow_timeToNow", isBeforeNow)
   return (
     <Card style={styles.card}>
       <FlatList
@@ -117,7 +118,7 @@ export default function ItemUtilities() {
         }}
         ItemSeparatorComponent={() => <View style={{ height: HEIGHT(spacing.md) }} />}
       />
-      {nearestOrder?.id && (
+      {nearestOrder?.id && !isBeforeNow && (
         <List.Item
           style={styles.itemRemind}
           onPress={() => {
