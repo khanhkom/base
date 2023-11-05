@@ -35,6 +35,7 @@ const ORDER = {
   CREATE_ORDER: "order",
   UPDATE_ORDER: "order/",
   CANCEL_ORDER: "order/cancel/",
+  GET_ORDER_BEING_SERVICE: "order/patient-get-order-nearest",
 }
 const URL_RESULT = {
   GET_RESULT_BY_ORDER: "result/order/",

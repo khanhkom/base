@@ -1,5 +1,5 @@
 import { StyleSheet, Image, View, FlatList, Pressable } from "react-native"
-import React from "react"
+import React, { useEffect, useState } from "react"
 import R from "@app/assets"
 import { HEIGHT, WIDTH, convertDuration } from "@app/config/functions"
 import { Text } from "@app/components/Text"
@@ -10,6 +10,8 @@ import { navigate } from "@app/navigators/navigationUtilities"
 import { Icon } from "@app/components/Icon"
 import useHookHome from "../useHookHome"
 import { translate } from "@app/i18n/translate"
+import { getOrderBeingServiced } from "@app/services/api/functions/order"
+import moment from "moment"
 const TYPE_FEATURES = {
   DATLICH: 0,
   TUVAN: 1,
@@ -61,7 +63,36 @@ const Item = ({ item, onPress }) => {
   )
 }
 export default function ItemUtilities() {
-  const { returnNearestOrder } = useHookHome()
+  const [nearestOrder, setNearestOrder] = useState({ timeDifference: 0 })
+  const [timeFromNow, setTimeFromNow] = useState(convertDuration(nearestOrder?.timeDifference))
+
+  useEffect(() => {
+    async function getOrderNearest() {
+      const nearestOrderTemp = await getOrderBeingServiced()
+      console.log("nearestOrderTemp", nearestOrderTemp?.data)
+      if (nearestOrderTemp?.data?.id) {
+        const dataOrder = nearestOrderTemp?.data
+        const timeDifference = await moment(nearestOrderTemp.data.timeRange?.from).diff(new Date())
+        Object.assign(dataOrder, { timeDifference })
+        setTimeFromNow(convertDuration(nearestOrder?.timeDifference))
+
+        setNearestOrder(dataOrder)
+      } else {
+        console.log("none_order")
+      }
+    }
+    getOrderNearest()
+  }, [])
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setTimeFromNow(convertDuration(nearestOrder?.timeDifference))
+    }, 60000) // 1 minute in milliseconds
+
+    // return () => {
+    //   clearInterval(interval)
+    // } // Clear the interval when component unmounts
+  }, [nearestOrder])
+
   const onPresItem = (index) => {
     switch (index) {
       case TYPE_FEATURES.TUVAN:
@@ -75,8 +106,6 @@ export default function ItemUtilities() {
         break
     }
   }
-  const nearestOrder = returnNearestOrder()
-  const timeFromNow = convertDuration(nearestOrder?.timeDifference)
 
   return (
     <Card style={styles.card}>
@@ -88,7 +117,7 @@ export default function ItemUtilities() {
         }}
         ItemSeparatorComponent={() => <View style={{ height: HEIGHT(spacing.md) }} />}
       />
-      {nearestOrder?.timeDifference && timeFromNow.day === 0 && (
+      {nearestOrder?.id && (
         <List.Item
           style={styles.itemRemind}
           onPress={() => {
@@ -99,7 +128,7 @@ export default function ItemUtilities() {
           title={() => {
             return (
               <Text size="sm" weight="medium" style={{ color: colors.white }}>
-                {timeFromNow?.day === 0 && timeFromNow.hour === 0 && timeFromNow.min < 5
+                {timeFromNow?.day <= 0 && timeFromNow.hour <= 0 && timeFromNow.min <= 0
                   ? translate("home.time_to_exam")
                   : `${translate("home.have_exam_in_next")} ${timeFromNow?.hour} ${translate(
                       "home.hour",

@@ -35,3 +35,8 @@ export const cancelOrder = (
     .put(URL.CANCEL_ORDER + id, body)
     .then((res) => res)
     .catch((err) => err)
+export const getOrderBeingServiced = (): Promise<ApiResponse<IOrderHistory>> =>
+  api.apisauce
+    .get(URL.GET_ORDER_BEING_SERVICE)
+    .then((res) => res)
+    .catch((err) => err)
