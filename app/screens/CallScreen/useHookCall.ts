@@ -363,6 +363,7 @@ const useHookCall = (callId, isIncoming, from, to, fromName) => {
   const dismissCallingView = async () => {
     RNCallKeep.endAllCalls()
     goBack()
+    RNNotificationCall.hideNotification()
     await storage.saveString(storage.KEYSTORAGE.ACTION_FROM_CALLKIT, ActionFromCallKit.NONE)
     // props.navigation.goBack()
   }
