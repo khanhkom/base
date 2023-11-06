@@ -44,33 +44,37 @@ export default function BottonButton({
     detailOrder?.timeRange?.to,
   )
 
-  if (status === STATUS_ORDER.created)
-    return (
-      <View style={styles.container}>
-        <Button
-          mode="contained"
-          style={[styles.buttonHome, { backgroundColor: colors.red_0 }]}
-          textColor={colors.red_5}
-          onPress={() => {
-            navigate("CancelBooking", { id, getDetailOrderApi })
-          }}
-        >
-          {translate("booking.button.cancel")}
-        </Button>
-        <Button
-          onPress={() => {
-            updateDataCreateOrder()
-            navigate("CompleteBooking", { id, type: "update" })
-          }}
-          mode="contained"
-          style={styles.button}
-        >
-          {translate("booking.button.swap_order")}
-        </Button>
-      </View>
-    )
+  if (status === STATUS_ORDER.created) {
+    if (typeTimeCall === TYPE_TIME_CALL.CHUA_DEN) {
+      return (
+        <View style={styles.container}>
+          <Button
+            mode="contained"
+            style={[styles.buttonHome, { backgroundColor: colors.red_0 }]}
+            textColor={colors.red_5}
+            onPress={() => {
+              navigate("CancelBooking", { id, getDetailOrderApi })
+            }}
+          >
+            {translate("booking.button.cancel")}
+          </Button>
+          <Button
+            onPress={() => {
+              updateDataCreateOrder()
+              navigate("CompleteBooking", { id, type: "update" })
+            }}
+            mode="contained"
+            style={styles.button}
+          >
+            {translate("booking.button.swap_order")}
+          </Button>
+        </View>
+      )
+    } else return <View />
+  }
+
   if (status === STATUS_ORDER.verified || status === STATUS_ORDER.examining)
-    if (typeTimeCall !== TYPE_TIME_CALL.DA_DEN)
+    if (typeTimeCall === TYPE_TIME_CALL.DA_DEN)
       //origin ===
       return (
         <View style={styles.container}>
