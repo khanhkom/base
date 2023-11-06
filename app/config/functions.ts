@@ -1,6 +1,7 @@
 import { Dimensions } from "react-native"
 import { initialWindowMetrics } from "react-native-safe-area-context"
-const moment = require("moment")
+import moment from "moment"
+// const moment = require("moment")
 
 const { width, height } = Dimensions.get("window")
 const deviceHeight = height - (initialWindowMetrics?.insets.top ?? 0)
@@ -42,22 +43,26 @@ export function convertDuration(milliseconds): {
   day: number
   hour: number
   min: number
+  sed: number
 } {
   let days = 0
   let hours = 0
   let minutes = 0
+  let seconds = 0
   if (milliseconds) {
     const duration = moment.duration(milliseconds)
 
     days = Math.floor(duration.asDays())
     hours = Math.floor(duration.asHours()) % 24
     minutes = Math.floor(duration.asMinutes()) % 60
+    seconds = Math.floor(duration.asSeconds()) % 60
   }
 
   return {
     day: days,
     hour: hours,
     min: minutes,
+    sed: seconds,
   }
 }
 export function returnStartEndDate(): {

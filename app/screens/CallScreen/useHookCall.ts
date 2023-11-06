@@ -5,8 +5,10 @@ import React, { useState, useEffect, useRef } from "react"
 import { Alert, Platform } from "react-native"
 import RNCallKeep from "react-native-callkeep"
 import notifee from "@notifee/react-native"
+import * as storage from "@app/utils/storage"
+import { ActionFromCallKit } from "@app/context/themeContext"
 
-const useHookCall = (callId, isIncoming, from, to) => {
+const useHookCall = (callId, isIncoming, from, to, fromName) => {
   const [status, setStatus] = useState("")
   const [isMute, setIsMute] = useState(false)
   const [isVideoEnable, setIsVideoEnable] = useState(true)
@@ -19,6 +21,8 @@ const useHookCall = (callId, isIncoming, from, to) => {
   const [mediaState, setMediaState] = useState(-1)
   const [callIdNew, setCallIdNew] = useState(callId || "")
   const call2 = useRef(React.createRef())
+  const [isInited, setInited] = useState(false)
+  const [callUUID, setCallUUID] = useState("")
 
   useEffect(() => {
     MediaManager.initSound("messenger_ringtone.mp3", true, () => {})
@@ -31,6 +35,7 @@ const useHookCall = (callId, isIncoming, from, to) => {
       if (isIncoming) {
         call2.current.initAnswer(callId, (status, code, message) => {
           console.log("initAnswer " + message)
+          setInited(status)
         })
       } else {
         const callParams = JSON.stringify({
@@ -38,6 +43,7 @@ const useHookCall = (callId, isIncoming, from, to) => {
           to: to,
           isVideoCall: true,
           videoResolution: "NORMAL",
+          customData: fromName,
         })
         console.log("ZZZZZZZZ", callParams)
         call2.current.makeCall(callParams, (status, code, message, callId) => {
@@ -54,6 +60,122 @@ const useHookCall = (callId, isIncoming, from, to) => {
       }
     }
   }, [call2])
+  // handle call kit
+
+  useEffect(() => {
+    RNNotificationCall.removeEventListener("answer")
+    RNNotificationCall.removeEventListener("endCall")
+    RNCallKeep.removeEventListener("answerCall")
+    RNCallKeep.removeEventListener("endCall")
+  }, [])
+  useEffect(() => {
+    async function getDataActionCallKit() {
+      const actionFromCallKit = await storage.loadString(storage.KEYSTORAGE.ACTION_FROM_CALLKIT)
+
+      console.log("ActionFromCallKit:::", actionFromCallKit)
+      if (
+        Platform.OS === "android" &&
+        call2?.current &&
+        actionFromCallKit !== ActionFromCallKit.NONE &&
+        actionFromCallKit
+      ) {
+        if (actionFromCallKit === ActionFromCallKit.ANSWER) {
+          answerCall(false)
+          await storage.saveString(storage.KEYSTORAGE.ACTION_FROM_CALLKIT, ActionFromCallKit.NONE)
+        }
+        if (actionFromCallKit === ActionFromCallKit.REJECT) {
+          endPress(false)
+          await storage.saveString(storage.KEYSTORAGE.ACTION_FROM_CALLKIT, ActionFromCallKit.NONE)
+        }
+      }
+    }
+    if (isInited) {
+      getDataActionCallKit()
+    }
+  }, [call2, isInited])
+  // handle call android when app background
+  useEffect(() => {
+    console.log("isInited_isInited", isInited)
+    if (isInited && Platform.OS === "android") {
+      RNNotificationCall.addEventListener("answer", async (data) => {
+        RNNotificationCall.backToApp()
+        const { callUUID, payload } = data
+        answerCall(false)
+        await storage.saveString(storage.KEYSTORAGE.ACTION_FROM_CALLKIT, ActionFromCallKit.NONE)
+        console.log("press answer____", callUUID)
+      })
+      RNNotificationCall.addEventListener("endCall", async (data) => {
+        const { callUUID, endAction, payload } = data
+        endPress(false)
+        console.log("press endCall_____", callUUID)
+      })
+    }
+    return () => {
+      RNNotificationCall.removeEventListener("answer")
+      RNNotificationCall.removeEventListener("endCall")
+    }
+  }, [call2, isInited])
+  // handle ios
+
+  useEffect(() => {
+    async function getDataActionCallKit() {
+      const actionFromCallKit = await storage.loadString(storage.KEYSTORAGE.ACTION_FROM_CALLKIT)
+      console.log("ActionFromCallKit IOS:::", actionFromCallKit)
+      if (
+        Platform.OS === "ios" &&
+        call2?.current &&
+        actionFromCallKit !== ActionFromCallKit.NONE &&
+        actionFromCallKit
+      ) {
+        if (actionFromCallKit === ActionFromCallKit.ANSWER) {
+          answerCall(false)
+          await storage.saveString(storage.KEYSTORAGE.ACTION_FROM_CALLKIT, ActionFromCallKit.NONE)
+        }
+        if (actionFromCallKit === ActionFromCallKit.REJECT) {
+          endPress(false)
+          await storage.saveString(storage.KEYSTORAGE.ACTION_FROM_CALLKIT, ActionFromCallKit.NONE)
+        }
+      }
+    }
+    if (isInited) {
+      getDataActionCallKit()
+    }
+  }, [call2, isInited])
+  // handle call ios when app background
+  useEffect(() => {
+    console.log("isInited_isInited", isInited)
+    if (isInited && Platform.OS === "ios") {
+      RNCallKeep.addEventListener("answerCall", async (data) => {
+        RNCallKeep.backToForeground()
+        const { callUUID, payload } = data
+        // answerCall(true)
+        await storage.saveString(storage.KEYSTORAGE.ACTION_FROM_CALLKIT, ActionFromCallKit.NONE)
+        console.log("press answer____", callUUID)
+      })
+      RNCallKeep.addEventListener("endCall", async (data) => {
+        const { callUUID, endAction, payload } = data
+        endPress(false)
+        console.log("press endCall IOS_____", callUUID)
+      })
+
+      RNCallKeep.addEventListener("didActivateAudioSession", async () => {
+        answerCall(true)
+        console.log("didActivateAudioSession IOS__________")
+      })
+      RNCallKeep.addEventListener("didDisplayIncomingCall", async (data) => {
+        const { callUUID, endAction, payload } = data
+        setCallUUID(callUUID)
+        console.log("didActivateAudioSession IOS__________")
+      })
+    }
+    return () => {
+      RNCallKeep.removeEventListener("answerCall")
+      RNCallKeep.removeEventListener("endCall")
+    }
+  }, [call2, isInited])
+
+  ///
+
   const callDidChangeSignalingState = ({ callId, code, reason, sipCode, sipReason }) => {
     console.log(
       "callDidChangeSignalingState " +
@@ -199,13 +321,17 @@ const useHookCall = (callId, isIncoming, from, to) => {
     })
   }
 
-  const answerCall = () => {
+  const answerCall = (isCallKeep: boolean) => {
+    if (!isCallKeep) {
+      if (Platform.OS === "ios") {
+        RNCallKeep.endAllCalls()
+      }
+      RNNotificationCall.hideNotification()
+    }
     console.log("AAAAAAAA", callId)
-    RNCallKeep.endAllCalls()
-    RNNotificationCall.hideNotification()
     MediaManager.stopMusicBackground()
     notifee.cancelAllNotifications()
-    call2.current.answer(callId, (status, code, message) => {
+    call2?.current?.answer(callId, (status, code, message) => {
       console.log("answer: " + message, status)
       if (status) {
         setShowAnswerBtn(false)
@@ -234,9 +360,10 @@ const useHookCall = (callId, isIncoming, from, to) => {
     }
   }
 
-  const dismissCallingView = () => {
+  const dismissCallingView = async () => {
     RNCallKeep.endAllCalls()
     goBack()
+    await storage.saveString(storage.KEYSTORAGE.ACTION_FROM_CALLKIT, ActionFromCallKit.NONE)
     // props.navigation.goBack()
   }
 
@@ -268,6 +395,7 @@ const useHookCall = (callId, isIncoming, from, to) => {
     callDidAudioDeviceChange,
     callIdNew,
     isVideoEnableRemote,
+    callUUID,
   }
 }
 

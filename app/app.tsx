@@ -19,7 +19,7 @@ import { AppNavigator, useNavigationPersistence } from "./navigators"
 import * as storage from "./utils/storage"
 import { customFontsToLoad } from "./theme"
 import { setLangInApp } from "./i18n"
-import { PreferencesContext } from "./context/themeContext"
+import { ActionFromCallKit, PreferencesContext } from "./context/themeContext"
 import { PaperProvider } from "react-native-paper"
 import { colorExpandLight, lightTheme } from "./theme/colors/index"
 import { createThemeFromSourceColor } from "./utils/m3/createMaterial3Theme"
@@ -127,9 +127,13 @@ export async function onMessageReceived(message) {
               },
             )
           })
-          RNNotificationCall.addEventListener("answer", (data) => {
+          RNNotificationCall.addEventListener("answer", async (data) => {
             RNNotificationCall.backToApp()
             const { callUUID, payload } = data
+            await storage.saveString(
+              storage.KEYSTORAGE.ACTION_FROM_CALLKIT,
+              ActionFromCallKit.ANSWER,
+            )
             console.log("press answer", callUUID)
           })
           RNNotificationCall.addEventListener("endCall", (data) => {

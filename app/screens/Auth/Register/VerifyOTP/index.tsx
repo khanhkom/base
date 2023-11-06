@@ -3,7 +3,7 @@ import React, { useRef, useState, useEffect } from "react"
 import SmoothPinCodeInput from "react-native-smooth-pincode-input"
 import { Header } from "@app/components/Header"
 import { Text } from "@app/components/Text"
-import { HEIGHT, WIDTH } from "@app/config/functions"
+import { HEIGHT, WIDTH, convertDuration } from "@app/config/functions"
 import { spacing } from "@app/theme/spacing"
 import colors from "@app/assets/colors"
 import BackgroundTimer from "react-native-background-timer"
@@ -52,6 +52,7 @@ export default function VerifyOTP({ route }: ScreenProps) {
   const [error, setError] = useState(false)
   const [time, setTime] = useState(30)
   const [isBlock, setBlock] = useState(false)
+  const [releaseIn, setrReleaseIn] = useState(0)
   const dispatch = useDispatch()
   const tokenFi = useRef("")
 
@@ -147,10 +148,15 @@ export default function VerifyOTP({ route }: ScreenProps) {
           // navigate("TabNavigator")
         }
       } else {
+        setCode("")
         if (resOTP?.status === 429) {
           setError(true)
           setBlock(true)
+          if (releaseIn === 0) {
+            handleBlockOTP(resOTP?.data?.releaseIn)
+          }
           showToastMessage("Bạn đã nhập sai quá nhiều lần!", EToastType.ERROR)
+          console.log("resOTP_resOTP", resOTP?.data)
         } else {
           setError(true)
           showToastMessage(translate("otp.incorrect_login_code"), EToastType.ERROR)
@@ -216,7 +222,18 @@ export default function VerifyOTP({ route }: ScreenProps) {
     }
     return () => BackgroundTimer.clearInterval(intervalId)
   }, [time])
-
+  const handleBlockOTP = (timeBlockLeft) => {
+    setrReleaseIn(timeBlockLeft)
+    const intervalId = BackgroundTimer.setInterval(() => {
+      // this will be executed every 200 ms
+      // even when app is the the background
+      setrReleaseIn((val) => val - 1000)
+    }, 1000)
+    if (time === 0) {
+      BackgroundTimer.clearInterval(intervalId)
+    }
+  }
+  const timeBlockConvert = convertDuration(releaseIn)
   return (
     <View style={styles.container}>
       <Header leftIcon="arrow_left" backgroundColor={colors.white} />
@@ -233,12 +250,7 @@ export default function VerifyOTP({ route }: ScreenProps) {
         value={code}
         onTextChange={(code) => {
           console.log("error", error)
-          if (error) {
-            setError(false)
-            setCode("")
-          } else {
-            setCode(code)
-          }
+          setCode(code)
         }}
         onFulfill={(code) => _checkCode(code)}
         // onFulfill={(code) => {
@@ -256,28 +268,30 @@ export default function VerifyOTP({ route }: ScreenProps) {
       {error && (
         <Text preset="smRegular" style={styles.textError}>
           {isBlock
-            ? "Bạn đã nhập sai quá nhiều lần, vui lòng thử lại trong ít phút!"
+            ? `Bạn đã nhập sai quá nhiều lần, thử lại sau ${timeBlockConvert.min} phút ${timeBlockConvert?.sed} giây`
             : translate("otp.incorrectCode")}
         </Text>
       )}
-
-      <Text
-        disabled={time > 0}
-        onPress={reSendCode}
-        preset="baMedium"
-        style={{ marginTop: HEIGHT(40), color: colors.gray_7 }}
-      >
-        {translate("otp.resendCode")}{" "}
-        {time > 0 && (
-          <Text>
-            (
-            <Text preset="baMedium" style={{ color: colors.main_7 }}>
-              {time} {translate("common.second")}
+      {!isBlock && (
+        <Text
+          disabled={time > 0}
+          onPress={reSendCode}
+          preset="baMedium"
+          style={{ marginTop: HEIGHT(40), color: colors.gray_7 }}
+        >
+          {translate("otp.resendCode")}{" "}
+          {time > 0 && (
+            <Text>
+              (
+              <Text preset="baMedium" style={{ color: colors.main_7 }}>
+                {time} {translate("common.second")}
+              </Text>
+              )
             </Text>
-            )
-          </Text>
-        )}
-      </Text>
+          )}
+        </Text>
+      )}
+
       {loading && <LoadingOpacity />}
     </View>
   )

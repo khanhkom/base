@@ -6,7 +6,7 @@ import { HEIGHT, WIDTH } from "@app/config/functions"
 import { spacing } from "@app/theme/spacing"
 import R from "@app/assets"
 import { getNameById } from "@app/services/api/functions/stringee"
-export default function ItemUserTarget({ isIncoming, from }) {
+export default function ItemUserTarget({ isIncoming, from, doctorName }) {
   const [name, setName] = useState("")
   const getCallName = async () => {
     const dataName = await getNameById(from)
@@ -22,7 +22,7 @@ export default function ItemUserTarget({ isIncoming, from }) {
       {!isIncoming ? (
         <View>
           <Text size="xxl" weight="semiBold" style={styles.textName}>
-            B.s {name}
+            B.s {doctorName}
           </Text>
           <Text size="sm" weight="normal" style={styles.textStatus}>
             Đang kết nối...

@@ -74,9 +74,11 @@ export default function ItemUtilities() {
       if (nearestOrderTemp?.data?.id) {
         const dataOrder = nearestOrderTemp?.data
         const timeDifference = await moment(nearestOrderTemp.data.timeRange?.from).diff(new Date())
-        setIsBeforeNow(moment(nearestOrderTemp.data.timeRange?.to).isBefore(new Date()))
+        let isBefore = await moment(nearestOrderTemp.data.timeRange?.to).isBefore(new Date())
+        console.log("isBefore_isBefore", isBefore)
+        setIsBeforeNow(isBefore)
         Object.assign(dataOrder, { timeDifference })
-        setTimeFromNow(convertDuration(nearestOrder?.timeDifference))
+        setTimeFromNow(convertDuration(timeDifference))
         setNearestOrder(dataOrder)
       } else {
         console.log("none_order")
@@ -84,6 +86,8 @@ export default function ItemUtilities() {
     }
     getOrderNearest()
   }, [])
+
+  console.log("timeFromNow_timeFromNow", timeFromNow)
   useEffect(() => {
     const interval = setInterval(() => {
       setTimeFromNow(convertDuration(nearestOrder?.timeDifference))

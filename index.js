@@ -8,6 +8,26 @@ import { AppRegistry } from "react-native"
 import RNBootSplash from "react-native-bootsplash"
 import RNCallKeep from "react-native-callkeep"
 import messaging from "@react-native-firebase/messaging"
+import * as storage from "./app/utils/storage"
+import { ActionFromCallKit } from "./app/context/themeContext.ts"
+import VoipPushNotification from "react-native-voip-push-notification"
+console.log("awake_app::::")
+
+RNCallKeep.addEventListener("answerCall", async () => {
+  // this.answerCall()
+  console.log("answerCall_answerCall")
+  await storage.saveString(storage.KEYSTORAGE.ACTION_FROM_CALLKIT, ActionFromCallKit.ANSWER)
+})
+
+RNCallKeep.addEventListener("endCall", async ({ callUUID }) => {
+  console.log("endCall_endCall")
+  await storage.saveString(storage.KEYSTORAGE.ACTION_FROM_CALLKIT, ActionFromCallKit.REJECT)
+})
+
+VoipPushNotification.addEventListener("notification", async (notification) => {
+  console.log("notification:::::", notification.getData())
+  await storage.saveString(storage.KEYSTORAGE.ACTION_FROM_CALLKIT, ActionFromCallKit.ON_NOTI)
+})
 
 function IgniteApp() {
   return <App hideSplashScreen={RNBootSplash.hide} />

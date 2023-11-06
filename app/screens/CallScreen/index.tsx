@@ -96,7 +96,8 @@ const CallScreen = ({ route }: ScreenProps) => {
     callDidHandleOnAnotherDevice,
     callDidAudioDeviceChange,
     isVideoEnableRemote,
-  } = useHookCall(callId, isIncoming, from, to)
+    callUUID,
+  } = useHookCall(callId, isIncoming, from, to, detailOrder?.doctor?.name)
   console.log("STATUS_", status, isVideoCall, callId, receivedRemoteStream)
   console.log("STATUS_1", status, isVideoCall, callId, receivedLocalStream)
 
@@ -145,7 +146,11 @@ const CallScreen = ({ route }: ScreenProps) => {
         </View>
       )}
       {!receivedRemoteStream && (
-        <ItemUserTarget isIncoming={isIncoming} from={isIncoming ? from : to} />
+        <ItemUserTarget
+          isIncoming={isIncoming}
+          from={isIncoming ? from : to}
+          doctorName={detailOrder?.doctor?.name}
+        />
       )}
 
       {!showAnswerBtn && (
@@ -158,6 +163,7 @@ const CallScreen = ({ route }: ScreenProps) => {
             isVideoEnable={isVideoEnable}
             videoPress={videoPress}
             endPress={() => {
+              RNCallKeep.endAllCalls()
               endPress(!showAnswerBtn)
             }}
           />
@@ -166,10 +172,25 @@ const CallScreen = ({ route }: ScreenProps) => {
       {showAnswerBtn && (
         <View style={styles.bottomContainer}>
           <BottomButton
-            onAccept={answerCall}
+            onAccept={() => {
+              console.log("callUUID_callUUID", callUUID)
+              if (Platform.OS === "ios") {
+                if (callUUID && callUUID !== "") {
+                  RNCallKeep.answerIncomingCall(callUUID)
+                }
+              } else {
+                answerCall(false)
+              }
+            }}
             onCancel={() => {
-              RNCallKeep.endAllCalls()
-              endPress(!showAnswerBtn)
+              // RNCallKeep.endAllCalls()
+              if (showAnswerBtn) {
+                endPress(false)
+                // RNCallKeep.endCall(callUUID)
+                RNCallKeep.endAllCalls()
+              } else {
+                endPress(true)
+              }
               goBack()
             }}
           />
