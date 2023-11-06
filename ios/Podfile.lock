@@ -554,6 +554,8 @@ PODS:
     - React-Core
   - react-native-image-picker (5.7.0):
     - React-Core
+  - react-native-keep-awake (4.0.0):
+    - React
   - react-native-netinfo (9.4.1):
     - React-Core
   - react-native-orientation-locker (1.5.0):
@@ -667,6 +669,8 @@ PODS:
   - RNCAsyncStorage (1.17.11):
     - React-Core
   - RNDateTimePicker (7.5.0):
+    - React-Core
+  - RNDeviceInfo (10.11.0):
     - React-Core
   - RNFBApp (18.3.2):
     - Firebase/CoreOnly (= 10.14.0)
@@ -814,6 +818,7 @@ DEPENDENCIES:
   - react-native-fbsdk-next (from `../node_modules/react-native-fbsdk-next`)
   - react-native-full-screen-notification-incoming-call (from `../node_modules/react-native-full-screen-notification-incoming-call`)
   - react-native-image-picker (from `../node_modules/react-native-image-picker`)
+  - react-native-keep-awake (from `../node_modules/react-native-keep-awake`)
   - "react-native-netinfo (from `../node_modules/@react-native-community/netinfo`)"
   - react-native-orientation-locker (from `../node_modules/react-native-orientation-locker`)
   - react-native-otp-verify (from `../node_modules/react-native-otp-verify`)
@@ -839,6 +844,7 @@ DEPENDENCIES:
   - RNCallKeep (from `../node_modules/react-native-callkeep`)
   - "RNCAsyncStorage (from `../node_modules/@react-native-async-storage/async-storage`)"
   - "RNDateTimePicker (from `../node_modules/@react-native-community/datetimepicker`)"
+  - RNDeviceInfo (from `../node_modules/react-native-device-info`)
   - "RNFBApp (from `../node_modules/@react-native-firebase/app`)"
   - "RNFBMessaging (from `../node_modules/@react-native-firebase/messaging`)"
   - "RNFlashList (from `../node_modules/@shopify/flash-list`)"
@@ -986,6 +992,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-full-screen-notification-incoming-call"
   react-native-image-picker:
     :path: "../node_modules/react-native-image-picker"
+  react-native-keep-awake:
+    :path: "../node_modules/react-native-keep-awake"
   react-native-netinfo:
     :path: "../node_modules/@react-native-community/netinfo"
   react-native-orientation-locker:
@@ -1036,6 +1044,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-async-storage/async-storage"
   RNDateTimePicker:
     :path: "../node_modules/@react-native-community/datetimepicker"
+  RNDeviceInfo:
+    :path: "../node_modules/react-native-device-info"
   RNFBApp:
     :path: "../node_modules/@react-native-firebase/app"
   RNFBMessaging:
@@ -1147,6 +1157,7 @@ SPEC CHECKSUMS:
   react-native-fbsdk-next: 16e652b5f1236492631185c58ec2ae15b029119d
   react-native-full-screen-notification-incoming-call: c0a64a09e6e413eab704cc26b7190a65859ba629
   react-native-image-picker: 3269f75c251cdcd61ab51b911dd30d6fff8c6169
+  react-native-keep-awake: afad8a51dfef9fe9655a6344771be32c8596d774
   react-native-netinfo: fefd4e98d75cbdd6e85fc530f7111a8afdf2b0c5
   react-native-orientation-locker: 851f6510d8046ea2f14aa169b1e01fcd309a94ba
   react-native-otp-verify: 3dbd8a52ceb8d4dfc775bddd6fc98a453091ed5f
@@ -1172,6 +1183,7 @@ SPEC CHECKSUMS:
   RNCallKeep: aa9b1f9286f8f60d7b7d41ee5de47de564356aac
   RNCAsyncStorage: 8616bd5a58af409453ea4e1b246521bb76578d60
   RNDateTimePicker: b722c23030b744763cf51d80fc22f354653f65e0
+  RNDeviceInfo: bf8a32acbcb875f568217285d1793b0e8588c974
   RNFBApp: 0b534885354024f4d171ede8da04521d81bc1767
   RNFBMessaging: a2ebefff4dd99eba6b16105bbc0b931bfdb0ce74
   RNFlashList: 25b0e092b4470c84db0386d4f5316dc34123bb6d
