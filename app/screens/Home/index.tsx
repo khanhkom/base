@@ -1,5 +1,5 @@
-import { Alert, PermissionsAndroid, Platform, StyleSheet } from "react-native"
-import React, { useEffect } from "react"
+import { PermissionsAndroid, Platform, StyleSheet } from "react-native"
+import React, { useEffect, useState } from "react"
 import HeaderHome from "./Item/Header"
 import { Screen } from "@app/components/Screen"
 import ItemUtilities from "./Item/ItemUtilities"
@@ -9,20 +9,11 @@ import TopPackage from "./Item/TopPackage"
 import HotNews from "./Item/HotNews"
 import colors from "@app/assets/colors"
 // import useHookStringee from "./useHookStringee"
-import {
-  getStringeeToken,
-  removeActionClient,
-  unregisterPush,
-  updateStringeeClientId,
-} from "@app/redux/actions/stringee"
-import { useSelector } from "@app/redux/reducers"
 import { useDispatch } from "react-redux"
 import { getOrderHistory } from "@app/redux/actions/actionOrder"
-import useHookCallKitIOS from "@app/hooks/stringee/useHookCallKitIOS"
-import { StringeeClient } from "stringee-react-native"
 import notifee, { AuthorizationStatus } from "@notifee/react-native"
-import { translate } from "@app/i18n/translate"
 import messaging from "@react-native-firebase/messaging"
+import { getStringeeToken } from "@app/redux/actions/stringee"
 async function checkNotificationPermission() {
   const settings = await notifee.getNotificationSettings()
 
@@ -34,13 +25,10 @@ async function checkNotificationPermission() {
 }
 
 export default function HomeScreen() {
-  const session = useSelector((state) => state.stringeeReducers.session)
+  const [permissionGranted, setPermissionGranted] = useState(false)
 
-  const actionClient = useSelector((state) => state.stringeeReducers.actionClient)
   const dispatch = useDispatch()
-  const updateClientId = (id: string) => {
-    dispatch(updateStringeeClientId(id))
-  }
+
   async function requestUserPermission() {
     PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS)
 
@@ -54,46 +42,32 @@ export default function HomeScreen() {
     }
   }
 
-  const checkBatteryAndroid = async () => {
-    const batteryOptimizationEnabled = await notifee.isBatteryOptimizationEnabled()
-    if (batteryOptimizationEnabled) {
-      // 2. ask your users to disable the feature
-      Alert.alert(
-        translate("home.optimize_pin"),
-        translate("home.optimize_pin_desc"),
-        [
-          // 3. launch intent to navigate the user to the appropriate screen
-          {
-            text: translate("common.setting"),
-            onPress: async () => await notifee.openBatteryOptimizationSettings(),
-          },
-          {
-            text: translate("common.cancel"),
-            onPress: () => console.log("Cancel Pressed"),
-            style: "cancel",
-          },
-        ],
-        { cancelable: false },
-      )
-    }
-  }
   useEffect(() => {
     // checkBatteryAndroid()
     requestUserPermission()
     checkNotificationPermission()
   }, [])
-  const {
-    clientDidConnect,
-    clientDidDisConnect,
-    clientDidFailWithError,
-    clientDidIncomingCall2,
-    clientRequestAccessToken,
-    clientReceiveCustomMessage,
-    client,
-    permissionGranted,
-    requestPermission,
-    unregisterPush,
-  } = useHookCallKitIOS(updateClientId)
+
+  const requestPermission = () => {
+    PermissionsAndroid.requestMultiple([
+      PermissionsAndroid.PERMISSIONS.CAMERA,
+      PermissionsAndroid.PERMISSIONS.RECORD_AUDIO,
+      PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS,
+      PermissionsAndroid.PERMISSIONS.BLUETOOTH_CONNECT,
+    ])
+      .then((result) => {
+        if (
+          result["android.permission.CAMERA"] &&
+          result["android.permission.RECORD_AUDIO"] === "granted"
+        ) {
+          setPermissionGranted(true)
+        }
+      })
+      .catch((err) => {
+        console.log("requestPermission_error", err)
+      })
+  }
+
   console.log("permissionGranted", permissionGranted)
   React.useEffect(() => {
     if (!permissionGranted) {
@@ -111,25 +85,7 @@ export default function HomeScreen() {
     dispatch(getStringeeToken())
     dispatch(getOrderHistory())
   }, [])
-  useEffect(() => {
-    if (session?.access_token && session?.access_token !== "") {
-      dispatch(removeActionClient())
-      client?.current?.connect(session?.access_token)
-    }
-  }, [session?.access_token])
 
-  useEffect(() => {
-    if (actionClient === "REFRESH_CLIENT") {
-      if (session?.access_token && session?.access_token !== "") {
-        client?.current?.connect(session?.access_token)
-      }
-      // dispatch(refreshClient())
-    }
-    if (actionClient === "UN_REGISTER_PUSH") {
-      unregisterPush()
-      // dispatch(unregisterPush())
-    }
-  }, [actionClient])
   return (
     <Screen preset="scroll" style={styles.container}>
       <HeaderHome onSearch={onSearch} />
@@ -138,20 +94,6 @@ export default function HomeScreen() {
       <TopDocter />
       <TopPackage />
       <HotNews />
-      <StringeeClient
-        ref={client}
-        eventHandlers={{
-          onConnect: clientDidConnect,
-          onDisConnect: clientDidDisConnect,
-          onFailWithError: clientDidFailWithError,
-          onIncomingCall: clientDidIncomingCall2,
-          onIncomingCall2: clientDidIncomingCall2,
-          onRequestAccessToken: clientRequestAccessToken,
-          onCustomMessage: clientReceiveCustomMessage,
-        }}
-        // If you use a premise server, put your host and port here to connect
-        // serverAddresses={new StringeeServerAddress('host', port)}
-      />
     </Screen>
   )
 }

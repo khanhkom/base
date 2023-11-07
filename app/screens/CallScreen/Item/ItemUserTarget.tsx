@@ -18,7 +18,7 @@ export default function ItemUserTarget({ isIncoming, from, doctorName }) {
   }, [from])
   return (
     <View>
-      <Image source={R.images.call_avatar} style={styles.imageCalling} />
+      <Image source={R.images.call_avatar_default} style={styles.imageCalling} />
       {!isIncoming ? (
         <View>
           <Text size="xxl" weight="semiBold" style={styles.textName}>

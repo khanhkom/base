@@ -267,7 +267,7 @@ const useHookCall = (callId, isIncoming, from, to, fromName) => {
     console.log("didHandleOnAnotherDevice " + callId + "***" + code + "***" + description)
     setStatus(description)
     // Cuoc goi da duoc answer, reject hoặc end thi can dismiss view
-    if (code !== 1) {
+    if (code !== 1 && isIncoming) {
       dismissCallingView()
     }
   }
