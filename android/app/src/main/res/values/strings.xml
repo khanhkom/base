@@ -10,5 +10,7 @@
     <!-- <string moduleConfig="true"
     name="CodePushDeploymentKey">iQh42P1uF6cXUzeXI3KoxLx2dl6GSBZruE0cn</string> -->
     <string moduleConfig="true" name="CodePushDeploymentKey">zVGRHpjAJTE3pRS4JMo7bGhGHUAoIyQw8_s8l</string>
-
+    <string name="calling">Calling</string>
+    <string name="answerCall">Answer</string>
+    <string name="declineCall">Decline</string>
 </resources>

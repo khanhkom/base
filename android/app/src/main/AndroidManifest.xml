@@ -92,5 +92,26 @@
     <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_app_id" />
     <meta-data android:name="com.facebook.sdk.ClientToken"
       android:value="@string/facebook_client_token" />
+      <activity
+            android:name="jp.shachihata.sasatto.incomingcall.IncomingCallActivity"
+            android:exported="true"
+            android:keepScreenOn="true"
+            android:launchMode="singleTask"
+            android:showWhenLocked="true"
+            android:taskAffinity=""
+            android:theme="@style/AppTheme"
+            android:turnScreenOn="true"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenSize" />
+
+        <service android:name="jp.shachihata.sasatto.incomingcall.IncomingCallService" />
+
+        <receiver
+            android:name=".incomingcall.IncomingCallReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="answer" />
+                <action android:name="decline" />
+            </intent-filter>
+        </receiver>
   </application>
 </manifest>
