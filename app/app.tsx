@@ -12,14 +12,14 @@ import "./utils/ignoreWarnings"
 import { useFonts } from "expo-font"
 import React, { useEffect } from "react"
 import { initialWindowMetrics, SafeAreaProvider } from "react-native-safe-area-context"
-import { Alert, Platform, AppState } from "react-native"
+import { Alert } from "react-native"
 import * as Linking from "expo-linking"
 import { useInitialRootStore } from "./models"
 import { AppNavigator, useNavigationPersistence } from "./navigators"
 import * as storage from "./utils/storage"
 import { customFontsToLoad } from "./theme"
 import { setLangInApp } from "./i18n"
-import { ActionFromCallKit, PreferencesContext } from "./context/themeContext"
+import { PreferencesContext } from "./context/themeContext"
 import { PaperProvider } from "react-native-paper"
 import { colorExpandLight, lightTheme } from "./theme/colors/index"
 import { createThemeFromSourceColor } from "./utils/m3/createMaterial3Theme"
@@ -30,15 +30,11 @@ import createSagaMiddleware from "redux-saga"
 import rootReducers from "./redux/reducers"
 import Toast from "react-native-toast-message"
 import rootSaga from "@app/redux/sagas"
-import notifee, { AndroidVisibility } from "@notifee/react-native"
 import messaging from "@react-native-firebase/messaging"
-import RNCallKeep from "react-native-callkeep"
-import RNNotificationCall from "react-native-full-screen-notification-incoming-call"
 export const NAVIGATION_PERSISTENCE_KEY = "NAVIGATION_STATE"
 import codePush from "react-native-code-push"
 import NoInternetComponent from "./components/no-internet"
-import { getNameById } from "./services/api/functions/stringee"
-import KeepAwake from "react-native-keep-awake"
+import { onMessageReceived } from "./utils/stringee/PushNotification"
 
 const sagaMiddleware = createSagaMiddleware()
 const store = createStore(rootReducers, applyMiddleware(sagaMiddleware))
@@ -73,84 +69,6 @@ interface AppProps {
  * This is the root component of our app.
  */
 
-export async function onMessageReceived(message) {
-  console.log("notification", message)
-  const data = JSON.parse(message.data.data)
-  const callStatus = data?.callStatus
-  const from = data?.from?.number
-  const dataName = await getNameById(from)
-  const notificationId = "11111" // YOUR_NOTIFICATION_ID
-  console.log("data: " + callStatus, AppState.currentState)
-  const isShowNotification = AppState.currentState !== "active"
-  const channelId = await notifee.createChannel({
-    id: "sdocter",
-    name: "sdocter",
-    vibration: true,
-    sound: "messenger_ringtone",
-    visibility: AndroidVisibility.PUBLIC,
-    vibrationPattern: [300, 500],
-  })
-  KeepAwake.activate()
-  switch (callStatus) {
-    case "started":
-      console.log("started_started", isShowNotification)
-      if (isShowNotification) {
-        RNCallKeep.displayIncomingCall(
-          notificationId,
-          dataName?.fullname ?? from,
-          channelId,
-          "number",
-          false,
-        )
-
-        if (Platform.OS === "android") {
-          RNCallKeep.addEventListener("didDisplayIncomingCall", ({ callUUID }) => {
-            console.log("didDisplayIncomingCall", callUUID)
-          })
-          RNCallKeep.addEventListener("showIncomingCallUi", ({ callUUID: uuid }) => {
-            console.log("showIncomingCallUi_showIncomingCallUi", uuid)
-            RNNotificationCall.displayNotification(
-              "22221a97-8eb4-4ac2-b2cf-0a3c0b9100ad",
-              null,
-              30000,
-              {
-                channelId: "sdocter",
-                channelName: "sdocter",
-                notificationIcon: "ic_launcher", //mipmap
-                notificationTitle: "Bác sĩ " + dataName?.fullname ?? "",
-                notificationBody: "Cuộc gọi video đến",
-                answerText: "Nghe",
-                declineText: "Từ chối",
-                notificationColor: "colorAccent",
-                //mainComponent:'MyReactNativeApp',//AppRegistry.registerComponent('MyReactNativeApp', () => CustomIncomingCall);
-                // payload:{name:'Test',Body:'test'}
-              },
-            )
-          })
-          RNNotificationCall.addEventListener("answer", async (data) => {
-            RNNotificationCall.backToApp()
-            const { callUUID, payload } = data
-            await storage.saveString(
-              storage.KEYSTORAGE.ACTION_FROM_CALLKIT,
-              ActionFromCallKit.ANSWER,
-            )
-            console.log("press answer", callUUID)
-          })
-          RNNotificationCall.addEventListener("endCall", (data) => {
-            const { callUUID, endAction, payload } = data
-            console.log("press endCall", callUUID)
-          })
-        }
-      }
-
-      break
-    case "ended":
-      RNCallKeep.endAllCalls()
-      RNNotificationCall.hideNotification()
-      notifee.cancelAllNotifications()
-      break
-  }
-}
 messaging().onMessage(onMessageReceived)
 function App(props: AppProps) {
   const { hideSplashScreen } = props

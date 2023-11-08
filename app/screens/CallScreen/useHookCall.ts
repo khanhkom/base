@@ -26,7 +26,6 @@ const useHookCall = (callId, isIncoming, from, to, fromName) => {
 
   useEffect(() => {
     MediaManager.initSound("messenger_ringtone.mp3", true, () => {})
-    MediaManager.playMusicBackGround("messenger_ringtone.mp3", true)
     return () => MediaManager.stopMusicBackground()
   }, [])
 
@@ -36,6 +35,7 @@ const useHookCall = (callId, isIncoming, from, to, fromName) => {
         call2.current.initAnswer(callId, (status, code, message) => {
           console.log("initAnswer " + message)
           setInited(status)
+          MediaManager.playMusicBackGround("messenger_ringtone.mp3", true)
         })
       } else {
         const callParams = JSON.stringify({

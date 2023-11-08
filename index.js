@@ -2,7 +2,7 @@
 // If you use Expo (`yarn expo:start`), the entry point is ./App.js instead.
 // Both do essentially the same thing.
 
-import App, { onMessageReceived } from "./app/app.tsx"
+import App from "./app/app.tsx"
 import React from "react"
 import { AppRegistry } from "react-native"
 import RNBootSplash from "react-native-bootsplash"
@@ -11,6 +11,7 @@ import messaging from "@react-native-firebase/messaging"
 import * as storage from "./app/utils/storage"
 import { ActionFromCallKit } from "./app/context/themeContext.ts"
 import VoipPushNotification from "react-native-voip-push-notification"
+import { onMessageReceived } from "./app/utils/stringee/PushNotification.ts"
 console.log("awake_app::::")
 
 RNCallKeep.addEventListener("answerCall", async () => {
