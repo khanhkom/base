@@ -140,7 +140,7 @@ const useHookCall = (callId, isIncoming, from, to, fromName) => {
     if (isInited) {
       getDataActionCallKit()
     }
-  }, [call2, isInited])
+  }, [call2, isInited, callId])
   // handle call ios when app background
   useEffect(() => {
     console.log("isInited_isInited", isInited)
@@ -172,7 +172,7 @@ const useHookCall = (callId, isIncoming, from, to, fromName) => {
       RNCallKeep.removeEventListener("answerCall")
       RNCallKeep.removeEventListener("endCall")
     }
-  }, [call2, isInited])
+  }, [call2, isInited, callId])
 
   ///
 

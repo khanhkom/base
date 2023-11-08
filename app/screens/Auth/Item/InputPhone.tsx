@@ -175,6 +175,7 @@ const styles = StyleSheet.create({
     margin: 0,
     marginLeft: WIDTH(spacing.xs),
     padding: 0,
+    color: colors.gray_9,
   },
   wrapperInput: {
     alignItems: "center",
