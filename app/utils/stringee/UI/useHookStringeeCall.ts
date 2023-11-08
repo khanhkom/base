@@ -195,20 +195,22 @@ const useHookCallKitIOS = (updateClientId) => {
         newSyncCall.answered = true
         setSyncCall(newSyncCall)
 
-        call2?.current.answer(callId, (status, code, message) => {
-          // setAnsweredCall(true)
-          // setTimeout(() => {
-          //   setAnsweredCall(true)
-          //   setShowCallingView(true)
-          // }, 1000)
-          // s
-          console.log("call did answer " + status + " - message: " + message)
-          if (status) {
-            // Sucess
-          } else {
-            // Fail
-          }
-        })
+        setTimeout(() => {
+          call2?.current.answer(callId, (status, code, message) => {
+            setAnsweredCall(true)
+            // setTimeout(() => {
+            //   setAnsweredCall(true)
+            //   setShowCallingView(true)
+            // }, 1000)
+            // s
+            console.log("call did answer " + status + " - message: " + message)
+            if (status) {
+              // Sucess
+            } else {
+              // Fail
+            }
+          })
+        }, 1000)
         await storage.saveString(storage.KEYSTORAGE.ACTION_FROM_CALLKIT, ActionFromCallKit.NONE)
       })
       RNNotificationCall.addEventListener("endCall", async (data) => {
