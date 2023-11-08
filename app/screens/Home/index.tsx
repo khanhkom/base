@@ -8,7 +8,6 @@ import TopDocter from "./Item/TopDocter"
 import TopPackage from "./Item/TopPackage"
 import HotNews from "./Item/HotNews"
 import colors from "@app/assets/colors"
-// import useHookStringee from "./useHookStringee"
 import {
   getStringeeToken,
   removeActionClient,
