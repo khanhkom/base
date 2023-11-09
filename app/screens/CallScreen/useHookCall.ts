@@ -58,14 +58,17 @@ const useHookCall = (callId, isIncoming, from, to, fromName) => {
           customData: fromName,
         })
         console.log("ZZZZZZZZ", callParams)
+        InCallManager.start({ media: "video" }) // or _DEFAULT_ or _DTMF_
+
         call2.current.makeCall(callParams, (status, code, message, callId) => {
           console.log(
             "status-" + status + " code-" + code + " message-" + message + " callId-" + callId,
           )
           if (status) {
             setCallIdNew(callId)
+            // InCallManager.start({ media: "video" }) // or _DEFAULT_ or _DTMF_
+
             // MediaManager.playMusicBackGround("phone_call.mp3", true)
-            InCallManager.start({ media: "audio", ringback: "_BUNDLE_" }) // or _DEFAULT_ or _DTMF_
           } else {
             Alert.alert("Make call fail: " + message)
           }
@@ -220,9 +223,10 @@ const useHookCall = (callId, isIncoming, from, to, fromName) => {
       case 2:
         // Answered
         if (mediaState === 0 && status !== "started") {
-          startCall()
-          InCallManager.stopRingback()
+          console.log("ZOOOOOOOO_DAY")
+
           Vibration.cancel()
+          startCall()
         }
         break
       case 3:
@@ -251,7 +255,10 @@ const useHookCall = (callId, isIncoming, from, to, fromName) => {
     switch (code) {
       case 0:
         if (signalingState === 2 && status !== "started") {
+          console.log("ZOOOOOOOO_DAY_1")
           Vibration.cancel()
+          InCallManager.stopRingback()
+          // InCallManager.start({ media: "video" }) // or _DEFAULT_ or _DTMF_
           startCall()
         }
         break
@@ -266,8 +273,14 @@ const useHookCall = (callId, isIncoming, from, to, fromName) => {
   }
 
   const callDidReceiveRemoteStream = ({ callId }) => {
-    console.log("callDidReceiveRemoteStream")
+    console.log("callDidReceiveRemoteStream_1")
     MediaManager.stopMusicBackground()
+    InCallManager.stopRingback()
+    InCallManager.stop()
+    // setTimeout(() => {
+    //   console.log("setTimeout:::")
+    //   InCallManager.start({ media: "video" }) // audio/video, default: audio
+    // }, 2000)
     setReceivedRemoteStream(true)
     //   if (receivedRemoteStream) {
     //   setReceivedRemoteStream(false)
