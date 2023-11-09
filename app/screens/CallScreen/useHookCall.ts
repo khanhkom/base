@@ -37,7 +37,7 @@ const useHookCall = (callId, isIncoming, from, to, fromName) => {
           console.log("initAnswer " + message)
           setInited(status)
           if (Platform.OS === "ios") {
-            InCallManager.startRingtone("_BUNDLE_") // or _DEFAULT_ or system filename with extension
+            // InCallManager.startRingtone("_BUNDLE_") // or _DEFAULT_ or system filename with extension
           }
           if (Platform.OS === "android") {
             InCallManager.startRingtone("incallmanager_ringtone.mp3") // or _DEFAULT_ or system filename with extension
@@ -66,7 +66,6 @@ const useHookCall = (callId, isIncoming, from, to, fromName) => {
           )
           if (status) {
             setCallIdNew(callId)
-            // InCallManager.start({ media: "video" }) // or _DEFAULT_ or _DTMF_
 
             // MediaManager.playMusicBackGround("phone_call.mp3", true)
           } else {
@@ -258,7 +257,6 @@ const useHookCall = (callId, isIncoming, from, to, fromName) => {
           console.log("ZOOOOOOOO_DAY_1")
           Vibration.cancel()
           InCallManager.stopRingback()
-          // InCallManager.start({ media: "video" }) // or _DEFAULT_ or _DTMF_
           startCall()
         }
         break
@@ -277,10 +275,7 @@ const useHookCall = (callId, isIncoming, from, to, fromName) => {
     MediaManager.stopMusicBackground()
     InCallManager.stopRingback()
     InCallManager.stop()
-    // setTimeout(() => {
-    //   console.log("setTimeout:::")
-    //   InCallManager.start({ media: "video" }) // audio/video, default: audio
-    // }, 2000)
+
     setReceivedRemoteStream(true)
     //   if (receivedRemoteStream) {
     //   setReceivedRemoteStream(false)
