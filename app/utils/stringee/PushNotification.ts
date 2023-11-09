@@ -1,5 +1,5 @@
 import KeepAwake from "react-native-keep-awake"
-import { AppState, Platform } from "react-native"
+import { AppState, Platform, Vibration } from "react-native"
 import RNCallKeep from "react-native-callkeep"
 import notifee, { AndroidVisibility } from "@notifee/react-native"
 import RNNotificationCall from "react-native-full-screen-notification-incoming-call"
@@ -24,6 +24,9 @@ export async function createNotificationChannel() {
 }
 
 export async function displayNotification(dataName) {
+  const pattern = [0, 500, 200, 500]
+  // Vibrate with the waveform pattern
+  Vibration.vibrate(pattern, true)
   RNNotificationCall.displayNotification("22221a97-8eb4-4ac2-b2cf-0a3c0b9100ad", null, 30000, {
     channelId: "sdocter",
     channelName: "sdocter",
@@ -33,6 +36,7 @@ export async function displayNotification(dataName) {
     answerText: "Nghe",
     declineText: "Từ chối",
     notificationColor: "colorAccent",
+
     //mainComponent:'MyReactNativeApp',//AppRegistry.registerComponent('MyReactNativeApp', () => CustomIncomingCall);
     // payload:{name:'Test',Body:'test'}
   })
@@ -88,6 +92,7 @@ export async function onMessageReceived(message) {
       break
     case "ended":
       RNCallKeep.endAllCalls()
+      Vibration.cancel()
       RNNotificationCall.hideNotification()
       notifee.cancelAllNotifications()
       break

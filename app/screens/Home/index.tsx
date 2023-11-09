@@ -78,8 +78,11 @@ export default function HomeScreen() {
   }
   useEffect(() => {
     // checkBatteryAndroid()
-    requestUserPermission()
+    const timeout = setTimeout(() => {
+      requestUserPermission()
+    }, 1000)
     checkNotificationPermission()
+    return () => clearTimeout(timeout)
   }, [])
   const {
     clientDidConnect,

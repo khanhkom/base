@@ -10,8 +10,10 @@ import {
   Platform,
   Pressable,
   PermissionsAndroid,
+  Vibration,
 } from "react-native"
 import KeepAwake from "react-native-keep-awake"
+import InCallManager from "react-native-incall-manager"
 
 import { StringeeCall2, StringeeVideoView } from "stringee-react-native"
 import Toolbar from "../CallVideo/Item/Toolbar"
@@ -173,6 +175,9 @@ const CallScreen = ({ route }: ScreenProps) => {
         <View style={styles.bottomContainer}>
           <BottomButton
             onAccept={() => {
+              Vibration.cancel()
+              InCallManager.stopRingback()
+
               console.log("callUUID_callUUID", callUUID)
               if (Platform.OS === "ios") {
                 if (callUUID && callUUID !== "") {

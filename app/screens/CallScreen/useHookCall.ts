@@ -2,11 +2,12 @@ import RNNotificationCall from "react-native-full-screen-notification-incoming-c
 import { goBack } from "@app/navigators/navigationUtilities"
 import MediaManager from "@app/utils/MediaManager"
 import React, { useState, useEffect, useRef } from "react"
-import { Alert, Platform } from "react-native"
+import { Alert, Platform, Vibration } from "react-native"
 import RNCallKeep from "react-native-callkeep"
 import notifee from "@notifee/react-native"
 import * as storage from "@app/utils/storage"
 import { ActionFromCallKit } from "@app/context/themeContext"
+import InCallManager from "react-native-incall-manager"
 
 const useHookCall = (callId, isIncoming, from, to, fromName) => {
   const [status, setStatus] = useState("")
@@ -35,7 +36,18 @@ const useHookCall = (callId, isIncoming, from, to, fromName) => {
         call2.current.initAnswer(callId, (status, code, message) => {
           console.log("initAnswer " + message)
           setInited(status)
-          MediaManager.playMusicBackGround("messenger_ringtone.mp3", true)
+          if (Platform.OS === "ios") {
+            InCallManager.startRingtone("_BUNDLE_") // or _DEFAULT_ or system filename with extension
+          }
+          if (Platform.OS === "android") {
+            InCallManager.startRingtone("incallmanager_ringtone.mp3") // or _DEFAULT_ or system filename with extension
+
+            // Define the waveform pattern
+            const pattern = [0, 500, 200, 500]
+            // Vibrate with the waveform pattern
+            Vibration.vibrate(pattern, true)
+          }
+          // MediaManager.playMusicBackGround("messenger_ringtone.mp3", true)
         })
       } else {
         const callParams = JSON.stringify({
@@ -52,7 +64,8 @@ const useHookCall = (callId, isIncoming, from, to, fromName) => {
           )
           if (status) {
             setCallIdNew(callId)
-            MediaManager.playMusicBackGround("phone_call.mp3", true)
+            // MediaManager.playMusicBackGround("phone_call.mp3", true)
+            InCallManager.start({ media: "audio", ringback: "_BUNDLE_" }) // or _DEFAULT_ or _DTMF_
           } else {
             Alert.alert("Make call fail: " + message)
           }
@@ -204,6 +217,8 @@ const useHookCall = (callId, isIncoming, from, to, fromName) => {
         // Answered
         if (mediaState === 0 && status !== "started") {
           startCall()
+          InCallManager.stopRingback()
+          Vibration.cancel()
         }
         break
       case 3:
@@ -232,6 +247,7 @@ const useHookCall = (callId, isIncoming, from, to, fromName) => {
     switch (code) {
       case 0:
         if (signalingState === 2 && status !== "started") {
+          Vibration.cancel()
           startCall()
         }
         break
@@ -274,7 +290,7 @@ const useHookCall = (callId, isIncoming, from, to, fromName) => {
 
   const callDidAudioDeviceChange = ({ selectedAudioDevice, availableAudioDevices }) => {
     console.log(
-      "didHandleOnAnotherDevice selectedAudioDevice" +
+      "callDidAudioDeviceChange selectedAudioDevice" +
         selectedAudioDevice +
         " availableAudioDevices-" +
         availableAudioDevices,
@@ -328,11 +344,15 @@ const useHookCall = (callId, isIncoming, from, to, fromName) => {
       }
       RNNotificationCall.hideNotification()
     }
-    console.log("AAAAAAAA", callId)
+    console.log("AAAAAAAA", callId, callUUID)
     MediaManager.stopMusicBackground()
     notifee.cancelAllNotifications()
+    RNCallKeep.toggleAudioRouteSpeaker(callUUID, false)
+
     call2?.current?.answer(callId, (status, code, message) => {
       console.log("answer: " + message, status)
+      InCallManager.start({ media: "audio" }) // audio/video, default: audio
+
       if (status) {
         setShowAnswerBtn(false)
         setSignalingState(2)
@@ -359,10 +379,16 @@ const useHookCall = (callId, isIncoming, from, to, fromName) => {
       })
     }
   }
-
+  useEffect(() => {
+    return () => InCallManager.stop()
+  }, [])
   const dismissCallingView = async () => {
     RNCallKeep.endAllCalls()
     goBack()
+    InCallManager.stopRingback()
+    InCallManager.stopRingtone()
+    Vibration.cancel()
+
     RNNotificationCall.hideNotification()
     await storage.saveString(storage.KEYSTORAGE.ACTION_FROM_CALLKIT, ActionFromCallKit.NONE)
     // props.navigation.goBack()
