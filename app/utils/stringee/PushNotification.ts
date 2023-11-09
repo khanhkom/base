@@ -56,13 +56,13 @@ export async function onMessageReceived(message) {
   switch (callStatus) {
     case "started":
       console.log("started_started", isShowNotification)
+      await displayIncomingCall(notificationId, dataName?.fullname ?? from, channelId)
+      RNCallKeep.addEventListener("showIncomingCallUi", async ({ callUUID }) => {
+        console.log("didDisplayIncomingCall:::callUUID", callUUID)
+        await storage.saveString(storage.KEYSTORAGE.CALLKIT_ID, callUUID)
+      })
       if (isShowNotification) {
-        await displayIncomingCall(notificationId, dataName?.fullname ?? from, channelId)
-
         if (Platform.OS === "android") {
-          RNCallKeep.addEventListener("didDisplayIncomingCall", ({ callUUID }) => {
-            console.log("didDisplayIncomingCall", callUUID)
-          })
           RNCallKeep.addEventListener("showIncomingCallUi", ({ callUUID: uuid }) => {
             console.log("showIncomingCallUi_showIncomingCallUi", uuid)
             displayNotification(dataName)

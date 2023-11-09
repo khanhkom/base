@@ -3,7 +3,7 @@ import { goBack } from "@app/navigators/navigationUtilities"
 import MediaManager from "@app/utils/MediaManager"
 import React, { useState, useEffect, useRef } from "react"
 import { Alert, Platform, Vibration } from "react-native"
-import RNCallKeep from "react-native-callkeep"
+import RNCallKeep, { AudioRoute } from "react-native-callkeep"
 import notifee from "@notifee/react-native"
 import * as storage from "@app/utils/storage"
 import { ActionFromCallKit } from "@app/context/themeContext"
@@ -76,6 +76,10 @@ const useHookCall = (callId, isIncoming, from, to, fromName) => {
   // handle call kit
 
   useEffect(() => {
+    RNCallKeep.addEventListener("didChangeAudioRoute", ({ output }) => {
+      console.log("didChangeAudioRoute::", output)
+    })
+
     RNNotificationCall.removeEventListener("answer")
     RNNotificationCall.removeEventListener("endCall")
     RNCallKeep.removeEventListener("answerCall")
@@ -349,10 +353,11 @@ const useHookCall = (callId, isIncoming, from, to, fromName) => {
     notifee.cancelAllNotifications()
     RNCallKeep.toggleAudioRouteSpeaker(callUUID, false)
 
-    call2?.current?.answer(callId, (status, code, message) => {
+    call2?.current?.answer(callId, async (status, code, message) => {
       console.log("answer: " + message, status)
-      InCallManager.start({ media: "audio" }) // audio/video, default: audio
+      InCallManager.start({ media: "video" }) // audio/video, default: audio
 
+      handleAudioRoute()
       if (status) {
         setShowAnswerBtn(false)
         setSignalingState(2)
@@ -361,7 +366,13 @@ const useHookCall = (callId, isIncoming, from, to, fromName) => {
       }
     })
   }
-
+  const handleAudioRoute = async () => {
+    const audioRoutes = await RNCallKeep.getAudioRoutes()
+    const callUUIDLocal = await storage.loadString(storage.KEYSTORAGE.CALLKIT_ID)
+    console.log("callUUIDLocal:::", callUUIDLocal)
+    // RNCallKeep.setAudioRoute("11111")
+    console.log("audioRoutes_audioRoutes", audioRoutes)
+  }
   const endPress = (isHangup) => {
     if (isHangup) {
       call2.current.hangup(callIdNew, (status, code, message) => {
