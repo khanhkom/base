@@ -12,7 +12,7 @@ import "./utils/ignoreWarnings"
 import { useFonts } from "expo-font"
 import React, { useEffect } from "react"
 import { initialWindowMetrics, SafeAreaProvider } from "react-native-safe-area-context"
-import { Alert } from "react-native"
+import { Alert, Platform } from "react-native"
 import * as Linking from "expo-linking"
 import { useInitialRootStore } from "./models"
 import { AppNavigator, useNavigationPersistence } from "./navigators"
@@ -35,6 +35,7 @@ export const NAVIGATION_PERSISTENCE_KEY = "NAVIGATION_STATE"
 import codePush from "react-native-code-push"
 import NoInternetComponent from "./components/no-internet"
 import { onMessageReceived } from "./utils/stringee/PushNotification"
+import CallEventHandle from "./utils/stringee/CallEventHandle"
 
 const sagaMiddleware = createSagaMiddleware()
 const store = createStore(rootReducers, applyMiddleware(sagaMiddleware))
@@ -156,6 +157,7 @@ function App(props: AppProps) {
         <Provider store={store}>
           <PaperProvider theme={theme}>
             <GestureHandlerRootView style={{ flex: 1 }}>
+              {Platform.OS === "ios" && <CallEventHandle />}
               <AppNavigator
                 linking={linking}
                 initialState={initialNavigationState}

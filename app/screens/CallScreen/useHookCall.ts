@@ -272,11 +272,11 @@ const useHookCall = (callId, isIncoming, from, to, fromName) => {
 
   const callDidReceiveRemoteStream = ({ callId }) => {
     console.log("callDidReceiveRemoteStream_1")
+    setReceivedRemoteStream(true)
     MediaManager.stopMusicBackground()
     InCallManager.stopRingback()
     // InCallManager.stop()
 
-    setReceivedRemoteStream(true)
     //   if (receivedRemoteStream) {
     //   setReceivedRemoteStream(false)
     // } else {
