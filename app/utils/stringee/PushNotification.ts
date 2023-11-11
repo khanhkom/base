@@ -23,7 +23,7 @@ export async function createNotificationChannel() {
   })
 }
 
-export async function displayNotification(dataName) {
+export async function displayNotification(fullname) {
   const pattern = [0, 500, 200, 500]
   // Vibrate with the waveform pattern
   Vibration.vibrate(pattern, true)
@@ -31,7 +31,7 @@ export async function displayNotification(dataName) {
     channelId: "sdocter",
     channelName: "sdocter",
     notificationIcon: "ic_launcher", //mipmap
-    notificationTitle: "Bác sĩ " + dataName?.fullname ?? "",
+    notificationTitle: "B.s " + fullname || "",
     notificationBody: "Cuộc gọi video đến",
     answerText: "Nghe",
     declineText: "Từ chối",
@@ -47,7 +47,9 @@ export async function onMessageReceived(message) {
   const data = JSON.parse(message.data.data)
   const callStatus = data?.callStatus
   const from = data?.from?.number
-  const dataName = await getNameById(from)
+
+  const fullName = data?.from?.alias
+
   const notificationId = "11111" // YOUR_NOTIFICATION_ID
   console.log("data: " + callStatus, AppState.currentState)
   const isShowNotification = AppState.currentState !== "active"
@@ -56,7 +58,7 @@ export async function onMessageReceived(message) {
   switch (callStatus) {
     case "started":
       console.log("started_started", isShowNotification)
-      await displayIncomingCall(notificationId, dataName?.fullname ?? from, channelId)
+      await displayIncomingCall(notificationId, fullName || from, channelId)
       RNCallKeep.addEventListener("showIncomingCallUi", async ({ callUUID }) => {
         console.log("didDisplayIncomingCall:::callUUID", callUUID)
         await storage.saveString(storage.KEYSTORAGE.CALLKIT_ID, callUUID)
@@ -65,7 +67,7 @@ export async function onMessageReceived(message) {
         if (Platform.OS === "android") {
           RNCallKeep.addEventListener("showIncomingCallUi", ({ callUUID: uuid }) => {
             console.log("showIncomingCallUi_showIncomingCallUi", uuid)
-            displayNotification(dataName)
+            displayNotification(fullName)
           })
           RNNotificationCall.addEventListener("answer", async (data) => {
             RNNotificationCall.backToApp()
