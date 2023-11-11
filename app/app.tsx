@@ -157,7 +157,7 @@ function App(props: AppProps) {
         <Provider store={store}>
           <PaperProvider theme={theme}>
             <GestureHandlerRootView style={{ flex: 1 }}>
-              {Platform.OS === "ios" && <CallEventHandle />}
+              {/* {Platform.OS === "ios" && <CallEventHandle />} */}
               <AppNavigator
                 linking={linking}
                 initialState={initialNavigationState}
