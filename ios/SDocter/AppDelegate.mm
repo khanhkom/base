@@ -87,7 +87,7 @@
                                  handle: @"Stringee"
                              handleType: @"generic"
                                hasVideo: true
-                    localizedCallerName: @"B.s "+fromAlias
+                    localizedCallerName: [@"B.s " stringByAppendingString:fromAlias]
                         supportsHolding: YES
                            supportsDTMF: YES
                        supportsGrouping: YES
@@ -105,7 +105,7 @@
                                  handle: @"Stringee"
                              handleType: @"generic"
                                hasVideo: true
-                    localizedCallerName: @"B.s "+fromAlias
+                    localizedCallerName: [@"B.s " stringByAppendingString:fromAlias]
                         supportsHolding: YES
                            supportsDTMF: YES
                        supportsGrouping: YES
