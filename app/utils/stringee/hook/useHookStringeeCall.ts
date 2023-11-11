@@ -70,7 +70,6 @@ const useHookStringeeCall = (updateClientId) => {
 
     RNCallKeep.addEventListener("didActivateAudioSession", (data) => {
       setIsActivateAudioSession(true)
-      answerCallAction()
     })
 
     RNCallKeep.addEventListener("didReceiveStartCallAction", ({ handle, callUUID, name }) => {})
@@ -181,50 +180,6 @@ const useHookStringeeCall = (updateClientId) => {
       setInited(status)
       console.log(message)
     })
-  }
-  const answerCallAction = () => {
-    /*
-          Voi iOS, Answer StringeeCall khi thoa man cac yeu to:
-          1. Da nhan duoc su kien onIncomingCall (có callId)
-          2. User da click answer
-          3. Chua goi ham answer cua StringeeCall lan nao
-          3. AudioSession da active
-        **/
-    MediaManager.stopMusicBackground()
-    RNNotificationCall.hideNotification()
-    notifee.cancelAllNotifications()
-    if (
-      syncCall == null ||
-      syncCall.callId === "" ||
-      (Platform.OS === "ios" && !isActivateAudioSession) ||
-      !syncCall.answered ||
-      answeredCall
-    ) {
-      console.log(
-        "Chua du dieu kien de answer call, AudioSessionActived: " +
-          isActivateAudioSession +
-          " - syncCall: " +
-          syncCall +
-          " - syncCall.callId: " +
-          syncCall.callId +
-          " - AnsweredAction: " +
-          syncCall.answered +
-          " - AnsweredCall: " +
-          answeredCall,
-      )
-
-      return
-    }
-    InCallManager.stopRingtone()
-    // call2?.current.answer(syncCall.callId, (status, code, message) => {
-    //   setAnsweredCall(true)
-    //   console.log("call did answer " + status + " - message: " + message)
-    //   if (status) {
-    //     // Sucess
-    //   } else {
-    //     // Fail
-    //   }
-    // })
   }
   const endCallAndUpdateView = () => {
     console.log("endCallAndUpdateView::")
@@ -540,7 +495,6 @@ const useHookStringeeCall = (updateClientId) => {
     syncCall,
     callState,
     answeredCall,
-    answerCallAction,
     isIncoming,
     setSyncCall,
     clientId,

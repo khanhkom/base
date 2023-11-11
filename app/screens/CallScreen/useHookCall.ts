@@ -55,7 +55,7 @@ const useHookCall = (callId, isIncoming, from, to, fromName) => {
           to: to,
           isVideoCall: true,
           videoResolution: "NORMAL",
-          customData: fromName,
+          customData: JSON.stringify({ fullname: fromName }),
         })
         console.log("ZZZZZZZZ", callParams)
         InCallManager.start({ media: "video" }) // or _DEFAULT_ or _DTMF_
