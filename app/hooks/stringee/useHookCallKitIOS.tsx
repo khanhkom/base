@@ -207,6 +207,7 @@ const useHookCallKitIOS = (updateClientId) => {
       from: from,
       to: userId,
       isIncoming: true,
+      fromAlias,
     })
     console.log("syncCall_syncCall", syncCall)
 

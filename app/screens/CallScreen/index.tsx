@@ -40,12 +40,13 @@ interface ScreenProps {
       clientId: string
       from: string
       to: string
+      fromAlias?: string
     }
   }
 }
 const CallScreen = ({ route }: ScreenProps) => {
   const params = route.params
-  const { isVideoCall, isIncoming, detailOrder, callId, clientId, from, to } = params
+  const { isVideoCall, isIncoming, detailOrder, callId, clientId, from, to, fromAlias } = params
   const [permissionGranted, setPermissionGranted] = useState(false)
   const requestPermission = () => {
     PermissionsAndroid.requestMultiple([
@@ -150,7 +151,7 @@ const CallScreen = ({ route }: ScreenProps) => {
       {!receivedRemoteStream && (
         <ItemUserTarget
           isIncoming={isIncoming}
-          from={isIncoming ? from : to}
+          fromAlias={fromAlias}
           doctorName={detailOrder?.doctor?.name}
         />
       )}

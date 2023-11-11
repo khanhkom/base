@@ -6,16 +6,7 @@ import { HEIGHT, WIDTH } from "@app/config/functions"
 import { spacing } from "@app/theme/spacing"
 import R from "@app/assets"
 import { getNameById } from "@app/services/api/functions/stringee"
-export default function ItemUserTarget({ isIncoming, from, doctorName }) {
-  const [name, setName] = useState("")
-  const getCallName = async () => {
-    const dataName = await getNameById(from)
-    console.log("dataName_dataName", dataName, from)
-    setName(dataName?.fullname ?? "")
-  }
-  useEffect(() => {
-    getCallName()
-  }, [from])
+export default function ItemUserTarget({ isIncoming, doctorName, fromAlias }) {
   return (
     <View>
       <Image source={R.images.call_avatar} style={styles.imageCalling} />
@@ -31,7 +22,7 @@ export default function ItemUserTarget({ isIncoming, from, doctorName }) {
       ) : (
         <View>
           <Text size="xxl" weight="semiBold" style={styles.textName}>
-            B.s {name}
+            B.s {fromAlias}
           </Text>
           <Text size="sm" weight="normal" style={styles.textStatus}>
             Đang gọi cho bạn
