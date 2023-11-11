@@ -50,8 +50,6 @@ export default function CallEventHandle() {
     clientRequestAccessToken,
     clientReceiveCustomMessage,
     client,
-    permissionGranted,
-    requestPermission,
     unregisterPush,
     call2,
     status,
@@ -80,21 +78,11 @@ export default function CallEventHandle() {
     showCallingView,
     answeredCall,
     callState,
-    answerCallAction,
     isIncoming,
     setSyncCall,
     clientId,
     from,
   } = useHookCallKitIOS(updateClientId)
-
-  console.log("permissionGranted", permissionGranted)
-  React.useEffect(() => {
-    if (!permissionGranted) {
-      if (Platform.OS === "android") {
-        requestPermission()
-      }
-    }
-  }, [])
 
   useEffect(() => {
     async function loadDataLocal() {
