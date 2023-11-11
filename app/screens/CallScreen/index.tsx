@@ -99,7 +99,7 @@ const CallScreen = ({ route }: ScreenProps) => {
     callDidAudioDeviceChange,
     isVideoEnableRemote,
     callUUID,
-  } = useHookCall(callId, isIncoming, from, to, detailOrder?.doctor?.name)
+  } = useHookCall(callId, isIncoming, from, to, detailOrder?.patient?.name)
   console.log("STATUS_", status, isVideoCall, callId, receivedRemoteStream)
   console.log("STATUS_1", status, isVideoCall, callId, receivedLocalStream)
 
