@@ -20,6 +20,7 @@ import CallScreen from "./hook/CallModal"
 import { useSafeAreaInsetsStyle } from "../useSafeAreaInsetsStyle"
 import { api } from "@app/services/api"
 import { KEYSTORAGE, load } from "../storage"
+import BackgroundTimer from "react-native-background-timer"
 async function checkNotificationPermission() {
   const settings = await notifee.getNotificationSettings()
 
@@ -128,6 +129,13 @@ export default function CallEventHandle() {
     if (session?.access_token && session?.access_token !== "") {
       dispatch(removeActionClient())
       client?.current?.connect(session?.access_token)
+      BackgroundTimer.runBackgroundTimer(() => {
+        //code that will be called every 3 seconds
+        client?.current?.connect(session?.access_token)
+      }, 60000)
+    }
+    return () => {
+      BackgroundTimer.stopBackgroundTimer() //after this call all code on background stop run.
     }
   }, [session?.access_token])
 
@@ -136,10 +144,13 @@ export default function CallEventHandle() {
       if (session?.access_token && session?.access_token !== "") {
         client?.current?.connect(session?.access_token)
       }
+      dispatch(removeActionClient())
       // dispatch(refreshClient())
     }
     if (actionClient === "UN_REGISTER_PUSH") {
       unregisterPush()
+      client?.current?.disconnect()
+      dispatch(removeActionClient())
       // dispatch(unregisterPush())
     }
   }, [actionClient])

@@ -128,11 +128,14 @@ export default function HomeScreen() {
       }
       // dispatch(refreshClient())
     }
+    //logout
     if (actionClient === "UN_REGISTER_PUSH") {
       unregisterPush()
+      client?.current?.disconnect()
       // dispatch(unregisterPush())
     }
   }, [actionClient])
+
   return (
     <Screen preset="scroll" style={styles.container}>
       <HeaderHome onSearch={onSearch} />

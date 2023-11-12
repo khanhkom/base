@@ -39,6 +39,12 @@ export default (state = defaultState, action) => {
         actionClient: "",
       }
     }
+    case "DISCONNECT_CLIENT": {
+      return {
+        ...state,
+        actionClient: "DISCONNECT_CLIENT",
+      }
+    }
     default:
       break
   }
