@@ -346,6 +346,7 @@ const useHookCallKitIOS = (updateClientId) => {
     InCallManager.stopRingtone()
     call2?.current.answer(callId, (status, code, message) => {
       setAnsweredCall(true)
+      InCallManager.start({ media: "video" }) // audio/video, default: audio
       setShowCallingView(true)
       console.log("call did answer " + status + " - message: " + message)
       if (status) {
