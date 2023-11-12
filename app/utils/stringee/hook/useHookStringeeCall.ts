@@ -73,35 +73,6 @@ const useHookCallKitIOS = (updateClientId) => {
       )
     }
   }
-  // listener
-  useEffect(() => {
-    RNCallKeep.addEventListener(
-      "didDisplayIncomingCall",
-      ({ error, callUUID, handle, localizedCallerName, hasVideo, fromPushKit, payload }) => {
-        // Call back khi show callkit cho incoming call thanh cong, end fakeCall da show o day
-        if (fakeCallIds.includes(callUUID)) {
-          RNCallKeep.endCall(callUUID)
-          var newFakeCallIds = fakeCallIds.filter((uuid) => uuid != callUUID)
-          setFakeCallIds(newFakeCallIds)
-          console.log("END FAKE CALL, UUID: " + callUUID + " fakeCallIds: " + fakeCallIds.toString)
-        }
-
-        deleteSyncCallIfNeed()
-        if (error) {
-        }
-      },
-    )
-
-    RNCallKeep.addEventListener("didReceiveStartCallAction", ({ handle, callUUID, name }) => {})
-
-    RNCallKeep.addEventListener("didPerformSetMutedCallAction", ({ muted, callUUID }) => {
-      if (muted != isMute) {
-        mutePress()
-      }
-    })
-  }, [])
-  //end listen
-
   // handle ios
   useEffect(() => {
     async function getDataActionCallKit() {
@@ -315,9 +286,6 @@ const useHookCallKitIOS = (updateClientId) => {
       newSyncCall.serial = serial
       newSyncCall.callkitId = await UUIDGenerator.getRandomUUID()
       newSyncCall.receivedStringeeCall = true
-
-      // Callkit
-      RNCallKeep.displayIncomingCall(newSyncCall.callkitId, "Stringee", fromAlias, "generic", true)
 
       // Call screen
       setSyncCall(newSyncCall)
