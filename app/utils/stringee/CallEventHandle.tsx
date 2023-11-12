@@ -186,7 +186,7 @@ export default function CallEventHandle() {
           hasLocalStream={receivedLocalStream}
           hasRemoteStream={receivedRemoteStream}
           stringeeCallId={syncCall != null ? syncCall.callId : ""}
-          isAnswered={syncCall != null ? syncCall.answered : answeredCall}
+          isAnswered={answeredCall}
           isVideoEnableRemote={isVideoEnableRemote}
           callState={callState}
           endButtonHandler={() => {
