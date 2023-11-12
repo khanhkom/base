@@ -347,30 +347,8 @@ const useHookCallKitIOS = (updateClientId) => {
     MediaManager.stopMusicBackground()
     RNNotificationCall.hideNotification()
     notifee.cancelAllNotifications()
-    if (
-      syncCall == null ||
-      syncCall.callId === "" ||
-      (Platform.OS === "ios" && !isActivateAudioSession) ||
-      !syncCall.answered ||
-      answeredCall
-    ) {
-      console.log(
-        "Chua du dieu kien de answer call, AudioSessionActived: " +
-          isActivateAudioSession +
-          " - syncCall: " +
-          syncCall +
-          " - syncCall.callId: " +
-          syncCall.callId +
-          " - AnsweredAction: " +
-          syncCall.answered +
-          " - AnsweredCall: " +
-          answeredCall,
-      )
-
-      return
-    }
     InCallManager.stopRingtone()
-    call2?.current.answer(syncCall.callId, (status, code, message) => {
+    call2?.current.answer(callId, (status, code, message) => {
       setAnsweredCall(true)
       setShowCallingView(true)
       console.log("call did answer " + status + " - message: " + message)
