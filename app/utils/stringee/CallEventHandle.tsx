@@ -149,7 +149,6 @@ export default function CallEventHandle() {
     }
     if (actionClient === "UN_REGISTER_PUSH") {
       unregisterPush()
-      client?.current?.disconnect()
       dispatch(removeActionClient())
       // dispatch(unregisterPush())
     }

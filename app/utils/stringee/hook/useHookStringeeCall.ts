@@ -199,6 +199,7 @@ const useHookCallKitIOS = (updateClientId) => {
     console.log("unregisterPush_unregisterPush::", token)
     client?.current?.unregisterPush(token, (status, code, message) => {
       console.log("unregisterPush", status, code, message)
+      client?.current?.disconnect()
     })
   }
   const notificationListener = (notification) => {
