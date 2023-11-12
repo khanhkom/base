@@ -98,7 +98,7 @@ const useHookStringeeCall = (updateClientId) => {
         }
       })
     })
-  }, [])
+  }, [callId])
   //end listen
 
   //
