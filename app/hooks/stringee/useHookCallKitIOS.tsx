@@ -210,79 +210,7 @@ const useHookCallKitIOS = (updateClientId) => {
       fromAlias,
     })
     console.log("syncCall_syncCall", syncCall)
-
-    // if (syncCall == null) {
-    //   console.log("Call + Show new call kit")
-    //   const newSyncCall = new SyncCall()
-    //   newSyncCall.callId = callId
-    //   newSyncCall.serial = serial
-    //   // newSyncCall.callkitId = uuid.v1()
-    //   newSyncCall.callkitId = Math.round(Math.random() * 100).toString()
-    //   newSyncCall.receivedStringeeCall = true
-    //   let uuid = await UUIDGenerator.getRandomUUID()
-    //   console.log("uuid_uuid", uuid)
-    //   // Callkit
-    //   // RNCallKeep.displayIncomingCall(uuid, "Stringee", fromAlias, "generic", true)
-    //   setSyncCall(newSyncCall)
-
-    //   // answerCallAction()
-    //   return
-    // }
-    // // Cuoc goi moi toi khong phai la current sync call
-    // // Alert.alert('INCOMING CALL, callId: ' + this.state.syncCall?.callId + ' serial: ' + this.state.syncCall.serial);
-
-    // if (!syncCall.isThisCall(callId, serial)) {
-    //   console.log("INCOMING CALL -> REJECT, CUOC GOI MOI KHONG TRUNG VOI SYNC CALL")
-    //   stringeeCall?.current.reject(callId, (status, code, message) => {})
-    //   return
-    // }
-    // if (syncCall.rejected) {
-    //   // nguoi dung da click nut reject cuoc goi
-    //   console.log("INCOMING CALL -> REJECT, NGUOI DUNG DA REJECT CUOC GOI")
-    //   stringeeCall?.current.reject(callId, (status, code, message) => {})
-    //   return
-    // }
-    // // Da show callkit => update UI
-    // if (syncCall.callkitId !== "") {
-    //   console.log("Call + Update")
-    //   RNCallKeep.updateDisplay(syncCall.callkitId, fromAlias, "")
-
-    //   const newSyncCall = syncCall
-    //   newSyncCall.callId = callId
-    //   newSyncCall.receivedStringeeCall = true
-    //   setSyncCall(newSyncCall)
-    //   return
-    // }
-
-    // // Chua show callkit thi show
-    // const newSyncCall = syncCall
-    // newSyncCall.callId = callId
-    // newSyncCall.serial = serial
-    // // newSyncCall.callkitId = uuid.v1()
-    // newSyncCall.callkitId = Math.round(Math.random() * 100).toString()
-    // newSyncCall.receivedStringeeCall = true
-    // setSyncCall(newSyncCall)
   }
-
-  useEffect(() => {
-    if (iOS) {
-      VoipPushNotification.registerVoipToken()
-
-      VoipPushNotification.addEventListener("register", registerListener)
-      VoipPushNotification.addEventListener("notification", notificationListener)
-
-      // ===== Step 3: subscribe `didLoadWithEvents` event =====
-      VoipPushNotification.addEventListener("didLoadWithEvents", (events) => {
-        // --- this will fire when there are events occured before js bridge initialized
-        // --- use this event to execute your event handler manually by event type
-
-        if (!events || !Array.isArray(events) || events.length < 1) {
-          return
-        }
-        console.log("events_events", events)
-      })
-    }
-  }, [])
 
   const clientDidConnect = async ({ userId }) => {
     console.log("clientDidConnect02 - " + userId, client?.current?.getId?.())
