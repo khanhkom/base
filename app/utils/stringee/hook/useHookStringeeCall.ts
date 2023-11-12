@@ -435,8 +435,6 @@ const useHookCallKitIOS = (updateClientId) => {
       answerCallAction()
       return
     }
-
-    console.log("syncCall_syncCall", syncCall)
   }
   const answerCallAction = () => {
     /*
@@ -446,6 +444,7 @@ const useHookCallKitIOS = (updateClientId) => {
           3. Chua goi ham answer cua StringeeCall lan nao
           3. AudioSession da active
         **/
+    console.log("syncCall_syncCall", syncCall)
     MediaManager.stopMusicBackground()
     RNNotificationCall.hideNotification()
     notifee.cancelAllNotifications()
