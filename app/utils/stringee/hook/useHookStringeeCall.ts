@@ -196,6 +196,7 @@ const useHookCallKitIOS = (updateClientId) => {
   }
   const unregisterPush = () => {
     const token = Platform.OS === "android" ? androidPushToken : pushToken
+    console.log("unregisterPush_unregisterPush::", token)
     client?.current?.unregisterPush(token, (status, code, message) => {
       console.log("unregisterPush", status, code, message)
     })
