@@ -68,8 +68,9 @@ const useHookStringeeCall = (updateClientId) => {
       },
     )
 
-    RNCallKeep.addEventListener("didActivateAudioSession", (data) => {
+    RNCallKeep.addEventListener("didActivateAudioSession", async (data) => {
       setIsActivateAudioSession(true)
+      await storage.saveString(storage.KEYSTORAGE.ACTION_FROM_CALLKIT, ActionFromCallKit.ANSWER)
     })
 
     RNCallKeep.addEventListener("didReceiveStartCallAction", ({ handle, callUUID, name }) => {})
@@ -88,7 +89,7 @@ const useHookStringeeCall = (updateClientId) => {
 
     RNCallKeep.addEventListener("endCall", ({ callUUID }) => {
       console.log("EVENT END CALLKIT, callUUID: " + callUUID, syncCall)
-      call2?.current.reject(this.state.syncCall.callId, (status, code, message) => {
+      call2?.current.reject(callId, (status, code, message) => {
         console.log("stringeeCall.reject: " + message)
         if (status) {
           // Sucess
