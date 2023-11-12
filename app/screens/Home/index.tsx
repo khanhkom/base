@@ -84,26 +84,26 @@ export default function HomeScreen() {
     checkNotificationPermission()
     return () => clearTimeout(timeout)
   }, [])
-  const {
-    clientDidConnect,
-    clientDidDisConnect,
-    clientDidFailWithError,
-    clientDidIncomingCall2,
-    clientRequestAccessToken,
-    clientReceiveCustomMessage,
-    client,
-    permissionGranted,
-    requestPermission,
-    unregisterPush,
-  } = useHookCallKitIOS(updateClientId)
-  console.log("permissionGranted", permissionGranted)
-  React.useEffect(() => {
-    if (!permissionGranted) {
-      if (Platform.OS === "android") {
-        requestPermission()
-      }
-    }
-  }, [])
+  // const {
+  //   clientDidConnect,
+  //   clientDidDisConnect,
+  //   clientDidFailWithError,
+  //   clientDidIncomingCall2,
+  //   clientRequestAccessToken,
+  //   clientReceiveCustomMessage,
+  //   client,
+  //   permissionGranted,
+  //   requestPermission,
+  //   unregisterPush,
+  // } = useHookCallKitIOS(updateClientId)
+  // console.log("permissionGranted", permissionGranted)
+  // React.useEffect(() => {
+  //   if (!permissionGranted) {
+  //     if (Platform.OS === "android") {
+  //       requestPermission()
+  //     }
+  //   }
+  // }, [])
 
   /** search bar */
   const onSearch = async (keyword) => {}
@@ -113,25 +113,25 @@ export default function HomeScreen() {
     dispatch(getStringeeToken())
     dispatch(getOrderHistory())
   }, [])
-  useEffect(() => {
-    if (session?.access_token && session?.access_token !== "") {
-      dispatch(removeActionClient())
-      client?.current?.connect(session?.access_token)
-    }
-  }, [session?.access_token])
+  // useEffect(() => {
+  //   if (session?.access_token && session?.access_token !== "") {
+  //     dispatch(removeActionClient())
+  //     client?.current?.connect(session?.access_token)
+  //   }
+  // }, [session?.access_token])
 
-  useEffect(() => {
-    if (actionClient === "REFRESH_CLIENT") {
-      if (session?.access_token && session?.access_token !== "") {
-        client?.current?.connect(session?.access_token)
-      }
-      // dispatch(refreshClient())
-    }
-    if (actionClient === "UN_REGISTER_PUSH") {
-      unregisterPush()
-      // dispatch(unregisterPush())
-    }
-  }, [actionClient])
+  // useEffect(() => {
+  //   if (actionClient === "REFRESH_CLIENT") {
+  //     if (session?.access_token && session?.access_token !== "") {
+  //       client?.current?.connect(session?.access_token)
+  //     }
+  //     // dispatch(refreshClient())
+  //   }
+  //   if (actionClient === "UN_REGISTER_PUSH") {
+  //     unregisterPush()
+  //     // dispatch(unregisterPush())
+  //   }
+  // }, [actionClient])
   return (
     <Screen preset="scroll" style={styles.container}>
       <HeaderHome onSearch={onSearch} />
@@ -140,7 +140,7 @@ export default function HomeScreen() {
       <TopDocter />
       <TopPackage />
       <HotNews />
-      <StringeeClient
+      {/* <StringeeClient
         ref={client}
         eventHandlers={{
           onConnect: clientDidConnect,
@@ -153,7 +153,7 @@ export default function HomeScreen() {
         }}
         // If you use a premise server, put your host and port here to connect
         // serverAddresses={new StringeeServerAddress('host', port)}
-      />
+      /> */}
     </Screen>
   )
 }
