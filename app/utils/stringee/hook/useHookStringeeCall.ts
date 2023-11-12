@@ -294,8 +294,6 @@ const useHookCallKitIOS = (updateClientId) => {
         setInited(status)
         console.log(message)
       })
-
-      answerCallAction()
       return
     }
 
@@ -330,8 +328,6 @@ const useHookCallKitIOS = (updateClientId) => {
         setInited(status)
         console.log(message)
       })
-
-      answerCallAction()
       return
     }
   }
