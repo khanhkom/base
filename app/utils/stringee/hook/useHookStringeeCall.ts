@@ -92,11 +92,6 @@ const useHookCallKitIOS = (updateClientId) => {
       },
     )
 
-    RNCallKeep.addEventListener("didActivateAudioSession", (data) => {
-      setIsActivateAudioSession(true)
-      answerCallAction()
-    })
-
     RNCallKeep.addEventListener("didReceiveStartCallAction", ({ handle, callUUID, name }) => {})
 
     RNCallKeep.addEventListener("didPerformSetMutedCallAction", ({ muted, callUUID }) => {
@@ -104,132 +99,70 @@ const useHookCallKitIOS = (updateClientId) => {
         mutePress()
       }
     })
-
-    RNCallKeep.addEventListener("answerCall", ({ callUUID }) => {
-      if (syncCall == null) {
-        return
-      }
-      // Alert.alert('Người dùng click answer, Sync CallKitId: ' + this.state.syncCall.callkitId + ' callUUID: ' + callUUID.toLowerCase());
-
-      if (callUUID != syncCall.callkitId) {
-        return
-      }
-
-      // Luu lai hanh dong answer cua nguoi dung
-      var newSyncCall = syncCall
-      newSyncCall.answered = true
-      setSyncCall(newSyncCall)
-
-      // Answer call neu can
-      answerCallAction()
-    })
-
-    RNCallKeep.addEventListener("endCall", ({ callUUID }) => {
-      console.log("EVENT END CALLKIT, callUUID: " + callUUID, syncCall)
-
-      if (syncCall == null) {
-        console.log("EVENT END CALLKIT - syncCall = null")
-        return
-      }
-
-      if (syncCall.callkitId == "" || callUUID != syncCall.callkitId) {
-        console.log("EVENT END CALLKIT - uuid khac, callkitId: " + syncCall.callkitId)
-        return
-      }
-
-      // Cap nhat trang thai cho syncCall
-      var newSyncCall = syncCall
-      newSyncCall.endedCallkit = true
-      newSyncCall.rejected = true
-      setSyncCall(newSyncCall)
-
-      // StringeeCall van chua duoc end thi can end
-      console.log(
-        "EVENT END CALLKIT, syncCall: " +
-          syncCall +
-          " callId: " +
-          syncCall.callId +
-          " callCode: " +
-          syncCall.callCode,
-      )
-      if (syncCall.callId != "" && syncCall.callCode != 3 && syncCall.callCode != 4) {
-        InCallManager.stopRingtone()
-        if (answeredCall) {
-          console.log("HANGUP CALL KHI END CALLKIT")
-          call2?.current.hangup(syncCall.callId, (status, code, message) => {
-            console.log("stringeeCall.hangup: " + message)
-            if (status) {
-              // Sucess
-            } else {
-              // Fail
-            }
-          })
-        } else {
-          console.log("REJECT CALL KHI END CALLKIT")
-          call2?.current.reject(this.state.syncCall.callId, (status, code, message) => {
-            console.log("stringeeCall.reject: " + message)
-            if (status) {
-              // Sucess
-            } else {
-              // Fail
-            }
-          })
-        }
-      }
-
-      deleteSyncCallIfNeed()
-    })
   }, [])
   //end listen
 
-  // listen android
-  // handle call android when app background
+  // handle ios
+  useEffect(() => {
+    async function getDataActionCallKit() {
+      const actionFromCallKit = await storage.loadString(storage.KEYSTORAGE.ACTION_FROM_CALLKIT)
+      console.log("ActionFromCallKit IOS:::", actionFromCallKit)
+      if (
+        Platform.OS === "ios" &&
+        call2?.current &&
+        actionFromCallKit !== ActionFromCallKit.NONE &&
+        actionFromCallKit
+      ) {
+        if (actionFromCallKit === ActionFromCallKit.ANSWER) {
+          setIsActivateAudioSession(true)
+          answerCallAction()
+          await storage.saveString(storage.KEYSTORAGE.ACTION_FROM_CALLKIT, ActionFromCallKit.NONE)
+        }
+        if (actionFromCallKit === ActionFromCallKit.REJECT) {
+          endPress(false)
+          await storage.saveString(storage.KEYSTORAGE.ACTION_FROM_CALLKIT, ActionFromCallKit.NONE)
+        }
+      }
+    }
+    if (isInited) {
+      getDataActionCallKit()
+    }
+  }, [call2, isInited, callId])
+  // handle call ios when app background
   useEffect(() => {
     console.log("isInited_isInited", isInited)
-    if (isInited && Platform.OS === "android") {
-      RNNotificationCall.addEventListener("answer", async (data) => {
-        console.log("press answer____", callUUID)
-        RNNotificationCall.backToApp()
+    if (isInited && Platform.OS === "ios") {
+      RNCallKeep.addEventListener("answerCall", async (data) => {
+        RNCallKeep.backToForeground()
         const { callUUID, payload } = data
-        var newSyncCall = syncCall
-        newSyncCall.answered = true
-        setSyncCall(newSyncCall)
-
-        setTimeout(() => {
-          call2?.current.answer(callId, (status, code, message) => {
-            setAnsweredCall(true)
-            // setTimeout(() => {
-            //   setAnsweredCall(true)
-            //   setShowCallingView(true)
-            // }, 1000)
-            // s
-            console.log("call did answer " + status + " - message: " + message)
-            if (status) {
-              // Sucess
-            } else {
-              // Fail
-            }
-          })
-        }, 1000)
+        // answerCall(true)
         await storage.saveString(storage.KEYSTORAGE.ACTION_FROM_CALLKIT, ActionFromCallKit.NONE)
+        console.log("press answer____", callUUID)
       })
-      RNNotificationCall.addEventListener("endCall", async (data) => {
+      RNCallKeep.addEventListener("endCall", async (data) => {
         const { callUUID, endAction, payload } = data
-        call2.current.reject(callId, (status, code, message) => {
-          console.log("reject: " + message + "--------" + callId)
-          if (Platform.OS === "android") {
-            dismissCallingView()
-          }
-        })
-        endCallAndUpdateView()
+        endPress(false)
+        console.log("press endCall IOS_____", callUUID)
+      })
+
+      RNCallKeep.addEventListener("didActivateAudioSession", async () => {
+        setIsActivateAudioSession(true)
+        answerCallAction()
+        console.log("didActivateAudioSession IOS__________")
+      })
+      RNCallKeep.addEventListener("didDisplayIncomingCall", async (data) => {
+        const { callUUID, endAction, payload } = data
+        setCallUUID(callUUID)
+        console.log("didActivateAudioSession IOS__________")
       })
     }
     return () => {
-      RNNotificationCall.removeEventListener("answer")
-      RNNotificationCall.removeEventListener("endCall")
+      RNCallKeep.removeEventListener("answerCall")
+      RNCallKeep.removeEventListener("endCall")
     }
-  }, [call2, isInited, callId, syncCall])
-  //
+  }, [call2, isInited, callId])
+
+  ///
   const addSyncCallToCacheArray = (sCall) => {
     // Xoa call cu neu da save
     const newAllSyncCalls = allSyncCalls.filter(
@@ -388,7 +321,6 @@ const useHookCallKitIOS = (updateClientId) => {
 
       // Call screen
       setSyncCall(newSyncCall)
-      setShowCallingView(true)
 
       call2?.current?.initAnswer(callId, (status, code, message) => {
         setInited(status)
@@ -425,7 +357,6 @@ const useHookCallKitIOS = (updateClientId) => {
       newSyncCall.receivedStringeeCall = true
       setSyncCall(newSyncCall)
       setCallId(callId)
-      setShowCallingView(true)
 
       call2?.current.initAnswer(callId, (status, code, message) => {
         setInited(status)
@@ -473,6 +404,7 @@ const useHookCallKitIOS = (updateClientId) => {
     InCallManager.stopRingtone()
     call2?.current.answer(syncCall.callId, (status, code, message) => {
       setAnsweredCall(true)
+      setShowCallingView(true)
       console.log("call did answer " + status + " - message: " + message)
       if (status) {
         // Sucess
