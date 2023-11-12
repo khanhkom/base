@@ -11,10 +11,12 @@ import {
 } from "@app/redux/actions/stringee"
 import { useSelector } from "@app/redux/reducers"
 import { useDispatch } from "react-redux"
+import { getOrderHistory } from "@app/redux/actions/actionOrder"
 import useHookCallKitIOS from "./hook/useHookStringeeCall"
 import { StringeeClient, StringeeCall2 } from "stringee-react-native"
 import notifee, { AuthorizationStatus } from "@notifee/react-native"
 import messaging from "@react-native-firebase/messaging"
+import CallScreen from "./hook/CallModal"
 import { useSafeAreaInsetsStyle } from "../useSafeAreaInsetsStyle"
 import { api } from "@app/services/api"
 import { KEYSTORAGE, load } from "../storage"
@@ -37,9 +39,21 @@ export default function CallEventHandle() {
   const updateClientId = (id: string) => {
     dispatch(updateStringeeClientId(id))
   }
+  async function requestUserPermission() {
+    PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS)
 
+    const authStatus = await messaging().requestPermission()
+    const enabled =
+      authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+      authStatus === messaging.AuthorizationStatus.PROVISIONAL
+
+    if (enabled) {
+      console.log("Authorization status:", authStatus)
+    }
+  }
   useEffect(() => {
     // checkBatteryAndroid()
+    requestUserPermission()
     checkNotificationPermission()
   }, [])
   const {
@@ -50,11 +64,14 @@ export default function CallEventHandle() {
     clientRequestAccessToken,
     clientReceiveCustomMessage,
     client,
+    permissionGranted,
+    requestPermission,
     unregisterPush,
     call2,
     status,
     isVideoEnable,
     isSpeaker,
+    showAnswerBtn,
     receivedLocalStream,
     receivedRemoteStream,
     signalingState,
@@ -78,11 +95,21 @@ export default function CallEventHandle() {
     showCallingView,
     answeredCall,
     callState,
+    answerCallAction,
     isIncoming,
     setSyncCall,
     clientId,
     from,
   } = useHookCallKitIOS(updateClientId)
+
+  console.log("permissionGranted", permissionGranted)
+  React.useEffect(() => {
+    if (!permissionGranted) {
+      if (Platform.OS === "android") {
+        requestPermission()
+      }
+    }
+  }, [])
 
   useEffect(() => {
     async function loadDataLocal() {
@@ -147,6 +174,51 @@ export default function CallEventHandle() {
           onAudioDeviceChange: callDidAudioDeviceChange, ///only available on android
         }}
       />
+      <Modal
+        animationType="slide"
+        transparent={false}
+        visible={showCallingView}
+        onRequestClose={() => {
+          Alert.alert("Modal has been closed.")
+        }}
+      >
+        <CallScreen
+          hasLocalStream={receivedLocalStream}
+          hasRemoteStream={receivedRemoteStream}
+          stringeeCallId={syncCall != null ? syncCall.callId : ""}
+          isAnswered={syncCall != null ? syncCall.answered : answeredCall}
+          isVideoEnableRemote={isVideoEnableRemote}
+          callState={callState}
+          endButtonHandler={() => {
+            endPress(true)
+          }}
+          rejectButtonHandler={() => {
+            endPress(false)
+          }}
+          from={from}
+          acceptButtonHandler={() => {
+            var newSyncCall = syncCall
+            newSyncCall.answered = true
+            setSyncCall(newSyncCall)
+            answerCallAction()
+          }}
+          isIncoming={isIncoming}
+          switchCameraHandler={switchPress}
+          isSpeaker={isSpeaker}
+          speakerButtonHandler={speakerPress}
+          isMute={isMute}
+          muteButtonHandler={mutePress}
+          enableVideo={isVideoEnable}
+          enableVideoButtonHandler={videoPress}
+        />
+      </Modal>
     </View>
   )
 }
+
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: colors.gray_1,
+    position: "absolute",
+  },
+})
