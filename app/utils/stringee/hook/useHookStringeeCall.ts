@@ -275,7 +275,7 @@ const useHookCallKitIOS = (updateClientId) => {
       serial,
     )
     console.log("startRingtone_startRingtone")
-    InCallManager.startRingtone("_BUNDLE_") // or _DEFAULT_ or system filename with extension
+    // InCallManager.startRingtone("_BUNDLE_") // or _DEFAULT_ or system filename with extension
 
     setUserId(userId)
     setCallState("Incoming Call")
