@@ -127,12 +127,13 @@ export default function HomeScreen() {
         client?.current?.connect(session?.access_token)
       }
       // dispatch(refreshClient())
+      dispatch(removeActionClient())
     }
     //logout
     if (actionClient === "UN_REGISTER_PUSH") {
       unregisterPush()
-      client?.current?.disconnect()
       // dispatch(unregisterPush())
+      dispatch(removeActionClient())
     }
   }, [actionClient])
 
