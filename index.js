@@ -49,6 +49,14 @@ RNCallKeep.setup({
 messaging().setBackgroundMessageHandler(async (notification) => {
   onMessageReceived(notification, true)
 })
+AppRegistry.registerHeadlessTask(
+  "RNCallKeepBackgroundMessage",
+  () =>
+    ({ name, callUUID, handle }) => {
+      // Make your call here
 
+      return Promise.resolve()
+    },
+)
 AppRegistry.registerComponent("SDocter", () => IgniteApp)
 export default App

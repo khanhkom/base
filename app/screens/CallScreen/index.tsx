@@ -54,6 +54,7 @@ const CallScreen = ({ route }: ScreenProps) => {
       PermissionsAndroid.PERMISSIONS.RECORD_AUDIO,
       PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS,
       PermissionsAndroid.PERMISSIONS.BLUETOOTH_CONNECT,
+      PermissionsAndroid.PERMISSIONS.CALL_PHONE,
     ])
       .then((result) => {
         if (

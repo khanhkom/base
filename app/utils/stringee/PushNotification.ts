@@ -3,21 +3,21 @@ import { AppState, Platform, Vibration } from "react-native"
 import RNCallKeep from "react-native-callkeep"
 import notifee, { AndroidVisibility } from "@notifee/react-native"
 import RNNotificationCall from "react-native-full-screen-notification-incoming-call"
-import { getNameById } from "@app/services/api/functions/stringee"
 import { ActionFromCallKit } from "@app/context/themeContext"
 import InCallManager from "react-native-incall-manager"
 import * as storage from "@app/utils/storage"
 
 export async function displayIncomingCall(notificationId, dataName, channelId) {
-  RNCallKeep.displayIncomingCall(notificationId, dataName, channelId, "number", false)
+  InCallManager.startRingtone("incallmanager_ringtone.mp3") // or _DEFAULT_ or system filename with extension
+  console.log("InCallManager_startRingtone")
+  RNCallKeep.displayIncomingCall(notificationId, dataName, channelId, "number", true)
 }
 
 export async function createNotificationChannel() {
   return await notifee.createChannel({
-    id: "sdocter",
-    name: "sdocter",
+    id: "sdocterpatient",
+    name: "sdocterpatient",
     vibration: true,
-    sound: "messenger_ringtone",
     visibility: AndroidVisibility.PUBLIC,
     vibrationPattern: [300, 500],
   })
@@ -27,9 +27,11 @@ export async function displayNotification(fullname) {
   const pattern = [0, 500, 200, 500]
   // Vibrate with the waveform pattern
   Vibration.vibrate(pattern, true)
+  // playSampleSound(soundsList[0])
+
   RNNotificationCall.displayNotification("22221a97-8eb4-4ac2-b2cf-0a3c0b9100ad", null, 30000, {
-    channelId: "sdocter",
-    channelName: "sdocter",
+    channelId: "sdocterpatient",
+    channelName: "sdocterpatient",
     notificationIcon: "ic_launcher", //mipmap
     notificationTitle: "B.s " + fullname || "",
     notificationBody: "Cuộc gọi video đến",
@@ -54,6 +56,7 @@ export async function onMessageReceived(message) {
   console.log("data: " + callStatus, AppState.currentState)
   const isShowNotification = AppState.currentState !== "active"
   const channelId = await createNotificationChannel()
+  console.log("channelId_channelId", channelId)
   KeepAwake.activate()
   switch (callStatus) {
     case "started":

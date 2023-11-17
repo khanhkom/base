@@ -38,7 +38,7 @@ const useHookCall = (callId, isIncoming, from, to, fromName) => {
           setInited(status)
 
           if (Platform.OS === "android") {
-            InCallManager.startRingtone("incallmanager_ringtone.mp3") // or _DEFAULT_ or system filename with extension
+            // InCallManager.startRingtone("incallmanager_ringtone.mp3") // or _DEFAULT_ or system filename with extension
             // Define the waveform pattern
             const pattern = [0, 500, 200, 500]
             // Vibrate with the waveform pattern
