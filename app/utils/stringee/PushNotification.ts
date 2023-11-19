@@ -6,11 +6,12 @@ import RNNotificationCall from "react-native-full-screen-notification-incoming-c
 import { ActionFromCallKit } from "@app/context/themeContext"
 import InCallManager from "react-native-incall-manager"
 import * as storage from "@app/utils/storage"
+import UUIDGenerator from "react-native-uuid-generator"
+import { request, check, PERMISSIONS, RESULTS, requestMultiple } from "react-native-permissions"
 
-export async function displayIncomingCall(notificationId, dataName, channelId) {
-  InCallManager.startRingtone("incallmanager_ringtone.mp3") // or _DEFAULT_ or system filename with extension
-  console.log("InCallManager_startRingtone")
-  RNCallKeep.displayIncomingCall(notificationId, dataName, channelId, "number", true)
+export async function displayIncomingCall() {
+  const callkitId = await UUIDGenerator.getRandomUUID()
+  RNCallKeep.displayIncomingCall(callkitId, "Stringee", "", "number", true)
 }
 
 export async function createNotificationChannel() {
@@ -45,61 +46,72 @@ export async function displayNotification(fullname) {
 }
 
 export async function onMessageReceived(message) {
-  console.log("notification", message)
-  const data = JSON.parse(message.data.data)
-  const callStatus = data?.callStatus
-  const from = data?.from?.number
+  try {
+    console.log("notification", message)
+    const data = JSON.parse(message.data.data)
+    const callStatus = data?.callStatus
+    const from = data?.from?.number
 
-  const fullName = data?.from?.alias
+    const fullName = data?.from?.alias
 
-  const notificationId = "11111" // YOUR_NOTIFICATION_ID
-  console.log("data: " + callStatus, AppState.currentState)
-  const isShowNotification = AppState.currentState !== "active"
-  const channelId = await createNotificationChannel()
-  console.log("channelId_channelId", channelId)
-  KeepAwake.activate()
-  switch (callStatus) {
-    case "started":
-      console.log("started_started", isShowNotification)
-      await displayIncomingCall(notificationId, fullName || from, channelId)
-      RNCallKeep.addEventListener("showIncomingCallUi", async ({ callUUID }) => {
-        console.log("didDisplayIncomingCall:::callUUID", callUUID)
-        await storage.saveString(storage.KEYSTORAGE.CALLKIT_ID, callUUID)
-      })
-      if (isShowNotification) {
-        if (Platform.OS === "android") {
-          RNCallKeep.addEventListener("showIncomingCallUi", ({ callUUID: uuid }) => {
-            console.log("showIncomingCallUi_showIncomingCallUi", uuid)
-            displayNotification(fullName)
-          })
-          RNNotificationCall.addEventListener("answer", async (data) => {
-            RNNotificationCall.backToApp()
-            const { callUUID, payload } = data
-            await storage.saveString(
-              storage.KEYSTORAGE.ACTION_FROM_CALLKIT,
-              ActionFromCallKit.ANSWER,
-            )
-            console.log("press answer", callUUID)
-          })
-          RNNotificationCall.addEventListener("endCall", async (data) => {
-            RNNotificationCall.backToApp()
-            const { callUUID, endAction, payload } = data
-            InCallManager.stopRingtone()
-            await storage.saveString(
-              storage.KEYSTORAGE.ACTION_FROM_CALLKIT,
-              ActionFromCallKit.REJECT,
-            )
-            console.log("press endCall", callUUID)
-          })
+    console.log("data: " + callStatus, AppState.currentState)
+    const isShowNotification = AppState.currentState !== "active"
+    const channelId = await createNotificationChannel()
+    // const channelId = "sdocterpatient"
+
+    // console.log("channelId_channelId", channelId)
+    KeepAwake.activate()
+    const granted = await check(PERMISSIONS.ANDROID.READ_PHONE_NUMBERS)
+    switch (callStatus) {
+      case "started":
+        console.log("started_started", isShowNotification)
+        InCallManager.startRingtone("incallmanager_ringtone.mp3") // or _DEFAULT_ or system filename with extension
+
+        if (granted !== RESULTS.GRANTED) {
+          displayNotification(fullName)
+        } else {
+          await displayIncomingCall()
         }
-      }
+        if (isShowNotification) {
+          if (Platform.OS === "android") {
+            RNCallKeep.addEventListener("showIncomingCallUi", ({ callUUID: uuid }) => {
+              displayNotification(fullName)
+              console.log("showIncomingCallUi_showIncomingCallUi", uuid)
+            })
+            RNNotificationCall.addEventListener("answer", async (data) => {
+              RNNotificationCall.backToApp()
+              Vibration.cancel()
+              const { callUUID, payload } = data
+              await storage.saveString(
+                storage.KEYSTORAGE.ACTION_FROM_CALLKIT,
+                ActionFromCallKit.ANSWER,
+              )
+              console.log("press answer", callUUID)
+            })
+            RNNotificationCall.addEventListener("endCall", async (data) => {
+              RNNotificationCall.backToApp()
+              Vibration.cancel()
+              const { callUUID, endAction, payload } = data
+              InCallManager.stopRingtone()
+              await storage.saveString(
+                storage.KEYSTORAGE.ACTION_FROM_CALLKIT,
+                ActionFromCallKit.REJECT,
+              )
+              console.log("press endCall", callUUID)
+            })
+          }
+        }
 
-      break
-    case "ended":
-      RNCallKeep.endAllCalls()
-      Vibration.cancel()
-      RNNotificationCall.hideNotification()
-      notifee.cancelAllNotifications()
-      break
+        break
+      case "ended":
+        InCallManager.stopRingtone()
+        RNCallKeep.endAllCalls()
+        Vibration.cancel()
+        RNNotificationCall.hideNotification()
+        notifee.cancelAllNotifications()
+        break
+    }
+  } catch (error) {
+    console.log("NOTI_ERROR::", error)
   }
 }

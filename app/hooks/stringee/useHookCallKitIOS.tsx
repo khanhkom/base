@@ -28,7 +28,6 @@ const useHookCallKitIOS = (updateClientId) => {
   const [userId, setUserId] = useState("")
   const [callId, setCallId] = useState("")
   const [from, setFrom] = useState("")
-  const stringeeCall = useRef(null)
 
   const deleteSyncCallIfNeed = () => {
     // Implement the deleteSyncCallIfNeed function...
@@ -323,7 +322,7 @@ const useHookCallKitIOS = (updateClientId) => {
       PermissionsAndroid.PERMISSIONS.RECORD_AUDIO,
       PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS,
       PermissionsAndroid.PERMISSIONS.BLUETOOTH_CONNECT,
-      PermissionsAndroid.PERMISSIONS.CALL_PHONE,
+      PermissionsAndroid.PERMISSIONS.READ_PHONE_NUMBERS,
     ])
       .then((result) => {
         if (

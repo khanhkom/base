@@ -3,7 +3,6 @@ export const ActionFromCallKit = {
   NONE: "NONE",
   ANSWER: "ANSWER",
   REJECT: "REJECT",
-  ON_NOTI: "ON_NOTI",
 }
 
 export const PreferencesContext = React.createContext({

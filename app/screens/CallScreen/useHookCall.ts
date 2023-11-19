@@ -373,8 +373,6 @@ const useHookCall = (callId, isIncoming, from, to, fromName) => {
   }
   const handleAudioRoute = async () => {
     const audioRoutes = await RNCallKeep.getAudioRoutes()
-    const callUUIDLocal = await storage.loadString(storage.KEYSTORAGE.CALLKIT_ID)
-    console.log("callUUIDLocal:::", callUUIDLocal)
     // RNCallKeep.setAudioRoute("11111")
     console.log("audioRoutes_audioRoutes", audioRoutes)
   }
