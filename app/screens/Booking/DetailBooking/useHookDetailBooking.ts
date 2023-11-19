@@ -23,6 +23,7 @@ export const TYPE_FIELD = {
   specialList: 6,
   patientNotes: 7,
   code: 8,
+  patientPhone: 9,
 }
 export const DATA_BOOK = [
   {
@@ -58,6 +59,10 @@ export const DATA_BOOK = [
       {
         title: translate("booking.name"),
         type: TYPE_FIELD.patientName,
+      },
+      {
+        title: "Số điện thoại: ",
+        type: TYPE_FIELD.patientPhone,
       },
     ],
   },
@@ -135,7 +140,8 @@ const useHookDetailBooking = (id) => {
         return detailOrder?.specialist?.value
       case TYPE_FIELD.patientNotes:
         return detailOrder?.patientNotes
-
+      case TYPE_FIELD.patientPhone:
+        return detailOrder?.patient?.phone
       case TYPE_FIELD.code:
         return detailOrder?.code
       default:

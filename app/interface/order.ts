@@ -30,6 +30,7 @@ export interface IOrderHistory {
     name: string
     userId: string
     profileId: string
+    phone: string
   }
   doctor: {
     id: string
