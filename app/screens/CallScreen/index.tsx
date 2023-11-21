@@ -44,16 +44,21 @@ interface ScreenProps {
     }
   }
 }
+const PERMISSION_CALL = {
+  NONE: "NONE",
+  GRANTED: "GRANTED",
+  REJECT: "REJECT",
+}
 const CallScreen = ({ route }: ScreenProps) => {
   const params = route.params
   const { isVideoCall, isIncoming, detailOrder, callId, clientId, from, to, fromAlias } = params
-  const [permissionGranted, setPermissionGranted] = useState(false)
+  const [permissionGranted, setPermissionGranted] = useState(PERMISSION_CALL.NONE)
   const requestPermission = () => {
     PermissionsAndroid.requestMultiple([
       PermissionsAndroid.PERMISSIONS.CAMERA,
       PermissionsAndroid.PERMISSIONS.RECORD_AUDIO,
       PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS,
-      PermissionsAndroid.PERMISSIONS.BLUETOOTH_CONNECT,
+      // PermissionsAndroid.PERMISSIONS.BLUETOOTH_CONNECT,
       PermissionsAndroid.PERMISSIONS.READ_PHONE_NUMBERS,
     ])
       .then((result) => {
@@ -61,7 +66,9 @@ const CallScreen = ({ route }: ScreenProps) => {
           result["android.permission.CAMERA"] &&
           result["android.permission.RECORD_AUDIO"] === "granted"
         ) {
-          setPermissionGranted(true)
+          setPermissionGranted(PERMISSION_CALL.GRANTED)
+        } else {
+          setPermissionGranted(PERMISSION_CALL.REJECT)
         }
       })
       .catch((err) => {
@@ -73,6 +80,12 @@ const CallScreen = ({ route }: ScreenProps) => {
     requestPermission()
     KeepAwake.activate()
   }, [])
+  useEffect(() => {
+    if (permissionGranted === PERMISSION_CALL.REJECT) {
+      endPress(!showAnswerBtn)
+    }
+  }, [permissionGranted])
+  console.log("permissionGranted_permissionGranted", permissionGranted)
   const {
     call2,
     status,
@@ -102,8 +115,6 @@ const CallScreen = ({ route }: ScreenProps) => {
     isVideoEnableRemote,
     callUUID,
   } = useHookCall(callId, isIncoming, from, to, detailOrder?.patient?.name)
-  console.log("STATUS_", status, isVideoCall, callId, receivedRemoteStream)
-  console.log("STATUS_1", status, isVideoCall, callId, receivedLocalStream)
 
   return (
     <Screen

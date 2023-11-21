@@ -321,7 +321,7 @@ const useHookCallKitIOS = (updateClientId) => {
       PermissionsAndroid.PERMISSIONS.CAMERA,
       PermissionsAndroid.PERMISSIONS.RECORD_AUDIO,
       PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS,
-      PermissionsAndroid.PERMISSIONS.BLUETOOTH_CONNECT,
+      // PermissionsAndroid.PERMISSIONS.BLUETOOTH_CONNECT,
       PermissionsAndroid.PERMISSIONS.READ_PHONE_NUMBERS,
     ])
       .then((result) => {

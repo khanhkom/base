@@ -1,7 +1,7 @@
 import KeepAwake from "react-native-keep-awake"
 import { AppState, Platform, Vibration } from "react-native"
 import RNCallKeep from "react-native-callkeep"
-import notifee, { AndroidVisibility } from "@notifee/react-native"
+import notifee, { AndroidImportance, AndroidVisibility } from "@notifee/react-native"
 import RNNotificationCall from "react-native-full-screen-notification-incoming-call"
 import { ActionFromCallKit } from "@app/context/themeContext"
 import InCallManager from "react-native-incall-manager"
@@ -16,11 +16,12 @@ export async function displayIncomingCall() {
 
 export async function createNotificationChannel() {
   return await notifee.createChannel({
-    id: "sdocterpatient",
-    name: "sdocterpatient",
+    id: "sdocterpatient_2",
+    name: "sdocterpatient_2",
     vibration: true,
     visibility: AndroidVisibility.PUBLIC,
     vibrationPattern: [300, 500],
+    importance: AndroidImportance.HIGH,
   })
 }
 
@@ -31,8 +32,8 @@ export async function displayNotification(fullname) {
   // playSampleSound(soundsList[0])
 
   RNNotificationCall.displayNotification("22221a97-8eb4-4ac2-b2cf-0a3c0b9100ad", null, 30000, {
-    channelId: "sdocterpatient",
-    channelName: "sdocterpatient",
+    channelId: "sdocterpatient_2",
+    channelName: "sdocterpatient_2",
     notificationIcon: "ic_launcher", //mipmap
     notificationTitle: "B.s " + fullname || "",
     notificationBody: "Cuộc gọi video đến",
@@ -62,13 +63,23 @@ export async function onMessageReceived(message) {
     // console.log("channelId_channelId", channelId)
     KeepAwake.activate()
     const granted = await check(PERMISSIONS.ANDROID.READ_PHONE_NUMBERS)
+    await notifee.displayNotification({
+      title: "Notification Title",
+      body: "Main body content of the notification",
+      android: {
+        channelId,
+      },
+    })
+
     switch (callStatus) {
       case "started":
         console.log("started_started", isShowNotification)
         InCallManager.startRingtone("incallmanager_ringtone.mp3") // or _DEFAULT_ or system filename with extension
 
         if (granted !== RESULTS.GRANTED) {
-          displayNotification(fullName)
+          if (isShowNotification) {
+            displayNotification(fullName)
+          }
         } else {
           await displayIncomingCall()
         }

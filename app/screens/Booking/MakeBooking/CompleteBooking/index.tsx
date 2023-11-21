@@ -11,7 +11,6 @@ import { goBack, navigate } from "@app/navigators/navigationUtilities"
 import CustomPicker from "./Item/CustomPicker/CustomPicker"
 import { Icon } from "@app/components/Icon"
 import FileAttachment from "./Item/FileAttachment"
-import PopupVerify from "@app/components/PopupVerify"
 import { useSelector } from "@app/redux/reducers"
 import { useDispatch } from "react-redux"
 import {
@@ -32,6 +31,7 @@ import PopupErros from "@app/components/PopupErros"
 import { DATA_TIME } from "../SelectTimeBooking/Data"
 import { translate } from "@app/i18n/translate"
 import { Screen } from "@app/components/Screen"
+import PopupVerify from "./Item/PopupVerify"
 const VALIDATE_MESSAGE = [
   "Vui lòng chọn chuyên khoa!",
   "Vui lòng chọn ngày khám!",
@@ -153,7 +153,6 @@ export default function CompleteBooking({ route }: ScreenProps) {
         goBack()
         showToastMessage(translate("booking.update_booking_success"), EToastType.SUCCESS)
       } else {
-        
         showToastMessage(translate("booking.update_booking_fail"), EToastType.ERROR)
       }
     } else {
@@ -175,7 +174,7 @@ export default function CompleteBooking({ route }: ScreenProps) {
   }
   return (
     <Screen
-      safeAreaEdges={Platform.OS === "android" ?["bottom"]:[]}
+      safeAreaEdges={Platform.OS === "android" ? ["bottom"] : []}
       contentContainerStyle={styles.container}
     >
       <Header
@@ -293,11 +292,11 @@ export default function CompleteBooking({ route }: ScreenProps) {
       </View>
       <PopupVerify
         title={translate("booking.verify_booking")}
-        desc={`${translate("booking.confirm_booking")} ${docter?.name} ${translate("booking.in")} ${
-          selectedTime?.time
-        } ${translate("booking.date")} ${moment(selectedDate).format("DD/MM/YYYY")}. ${translate(
-          "booking.please_verify_booking_information",
+        desc={`${translate("booking.confirm_booking")} ${docter?.name} ${translate("booking.in")} `}
+        time={`${selectedTime?.time} ${translate("booking.date")} ${moment(selectedDate).format(
+          "DD/MM/YYYY",
         )}`}
+        textPleaseComfirm={translate("booking.please_verify_booking_information")}
         visible={visible}
         setVisible={setVisible}
         onRightPress={() => {
