@@ -19,13 +19,22 @@ import { translate } from "@app/i18n/translate"
 import { validatePhoneNumber } from "@app/utils/validate"
 import DeviceInfo from "react-native-device-info"
 import { OTP_TYPE } from "../../Login/useHookLogin"
-export default function VerifyPhoneNumber() {
+import auth from "@react-native-firebase/auth"
+interface IScreenParams {
+  route: {
+    params: {
+      isNeedUpdatePhone: boolean
+    }
+  }
+}
+export default function VerifyPhoneNumber({ route }: IScreenParams) {
   const [countryCode, setCountryCode] = useState("+84")
   const [phoneNumber, setPhoneNumber] = useState("")
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(false)
   const [otpMethod, setOTPMethod] = useState(0)
   const dispatch = useDispatch()
+  const { isNeedUpdatePhone } = route.params
   const onSubmit = async () => {
     // showModal()
     const isValidNumber = validatePhoneNumber(phoneNumber)
@@ -48,31 +57,46 @@ export default function VerifyPhoneNumber() {
         let resLogin = null
         if (otpMethod === OTP_TYPE.ZNS) {
           resLogin = await getOtpSocial(body)
-        } else {
-          resLogin = await getOtp(body)
-        }
-        console.log("resLogin_resLogin", resLogin?.data)
-        if (resLogin?.status === 201) {
-          dispatch(
-            updateUserField({
+          console.log("resLogin_resLogin", resLogin?.data)
+          if (resLogin?.status === 201) {
+            dispatch(
+              updateUserField({
+                phone: countryCode + result,
+              }),
+            )
+            navigate("VerifyOTP", {
               phone: countryCode + result,
-            }),
-          )
-          navigate("VerifyOTP", {
-            phone: countryCode + result,
-            type: "SOCIAL",
-            otpMethod,
-          })
+              type: "SOCIAL",
+              otpMethod,
+              isNeedUpdatePhone,
+            })
+          } else {
+            const message = resLogin?.data?.message
+            if (message === "Phone not existed in system") {
+              setError(true)
+              showToastMessage("Số điện thoại đã được liên kết!", EToastType.ERROR)
+            } else {
+              setError(true)
+              showToastMessage(translate("auth.verify_telephone_number_again"), EToastType.ERROR)
+            }
+          }
         } else {
-          const message = resLogin?.data?.message
-          if (message === "Phone not existed in system") {
-            setError(true)
-            showToastMessage("Số điện thoại đã được liên kết!", EToastType.ERROR)
+          // resLogin = await getOtp(body)
+          const confirmation = await auth().signInWithPhoneNumber(`${body.phone}`)
+
+          if (confirmation.verificationId) {
+            navigate("VerifyOTP", {
+              phone: body.phone,
+              otpMethod,
+              type: "LOGIN",
+              confirmation,
+            })
           } else {
             setError(true)
             showToastMessage(translate("auth.verify_telephone_number_again"), EToastType.ERROR)
           }
         }
+
         console.log("resLogin_resLogin", body, resLogin?.data)
         setLoading(false)
       } catch (error) {

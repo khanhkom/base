@@ -16,6 +16,10 @@ const URL_LOGIN = {
   VERIFY_OTP: "pin/verifyOtp",
   VERIFY_OTP_V2: "pin/v2/verifyOtpForLogin",
   LOGIN_SOCIAL: "session/createSessionWithOAuth2",
+
+  CHECK_USER_FIREBASE: "authentication/checkUserFirebase",
+  CREATE_SESSION_FIREBASE: "session/createSessionWithFirebase",
+  UPDATE_PHONE_SOCIAL: "authentication/userUpdatePhone",
 }
 const URL_PATIENT = {
   CREATE_PATIENT: "patient",

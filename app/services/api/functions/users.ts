@@ -102,3 +102,22 @@ export const verifyOTPSocial = (body: {
     .get(URL.VERIFY_OTP_SOCIAL_V2, body)
     .then((res) => res)
     .catch((err) => err)
+
+// login firebase OTP
+export const checkUserFirebase = (body: { phone: string }) =>
+  api.apisauce
+    .post(URL.CHECK_USER_FIREBASE, body)
+    .then((res) => res)
+    .catch((err) => err)
+
+export const createSessionWithFirebase = (body: { phone: string; idtoken: string }) =>
+  api.apisauce
+    .post(URL.CREATE_SESSION_FIREBASE, body)
+    .then((res) => res)
+    .catch((err) => err)
+
+export const updatePhoneSocial = (body: { phone: string; idtoken: string }) =>
+  api.apisauce
+    .put(URL.UPDATE_PHONE_SOCIAL, body)
+    .then((res) => res)
+    .catch((err) => err)

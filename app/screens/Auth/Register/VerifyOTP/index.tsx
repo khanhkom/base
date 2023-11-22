@@ -13,11 +13,13 @@ import { KEYSTORAGE, save } from "@app/utils/storage"
 import { getStringeeToken } from "@app/redux/actions/stringee"
 import { useDispatch } from "react-redux"
 import {
+  createSessionWithFirebase,
   getOtp,
   getOtpLogin,
   getOtpRegister,
   getOtpSocial,
   getOtpV2,
+  updatePhoneSocial,
   verifyOTP,
   verifyOTPLogin,
   verifyOTPRegister,
@@ -32,6 +34,7 @@ import { translate } from "@app/i18n/translate"
 import { getHash, startOtpListener, removeListener } from "react-native-otp-verify"
 import DeviceInfo from "react-native-device-info"
 import { OTP_TYPE } from "../../Login/useHookLogin"
+import auth from "@react-native-firebase/auth"
 
 interface ScreenProps {
   route: {
@@ -39,6 +42,8 @@ interface ScreenProps {
       phone: string
       otpMethod: number
       type: "REGISTER" | "LOGIN" | "SOCIAL"
+      confirmation?: any
+      isNeedUpdatePhone?: any
     }
   }
 }
@@ -46,6 +51,8 @@ export default function VerifyOTP({ route }: ScreenProps) {
   const phone = route?.params?.phone
   const otpMethod = route?.params?.otpMethod
   const type = route?.params?.type
+  const confirmation = route?.params?.confirmation
+  const isNeedUpdatePhone = route?.params?.isNeedUpdatePhone
   const pinInput = useRef(null)
   const [code, setCode] = useState("")
   const [loading, setLoading] = useState(false)
@@ -53,9 +60,10 @@ export default function VerifyOTP({ route }: ScreenProps) {
   const [time, setTime] = useState(30)
   const [isBlock, setBlock] = useState(false)
   const [releaseIn, setrReleaseIn] = useState(0)
+  const [confirm, setConfirm] = useState(confirmation)
+
   const dispatch = useDispatch()
   const tokenFi = useRef("")
-
   useEffect(() => {
     async function getTokenFi() {
       try {
@@ -125,7 +133,20 @@ export default function VerifyOTP({ route }: ScreenProps) {
             fcmToken: tokenFi.current,
           })
         }
-        resOTP = await verifyOTP(newBody)
+        // resOTP = await verifyOTP(newBody)
+        resOTP = await confirm.confirm(codeFinal)
+        const idToken = await auth().currentUser.getIdToken(true)
+        resOTP = await createSessionWithFirebase({
+          phone,
+          idtoken: idToken,
+        })
+        if (isNeedUpdatePhone) {
+          await updatePhoneSocial({
+            phone,
+            idtoken: idToken,
+          })
+        }
+        console.log("resOTP_resOTP::::", resOTP, codeFinal, idToken)
       }
       console.log("body", body, resOTP)
       const dataLogin = resOTP?.data
@@ -182,7 +203,14 @@ export default function VerifyOTP({ route }: ScreenProps) {
       // const resLogin = await getOtpV2(body)
       let resLogin = null
       if (otpMethod !== 0) {
-        resLogin = await getOtp(body)
+        const confirmation = await auth().signInWithPhoneNumber(`${body.phone}`)
+        setConfirm(confirmation)
+        if (confirmation?.verificationId) {
+          showToastMessage(translate("otp.code_sent_successfully"), EToastType.SUCCESS)
+        } else {
+          showToastMessage(translate("common.oops_error"), EToastType.ERROR)
+        }
+        // resLogin = await getOtp(body)
       } else {
         switch (type) {
           case "LOGIN":
@@ -197,14 +225,15 @@ export default function VerifyOTP({ route }: ScreenProps) {
           default:
             break
         }
+        if (resLogin?.status === 201) {
+          showToastMessage(translate("otp.code_sent_successfully"), EToastType.SUCCESS)
+        } else {
+          showToastMessage(translate("common.oops_error"), EToastType.ERROR)
+        }
       }
       // console.log("resLogin", resLogin)
       setTime(30)
-      if (resLogin?.status === 201) {
-        showToastMessage(translate("otp.code_sent_successfully"), EToastType.SUCCESS)
-      } else {
-        showToastMessage(translate("common.oops_error"), EToastType.ERROR)
-      }
+
       setLoading(false)
     } catch (error) {
       showToastMessage(translate("common.oops_error"), EToastType.ERROR)

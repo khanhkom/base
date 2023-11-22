@@ -5,4 +5,5 @@ export interface ISession {
   refreshExpiresIn: number
   isNewUser?: boolean
   isVerified?: boolean
+  isNeedUpdatePhone?: boolean
 }

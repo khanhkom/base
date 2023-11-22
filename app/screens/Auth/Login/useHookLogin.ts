@@ -3,7 +3,13 @@ import { navigate } from "@app/navigators/navigationUtilities"
 import { updateUserField } from "@app/redux/actions"
 import { getStringeeToken } from "@app/redux/actions/stringee"
 import { api } from "@app/services/api"
-import { getOtp, getOtpLogin, getOtpRegister, loginSocial } from "@app/services/api/functions/users"
+import {
+  checkUserFirebase,
+  getOtp,
+  getOtpLogin,
+  getOtpRegister,
+  loginSocial,
+} from "@app/services/api/functions/users"
 import { EToastType, showToastMessage } from "@app/utils/library"
 import { KEYSTORAGE, save } from "@app/utils/storage"
 import { validatePhoneNumber } from "@app/utils/validate"
@@ -14,6 +20,8 @@ import { AccessToken, LoginManager } from "react-native-fbsdk-next"
 import { useDispatch } from "react-redux"
 import DeviceInfo from "react-native-device-info"
 import { TYPE_MESSAGE_LOGIN } from "@app/services/api/apiErrorMessage"
+import auth from "@react-native-firebase/auth"
+
 export const OTP_TYPE = {
   ZNS: 0,
   PHONE: 1,
@@ -72,7 +80,9 @@ const useHookLogin = (setCustomLoading?: (val: boolean) => void) => {
     if (otpMethod === OTP_TYPE.ZNS) {
       resLogin = await getOtpLogin(body)
     } else {
-      resLogin = await getOtp(body)
+      // resLogin = await getOtp(body)
+      onLoginWithSMS()
+      return
     }
     setLoading(false)
     //1. check if not exist in db
@@ -199,10 +209,11 @@ const useHookLogin = (setCustomLoading?: (val: boolean) => void) => {
     setCustomLoading(false)
     const dataLogin = resLogin?.data
     console.log("_hanldeLoginServer::", dataLogin)
+    const isNeedUpdatePhone = dataLogin?.isNeedUpdatePhone
     if (resLogin.data.accessToken) {
       if (resLogin.data.isNewUser || !resLogin.data?.isVerified) {
         api.apisauce.setHeader("access-token", resLogin.data.accessToken)
-        navigate("VerifyPhoneNumber")
+        navigate("VerifyPhoneNumber", { isNeedUpdatePhone })
       } else {
         api.apisauce.setHeader("access-token", dataLogin?.accessToken)
         save(KEYSTORAGE.LOGIN_DATA, dataLogin)
@@ -212,6 +223,34 @@ const useHookLogin = (setCustomLoading?: (val: boolean) => void) => {
     } else {
       showToastMessage(translate("common.oops_error"), EToastType.ERROR)
     }
+  }
+
+  const onLoginWithSMS = async () => {
+    const result = phoneNumber.replace(/^0+/, "")
+    const body = {
+      phone: countryCode + result,
+    }
+    const checkUserFi = await checkUserFirebase(body)
+    if (!checkUserFi.data) {
+      setError(true)
+      showToastMessage(translate("auth.verify_telephone_number_again"), EToastType.ERROR)
+    } else {
+      const confirmation = await auth().signInWithPhoneNumber(`${body.phone}`)
+
+      if (confirmation.verificationId) {
+        navigate("VerifyOTP", {
+          phone: body.phone,
+          otpMethod,
+          type: "LOGIN",
+          confirmation,
+        })
+      } else {
+        setError(true)
+        showToastMessage(translate("auth.verify_telephone_number_again"), EToastType.ERROR)
+      }
+      console.log("confirmation::", confirmation.verificationId)
+    }
+    setLoading(false)
   }
   return {
     indexTab,
