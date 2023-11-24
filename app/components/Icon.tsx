@@ -173,6 +173,8 @@ export const iconRegistry = {
   take_photo: require("./icons/take_photo.png"),
   view_more: require("./icons/view_more.png"),
   no_wifi: require("./icons/no_wifi.png"),
+  ic_asked: require("./icons/ic_asked.png"),
+  arrow_circle_right_bold: require("./icons/arrow-circle-right-bold.png"),
 }
 const $imageStyle: ImageStyle = {
   resizeMode: "contain",

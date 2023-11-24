@@ -106,6 +106,9 @@ export default function ItemUtilities() {
       case TYPE_FEATURES.KETQUA:
         navigate("SelectPatientHistory")
         break
+      case TYPE_FEATURES.HOIDAP:
+        navigate("CommunityFAQ")
+        break
 
       default:
         break

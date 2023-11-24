@@ -9,6 +9,7 @@ import IMAGES_PROFILE from "./images/profile"
 import IMAGES_CHAT from "./images/chat"
 import IMAGE_SEARCH from "./images/search"
 import IMAGE_ORDER from "./images/order"
+import IMAGE_FAQ from "./images/faq"
 
 const IMAGE = {
   ...AUTH_IMAGE,
@@ -22,5 +23,6 @@ const IMAGE = {
   ...IMAGES_CHAT,
   ...IMAGE_SEARCH,
   ...IMAGE_ORDER,
+  ...IMAGE_FAQ,
 }
 export default IMAGE

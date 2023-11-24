@@ -54,6 +54,11 @@ import { DetailConversation } from "@app/screens/Conversation/DetailConversation
 import { ChatWithSupport } from "@app/screens/Conversation/ChatWithSupport"
 import ChatProfile from "@app/screens/Conversation/ChatProfile"
 import SearchConversation from "@app/screens/Conversation/SearchConversation"
+import CommunityFAQ from "@app/screens/FAQ/CommunityFAQ"
+import ListQuestion from "@app/screens/FAQ/ListQuestion"
+import MyQuestion from "@app/screens/FAQ/MyQuestion"
+import SendQuestion from "@app/screens/FAQ/SendQuestion"
+import DetailQuestion from "@app/screens/FAQ/DetailQuestion"
 
 export type AppStackParamList = {
   TabNavigator: undefined
@@ -111,6 +116,13 @@ export type AppStackParamList = {
   ChatWithSupport: undefined
   ChatProfile: undefined
   SearchConversation: undefined
+
+  CommunityFAQ: undefined
+
+  ListQuestion: undefined
+  MyQuestion: undefined
+  SendQuestion: undefined
+  DetailQuestion: undefined
   // 🔥 Your screens go here
   // IGNITE_GENERATOR_ANCHOR_APP_STACK_PARAM_LIST
 }
@@ -195,6 +207,12 @@ const AppStack = observer(function AppStack() {
       <Stack.Screen name="SelectLocation" component={SelectLocation} />
       <Stack.Screen name="Notification" component={Notification} />
       <Stack.Screen name="VerifyPhoneNumber" component={VerifyPhoneNumber} />
+
+      <Stack.Screen name="CommunityFAQ" component={CommunityFAQ} />
+      <Stack.Screen name="ListQuestion" component={ListQuestion} />
+      <Stack.Screen name="MyQuestion" component={MyQuestion} />
+      <Stack.Screen name="SendQuestion" component={SendQuestion} />
+      <Stack.Screen name="DetailQuestion" component={DetailQuestion} />
     </Stack.Navigator>
   )
 })

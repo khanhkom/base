@@ -1,11 +1,15 @@
 const colors = {
   primary: "#183E9F",
   primary_2: "#BAC5E2",
+  primary_3: "#A3B2D9",
+
   primary_8: "#183E9F",
+  primary_9: "#143485",
   primary_6: "#4665B2",
   primary_0: "#EDF0F7",
   black: "#000000",
   white: "#ffffff",
+  white10: "#ffffff10",
   backdrop: "rgba(0, 0, 0, .4)",
   white_1: "rgba(255, 255, 255, .1)",
   gray_5: "#ADB5BD",
@@ -35,5 +39,7 @@ const colors = {
 
   violet_0: "#F3F0FF",
   violet_8: "#6741D9",
+
+  indigo_0: "#EDF2FF",
 }
 export default colors
