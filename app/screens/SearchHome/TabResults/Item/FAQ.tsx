@@ -6,23 +6,40 @@ import { HEIGHT, WIDTH } from "@app/config/functions"
 import { spacing } from "@app/theme/spacing"
 import { Card, Divider, List } from "react-native-paper"
 import R from "@app/assets"
-const DATA_FAKE = [
-  {
-    title: "Các triệu chứng của sốt xuất huyết thường xảy ra ở trẻ sơ sinh",
-  },
-  {
-    title: "Các triệu chứng của sốt xuất huyết thường xảy ra ở trẻ sơ sinh",
-  },
-  {
-    title: "Các triệu chứng của sốt xuất huyết thường xảy ra ở trẻ sơ sinh",
-  },
-]
-export default function FAQ() {
+import { searchClient } from "@app/utils/algolia"
+import usCallApiAlgoliaByIndex from "./usCallApiAlgoliaByIndex"
+import ItemPlaceholder from "./ItemPlaceholder"
+import RefreshList from "@app/components/refresh-list"
+
+export default function FAQ({ keyword }) {
+  console.log("keyword::", keyword)
+  const {
+    listData,
+    onFooterRefresh,
+    onHeaderRefresh,
+    refreshState,
+    loading: loadingList,
+  } = usCallApiAlgoliaByIndex(keyword, "faqs")
+  if (loadingList) {
+    return (
+      <View>
+        <ItemPlaceholder />
+        <ItemPlaceholder />
+        <ItemPlaceholder />
+      </View>
+    )
+  }
   return (
     <View style={styles.container}>
-      <FlatList
-        data={DATA_FAKE}
-        renderItem={({ item, index }) => {
+      <RefreshList
+        data={listData}
+        contentContainerStyle={{ paddingBottom: HEIGHT(32) }}
+        loading={loadingList}
+        onFooterRefresh={onFooterRefresh}
+        onHeaderRefresh={onHeaderRefresh}
+        showsVerticalScrollIndicator={false}
+        refreshState={refreshState}
+        renderItem={(item, index) => {
           return (
             <Card mode="contained" style={styles.item}>
               <List.Item
@@ -34,7 +51,7 @@ export default function FAQ() {
                   return (
                     <View>
                       <Text size="ba" weight="medium" style={{ color: colors.gray_9 }}>
-                        {item.title}
+                        {item?.patientQuestion}
                       </Text>
                     </View>
                   )

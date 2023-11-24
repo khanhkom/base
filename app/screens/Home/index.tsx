@@ -64,7 +64,7 @@ export default function HomeScreen() {
           // 3. launch intent to navigate the user to the appropriate screen
           {
             text: translate("common.setting"),
-            onPress: async () => await notifee.openBatteryOptimizationSettings(),
+            onPress: async () => await notifee.openNotificationSettings(),
           },
           {
             text: translate("common.cancel"),

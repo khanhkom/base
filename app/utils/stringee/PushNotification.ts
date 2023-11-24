@@ -63,13 +63,13 @@ export async function onMessageReceived(message) {
     // console.log("channelId_channelId", channelId)
     KeepAwake.activate()
     const granted = await check(PERMISSIONS.ANDROID.READ_PHONE_NUMBERS)
-    await notifee.displayNotification({
-      title: "Notification Title",
-      body: "Main body content of the notification",
-      android: {
-        channelId,
-      },
-    })
+    // await notifee.displayNotification({
+    //   title: "Notification Title",
+    //   body: "Main body content of the notification",
+    //   android: {
+    //     channelId,
+    //   },
+    // })
 
     switch (callStatus) {
       case "started":

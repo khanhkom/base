@@ -44,6 +44,7 @@
       android:windowSoftInputMode="adjustPan"
       android:exported="true"
       android:showWhenLocked="true"
+      android:showOnLockScreen="true"
       android:turnScreenOn="true"
     >
       <intent-filter>
@@ -60,6 +61,7 @@
       android:excludeFromRecents="true"
       android:exported="true"
       android:showWhenLocked="true"
+      android:showOnLockScreen="true"
       android:turnScreenOn="true"
     />
     <activity
@@ -69,6 +71,7 @@
       android:excludeFromRecents="true"
       android:exported="true"
       android:showWhenLocked="true"
+      android:showOnLockScreen="true"
       android:turnScreenOn="true"
     />
     <service

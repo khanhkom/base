@@ -5,6 +5,9 @@ import colors from "@app/assets/colors"
 import ItemRecent from "./Item/ItemRecent"
 import ItemSuggest from "./Item/ItemSuggest"
 import TabResult from "./TabResults/TabResult"
+import { searchClient } from "@app/utils/algolia"
+import { useSearchBox, useInfiniteHits } from "react-instantsearch-core"
+
 const STATUS_SEARCH = {
   recent: 0,
   suggest: 1,
@@ -15,6 +18,7 @@ const STATUS_SEARCH = {
 export default function SearchHome() {
   const [keyword, setKeyword] = useState("")
   const [searchStatus, setSearchStatus] = useState(STATUS_SEARCH.recent)
+
   // const searchStatus = keyword === "" ? STATUS_SEARCH.recent : STATUS_SEARCH.suggest
   const hanldeChangeText = (text: string) => {
     setKeyword(text)
@@ -29,8 +33,8 @@ export default function SearchHome() {
     <View style={styles.container}>
       <Header keyword={keyword} setKeyword={hanldeChangeText} onSubmitSearch={onSubmitSearch} />
       {searchStatus === STATUS_SEARCH.recent && <ItemRecent />}
-      {searchStatus === STATUS_SEARCH.suggest && <ItemSuggest />}
-      {searchStatus === STATUS_SEARCH.result && <TabResult />}
+      {searchStatus === STATUS_SEARCH.suggest && <ItemSuggest keyword={keyword} />}
+      {searchStatus === STATUS_SEARCH.result && <TabResult keyword={keyword} />}
     </View>
   )
 }

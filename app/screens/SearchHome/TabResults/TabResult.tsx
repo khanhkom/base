@@ -25,20 +25,19 @@ const routesSearch = [
 ]
 
 // Create a function to render each scene based on its key
-const renderScene = SceneMap({
-  0: FAQ,
-  1: News,
-  2: Knowledge,
-  3: Doctor,
-  4: Facilities,
-  5: Drugstore,
-  6: Services,
-})
 
-export default function MyTabView() {
+export default function MyTabView({ keyword }) {
   const [index, setIndex] = React.useState(0)
   const [routes, setRoutes] = React.useState(routesSearch)
-
+  const renderScene = SceneMap({
+    0: () => <FAQ keyword={keyword} />,
+    1: News,
+    2: Knowledge,
+    3: Doctor,
+    4: Facilities,
+    5: Drugstore,
+    6: Services,
+  })
   // Render the TabView component with the necessary props
   return (
     <TabView
