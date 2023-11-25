@@ -174,6 +174,8 @@ export const iconRegistry = {
   view_more: require("./icons/view_more.png"),
   no_wifi: require("./icons/no_wifi.png"),
   ic_asked: require("./icons/ic_asked.png"),
+  clock: require("./icons/clock.png"),
+  close_circle: require("./icons/close-circle.png"),
   arrow_circle_right_bold: require("./icons/arrow-circle-right-bold.png"),
 }
 const $imageStyle: ImageStyle = {

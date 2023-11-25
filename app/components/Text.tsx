@@ -111,7 +111,7 @@ const $presets = {
 
   subheading: [$baseStyle, $sizeStyles.xl, $fontWeightStyles.medium] as StyleProp<TextStyle>,
 
-  formLabel: [$baseStyle, $fontWeightStyles.medium] as StyleProp<TextStyle>,
+  formLabel: [$baseStyle, $sizeStyles.ba, $fontWeightStyles.medium] as StyleProp<TextStyle>,
 
   formHelper: [$baseStyle, $sizeStyles.sm, $fontWeightStyles.normal] as StyleProp<TextStyle>,
 }

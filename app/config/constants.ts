@@ -22,9 +22,9 @@ export const LIST_ICON_BY_STATUS = [
   {
     title: "Đang khám",
     icon: "ic_status_booked",
-    color: colors.primary,
-    image: R.images.ic_confirm_status,
-    backgroundColor: colors.blue_0,
+    color: colors.white,
+    image: R.images.ic_examing,
+    backgroundColor: colors.red_5,
     status: STATUS_ORDER.examining,
   },
   {

@@ -41,5 +41,8 @@ const colors = {
   violet_8: "#6741D9",
 
   indigo_0: "#EDF2FF",
+
+  orange_0: "#FFF4E6",
+  orange_7: "#F76707",
 }
 export default colors

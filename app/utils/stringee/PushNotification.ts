@@ -73,7 +73,7 @@ export async function onMessageReceived(message) {
 
     switch (callStatus) {
       case "started":
-        console.log("started_started", isShowNotification)
+        console.log("isShowNotification_isShowNotification", isShowNotification)
         InCallManager.startRingtone("incallmanager_ringtone.mp3") // or _DEFAULT_ or system filename with extension
 
         if (granted !== RESULTS.GRANTED) {

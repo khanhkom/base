@@ -43,16 +43,15 @@ export default function FileAttachment({ listImage, setListImage }) {
   return (
     <View style={styles.container}>
       <Text preset="formLabel">{translate("common.file_attach")}</Text>
-      {listImage.length === 0 ? (
-        <Pressable onPress={onPickFile} style={styles.card}>
-          <View style={styles.boxIcon}>
-            <Icon icon="directbox_send" size={WIDTH(24)} color={colors.gray_5} />
-          </View>
-          <Text size="sm" weight="normal" style={{ color: colors.gray_7 }}>
-            {translate("booking.file_attach_desc")}
-          </Text>
-        </Pressable>
-      ) : (
+      <Pressable onPress={onPickFile} style={styles.card}>
+        <View style={styles.boxIcon}>
+          <Icon icon="directbox_send" size={WIDTH(24)} color={colors.gray_5} />
+        </View>
+        <Text size="sm" weight="normal" style={{ color: colors.gray_7 }}>
+          {translate("booking.file_attach_desc")}
+        </Text>
+      </Pressable>
+      {listImage.length > 0 && (
         <ScrollView horizontal>
           <View style={styles.wrapperImage}>
             {listImage.map((item, index) => {
@@ -65,18 +64,19 @@ export default function FileAttachment({ listImage, setListImage }) {
                       onDeleteImage(index)
                     }}
                   >
-                    <MaterialCommunityIcons
+                    {/* <MaterialCommunityIcons
                       name="close-circle-outline"
                       color={colors.gray_7}
                       size={WIDTH(20)}
-                    />
+                    /> */}
+                    <Icon icon="close_circle" size={WIDTH(24)} />
                   </Pressable>
                 </View>
               )
             })}
-            <Pressable onPress={onPickFile} style={styles.buttonUpload}>
+            {/* <Pressable onPress={onPickFile} style={styles.buttonUpload}>
               <IconButton icon="upload" iconColor={colors.gray_5} />
-            </Pressable>
+            </Pressable> */}
           </View>
         </ScrollView>
       )}
@@ -128,15 +128,15 @@ const styles = StyleSheet.create({
   },
   icClose: {
     position: "absolute",
-    right: WIDTH(spacing.sm),
-    top: HEIGHT(spacing.md),
+    right: WIDTH(6),
+    top: -HEIGHT(6),
   },
   image: {
     borderRadius: 8,
-    height: HEIGHT(140),
-    marginRight: WIDTH(spacing.xs),
+    height: HEIGHT(108),
+    marginRight: WIDTH(spacing.md),
     marginTop: WIDTH(spacing.xs),
-    width: WIDTH(109),
+    width: WIDTH(80),
   },
-  wrapperImage: { alignItems: "center", flexDirection: "row", marginBottom: HEIGHT(spacing.md) },
+  wrapperImage: { alignItems: "center", flexDirection: "row", marginVertical: HEIGHT(spacing.md) },
 })

@@ -9,6 +9,7 @@ import { spacing } from "@app/theme/spacing"
 import { TextField } from "@app/components/TextField"
 import FileAttachment from "./Item/FileAttachment"
 import PopupSuccess from "./Item/PopupSuccess"
+import { Text } from "@app/components/Text"
 
 interface IScreenParams {
   route: {
@@ -33,9 +34,16 @@ export default function SendQuestion({ route }: IScreenParams) {
           placeholder={"Nhập câu hỏi"}
           containerStyle={{ marginTop: HEIGHT(spacing.md) }}
         ></TextField>
-
+        <View style={styles.flexRow}>
+          <Text preset="formLabel">Mô tả</Text>
+          <Text size="sm" weight="normal" style={{ color: colors.gray_9 }}>
+            {desciption.length}
+            <Text size="sm" weight="normal" style={{ color: colors.gray_6 }}>
+              /1000
+            </Text>
+          </Text>
+        </View>
         <TextField
-          label={"Mô tả"}
           style={{ color: colors.gray_9, minHeight: HEIGHT(151) }}
           value={desciption}
           multiline
@@ -65,6 +73,11 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: colors.white,
     flex: 1,
+  },
+  flexRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginTop: HEIGHT(spacing.md),
   },
   buttonWrapper: {
     position: "absolute",

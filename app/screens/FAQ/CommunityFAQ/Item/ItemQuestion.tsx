@@ -6,10 +6,14 @@ import { Text } from "@app/components/Text"
 import { HEIGHT, WIDTH } from "@app/config/functions"
 import { spacing } from "@app/theme/spacing"
 import colors from "@app/assets/colors"
+import { navigate } from "@app/navigators/navigationUtilities"
 export default function ItemQuestion({ isAnswered }) {
   return (
     <Card mode="contained" style={styles.item}>
       <List.Item
+        onPress={() => {
+          navigate("DetailQuestion")
+        }}
         left={() => {
           return <Image source={R.images.ic_question} style={styles.icon} />
         }}
