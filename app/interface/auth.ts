@@ -7,3 +7,15 @@ export interface ISession {
   isVerified?: boolean
   isNeedUpdatePhone?: boolean
 }
+
+export interface IUser {
+  createdAt: string
+  fcmToken: string
+  isActive: boolean
+  phone: string
+  role: string
+  sessionToken: string
+  updatedAt: string
+  isVerified: boolean
+  id: string
+}

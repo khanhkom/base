@@ -52,7 +52,7 @@ export default function ItemExperience({
                   size="ba"
                   style={{ color: colors.gray_7, marginLeft: WIDTH(spacing.xs) }}
                 >
-                  {item?.timeRange ? `${item?.timeRange}: ${item?.description}` : item}
+                  • {item?.timeRange ? `${item?.timeRange}: ${item?.description}` : item}
                 </Text>
               )
           })}
@@ -69,7 +69,7 @@ export default function ItemExperience({
         </View>
       ) : (
         <Text weight="normal" size="ba" style={{ color: colors.gray_7 }}>
-          {data}
+          • {data}
         </Text>
       )}
     </View>

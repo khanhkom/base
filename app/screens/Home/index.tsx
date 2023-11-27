@@ -22,6 +22,7 @@ import { StringeeClient } from "stringee-react-native"
 import notifee, { AuthorizationStatus } from "@notifee/react-native"
 import { translate } from "@app/i18n/translate"
 import messaging from "@react-native-firebase/messaging"
+import { getMyProfile } from "@app/redux/actions"
 async function checkNotificationPermission() {
   const settings = await notifee.getNotificationSettings()
 
@@ -113,6 +114,7 @@ export default function HomeScreen() {
   useEffect(() => {
     dispatch(getStringeeToken())
     dispatch(getOrderHistory())
+    dispatch(getMyProfile())
   }, [])
   useEffect(() => {
     if (session?.access_token && session?.access_token !== "" && Platform.OS === "android") {

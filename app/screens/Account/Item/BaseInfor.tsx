@@ -6,7 +6,9 @@ import { Text } from "@app/components/Text"
 import colors from "@app/assets/colors"
 import R from "@app/assets"
 import { Card, Divider, List } from "react-native-paper"
+import { useSelector } from "@app/redux/reducers"
 export default function BaseInfor() {
+  const user = useSelector((state) => state.userReducers.user)
   return (
     <View style={styles.container}>
       <Image source={R.images.avatar_docter_rec} style={styles.doctorImage} resizeMode="contain" />
@@ -25,7 +27,7 @@ export default function BaseInfor() {
           right={() => {
             return (
               <Text size="ba" weight="normal" style={{ color: colors.gray_6 }}>
-                0123 456 789
+                {user?.phone}
               </Text>
             )
           }}

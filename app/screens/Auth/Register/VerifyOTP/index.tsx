@@ -184,10 +184,23 @@ export default function VerifyOTP({ route }: ScreenProps) {
         }
       }
     } catch (error) {
-      showToastMessage(translate("otp.incorrect_login_code"), EToastType.ERROR)
+      const errorCodePattern = /\[([^\]]+)\]/ // Regular expression to capture the error code within square brackets
+      const match = errorCodePattern.exec(error.message)
+      if (match) {
+        const errorCode = match[1]
+        console.log("Error code:", errorCode)
+        if (errorCode === "auth/session-expired") {
+          showToastMessage("Mã đã hết hạn vui lòng gửi mã mới!", EToastType.ERROR)
+        } else {
+          showToastMessage(translate("otp.incorrect_login_code"), EToastType.ERROR)
+        }
+      } else {
+        console.log("Error code not found")
+        showToastMessage(translate("otp.incorrect_login_code"), EToastType.ERROR)
+      }
+
       setError(true)
       setLoading(false)
-      console.warn("_checkCode", error)
     }
   }
   const reSendCode = async () => {

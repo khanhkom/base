@@ -59,6 +59,7 @@ import ListQuestion from "@app/screens/FAQ/ListQuestion"
 import MyQuestion from "@app/screens/FAQ/MyQuestion"
 import SendQuestion from "@app/screens/FAQ/SendQuestion"
 import DetailQuestion from "@app/screens/FAQ/DetailQuestion"
+import SearchFAQ from "@app/screens/FAQ/SearchFAQ"
 
 export type AppStackParamList = {
   TabNavigator: undefined
@@ -123,6 +124,7 @@ export type AppStackParamList = {
   MyQuestion: undefined
   SendQuestion: undefined
   DetailQuestion: undefined
+  SearchFAQ: undefined
   // 🔥 Your screens go here
   // IGNITE_GENERATOR_ANCHOR_APP_STACK_PARAM_LIST
 }
@@ -213,6 +215,7 @@ const AppStack = observer(function AppStack() {
       <Stack.Screen name="MyQuestion" component={MyQuestion} />
       <Stack.Screen name="SendQuestion" component={SendQuestion} />
       <Stack.Screen name="DetailQuestion" component={DetailQuestion} />
+      <Stack.Screen name="SearchFAQ" component={SearchFAQ} />
     </Stack.Navigator>
   )
 })

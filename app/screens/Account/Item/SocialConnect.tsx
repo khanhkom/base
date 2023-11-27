@@ -39,6 +39,7 @@ export default function SocialConnect({ setIndexSocial, setVisible }) {
         left={() => {
           return <Image source={R.images.ic_google} style={styles.logo} resizeMode="contain" />
         }}
+        style={{ paddingBottom: 0 }}
         onPress={() => {
           setIndexSocial(1)
           setVisible(true)

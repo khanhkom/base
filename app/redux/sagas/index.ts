@@ -5,6 +5,7 @@ import { watchFetchListPatient } from "./patient/watchFetchListPatient"
 import { watchFetchOrderHistory } from "./order/fetchOrderHistory"
 import { watchFetchOrderHistoryFilter } from "./order/fetchOrderHistoryFilter"
 import { watcFetchListSpecialListFilter } from "./doctor/fetchListSpecialList"
+import { watchFetchUserInfo } from "./users/getUserInfo"
 
 export default function* rootSaga() {
   yield all([
@@ -13,5 +14,6 @@ export default function* rootSaga() {
     fork(watchFetchOrderHistory),
     fork(watchFetchOrderHistoryFilter),
     fork(watcFetchListSpecialListFilter),
+    fork(watchFetchUserInfo),
   ])
 }

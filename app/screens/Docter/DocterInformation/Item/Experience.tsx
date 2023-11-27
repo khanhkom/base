@@ -37,6 +37,7 @@ export default function Experience({ data }: { data: IDocter }) {
     if (type === "introduce") return data?.introduce
     if (type === "briefcase") return data?.experience
     if (type === "award") return data?.education
+    // if (type === "department") return data?.specialist.map((item) => item.value)
     if (type === "department") return data?.specialist.map((item) => item.value)
   }
   return (

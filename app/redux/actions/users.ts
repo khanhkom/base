@@ -22,7 +22,7 @@ export function userLogin(data: unknown) {
 
 export function getMyProfile() {
   return {
-    type: "GET_USER_INFOR_REQUEST",
+    type: "FETCH_USER_INFO_REQUEST",
   }
 }
 export function updateUserField(data) {

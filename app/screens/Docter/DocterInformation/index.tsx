@@ -14,6 +14,7 @@ import { getDetailDocter } from "@app/services/api/functions/docter"
 import { useDispatch } from "react-redux"
 import { updateDocterCreateOrder } from "@app/redux/actions/actionOrder"
 import { translate } from "@app/i18n/translate"
+import LoadingScreen from "@app/components/loading/LoadingScreen"
 interface IScreenProps {
   route: {
     params: {
@@ -25,12 +26,11 @@ interface IScreenProps {
 export default function DocterInformation({ route }: IScreenProps) {
   const [loading, setLoading] = useState(false)
   const [detailDocter, setDetailDocter] = useState<IDocter>()
-  const doctorId = route.params?.item?.id
   const userId = route.params?.item?.userId
-  console.log("detailDocter_detailDocter", detailDocter)
   const loadDetailDocter = async () => {
     setLoading(true)
-    let resDetail = await getDetailDocter(doctorId)
+    let resDetail = await getDetailDocter(userId)
+    console.log("resDetail_resDetail", resDetail)
     setDetailDocter(resDetail.data)
     setLoading(false)
   }
@@ -38,6 +38,7 @@ export default function DocterInformation({ route }: IScreenProps) {
     loadDetailDocter()
   }, [])
   const dispatch = useDispatch()
+  if (loading) return <LoadingScreen />
   return (
     <Screen
       safeAreaEdges={Platform.OS === "android" ? ["bottom"] : []}

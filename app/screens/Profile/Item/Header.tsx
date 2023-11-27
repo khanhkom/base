@@ -6,9 +6,11 @@ import { Text } from "@app/components/Text"
 import colors from "@app/assets/colors"
 import R from "@app/assets"
 import { useSafeAreaInsetsStyle } from "@app/utils/useSafeAreaInsetsStyle"
+import { useSelector } from "@app/redux/reducers"
 export default function Header() {
   const $containerInsets = useSafeAreaInsetsStyle(["top"])
-
+  const user = useSelector((state) => state.userReducers.user)
+  console.log("user::", user)
   return (
     <View style={[styles.container, $containerInsets]}>
       <Image source={R.images.background_profile} style={styles.backgroundImage} />
@@ -25,7 +27,7 @@ export default function Header() {
         weight="normal"
         style={{ color: colors.white, marginBottom: HEIGHT(spacing.xxs) }}
       >
-        0123 456 789
+        {user?.phone}
       </Text>
     </View>
   )

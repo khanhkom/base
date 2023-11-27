@@ -121,3 +121,9 @@ export const updatePhoneSocial = (body: { phone: string; idtoken: string }) =>
     .put(URL.UPDATE_PHONE_SOCIAL, body)
     .then((res) => res)
     .catch((err) => err)
+
+export const getUserInformation = () =>
+  api.apisauce
+    .get(URL.GET_USER_INFO)
+    .then((res) => res)
+    .catch((err) => err)

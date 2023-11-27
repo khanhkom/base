@@ -1,14 +1,14 @@
 const defaultState = {
   user: {
-    name: "",
-    gender: "",
-    birthday: "",
-    mail: "",
-    province: "",
-    city: "",
-    ward: "",
-    address: "",
+    createdAt: "",
+    fcmToken: "",
+    isActive: false,
     phone: "",
+    role: "",
+    sessionToken: "",
+    updatedAt: "",
+    isVerified: false,
+    id: "",
   },
 }
 export default (state = defaultState, action) => {
@@ -18,6 +18,12 @@ export default (state = defaultState, action) => {
         ...state,
         user: action.data,
       }
+    case "FETCH_USER_INFO_SUCCESS":
+      return {
+        ...state,
+        user: action.payload,
+      }
+
     case "UPDATE_USER_FIELD":
       return {
         ...state,

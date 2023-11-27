@@ -11,7 +11,6 @@ import { navigate } from "@app/navigators/navigationUtilities"
 const limit = 10
 
 export default function Home() {
-  const user = useSelector((state) => state.userReducers)
   const [searchQuery, setSearchQuery] = React.useState("")
   const [loading, setLoading] = useState<boolean>(true)
   const indexSearch = searchClient.initIndex("y_khoa")

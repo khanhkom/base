@@ -7,6 +7,7 @@ import R from "@app/assets"
 import { Icon } from "@app/components/Icon"
 import { spacing } from "@app/theme/spacing"
 import { Text } from "@app/components/Text"
+import { navigate } from "@app/navigators/navigationUtilities"
 interface ItemProps {
   onPressFilter: () => void
   value?: string
@@ -21,17 +22,25 @@ export default function SearchFilter({ onPressFilter, onChangeText, value }: Ite
 
   return (
     <View style={styles.container}>
-      <Searchbar
-        onLayout={onLayout}
-        icon={R.images.search_normal}
-        iconColor={colors.primary_3}
-        style={[styles.searchContainer, { width: WIDTH(243) }]}
-        value={value}
-        placeholder={"Tìm vấn đề của bạn"}
-        placeholderTextColor={colors.primary_3}
-        onChangeText={onChangeText}
-        clearIcon={"close"}
-      />
+      <Pressable
+        onPress={() => {
+          navigate("SearchFAQ")
+        }}
+      >
+        <Searchbar
+          onLayout={onLayout}
+          icon={R.images.search_normal}
+          iconColor={colors.primary_3}
+          style={[styles.searchContainer, { width: WIDTH(243) }]}
+          inputStyle={{ color: colors.white }}
+          value={value}
+          placeholder={"Tìm vấn đề của bạn"}
+          placeholderTextColor={colors.primary_3}
+          onChangeText={onChangeText}
+          clearIcon={"close"}
+          editable={false}
+        />
+      </Pressable>
       <Pressable
         style={[
           styles.buttonFilter,
@@ -67,6 +76,7 @@ const styles = StyleSheet.create({
     width: WIDTH(287),
     borderRadius: WIDTH(8),
     backgroundColor: colors.white10,
+    color: colors.white,
   },
   buttonFilter: {
     borderRadius: WIDTH(8),
