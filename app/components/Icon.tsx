@@ -177,6 +177,9 @@ export const iconRegistry = {
   clock: require("./icons/clock.png"),
   close_circle: require("./icons/close-circle.png"),
   arrow_circle_right_bold: require("./icons/arrow-circle-right-bold.png"),
+  heart_comment: require("./icons/heart_comment.png"),
+  heart_active: require("./icons/heart_active.png"),
+  comment: require("./icons/comment.png"),
 }
 const $imageStyle: ImageStyle = {
   resizeMode: "contain",

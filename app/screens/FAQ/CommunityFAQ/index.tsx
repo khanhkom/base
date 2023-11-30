@@ -10,6 +10,7 @@ import { Button } from "react-native-paper"
 import { HEIGHT, WIDTH, getWidth } from "@app/config/functions"
 import { spacing } from "@app/theme/spacing"
 import { navigate } from "@app/navigators/navigationUtilities"
+import ItemFrequently from "./Item/ItemFrequently"
 
 interface ScreenProps {
   route: {
@@ -37,6 +38,7 @@ export default function CommunityFAQ({ route }: ScreenProps) {
           navigate("MyQuestion")
         }}
       />
+      <ItemFrequently />
       <LastQuestion />
       <ItemSpecialList />
       <View style={styles.buttonWrapper}>

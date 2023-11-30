@@ -199,7 +199,7 @@ export function Header(props: HeaderProps) {
             pointerEvents="none"
           >
             <Text
-              weight="medium"
+              weight="semiBold"
               size="md"
               text={titleContent}
               style={[$title, $titleStyleOverride]}

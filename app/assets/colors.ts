@@ -44,5 +44,6 @@ const colors = {
 
   orange_0: "#FFF4E6",
   orange_7: "#F76707",
+  orange_6: "#FD7E14",
 }
 export default colors
