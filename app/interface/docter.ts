@@ -35,6 +35,7 @@ interface Education {
 export interface ISpecialList {
   name: string
   code: string
+  value?: string
 }
 export interface IDoctorCalendar {
   timeRange: {

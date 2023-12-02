@@ -57,6 +57,15 @@ const RATING = {
   GET_RATING_BY_ORDER: "rating/order/",
   GET_RATING_BY_DOCTOR: "rating",
 }
+
+const QUESTION = {
+  CREATE_QUESTION: "questions",
+  GET_QUESTION: "questions",
+  GET_QUESTION_BY_ID: "questions/",
+  CREATE_COMMENT: "questions/",
+  DELETE_COMMENT: "questions/",
+  MOST_SPECIAL_LIST_QUESTION: "questions/mostSpecialist",
+}
 const NOTIFICATION = {
   GET_NOTIFICATION: "notification",
 }
@@ -69,6 +78,7 @@ const URL = {
   ...URL_RESULT,
   ...RATING,
   ...NOTIFICATION,
+  ...QUESTION,
   LOGIN: `account/login`,
   CREATE_SESSION: "session/createSession",
   REFRESH_SESSION: "session/refreshSession",

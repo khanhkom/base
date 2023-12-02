@@ -1,23 +1,44 @@
-import { Image, ScrollView, StyleSheet, Text, View } from "react-native"
-import React from "react"
+import { Image, Pressable, ScrollView, StyleSheet, Text, View } from "react-native"
+import React, { useState } from "react"
 import { HEIGHT, WIDTH } from "@app/config/functions"
 import { spacing } from "@app/theme/spacing"
+import ImageView from "react-native-image-viewing"
 
-export default function FileAttachment() {
+export default function FileAttachment({ data }: { data: string[] }) {
+  const [visible, setIsVisible] = useState(false)
+  const [imageIndex, setImageIndex] = useState(0)
+
   return (
-    <ScrollView horizontal>
-      {[1, 2, 3, 4, 5].map((item, index) => {
-        return (
-          <Image
-            source={{
-              uri: "https://hips.hearstapps.com/hmg-prod/images/portrait-of-a-happy-young-doctor-in-his-clinic-royalty-free-image-1661432441.jpg?crop=0.66698xw:1xh;center,top&resize=1200:*",
-            }}
-            style={styles.image}
-            key={index}
-          />
-        )
-      })}
-    </ScrollView>
+    <View>
+      <ScrollView horizontal>
+        {data.map((item, index) => {
+          return (
+            <Pressable
+              onPress={() => {
+                setImageIndex(index)
+                setIsVisible(true)
+              }}
+              key={index}
+            >
+              <Image
+                source={{
+                  uri: item,
+                }}
+                style={styles.image}
+              />
+            </Pressable>
+          )
+        })}
+      </ScrollView>
+      <ImageView
+        images={data?.map((item) => {
+          return { uri: item }
+        })}
+        imageIndex={imageIndex}
+        visible={visible}
+        onRequestClose={() => setIsVisible(false)}
+      />
+    </View>
   )
 }
 

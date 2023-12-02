@@ -1,5 +1,5 @@
 import { Image, Pressable, StyleSheet, View } from "react-native"
-import React from "react"
+import React, { useEffect, useState } from "react"
 import { List } from "react-native-paper"
 import { Text } from "@app/components/Text"
 import colors from "@app/assets/colors"
@@ -7,7 +7,23 @@ import R from "@app/assets"
 import { HEIGHT, WIDTH } from "@app/config/functions"
 import { spacing } from "@app/theme/spacing"
 import { navigate } from "@app/navigators/navigationUtilities"
+import { getListQuestionSpecialList } from "@app/services/api/functions/question"
+import { useSelector } from "@app/redux/reducers"
 export default function ItemSpecialList() {
+  const [specialListMost, setSpecialListMode] = useState([])
+  const user = useSelector((state) => state.userReducers.user)
+  const specialist = useSelector((state) => state.orderReducers.specialist)
+  console.log("user_user", specialist)
+  const [loading, setLoading] = useState(true)
+  useEffect(() => {
+    async function getMost() {
+      setLoading(true)
+      const specialList = await getListQuestionSpecialList()
+      console.log("specialList::", specialList?.data)
+      setLoading(false)
+    }
+    getMost()
+  }, [])
   return (
     <View style={styles.container}>
       <List.Item

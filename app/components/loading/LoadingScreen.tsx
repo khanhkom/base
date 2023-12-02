@@ -4,11 +4,14 @@ import colors from "@app/assets/colors"
 import { Header } from "@app/components/index"
 import { HEIGHT } from "@app/config/functions"
 import { spacing } from "@app/theme/spacing"
+import ItemPlaceholderCommon from "../placeholder/ItemCalendar"
 export default function LoadingScreen() {
   return (
     <View style={styles.container}>
       <Header leftIcon="arrow_left" title="" backgroundColor={colors.gray_1} />
-      <ActivityIndicator size="small" color={colors.gray_6} style={styles.item} />
+      <ItemPlaceholderCommon />
+      <ItemPlaceholderCommon />
+      <ItemPlaceholderCommon />
     </View>
   )
 }

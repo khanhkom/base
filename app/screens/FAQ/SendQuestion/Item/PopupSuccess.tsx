@@ -6,6 +6,7 @@ import colors from "@app/assets/colors"
 import { spacing } from "@app/theme/spacing"
 import R from "@app/assets"
 import { Text } from "@app/components/Text"
+import { goBack } from "@app/navigators/navigationUtilities"
 interface ItemProps {
   visible: boolean
   setVisible: (val: boolean) => void
@@ -29,7 +30,14 @@ export default function PopupSuccess({ visible, setVisible, desc, title }: ItemP
         {desc}
       </Text>
       <View style={styles.bottomView}>
-        <Button onPress={hideModal} mode="contained" style={styles.buttonRight}>
+        <Button
+          onPress={() => {
+            hideModal()
+            goBack()
+          }}
+          mode="contained"
+          style={styles.buttonRight}
+        >
           {"Đóng"}
         </Button>
       </View>

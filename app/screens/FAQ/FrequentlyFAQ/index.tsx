@@ -4,49 +4,34 @@ import { Header } from "@app/components/index"
 import colors from "@app/assets/colors"
 import SearchFilter from "@app/components/SearchFilter"
 import ModalFilter from "./Item/ModalFilter"
-import { getListDocter } from "@app/services/api/functions/docter"
 import { useDispatch } from "react-redux"
-import { translate } from "@app/i18n/translate"
 import ItemQuestion from "./Item/ItemQuestion"
 import { getListSpecialListRequest } from "@app/redux/actions/actionDoctor"
+import usCallApiAlgoliaByIndex from "@app/screens/SearchHome/TabResults/Item/usCallApiAlgoliaByIndex"
 
 export default function FrequentlyFAQ() {
-  const [listDocters, setListDocters] = useState([])
   const filterData = useRef({
     specialist: "",
-    gender: "",
-    sortByRatings: 0,
   })
   const dispatch = useDispatch()
-  const [loading, setLoading] = useState(false)
   const [isFiltered, setFiltered] = useState(false)
   const [keyword, setKeyword] = useState("")
   // eslint-disable-next-line camelcase
   const refModal = useRef(null)
+  const {
+    listData,
+    onFooterRefresh,
+    onHeaderRefresh,
+    refreshState,
+    loading: loadingList,
+  } = usCallApiAlgoliaByIndex(keyword, "faqs")
 
-  const getListDoctersAPI = async (params) => {
-    setLoading(true)
-    const resDocters = await getListDocter(params)
-    setLoading(false)
-    setListDocters(resDocters?.data?.items)
-  }
-  let timerId
+  console.log("listData_listData::", listData)
 
   useEffect(() => {
     dispatch(getListSpecialListRequest())
   }, [])
-  useEffect(() => {
-    bounceToSearch()
-  }, [keyword])
 
-  function bounceToSearch() {
-    clearTimeout(timerId)
-
-    timerId = setTimeout(() => {
-      // Code to trigger the search
-      onApplyFilter(filterData.current)
-    }, 300)
-  }
   const onApplyFilter = (dataFilter) => {
     filterData.current = dataFilter
     const params = {
@@ -54,31 +39,17 @@ export default function FrequentlyFAQ() {
       page: 1,
       perPage: 20,
     }
-    if (
-      dataFilter?.gender !== "" ||
-      dataFilter?.specialist !== "" ||
-      dataFilter?.sortByRatings !== 0
-    ) {
+    if (dataFilter?.specialist !== "") {
       setFiltered(true)
     } else {
       setFiltered(false)
     }
-    if (filterData.current?.gender !== "") {
-      Object.assign(params, {
-        gender: filterData.current?.gender,
-      })
-    }
+
     if (filterData.current?.specialist !== "") {
       Object.assign(params, {
         specialist: filterData.current?.specialist,
       })
     }
-    if (filterData.current?.sortByRatings !== 0) {
-      Object.assign(params, {
-        sortByRatings: filterData.current?.sortByRatings,
-      })
-    }
-    getListDoctersAPI(params)
   }
 
   return (

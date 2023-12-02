@@ -7,8 +7,11 @@ import { Icon } from "@app/components/Icon"
 import { Text } from "@app/components/Text"
 import colors from "@app/assets/colors"
 import { Divider } from "react-native-paper"
-
-export default function ItemAction() {
+interface ItemProps {
+  like: number
+  comment: number
+}
+export default function ItemAction({ like, comment }: ItemProps) {
   return (
     <View style={styles.container}>
       <Divider />
@@ -20,7 +23,7 @@ export default function ItemAction() {
             weight="normal"
             style={{ color: colors.gray_7, marginLeft: WIDTH(spacing.xs) }}
           >
-            120 lượt thích
+            {like} lượt thích
           </Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.button}>
@@ -30,7 +33,7 @@ export default function ItemAction() {
             weight="normal"
             style={{ color: colors.gray_7, marginLeft: WIDTH(spacing.xs) }}
           >
-            120 thảo luận
+            {comment} thảo luận
           </Text>
         </TouchableOpacity>
       </View>

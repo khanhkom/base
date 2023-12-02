@@ -1,4 +1,4 @@
-import { StyleSheet, View, Image, ScrollView } from "react-native"
+import { StyleSheet, View, Image, ScrollView, Platform } from "react-native"
 import React, { useState } from "react"
 import { Header } from "@app/components/Header"
 import colors from "@app/assets/colors"
@@ -10,6 +10,9 @@ import { TextField } from "@app/components/TextField"
 import FileAttachment from "./Item/FileAttachment"
 import PopupSuccess from "./Item/PopupSuccess"
 import { Text } from "@app/components/Text"
+import { EToastType, showToastMessage } from "@app/utils/library"
+import { createQuestion } from "@app/services/api/functions/question"
+import { LoadingOpacity } from "@app/components/loading/LoadingOpacity"
 
 interface IScreenParams {
   route: {
@@ -18,9 +21,39 @@ interface IScreenParams {
 }
 export default function SendQuestion({ route }: IScreenParams) {
   const [question, setQuestion] = useState("")
+  const [loading, setLoading] = useState(false)
   const [listImage, setListImage] = useState([])
   const [desciption, setDesciption] = useState("")
   const [visible, setVisible] = React.useState(false)
+  const onSendQuestion = async () => {
+    if (question.trim() === "") {
+      showToastMessage("Vui lòng nhập câu hỏi!", EToastType.ERROR)
+    } else if (desciption.trim() === "") {
+      showToastMessage("Vui lòng nhập mô tả!", EToastType.ERROR)
+    } else {
+      const formData = new FormData()
+      formData.append("title", question)
+      formData.append("content", desciption)
+
+      listImage.map((item) => {
+        const bodyImage = {
+          name: item.fileName || item.uri,
+          type: item.type,
+          uri: Platform.OS === "ios" ? item.uri.replace("file://", "") : item.uri,
+        }
+        formData.append("patientFiles", bodyImage)
+      })
+      setLoading(true)
+      const questionCreate = await createQuestion(formData)
+      if (questionCreate?.status === 201) {
+        setVisible(true)
+      } else {
+        showToastMessage("Có lỗi xảy ra vui lòng thử lại!", EToastType.ERROR)
+      }
+      console.log("questionCreate::", questionCreate?.status, questionCreate?.data)
+      setLoading(false)
+    }
+  }
   return (
     <View style={styles.container}>
       <Header leftIcon="arrow_left" title={"Đặt câu hỏi"} backgroundColor={colors.white} />
@@ -55,10 +88,11 @@ export default function SendQuestion({ route }: IScreenParams) {
         <View style={{ height: HEIGHT(120) }} />
       </ScrollView>
       <View style={styles.buttonWrapper}>
-        <Button mode="contained" style={styles.button} onPress={() => {}}>
+        <Button loading={loading} mode="contained" style={styles.button} onPress={onSendQuestion}>
           Đặt câu hỏi
         </Button>
       </View>
+      {loading && <LoadingOpacity />}
       <PopupSuccess
         visible={visible}
         setVisible={setVisible}

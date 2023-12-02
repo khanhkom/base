@@ -1,4 +1,4 @@
-import { StyleSheet, View, Image, FlatList } from "react-native"
+import { StyleSheet, View, Image, FlatList, Pressable, Alert } from "react-native"
 import React from "react"
 import { HEIGHT, WIDTH } from "@app/config/functions"
 import { spacing } from "@app/theme/spacing"
@@ -7,37 +7,75 @@ import { Text } from "@app/components/Text"
 import R from "@app/assets"
 import { Icon } from "@app/components/Icon"
 import ItemReply from "./ItemReply"
-export default function ItemComment({ item }) {
+import { ICommentData } from "@app/interface/question"
+import AvatarDefault from "@app/components/avatar-default"
+import { useSelector } from "@app/redux/reducers"
+export default function ItemComment({
+  item,
+  onReply,
+  onDeleteComment,
+}: {
+  item: ICommentData
+  onReply: (comment: ICommentData) => void
+  onDeleteComment: (commentId: string) => void
+}) {
+  const hasAvatar = item?.avatarUrl && item?.avatarUrl !== ""
+  const titleName = item?.role === "patient" ? "B.n" : "B.s"
+  const user = useSelector((state) => state.userReducers.user)
+  const isOwner = user?.id === item?.userId
+  const onDeleteHandle = () => {
+    Alert.alert("Xóa comment", "Bạn muốn xóa comment?", [
+      {
+        text: "Hủy",
+        onPress: () => console.log("Cancel Pressed"),
+        style: "cancel",
+      },
+      { text: "Xóa", onPress: () => onDeleteComment(item._id) },
+    ])
+  }
   return (
     <View style={styles.container}>
-      <View style={styles.item}>
-        <Image source={R.images.avatar_docter} style={styles.avatar} />
+      <Pressable disabled={!isOwner} style={styles.item} onLongPress={onDeleteHandle}>
+        {hasAvatar ? (
+          <Image source={{ uri: item?.avatarUrl }} style={styles.avatar} />
+        ) : (
+          <AvatarDefault name={item.userName} size="medium" style={styles.avatar} />
+        )}
         <View style={styles.boxComment}>
           <Text size="ba" weight="medium" style={{ color: colors.gray_9 }}>
-            B.s Nguyễn văn A
+            {titleName} {item?.userName}
           </Text>
           <Text size="ba" weight="normal" style={{ color: colors.gray_7 }}>
-            Lorem Ipsum is simply dummy text of the printing and typesetting industry
+            {item?.content}
           </Text>
-          {item?.image && <Image source={R.images.avatar_docter} style={styles.image} />}
+          {item?.avatarUrl && item?.avatarUrl !== "" && (
+            <Image source={R.images.avatar_docter} style={styles.image} />
+          )}
         </View>
-      </View>
+      </Pressable>
       <View style={styles.bottomView}>
-        <Text size="ba" weight="normal" style={{ color: colors.primary, marginRight: WIDTH(32) }}>
+        <Text
+          size="ba"
+          weight="normal"
+          onPress={() => {
+            onReply(item)
+          }}
+          style={{ color: colors.primary, marginRight: WIDTH(32) }}
+        >
           Trả lời
         </Text>
         <View style={styles.heart}>
           <Text size="ba" weight="normal" style={{ color: colors.gray_7, marginRight: WIDTH(4) }}>
-            120
+            {item?.likes?.length > 0 ? item?.likes?.length : ""}
           </Text>
           <Icon icon="heart_comment" size={WIDTH(16)} />
         </View>
       </View>
-      {item?.reply && (
+      {item?.replies?.length > 0 && (
         <FlatList
-          data={item?.reply}
+          data={item?.replies}
           renderItem={({ item, index }) => {
-            return <ItemReply />
+            return <ItemReply item={item} />
           }}
         />
       )}

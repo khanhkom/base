@@ -23,7 +23,7 @@ export default function SelectSpecialist({ route }: ScreenProps) {
   const dispatch = useDispatch()
   const specialList = useSelector((state) => state.doctorReducers.listSpecialList)
   const loading = useSelector((state) => state.doctorReducers.loading)
-
+  console.log("specialList::", specialList)
   useEffect(() => {
     dispatch(getListSpecialListRequest())
   }, [])

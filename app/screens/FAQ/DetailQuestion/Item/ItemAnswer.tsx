@@ -1,12 +1,14 @@
 import { StyleSheet, View, Image } from "react-native"
-import React from "react"
+import React, { memo } from "react"
 import { Text } from "@app/components/Text"
 import colors from "@app/assets/colors"
 import { HEIGHT, WIDTH } from "@app/config/functions"
 import { spacing } from "@app/theme/spacing"
 import { List } from "react-native-paper"
 import R from "@app/assets"
-export default function ItemAnswer() {
+import { IQuestion } from "@app/interface/question"
+import FileAttachment from "./FileAttachment"
+const ItemAnswer = ({ item }: { item: IQuestion }) => {
   return (
     <View style={styles.container}>
       <View style={styles.card}>
@@ -19,44 +21,48 @@ export default function ItemAnswer() {
             return (
               <View>
                 <Text size="md" weight="medium" style={{ color: colors.white }}>
-                  B.s Nguyễn Văn A
+                  B.s {item?.doctorName}
                 </Text>
                 <Text size="sm" weight="normal" style={{ color: colors.primary_3 }}>
-                  Khoa: Tai - Mũi - Họng
+                  Khoa: {item?.doctorSpecialist?.[0]?.value}
                 </Text>
               </View>
             )
           }}
           left={() => {
-            return <Image source={R.images.avatar_docter} style={styles.avatar} />
+            return (
+              <Image
+                source={
+                  item?.doctorAvatarUrl ? { uri: item?.doctorAvatarUrl } : R.images.avatar_docter
+                }
+                style={styles.avatar}
+              />
+            )
           }}
         />
         <Image source={R.images.background_item} style={styles.background} />
       </View>
       <View style={styles.content}>
         <Text size="ba" weight="normal" style={{ color: colors.gray_9 }}>
-          Lorem Ipsum is simply dummy text of the printing and typesetting industry
+          {item?.answer}
         </Text>
-        <Text size="ba" weight="normal" style={{ color: colors.gray_9 }}>
+        {/* <Text size="ba" weight="normal" style={{ color: colors.gray_9 }}>
           Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an
           unknown printer took a galley of type and scrambled it to make a type specimen book.
-        </Text>
+        </Text> */}
+        <FileAttachment data={item?.doctorFiles ?? []} />
       </View>
     </View>
   )
 }
-
+export default memo(ItemAnswer)
 const styles = StyleSheet.create({
   container: {
     backgroundColor: colors.white,
-    marginHorizontal: WIDTH(spacing.md),
-    borderRadius: 12,
     marginTop: HEIGHT(spacing.sm),
   },
   card: {
     backgroundColor: colors.primary_8,
-    borderTopLeftRadius: 12,
-    borderTopRightRadius: 12,
     paddingHorizontal: WIDTH(spacing.sm),
     paddingVertical: HEIGHT(spacing.sm),
   },

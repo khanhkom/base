@@ -1,10 +1,14 @@
-import { StyleSheet, View, Image } from "react-native"
-import React, { useState } from "react"
+import { StyleSheet, View, FlatList } from "react-native"
+import React, { useEffect, useState } from "react"
 import { Header } from "@app/components/Header"
 import colors from "@app/assets/colors"
 import { translate } from "@app/i18n/translate"
-import { FlatList } from "react-native-gesture-handler"
-import ItemQuestion from "../CommunityFAQ/Item/ItemQuestion"
+import LoadingScreen from "@app/components/loading/LoadingScreen"
+import { useCallApiMyQuestion } from "./useCallApiMyQuestion"
+import ItemEmpty from "@app/components/ItemEmpty"
+import { RefreshState } from "@app/components/refresh-list"
+import { HEIGHT } from "@app/config/functions"
+import ItemQuestion from "./ItemQuestion"
 
 interface IScreenParams {
   route: {
@@ -12,14 +16,27 @@ interface IScreenParams {
   }
 }
 export default function MyQuestion({ route }: IScreenParams) {
+  const { refreshState, listData, loading, onHeaderRefresh, onFooterRefresh } =
+    useCallApiMyQuestion()
+  if (loading) {
+    return <LoadingScreen />
+  }
   return (
     <View style={styles.container}>
       <Header leftIcon="arrow_left" title={"Câu hỏi của tôi"} backgroundColor={colors.gray_1} />
       <FlatList
-        data={[1, 2, 3, 4]}
+        data={listData}
         renderItem={({ item, index }) => {
-          return <ItemQuestion isAnswered={true} />
+          return <ItemQuestion item={item} />
         }}
+        ListFooterComponent={<View style={{ height: HEIGHT(32) }} />}
+        ListEmptyComponent={() => {
+          return <ItemEmpty title={translate("doctor.rating.empty")} />
+        }}
+        onRefresh={onHeaderRefresh}
+        onMomentumScrollEnd={onFooterRefresh}
+        keyExtractor={(item, index) => String(index)}
+        refreshing={refreshState === RefreshState.HeaderRefreshing}
       />
     </View>
   )

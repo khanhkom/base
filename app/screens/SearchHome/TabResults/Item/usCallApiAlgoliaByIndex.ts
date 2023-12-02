@@ -20,7 +20,7 @@ const limit = 10
 const usCallApiAlgoliaByIndex = (keyword: string, indexName: string) => {
   const indexSearch = searchClient.initIndex(indexName)
 
-  const [listData, setListData] = useState<Array<QuestionAnswer>>([])
+  const [listData, setListData] = useState<Array<QuestionAnswer[]>>([])
   const [refreshState, setRefreshState] = useState<number>(RefreshState.Idle)
   const [pageList, setPageList] = useState<number>(0)
   const [pagingRes, setPagingRes] = useState<IReponseData>({})
@@ -47,8 +47,8 @@ const usCallApiAlgoliaByIndex = (keyword: string, indexName: string) => {
       if (response?.hits) {
         setLoading(false)
         const data = response?.hits
-        var dataListRes: IDish[] = data || []
-        var dataListOld: IDish[] = listData ?? []
+        var dataListRes: QuestionAnswer[] = data || []
+        var dataListOld: QuestionAnswer[] = listData ?? []
         if (isLoadMore) {
           dataListOld = dataListOld.concat(dataListRes)
         } else dataListOld = dataListRes

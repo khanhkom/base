@@ -6,24 +6,32 @@ import colors from "@app/assets/colors"
 import { Text } from "@app/components/Text"
 import R from "@app/assets"
 import { Icon } from "@app/components/Icon"
-export default function ItemComment() {
+import { IReplyComment } from "@app/interface/question"
+import AvatarDefault from "@app/components/avatar-default"
+export default function ItemComment({ item }: { item: IReplyComment }) {
+  const hasAvatar = item?.avatarUrl && item?.avatarUrl !== ""
+  const titleName = item?.role === "patient" ? "B.n" : "B.s"
   return (
     <View style={styles.container}>
       <View style={styles.item}>
-        <Image source={R.images.avatar_docter} style={styles.avatar} />
+        {hasAvatar ? (
+          <Image source={{ uri: item?.avatarUrl }} style={styles.avatar} />
+        ) : (
+          <AvatarDefault name={item?.userName} size="medium" style={styles.avatar} />
+        )}
         <View style={styles.boxComment}>
           <Text size="ba" weight="medium" style={{ color: colors.gray_9 }}>
-            B.s Nguyễn văn A
+            {titleName} {item?.userName}
           </Text>
           <Text size="ba" weight="normal" style={{ color: colors.gray_7 }}>
-            Lorem Ipsum is simply dummy text of the printing and typesetting industry
+            {item?.content}
           </Text>
         </View>
       </View>
       <View style={styles.bottomView}>
         <View style={styles.heart}>
           <Text size="ba" weight="normal" style={{ color: colors.gray_7, marginRight: WIDTH(4) }}>
-            120
+            {item?.likes?.length > 0 ? item?.likes?.length : ""}
           </Text>
           <Icon icon="heart_comment" size={WIDTH(16)} />
         </View>
