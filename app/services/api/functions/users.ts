@@ -110,7 +110,11 @@ export const checkUserFirebase = (body: { phone: string }) =>
     .then((res) => res)
     .catch((err) => err)
 
-export const createSessionWithFirebase = (body: { phone: string; idtoken: string }) =>
+export const createSessionWithFirebase = (body: {
+  phone: string
+  idtoken: string
+  fcmToken: string
+}) =>
   api.apisauce
     .post(URL.CREATE_SESSION_FIREBASE, body)
     .then((res) => res)

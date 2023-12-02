@@ -6,7 +6,7 @@ import { HEIGHT, WIDTH } from "@app/config/functions"
 import { spacing } from "@app/theme/spacing"
 import { List } from "react-native-paper"
 import R from "@app/assets"
-export default function ItemAnswer() {
+export default function ItemAnswer({ answer }: { answer: string }) {
   return (
     <View style={styles.container}>
       <View style={styles.card}>
@@ -35,11 +35,7 @@ export default function ItemAnswer() {
       </View>
       <View style={styles.content}>
         <Text size="ba" weight="normal" style={{ color: colors.gray_9 }}>
-          Lorem Ipsum is simply dummy text of the printing and typesetting industry
-        </Text>
-        <Text size="ba" weight="normal" style={{ color: colors.gray_9 }}>
-          Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an
-          unknown printer took a galley of type and scrambled it to make a type specimen book.
+          {answer}
         </Text>
       </View>
     </View>
@@ -49,7 +45,7 @@ export default function ItemAnswer() {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: colors.white,
-    marginTop: HEIGHT(spacing.sm),
+    paddingTop: HEIGHT(spacing.sm),
   },
   card: {
     backgroundColor: colors.primary_8,

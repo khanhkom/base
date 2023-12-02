@@ -8,6 +8,8 @@ import { useDispatch } from "react-redux"
 import ItemQuestion from "./Item/ItemQuestion"
 import { getListSpecialListRequest } from "@app/redux/actions/actionDoctor"
 import usCallApiAlgoliaByIndex from "@app/screens/SearchHome/TabResults/Item/usCallApiAlgoliaByIndex"
+import { HEIGHT } from "@app/config/functions"
+import RefreshList from "@app/components/refresh-list"
 
 export default function FrequentlyFAQ() {
   const filterData = useRef({
@@ -16,6 +18,7 @@ export default function FrequentlyFAQ() {
   const dispatch = useDispatch()
   const [isFiltered, setFiltered] = useState(false)
   const [keyword, setKeyword] = useState("")
+
   // eslint-disable-next-line camelcase
   const refModal = useRef(null)
   const {
@@ -69,10 +72,17 @@ export default function FrequentlyFAQ() {
           refModal?.current?.show()
         }}
       />
-      <FlatList
-        data={[1, 2, 3]}
-        renderItem={() => {
-          return <ItemQuestion />
+
+      <RefreshList
+        data={listData}
+        contentContainerStyle={{ paddingBottom: HEIGHT(32) }}
+        loading={loadingList}
+        onFooterRefresh={onFooterRefresh}
+        onHeaderRefresh={onHeaderRefresh}
+        showsVerticalScrollIndicator={false}
+        refreshState={refreshState}
+        renderItem={(item, index) => {
+          return <ItemQuestion item={item} />
         }}
       />
       <ModalFilter

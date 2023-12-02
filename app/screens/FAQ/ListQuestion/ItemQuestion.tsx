@@ -17,7 +17,9 @@ export default function ItemQuestion({ item }: ItemProps) {
   return (
     <Card
       onPress={() => {
-        navigate("DetailQuestion", { id: item?.id })
+        navigate("DetailQuestion", {
+          id: item.id,
+        })
       }}
       mode="contained"
       style={styles.item}
@@ -40,7 +42,7 @@ export default function ItemQuestion({ item }: ItemProps) {
       <Text size="xs" weight="normal" style={styles.textTime}>
         {moment(item?.createdAt).format("HH:mm:ss, DD/MM/YYYY")}
       </Text>
-      {isAnswered && (
+      {isAnswered ? (
         <>
           <Divider style={{ marginVertical: HEIGHT(10), marginLeft: WIDTH(spacing.sm) }} />
           <Text
@@ -48,7 +50,14 @@ export default function ItemQuestion({ item }: ItemProps) {
             weight="normal"
             style={{ color: colors.gray_6, marginLeft: WIDTH(spacing.sm) }}
           >
-            Trả lời:<Text style={{ color: colors.gray_9 }}> Bác sĩ Nguyễn Ngọc Anh</Text>
+            Trả lời:<Text style={{ color: colors.gray_9 }}> Bác sĩ {item?.doctorName}</Text>
+          </Text>
+        </>
+      ) : (
+        <>
+          <Divider style={{ marginVertical: HEIGHT(10), marginLeft: WIDTH(spacing.sm) }} />
+          <Text size="ba" weight="normal" style={styles.textWaiting}>
+            Chờ bác sĩ trả lời
           </Text>
         </>
       )}
@@ -72,4 +81,5 @@ const styles = StyleSheet.create({
     marginLeft: WIDTH(spacing.sm),
   },
   textTime: { color: colors.gray_6, textAlign: "right" },
+  textWaiting: { color: colors.orange_7, marginLeft: WIDTH(spacing.sm), alignSelf: "center" },
 })

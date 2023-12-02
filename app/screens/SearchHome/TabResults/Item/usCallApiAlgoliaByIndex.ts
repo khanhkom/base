@@ -27,13 +27,36 @@ const usCallApiAlgoliaByIndex = (keyword: string, indexName: string) => {
   const [loading, setLoading] = useState<boolean>(true)
   const [isLimited, setIsLimited] = useState<boolean>(false)
 
+  const loadDataKeywordEmpty = async () => {
+    const headers = {
+      "X-Algolia-API-Key": "6c67068b71b6533274ae1a44496e2e44",
+      "X-Algolia-Application-Id": "NF05OPFGOI",
+    }
+    setLoading(true)
+
+    fetch("https://NF05OPFGOI-dsn.algolia.net/1/indexes/faqs", { headers })
+      .then((response) => response.json())
+      .then((responseData) => {
+        console.log("responseData_responseData", responseData?.hits)
+        setListData(responseData?.hits ?? [])
+        setLoading(false)
+      })
+      .catch((error) => {
+        console.error(error)
+        setLoading(false)
+      })
+  }
   useEffect(() => {
     onHeaderRefresh()
     setIsLimited(false)
   }, [keyword])
 
   async function getList(isLoadMore = false, page = pageList) {
-    if ((isLoadMore && isLimited) || !keyword) return
+    if (isLoadMore && isLimited) return
+    // if (keyword?.trim() === "") {
+    //   loadDataKeywordEmpty()
+    //   return
+    // }
     const body = {
       page: page,
       hitsPerPage: limit,

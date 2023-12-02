@@ -13,7 +13,7 @@ export interface IQuestion {
   doctorAvatarUrl?: string
   isAnswered: boolean
   status: EStatusQuestion
-  likes: any[] // Assuming the type of likes is an array
+  likes: ILikeQuestion[] // Assuming the type of likes is an array
   comments: ICommentData[] // Assuming the type of comments is an array
   createdAt: string
   updatedAt: string
@@ -48,7 +48,7 @@ export interface ICommentData {
 
   tags: any[] // Assuming the type of tags is an array
   createdAt: string
-  likes: any[] // Assuming the type of likes is an array
+  likes: ILikeQuestion[] // Assuming the type of likes is an array
   id: string
   _id: string
   avatarUrl: string
@@ -62,10 +62,20 @@ export interface IReplyComment {
   content: string
   createdAt: string
   id: string
-  likes: string[] // Assuming the type of likes is an array of strings
+  likes: ILikeQuestion[] // Assuming the type of likes is an array of strings
   replyToId: string
   role: string
   tags: string[] // Assuming the type of tags is an array of strings
   userId: string
   userName: string
+}
+
+export interface ILikeQuestion {
+  id: string
+  userId: string
+}
+
+export interface ISpecialistMost {
+  count: number
+  specialist: ISpecialList
 }

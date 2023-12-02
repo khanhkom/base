@@ -26,10 +26,21 @@ export default function ListComment({
       <FlatList
         data={listCommentFilter}
         ListHeaderComponent={() => (
-          <ItemAction like={detail?.likes?.length ?? 0} comment={listCommentFilter?.length ?? 0} />
+          <ItemAction
+            questionId={detail?.id}
+            like={detail?.likes ?? []}
+            comment={listCommentFilter?.length ?? 0}
+          />
         )}
         renderItem={({ item, index }) => {
-          return <ItemComment item={item} onReply={onReply} onDeleteComment={onDeleteComment} />
+          return (
+            <ItemComment
+              questionId={detail?.id}
+              item={item}
+              onReply={onReply}
+              onDeleteComment={onDeleteComment}
+            />
+          )
         }}
         style={{ paddingBottom: HEIGHT(100), backgroundColor: colors.white }}
       />

@@ -23,6 +23,7 @@ const DATA_ICON_NOTI = [
   },
 ]
 export default function ItemNotification({ item }: ItemProps) {
+  console.log("item_item::", item?.clickAction)
   const onPressItem = () => {
     switch (item?.clickAction?.actionType) {
       case "open_order":
@@ -30,7 +31,11 @@ export default function ItemNotification({ item }: ItemProps) {
           id: item?.clickAction?.data?.orderId,
         })
         break
-
+      case "open_question":
+        navigate("DetailQuestion", {
+          id: item?.clickAction?.data?.questionId || item?.clickAction?.data?.id,
+        })
+        break
       default:
         break
     }

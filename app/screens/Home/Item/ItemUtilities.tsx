@@ -87,7 +87,6 @@ export default function ItemUtilities() {
     getOrderNearest()
   }, [])
 
-  console.log("timeFromNow_timeFromNow", timeFromNow)
   useEffect(() => {
     const interval = setInterval(() => {
       setTimeFromNow(convertDuration(nearestOrder?.timeDifference))

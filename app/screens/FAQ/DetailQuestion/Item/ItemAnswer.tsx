@@ -9,6 +9,7 @@ import R from "@app/assets"
 import { IQuestion } from "@app/interface/question"
 import FileAttachment from "./FileAttachment"
 const ItemAnswer = ({ item }: { item: IQuestion }) => {
+  console.log("item::", item)
   return (
     <View style={styles.container}>
       <View style={styles.card}>
@@ -33,7 +34,13 @@ const ItemAnswer = ({ item }: { item: IQuestion }) => {
             return (
               <Image
                 source={
-                  item?.doctorAvatarUrl ? { uri: item?.doctorAvatarUrl } : R.images.avatar_docter
+                  item?.doctorAvatarUrl
+                    ? {
+                        uri:
+                          "https://sanreview-backend.s3.ap-southeast-1.amazonaws.com/" +
+                          item?.doctorAvatarUrl,
+                      }
+                    : R.images.avatar_docter
                 }
                 style={styles.avatar}
               />

@@ -7,11 +7,12 @@ import { HEIGHT, WIDTH } from "@app/config/functions"
 import { spacing } from "@app/theme/spacing"
 import colors from "@app/assets/colors"
 import { navigate } from "@app/navigators/navigationUtilities"
-export default function ItemQuestion() {
+import { QuestionAnswer } from "@app/interface/faq"
+export default function ItemQuestion({ item }: { item: QuestionAnswer }) {
   return (
     <Card
       onPress={() => {
-        navigate("DetailFrequentlyQuestion")
+        navigate("DetailFrequentlyQuestion", { data: item })
       }}
       mode="contained"
       style={styles.item}
@@ -24,16 +25,24 @@ export default function ItemQuestion() {
         title={() => {
           return (
             <View>
-              <Text size="ba" weight="medium" style={{ color: colors.gray_9 }}>
-                Các triệu chứng của sốt xuất huyết ở trẻ em dưới 5 tuổi
+              <Text numberOfLines={3} size="ba" weight="medium" style={{ color: colors.gray_9 }}>
+                {item?.patientQuestion}
+              </Text>
+              <Text
+                numberOfLines={2}
+                size="ba"
+                weight="normal"
+                style={{ color: colors.gray_7, marginTop: HEIGHT(spacing.xs) }}
+              >
+                Bác sĩ trả lời: {item?.doctorAnswer}
               </Text>
             </View>
           )
         }}
       />
-      <Text size="sm" weight="normal" style={styles.textTime}>
+      {/* <Text size="sm" weight="normal" style={styles.textTime}>
         Chuyên khoa: Tai Mũi Họng
-      </Text>
+      </Text> */}
     </Card>
   )
 }

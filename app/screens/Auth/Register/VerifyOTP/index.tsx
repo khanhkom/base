@@ -139,6 +139,7 @@ export default function VerifyOTP({ route }: ScreenProps) {
         resOTP = await createSessionWithFirebase({
           phone,
           idtoken: idToken,
+          fcmToken: tokenFi.current,
         })
         if (isNeedUpdatePhone) {
           await updatePhoneSocial({

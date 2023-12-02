@@ -31,7 +31,7 @@ export default function MyQuestion({ route }: IScreenParams) {
         }}
         ListFooterComponent={<View style={{ height: HEIGHT(32) }} />}
         ListEmptyComponent={() => {
-          return <ItemEmpty title={translate("doctor.rating.empty")} />
+          return <ItemEmpty title={"Không có câu hỏi nào!"} />
         }}
         onRefresh={onHeaderRefresh}
         onMomentumScrollEnd={onFooterRefresh}

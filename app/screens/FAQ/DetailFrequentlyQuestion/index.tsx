@@ -8,15 +8,18 @@ import { spacing } from "@app/theme/spacing"
 import FileAttachment from "./Item/FileAttachment"
 import ItemSpecialList from "./Item/ItemSpecialList"
 import ItemAnswer from "./Item/ItemAnswer"
-import ItemInputToolbar from "./Item/InputToolbar"
-import ListComment from "./Item/Comment/ListComment"
+import { QuestionAnswer } from "@app/interface/faq"
 
 interface IScreenParams {
   route: {
-    params: {}
+    params: {
+      data: QuestionAnswer
+    }
   }
 }
 export default function DetailFrequentlyQuestion({ route }: IScreenParams) {
+  const { data } = route.params
+  console.log("data_data::", data)
   return (
     <View style={styles.container}>
       <Header leftIcon="arrow_left" title={"Câu hỏi thường gặp"} backgroundColor={colors.white} />
@@ -24,23 +27,11 @@ export default function DetailFrequentlyQuestion({ route }: IScreenParams) {
       <ScrollView>
         <View style={styles.body}>
           <Text size="xl" weight="semiBold" style={{ color: colors.gray_9 }}>
-            Lorem Ipsum is simply dummy text of the printing and typesetting industry
+            {data?.patientQuestion}
           </Text>
-          <Text
-            size="ba"
-            weight="normal"
-            style={{ color: colors.gray_9, marginTop: HEIGHT(spacing.xs) }}
-          >
-            Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an
-            unknown printer took a galley of type and scrambled it to make a type specimen book.
-          </Text>
-          <FileAttachment />
-          <ItemSpecialList />
         </View>
-        <ItemAnswer />
-        <ListComment />
+        <ItemAnswer answer={data?.doctorAnswer} />
       </ScrollView>
-      <ItemInputToolbar />
     </View>
   )
 }

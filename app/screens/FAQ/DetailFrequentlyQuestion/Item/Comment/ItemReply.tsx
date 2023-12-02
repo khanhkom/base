@@ -1,16 +1,64 @@
-import { StyleSheet, View, Image } from "react-native"
-import React from "react"
+import { StyleSheet, View, Image, Pressable } from "react-native"
+import React, { useEffect, useState } from "react"
 import { HEIGHT, WIDTH } from "@app/config/functions"
 import { spacing } from "@app/theme/spacing"
 import colors from "@app/assets/colors"
 import { Text } from "@app/components/Text"
 import R from "@app/assets"
 import { Icon } from "@app/components/Icon"
-import { IReplyComment } from "@app/interface/question"
+import { ILikeQuestion, IReplyComment } from "@app/interface/question"
 import AvatarDefault from "@app/components/avatar-default"
-export default function ItemComment({ item }: { item: IReplyComment }) {
+import { EToastType, showToastMessage } from "@app/utils/library"
+import { MessageToast } from "@app/config/constants"
+import { useSelector } from "@app/redux/reducers"
+import { toggedLikeComment } from "@app/services/api/functions/question"
+export default function ItemComment({
+  item,
+  questionId,
+}: {
+  item: IReplyComment
+  questionId: string
+}) {
   const hasAvatar = item?.avatarUrl && item?.avatarUrl !== ""
   const titleName = item?.role === "patient" ? "B.n" : "B.s"
+  const user = useSelector((state) => state.userReducers.user)
+
+  const [isLike, setIsLike] = useState(false)
+  const [likeList, setLikeList] = useState<ILikeQuestion[]>([])
+  useEffect(() => {
+    const isLikeTemp = (item?.likes ?? []).some((item) => item.userId === user?.id)
+    setLikeList(item?.likes ?? [])
+    setIsLike(isLikeTemp)
+  }, [item.likes])
+
+  const onPressLike = async () => {
+    let newIsLike = false
+    let newLikeList = [...likeList]
+
+    if (isLike) {
+      newIsLike = false
+      newLikeList = likeList.filter((lk) => lk.userId !== user?.id)
+    } else {
+      newIsLike = true
+      newLikeList = [...likeList, { id: "", userId: user?.id }]
+    }
+
+    setIsLike(newIsLike)
+    setLikeList(newLikeList)
+
+    const likeRes = await toggedLikeComment(questionId, item.id)
+    if (likeRes.status !== 200) {
+      showToastMessage(MessageToast.apiError, EToastType.ERROR)
+      if (isLike) {
+        newLikeList = [...likeList, { id: "", userId: user?.id }]
+      } else {
+        newLikeList = likeList.filter((lk) => lk.userId !== user?.id)
+      }
+      setIsLike(!isLike)
+      setLikeList(newLikeList)
+    }
+  }
+
   return (
     <View style={styles.container}>
       <View style={styles.item}>
@@ -29,12 +77,12 @@ export default function ItemComment({ item }: { item: IReplyComment }) {
         </View>
       </View>
       <View style={styles.bottomView}>
-        <View style={styles.heart}>
+        <Pressable onPress={onPressLike} style={styles.heart}>
           <Text size="ba" weight="normal" style={{ color: colors.gray_7, marginRight: WIDTH(4) }}>
-            {item?.likes?.length > 0 ? item?.likes?.length : ""}
+            {likeList?.length > 0 ? likeList?.length : ""}
           </Text>
-          <Icon icon="heart_comment" size={WIDTH(16)} />
-        </View>
+          <Icon icon={isLike ? "heart_active" : "heart_comment"} size={WIDTH(16)} />
+        </Pressable>
       </View>
     </View>
   )

@@ -41,7 +41,11 @@ export default function FAQ({ keyword }) {
         refreshState={refreshState}
         renderItem={(item, index) => {
           return (
-            <Card mode="contained" style={styles.item} onPress={() => navigate("DetailQuestion")}>
+            <Card
+              mode="contained"
+              style={styles.item}
+              onPress={() => navigate("DetailFrequentlyQuestion", { data: item })}
+            >
               <List.Item
                 left={() => {
                   return <Image source={R.images.ic_question} style={styles.icon} />

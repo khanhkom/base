@@ -61,3 +61,7 @@ export const LIST_ICON_BY_STATUS = [
     status: STATUS_ORDER.cancel,
   },
 ]
+
+export const MessageToast = {
+  apiError: "Có lỗi xảy ra, vui lòng thử lại!",
+}

@@ -28,6 +28,12 @@ interface IScreenParams {
     }
   }
 }
+const STATUS_QUESTION = {
+  REJECTED: "Bị từ chối",
+  CREATED: "Chờ xác nhận",
+  VERIFIED: "Chờ bác sĩ trả lời",
+  CANCELLED: "Đã hủy",
+}
 export default function DetailQuestion({ route }: IScreenParams) {
   const [detail, setDetail] = useState<IQuestion>(null)
   const [comments, setComments] = useState<ICommentData[]>(null)
@@ -36,11 +42,12 @@ export default function DetailQuestion({ route }: IScreenParams) {
   const refInput = useRef(null)
   const [loading, setLoading] = useState(true)
   const id = route?.params?.id
+  console.log("id:::", id)
   useEffect(() => {
     async function getDetailQues() {
       setLoading(true)
       const question = await getDeatilQuestion(id)
-      console.log("question::", question)
+      console.log("question::", question?.data)
       if (question?.status === 200) {
         setDetail(question?.data ?? null)
         setComments(question?.data?.comments ?? [])
@@ -75,7 +82,6 @@ export default function DetailQuestion({ route }: IScreenParams) {
     } else {
       showToastMessage("Có lỗi xảy ra vui lòng thử lại!", EToastType.ERROR)
     }
-    console.log("commentRes::", commentRes)
   }
   const onReplyPress = (comment: ICommentData) => {
     setReplyComment(comment)
@@ -95,7 +101,6 @@ export default function DetailQuestion({ route }: IScreenParams) {
     } else {
       showToastMessage("Có lỗi xảy ra vui lòng thử lại!", EToastType.ERROR)
     }
-    console.log("commentRes::", commentRes)
   }
   if (loading) {
     return <LoadingScreen />
@@ -112,7 +117,7 @@ export default function DetailQuestion({ route }: IScreenParams) {
               weight="medium"
               style={{ color: colors.orange_7, marginLeft: WIDTH(spacing.xs) }}
             >
-              Chờ bác sĩ trả lời
+              {STATUS_QUESTION?.[detail?.status] ?? "Chờ bác sĩ trả lời"}
             </Text>
           </View>
         )}

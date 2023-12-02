@@ -1,4 +1,4 @@
-import { Image, Pressable, StyleSheet, View } from "react-native"
+import { FlatList, Image, Pressable, StyleSheet, View } from "react-native"
 import React, { useEffect, useState } from "react"
 import { List } from "react-native-paper"
 import { Text } from "@app/components/Text"
@@ -9,17 +9,17 @@ import { spacing } from "@app/theme/spacing"
 import { navigate } from "@app/navigators/navigationUtilities"
 import { getListQuestionSpecialList } from "@app/services/api/functions/question"
 import { useSelector } from "@app/redux/reducers"
+import { ISpecialistMost } from "@app/interface/question"
+import ItemEmpty from "@app/components/ItemEmpty"
 export default function ItemSpecialList() {
-  const [specialListMost, setSpecialListMode] = useState([])
-  const user = useSelector((state) => state.userReducers.user)
-  const specialist = useSelector((state) => state.orderReducers.specialist)
-  console.log("user_user", specialist)
+  const [specialListMost, setSpecialListMode] = useState<ISpecialistMost[]>([])
   const [loading, setLoading] = useState(true)
   useEffect(() => {
     async function getMost() {
       setLoading(true)
       const specialList = await getListQuestionSpecialList()
       console.log("specialList::", specialList?.data)
+      setSpecialListMode(specialList?.data ?? [])
       setLoading(false)
     }
     getMost()
@@ -35,36 +35,36 @@ export default function ItemSpecialList() {
           )
         }}
       />
-      <View style={styles.flexRow}>
-        <Pressable
-          onPress={() => {
-            navigate("ListQuestion")
-          }}
-          style={styles.item}
-        >
-          <Image source={R.images.features_2} style={styles.icon} />
-          <Text size="ba" weight="medium" style={styles.textName}>
-            Nhi khoa
-          </Text>
-          <Text size="sm" weight="normal" style={{ color: colors.primary_8 }}>
-            2300 câu hỏi
-          </Text>
-        </Pressable>
-        <Pressable
-          onPress={() => {
-            navigate("ListQuestion")
-          }}
-          style={styles.item}
-        >
-          <Image source={R.images.features_1} style={styles.icon} />
-          <Text size="ba" weight="medium" style={styles.textName}>
-            Răng - Hàm - Mặt
-          </Text>
-          <Text size="sm" weight="normal" style={{ color: colors.primary_8 }}>
-            2300 câu hỏi
-          </Text>
-        </Pressable>
-      </View>
+      <FlatList
+        data={specialListMost}
+        numColumns={2}
+        style={styles.flatList}
+        ListEmptyComponent={() => {
+          return <ItemEmpty title="Chưa có dữ liệu." />
+        }}
+        renderItem={({ item, index }) => {
+          return (
+            <Pressable
+              onPress={() => {
+                navigate("ListQuestion", {
+                  query: {
+                    specialistCode: item?.specialist?.code,
+                  },
+                })
+              }}
+              style={styles.item}
+            >
+              <Image source={R.images.features_2} style={styles.icon} />
+              <Text size="ba" weight="medium" style={styles.textName}>
+                {item?.specialist?.value ?? ""}
+              </Text>
+              <Text size="sm" weight="normal" style={{ color: colors.primary_8 }}>
+                {item?.count} câu hỏi
+              </Text>
+            </Pressable>
+          )
+        }}
+      />
     </View>
   )
 }
@@ -72,10 +72,9 @@ export default function ItemSpecialList() {
 const styles = StyleSheet.create({
   container: {
     marginTop: HEIGHT(spacing.sm),
+    paddingBottom: HEIGHT(100),
   },
-  flexRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
+  flatList: {
     paddingHorizontal: WIDTH(spacing.md),
   },
   textName: {

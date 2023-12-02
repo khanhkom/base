@@ -36,6 +36,9 @@ export default function LastQuestion() {
   return (
     <View>
       <List.Item
+        onPress={() => {
+          navigate("ListQuestion")
+        }}
         title={() => {
           return (
             <Text size="xl" weight="semiBold" style={{ color: colors.gray_9 }}>
