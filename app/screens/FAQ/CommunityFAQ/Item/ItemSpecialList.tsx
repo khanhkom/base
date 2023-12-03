@@ -14,6 +14,7 @@ import ItemEmpty from "@app/components/ItemEmpty"
 export default function ItemSpecialList() {
   const [specialListMost, setSpecialListMode] = useState<ISpecialistMost[]>([])
   const [loading, setLoading] = useState(true)
+  const isReload = useSelector((state) => state.questionReducers.isReload)
   useEffect(() => {
     async function getMost() {
       setLoading(true)
@@ -23,7 +24,7 @@ export default function ItemSpecialList() {
       setLoading(false)
     }
     getMost()
-  }, [])
+  }, [isReload])
   return (
     <View style={styles.container}>
       <List.Item

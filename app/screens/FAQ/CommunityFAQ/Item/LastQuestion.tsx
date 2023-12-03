@@ -9,10 +9,12 @@ import ItemQuestion from "./ItemQuestion"
 import { navigate } from "@app/navigators/navigationUtilities"
 import { getQuestionFilter } from "@app/services/api/functions/question"
 import ItemPlaceholder from "@app/components/ItemPlaceholder"
+import { useSelector } from "@app/redux/reducers"
 
 export default function LastQuestion() {
   const [questionRecent, setQuestionRecent] = useState([])
   const [loading, setLoading] = useState(true)
+  const isReload = useSelector((state) => state.questionReducers.isReload)
   useEffect(() => {
     async function getRecentQuestion() {
       const body = { page: 1, perPage: 5, sortByCreatedAt: 1 }
@@ -23,7 +25,7 @@ export default function LastQuestion() {
       setLoading(false)
     }
     getRecentQuestion()
-  }, [])
+  }, [isReload])
   if (loading) {
     return (
       <View>

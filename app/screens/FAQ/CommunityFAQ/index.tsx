@@ -1,4 +1,12 @@
-import { ActivityIndicator, FlatList, Keyboard, StyleSheet, View } from "react-native"
+import {
+  ActivityIndicator,
+  FlatList,
+  Keyboard,
+  RefreshControl,
+  ScrollView,
+  StyleSheet,
+  View,
+} from "react-native"
 import React, { useEffect, useRef, useState } from "react"
 import { Header } from "@app/components/index"
 import colors from "@app/assets/colors"
@@ -11,6 +19,9 @@ import { HEIGHT, WIDTH, getWidth } from "@app/config/functions"
 import { spacing } from "@app/theme/spacing"
 import { navigate } from "@app/navigators/navigationUtilities"
 import ItemFrequently from "./Item/ItemFrequently"
+import { useDispatch } from "react-redux"
+import { useSelector } from "@app/redux/reducers"
+import { reLoadDataQuestion } from "@app/redux/actions/actionQuestion"
 
 interface ScreenProps {
   route: {
@@ -20,7 +31,15 @@ interface ScreenProps {
 export default function CommunityFAQ({ route }: ScreenProps) {
   const [loading, setLoading] = useState(false)
   const [keyword, setKeyword] = useState("")
-
+  const isReload = useSelector((state) => state.questionReducers.isReload)
+  const [refreshing, setRefreshing] = useState(false)
+  const dispatch = useDispatch()
+  const onRefresh = () => {
+    dispatch(reLoadDataQuestion(!isReload))
+    setTimeout(() => {
+      setRefreshing(false)
+    }, 1000)
+  }
   return (
     <View style={styles.container}>
       <Header
@@ -38,9 +57,12 @@ export default function CommunityFAQ({ route }: ScreenProps) {
           navigate("MyQuestion")
         }}
       />
-      <ItemFrequently />
-      <LastQuestion />
-      <ItemSpecialList />
+      <ScrollView refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
+        <ItemFrequently />
+        <LastQuestion />
+        <ItemSpecialList />
+      </ScrollView>
+
       <View style={styles.buttonWrapper}>
         <Button
           mode="contained"

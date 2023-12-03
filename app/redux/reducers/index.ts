@@ -6,6 +6,7 @@ import bookingHistoryReducers from "./bookingHistoryReducers"
 import orderReducers from "./orderReducers"
 import patientReducers from "./patientReducers"
 import doctorReducers from "./doctorReducers"
+import questionReducers from "./questionReducers"
 
 import { useSelector as useReduxSelector, TypedUseSelectorHook } from "react-redux"
 const rootReducers = combineReducers({
@@ -16,6 +17,7 @@ const rootReducers = combineReducers({
   orderReducers,
   patientReducers,
   doctorReducers,
+  questionReducers,
 })
 
 export const useSelector: TypedUseSelectorHook<ReturnType<typeof rootReducers>> = useReduxSelector

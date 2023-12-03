@@ -48,7 +48,7 @@ export default function ItemQuestion({ item }: ItemProps) {
             weight="normal"
             style={{ color: colors.gray_6, marginLeft: WIDTH(spacing.sm) }}
           >
-            Trả lời:<Text style={{ color: colors.gray_9 }}> Bác sĩ Nguyễn Ngọc Anh</Text>
+            Trả lời:<Text style={{ color: colors.gray_9 }}> Bác sĩ {item?.doctorName}</Text>
           </Text>
         </>
       )}
