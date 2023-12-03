@@ -13,6 +13,7 @@ import { useSelector } from "@app/redux/reducers"
 import { toggedLikeComment } from "@app/services/api/functions/question"
 import { EToastType, showToastMessage } from "@app/utils/library"
 import { MessageToast } from "@app/config/constants"
+import { renderTextComment } from "./ItemTextComment"
 
 type ItemCommentProps = {
   item: ICommentData
@@ -90,9 +91,10 @@ export default function ItemComment({
           <Text size="ba" weight="medium" style={{ color: colors.gray_9 }}>
             {titleName} {item?.userName}
           </Text>
-          <Text size="ba" weight="normal" style={{ color: colors.gray_7 }}>
+          {renderTextComment(item?.content)}
+          {/* <Text size="ba" weight="normal" style={{ color: colors.gray_7 }}>
             {item?.content}
-          </Text>
+          </Text> */}
           {item?.avatarUrl && item?.avatarUrl !== "" && (
             <Image source={R.images.avatar_docter} style={styles.image} />
           )}

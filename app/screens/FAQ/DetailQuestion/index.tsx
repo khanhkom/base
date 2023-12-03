@@ -16,10 +16,11 @@ import {
   getDeatilQuestion,
 } from "@app/services/api/functions/question"
 import LoadingScreen from "@app/components/loading/LoadingScreen"
-import ItemInputToolbar from "../DetailFrequentlyQuestion/Item/InputToolbar"
-import ListComment from "../DetailFrequentlyQuestion/Item/Comment/ListComment"
+import ItemInputToolbar from "./Item/InputToolbar"
+import ListComment from "./Item/Comment/ListComment"
 import { useSelector } from "@app/redux/reducers"
 import { EToastType, showToastMessage } from "@app/utils/library"
+import { mentionRegEx } from "react-native-controlled-mentions"
 
 interface IScreenParams {
   route: {
@@ -42,7 +43,7 @@ export default function DetailQuestion({ route }: IScreenParams) {
   const refInput = useRef(null)
   const [loading, setLoading] = useState(true)
   const id = route?.params?.id
-  console.log("id:::", id)
+  console.log("id:::", detail)
   useEffect(() => {
     async function getDetailQues() {
       setLoading(true)
@@ -68,6 +69,25 @@ export default function DetailQuestion({ route }: IScreenParams) {
         replyToId: replyComment?._id,
       })
     }
+    const listUser = detail?.listUser ?? []
+    const mentions = comment.match(mentionRegEx)
+    const idRegex = /\(([^)]+)\)/
+    const idList = mentions.map((mention) => {
+      const matches = mention.match(idRegex)
+      const userId = matches ? matches[1] : null
+
+      return {
+        userId,
+        role: listUser.find((user) => user.userId === userId)?.role,
+      }
+    })
+    const tags = idList.filter((it) => it?.userId !== null)
+    if (tags && tags.length > 0) {
+      Object.assign(body, {
+        tags,
+      })
+    }
+    console.log("mentions_mentions", mentions, tags)
     const commentRes = await createCommentQuestion(id, body)
     if (commentRes?.status === 201) {
       const question = await getDeatilQuestion(id)
@@ -154,6 +174,7 @@ export default function DetailQuestion({ route }: IScreenParams) {
           ref={refInput}
           onSend={onCommentPost}
           onReplyCancel={onReplyCancel}
+          listUser={detail?.listUser ?? []}
         />
       )}
     </View>

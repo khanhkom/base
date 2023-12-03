@@ -5,8 +5,6 @@ import colors from "@app/assets/colors"
 import { Text } from "@app/components/Text"
 import { HEIGHT, WIDTH } from "@app/config/functions"
 import { spacing } from "@app/theme/spacing"
-import FileAttachment from "./Item/FileAttachment"
-import ItemSpecialList from "./Item/ItemSpecialList"
 import ItemAnswer from "./Item/ItemAnswer"
 import { QuestionAnswer } from "@app/interface/faq"
 
@@ -44,11 +42,5 @@ const styles = StyleSheet.create({
   body: {
     paddingHorizontal: WIDTH(spacing.md),
     backgroundColor: colors.white,
-  },
-  head: {
-    backgroundColor: colors.orange_0,
-    paddingHorizontal: WIDTH(spacing.sm),
-    paddingVertical: HEIGHT(spacing.sm),
-    flexDirection: "row",
   },
 })

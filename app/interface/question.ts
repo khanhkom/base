@@ -20,6 +20,7 @@ export interface IQuestion {
   patientName: string
   patientAvatarUrl: string
   doctorSpecialist: ISpecialList[] // Assuming the type of doctorSpecialist is an array
+  listUser: IUserTag[]
 }
 export enum EStatusQuestion {
   CREATED = "CREATED",
@@ -78,4 +79,10 @@ export interface ILikeQuestion {
 export interface ISpecialistMost {
   count: number
   specialist: ISpecialList
+}
+export interface IUserTag {
+  avatarUrl: string
+  role: string
+  userId: string
+  userName: string
 }
