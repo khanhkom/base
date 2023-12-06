@@ -16,8 +16,9 @@ interface ItemProps {
   like: ILikeQuestion[]
   comment: number
   questionId: string
+  onCommentPress: () => void
 }
-export default function ItemAction({ like, comment, questionId }: ItemProps) {
+export default function ItemAction({ like, comment, questionId, onCommentPress }: ItemProps) {
   const user = useSelector((state) => state.userReducers.user)
   const [isLike, setIsLike] = useState(false)
   const [likeList, setLikeList] = useState<ILikeQuestion[]>([])
@@ -71,7 +72,7 @@ export default function ItemAction({ like, comment, questionId }: ItemProps) {
             {likeList?.length ?? 0} lượt thích
           </Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.button}>
+        <TouchableOpacity onPress={onCommentPress} style={styles.button}>
           <Icon icon="comment" size={WIDTH(20)} />
           <Text
             size="ba"

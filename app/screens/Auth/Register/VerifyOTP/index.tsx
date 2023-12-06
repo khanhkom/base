@@ -55,6 +55,7 @@ export default function VerifyOTP({ route }: ScreenProps) {
   const isNeedUpdatePhone = route?.params?.isNeedUpdatePhone
   const pinInput = useRef(null)
   const [code, setCode] = useState("")
+  const [resend, setResend] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(false)
   const [time, setTime] = useState(30)
@@ -94,6 +95,14 @@ export default function VerifyOTP({ route }: ScreenProps) {
     })
     return () => removeListener()
   }, [])
+  function onAuthStateChanged(user) {
+    console.log("user_user", user)
+  }
+  useEffect(() => {
+    const subscriber = auth().onAuthStateChanged(onAuthStateChanged)
+    return subscriber // unsubscribe on unmount
+  }, [])
+
   const _checkCode = async (codeFinal) => {
     try {
       setLoading(true)
@@ -109,6 +118,7 @@ export default function VerifyOTP({ route }: ScreenProps) {
         })
       }
       let resOTP = null
+
       if (otpMethod === OTP_TYPE.ZNS) {
         switch (type) {
           case "LOGIN":
@@ -134,7 +144,13 @@ export default function VerifyOTP({ route }: ScreenProps) {
           })
         }
         // resOTP = await verifyOTP(newBody)
-        resOTP = await confirm.confirm(codeFinal)
+        if (resend) {
+          resOTP = await confirm.confirm(codeFinal)
+        } else {
+          resOTP = await confirmation.confirm(codeFinal)
+        }
+        console.log("333")
+
         const idToken = await auth().currentUser.getIdToken(true)
         resOTP = await createSessionWithFirebase({
           phone,
@@ -219,6 +235,7 @@ export default function VerifyOTP({ route }: ScreenProps) {
       if (otpMethod !== 0) {
         const confirmation = await auth().signInWithPhoneNumber(`${body.phone}`)
         setConfirm(confirmation)
+        setResend(true)
         if (confirmation?.verificationId) {
           showToastMessage(translate("otp.code_sent_successfully"), EToastType.SUCCESS)
         } else {

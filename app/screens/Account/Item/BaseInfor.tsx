@@ -11,9 +11,9 @@ export default function BaseInfor() {
   const user = useSelector((state) => state.userReducers.user)
   return (
     <View style={styles.container}>
-      <Image source={R.images.avatar_docter_rec} style={styles.doctorImage} resizeMode="contain" />
+      <Image source={R.images.avatar_patient} style={styles.doctorImage} resizeMode="cover" />
       <Text size="xxl" weight="semiBold" style={styles.name}>
-        B.s Nguyễn Văn A
+        {user?.fullname ?? "Chưa cập nhật"}
       </Text>
       <Card mode="contained" style={styles.card}>
         <List.Item
@@ -44,7 +44,7 @@ export default function BaseInfor() {
           right={() => {
             return (
               <Text size="ba" weight="normal" style={{ color: colors.gray_6 }}>
-                abc@gmail.com
+                {user?.gmail ?? "Chưa cập nhật"}
               </Text>
             )
           }}

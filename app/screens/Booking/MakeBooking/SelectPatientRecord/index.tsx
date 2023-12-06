@@ -10,6 +10,7 @@ import { getListPatientRequest } from "@app/redux/actions/patient"
 import { updatePatientOrder } from "@app/redux/actions/actionOrder"
 import { goBack, navigate } from "@app/navigators/navigationUtilities"
 import { HEIGHT } from "@app/config/functions"
+import ItemEmpty from "@app/components/ItemEmpty"
 interface IScreenProps {
   route: {
     params: {
@@ -25,12 +26,13 @@ export default function SelectPatientRecord({ route }: IScreenProps) {
   }, [])
   return (
     <Screen
-      safeAreaEdges={Platform.OS === "android" ?["bottom"]:[]}
+      safeAreaEdges={Platform.OS === "android" ? ["bottom"] : []}
       contentContainerStyle={styles.container}
     >
       <Header leftIcon="arrow_left" title="Hồ sơ y tế" backgroundColor={colors.gray_1} />
       <FlatList
         data={patients}
+        ListEmptyComponent={() => <ItemEmpty title="Danh sách rỗng!" />}
         renderItem={({ item, index }) => {
           return (
             <ItemRecord

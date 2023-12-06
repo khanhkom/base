@@ -6,6 +6,7 @@ export interface IQuestion {
   title: string
   content: string
   patientFiles: string[]
+  specialist?: ISpecialList[] // Assuming the type of doctorSpecialist is an array
   doctorFiles: string[]
   answer?: string
   answeredAt?: string

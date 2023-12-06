@@ -180,6 +180,7 @@ export const iconRegistry = {
   heart_comment: require("./icons/heart_comment.png"),
   heart_active: require("./icons/heart_active.png"),
   comment: require("./icons/comment.png"),
+  danger: require("./icons/danger.png"),
 }
 const $imageStyle: ImageStyle = {
   resizeMode: "contain",

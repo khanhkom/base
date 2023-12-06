@@ -21,6 +21,7 @@ import { useDispatch } from "react-redux"
 import DeviceInfo from "react-native-device-info"
 import { TYPE_MESSAGE_LOGIN } from "@app/services/api/apiErrorMessage"
 import auth from "@react-native-firebase/auth"
+import { handleErrorOTPFirebase } from "@app/config/functions"
 
 export const OTP_TYPE = {
   ZNS: 0,
@@ -113,7 +114,9 @@ const useHookLogin = (setCustomLoading?: (val: boolean) => void) => {
     if (otpMethod === OTP_TYPE.ZNS) {
       resRegister = await getOtpRegister(body)
     } else {
-      resRegister = await getOtp(body)
+      // resRegister = await getOtp(body)
+      onRegisterWithSMS()
+      return
     }
     setLoading(false)
     //1. check if not exist in db
@@ -226,31 +229,71 @@ const useHookLogin = (setCustomLoading?: (val: boolean) => void) => {
   }
 
   const onLoginWithSMS = async () => {
-    const result = phoneNumber.replace(/^0+/, "")
-    const body = {
-      phone: countryCode + result,
-    }
-    const checkUserFi = await checkUserFirebase(body)
-    if (!checkUserFi.data) {
-      setError(true)
-      showToastMessage(translate("auth.verify_telephone_number_again"), EToastType.ERROR)
-    } else {
-      const confirmation = await auth().signInWithPhoneNumber(`${body.phone}`)
-
-      if (confirmation.verificationId) {
-        navigate("VerifyOTP", {
-          phone: body.phone,
-          otpMethod,
-          type: "LOGIN",
-          confirmation,
-        })
-      } else {
+    try {
+      const result = phoneNumber.replace(/^0+/, "")
+      const body = {
+        phone: countryCode + result,
+      }
+      const checkUserFi = await checkUserFirebase(body)
+      if (!checkUserFi.data) {
         setError(true)
         showToastMessage(translate("auth.verify_telephone_number_again"), EToastType.ERROR)
+      } else {
+        const confirmation = await auth().signInWithPhoneNumber(`${body.phone}`)
+
+        if (confirmation.verificationId) {
+          navigate("VerifyOTP", {
+            phone: body.phone,
+            otpMethod,
+            type: "LOGIN",
+            confirmation,
+          })
+        } else {
+          setError(true)
+          showToastMessage(translate("auth.verify_telephone_number_again"), EToastType.ERROR)
+        }
+        console.log("confirmation::", confirmation.verificationId)
       }
-      console.log("confirmation::", confirmation.verificationId)
+      setLoading(false)
+    } catch (error) {
+      handleErrorOTPFirebase(error)
+      console.warn(error)
+      setLoading(false)
     }
-    setLoading(false)
+  }
+
+  const onRegisterWithSMS = async () => {
+    try {
+      const result = phoneNumber.replace(/^0+/, "")
+      const body = {
+        phone: countryCode + result,
+      }
+      const checkUserFi = await checkUserFirebase(body)
+      if (!checkUserFi.data) {
+        setError(true)
+        showToastMessage(translate("auth.verify_telephone_number_again"), EToastType.ERROR)
+      } else {
+        const confirmation = await auth().signInWithPhoneNumber(`${body.phone}`)
+
+        if (confirmation.verificationId) {
+          navigate("VerifyOTP", {
+            phone: body.phone,
+            otpMethod,
+            type: "REGISTER",
+            confirmation,
+          })
+        } else {
+          setError(true)
+          showToastMessage(translate("auth.verify_telephone_number_again"), EToastType.ERROR)
+        }
+        console.log("confirmation::", confirmation.verificationId)
+      }
+      setLoading(false)
+    } catch (error) {
+      handleErrorOTPFirebase(error)
+      console.warn(error)
+      setLoading(false)
+    }
   }
   return {
     indexTab,

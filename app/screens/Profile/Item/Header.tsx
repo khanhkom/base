@@ -14,13 +14,13 @@ export default function Header() {
   return (
     <View style={[styles.container, $containerInsets]}>
       <Image source={R.images.background_profile} style={styles.backgroundImage} />
-      <Image source={R.images.avatar_docter_rec} style={styles.doctorImage} resizeMode="contain" />
+      <Image source={R.images.avatar_patient} style={styles.doctorImage} resizeMode="cover" />
       <Text
         size="xxl"
         weight="semiBold"
         style={{ color: colors.white, marginBottom: HEIGHT(spacing.xxs) }}
       >
-        B.s Nguyễn Văn A
+        {user?.fullname ?? "Chưa cập nhật"}
       </Text>
       <Text
         size="ba"

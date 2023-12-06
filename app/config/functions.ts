@@ -1,6 +1,7 @@
 import { Dimensions } from "react-native"
 import { initialWindowMetrics } from "react-native-safe-area-context"
 import moment from "moment"
+import { EToastType, showToastMessage } from "@app/utils/library"
 // const moment = require("moment")
 
 const { width, height } = Dimensions.get("window")
@@ -136,4 +137,23 @@ export function convertTimeToAgo(date) {
   }
 
   return convertedTime
+}
+
+export const handleErrorOTPFirebase = (error) => {
+  const errorCodePattern = /\[([^\]]+)\]/ // Regular expression to capture the error code within square brackets
+  const match = errorCodePattern.exec(error.message)
+  if (match) {
+    const errorCode = match[1]
+    console.log("Error code:", errorCode)
+    if (errorCode === "auth/session-expired") {
+      showToastMessage("Mã đã hết hạn vui lòng gửi mã mới!", EToastType.ERROR)
+    } else if (errorCode === "auth/too-many-requests") {
+      showToastMessage("Yêu cầu bị giới hạn, Vui lòng thử lại sau!", EToastType.ERROR)
+    } else {
+      showToastMessage("Sai mã đăng nhập", EToastType.ERROR)
+    }
+  } else {
+    console.log("Error code not found")
+    showToastMessage("Sai mã đăng nhập", EToastType.ERROR)
+  }
 }

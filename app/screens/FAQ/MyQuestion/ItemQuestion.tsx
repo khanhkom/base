@@ -9,6 +9,7 @@ import colors from "@app/assets/colors"
 import { navigate } from "@app/navigators/navigationUtilities"
 import { IQuestion } from "@app/interface/question"
 import moment from "moment"
+import { STATUS_QUESTION } from "@app/config/constants"
 interface ItemProps {
   item: IQuestion
 }
@@ -57,7 +58,7 @@ export default function ItemQuestion({ item }: ItemProps) {
         <>
           <Divider style={{ marginVertical: HEIGHT(10), marginLeft: WIDTH(spacing.sm) }} />
           <Text size="ba" weight="normal" style={styles.textWaiting}>
-            Chờ bác sĩ trả lời
+            {STATUS_QUESTION?.[item?.status] ?? "Chờ bác sĩ trả lời"}
           </Text>
         </>
       )}

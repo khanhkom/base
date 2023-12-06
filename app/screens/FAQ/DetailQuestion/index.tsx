@@ -21,6 +21,8 @@ import ListComment from "./Item/Comment/ListComment"
 import { useSelector } from "@app/redux/reducers"
 import { EToastType, showToastMessage } from "@app/utils/library"
 import { mentionRegEx } from "react-native-controlled-mentions"
+import { STATUS_QUESTION } from "@app/config/constants"
+import ItemHeadStatus from "./Item/ItemHeadStatus"
 
 interface IScreenParams {
   route: {
@@ -29,12 +31,7 @@ interface IScreenParams {
     }
   }
 }
-const STATUS_QUESTION = {
-  REJECTED: "Bị từ chối",
-  CREATED: "Chờ xác nhận",
-  VERIFIED: "Chờ bác sĩ trả lời",
-  CANCELLED: "Đã hủy",
-}
+
 export default function DetailQuestion({ route }: IScreenParams) {
   const [detail, setDetail] = useState<IQuestion>(null)
   const [comments, setComments] = useState<ICommentData[]>(null)
@@ -58,6 +55,7 @@ export default function DetailQuestion({ route }: IScreenParams) {
     getDetailQues()
   }, [])
   const isWaiting = !detail?.isAnswered
+  console.log("detail_detail::", detail)
   // const isAnsewered = detail?.status === EStatusQuestion.ANSWERED
   const onCommentPost = async (comment: string) => {
     const body = {
@@ -72,23 +70,27 @@ export default function DetailQuestion({ route }: IScreenParams) {
     const listUser = detail?.listUser ?? []
     const mentions = comment.match(mentionRegEx)
     const idRegex = /\(([^)]+)\)/
-    const idList = mentions.map((mention) => {
-      const matches = mention.match(idRegex)
-      const userId = matches ? matches[1] : null
+    if (mentions && mentions?.length > 0) {
+      const idList = mentions.map((mention) => {
+        const matches = mention.match(idRegex)
+        const userId = matches ? matches[1] : null
 
-      return {
-        userId,
-        role: listUser.find((user) => user.userId === userId)?.role,
-      }
-    })
-    const tags = idList.filter((it) => it?.userId !== null)
-    if (tags && tags.length > 0) {
-      Object.assign(body, {
-        tags,
+        return {
+          userId,
+          role: listUser.find((user) => user.userId === userId)?.role,
+        }
       })
+      const tags = idList.filter((it) => it?.userId !== null)
+      if (tags && tags.length > 0) {
+        Object.assign(body, {
+          tags,
+        })
+      }
+      console.log("mentions_mentions", mentions, tags)
     }
-    console.log("mentions_mentions", mentions, tags)
+
     const commentRes = await createCommentQuestion(id, body)
+    console.log("commentRes_commentRes", commentRes)
     if (commentRes?.status === 201) {
       const question = await getDeatilQuestion(id)
       setComments(question?.data?.comments)
@@ -105,6 +107,9 @@ export default function DetailQuestion({ route }: IScreenParams) {
   }
   const onReplyPress = (comment: ICommentData) => {
     setReplyComment(comment)
+    refInput.current?.focus()
+  }
+  const onCommentPress = () => {
     refInput.current?.focus()
   }
   const onReplyCancel = () => {
@@ -129,18 +134,7 @@ export default function DetailQuestion({ route }: IScreenParams) {
     <View style={styles.container}>
       <Header leftIcon="arrow_left" title={"Câu hỏi"} backgroundColor={colors.white} />
       <ScrollView ref={refScrollView}>
-        {isWaiting && (
-          <View style={styles.head}>
-            <Icon icon="clock" size={WIDTH(20)} />
-            <Text
-              size="ba"
-              weight="medium"
-              style={{ color: colors.orange_7, marginLeft: WIDTH(spacing.xs) }}
-            >
-              {STATUS_QUESTION?.[detail?.status] ?? "Chờ bác sĩ trả lời"}
-            </Text>
-          </View>
-        )}
+        {isWaiting && <ItemHeadStatus status={detail?.status} />}
 
         <View style={styles.body}>
           <Text size="xl" weight="semiBold" style={{ color: colors.gray_9 }}>
@@ -154,7 +148,7 @@ export default function DetailQuestion({ route }: IScreenParams) {
             {detail?.content}
           </Text>
           <FileAttachment data={detail?.patientFiles ?? []} />
-          <ItemSpecialList data={detail?.doctorSpecialist ?? []} />
+          <ItemSpecialList data={detail?.specialist ?? []} />
         </View>
         {detail?.isAnswered && (
           <View>
@@ -163,6 +157,7 @@ export default function DetailQuestion({ route }: IScreenParams) {
               detail={detail}
               comments={comments}
               onReply={onReplyPress}
+              onCommentPress={onCommentPress}
               onDeleteComment={onDeleteComment}
             />
           </View>
@@ -195,5 +190,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: WIDTH(spacing.sm),
     paddingVertical: HEIGHT(spacing.sm),
     flexDirection: "row",
+    marginBottom: HEIGHT(spacing.sm),
   },
 })

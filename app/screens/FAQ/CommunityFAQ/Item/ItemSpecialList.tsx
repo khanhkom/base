@@ -53,7 +53,7 @@ export default function ItemSpecialList() {
                   },
                 })
               }}
-              style={styles.item}
+              style={[styles.item, index % 2 === 0 && { marginRight: WIDTH(spacing.sm) }]}
             >
               <Image source={R.images.features_2} style={styles.icon} />
               <Text size="ba" weight="medium" style={styles.textName}>
@@ -94,5 +94,6 @@ const styles = StyleSheet.create({
     paddingVertical: HEIGHT(spacing.sm),
     justifyContent: "center",
     alignItems: "center",
+    marginBottom: HEIGHT(spacing.sm),
   },
 })

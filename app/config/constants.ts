@@ -65,3 +65,17 @@ export const LIST_ICON_BY_STATUS = [
 export const MessageToast = {
   apiError: "Có lỗi xảy ra, vui lòng thử lại!",
 }
+
+export const STATUS_QUESTION = {
+  REJECTED: "Bị từ chối",
+  CREATED: "Chờ xác nhận",
+  VERIFIED: "Chờ bác sĩ trả lời",
+  CANCELLED: "Đã hủy",
+}
+
+export const STATUS_QUESTION_KEY = {
+  REJECTED: "REJECTED",
+  CREATED: "CREATED",
+  VERIFIED: "VERIFIED",
+  CANCELLED: "CANCELLED",
+}

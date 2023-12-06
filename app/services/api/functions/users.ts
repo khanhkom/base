@@ -131,3 +131,15 @@ export const getUserInformation = () =>
     .get(URL.GET_USER_INFO)
     .then((res) => res)
     .catch((err) => err)
+
+export const updateFullName = (body: { fullname: string }) =>
+  api.apisauce
+    .put(URL.UPDATE_FULLNAME, body)
+    .then((res) => res)
+    .catch((err) => err)
+
+export const updateImagePatient = (body, id) =>
+  api.apisauce
+    .put(`${URL.UPDATE_IMAGE}/${id}`, body)
+    .then((res) => res)
+    .catch((err) => err)

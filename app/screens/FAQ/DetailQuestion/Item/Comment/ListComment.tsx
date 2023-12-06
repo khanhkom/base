@@ -11,10 +11,12 @@ export default function ListComment({
   comments,
   onReply,
   onDeleteComment,
+  onCommentPress,
 }: {
   detail: IQuestion
   comments: ICommentData[]
   onReply: (comment: ICommentData) => void
+  onCommentPress: () => void
   onDeleteComment: (commentId: string) => void
 }) {
   const listCommentFilter = comments?.filter((cm) => {
@@ -29,6 +31,7 @@ export default function ListComment({
           <ItemAction
             questionId={detail?.id}
             like={detail?.likes ?? []}
+            onCommentPress={onCommentPress}
             comment={listCommentFilter?.length ?? 0}
           />
         )}

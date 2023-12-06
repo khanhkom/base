@@ -1,5 +1,5 @@
-import { KeyboardAvoidingView, StyleSheet, View, Image, Platform } from "react-native"
-import React from "react"
+import { KeyboardAvoidingView, StyleSheet, View, Image, Platform, Pressable } from "react-native"
+import React, { useEffect, useRef, useState } from "react"
 import { Header } from "@app/components/Header"
 import { Button, TextInput } from "react-native-paper"
 import { HEIGHT, WIDTH } from "@app/config/functions"
@@ -12,9 +12,53 @@ import { Text } from "@app/components/Text"
 import R from "@app/assets"
 import { Icon } from "@app/components/Icon"
 import { Screen } from "@app/components/Screen"
+import { EToastType, showToastMessage } from "@app/utils/library"
+import { getMyProfile } from "@app/redux/actions"
+import { updateFullName, updateImagePatient } from "@app/services/api/functions/users"
+import { useDispatch } from "react-redux"
+import ModalImagePicker from "@app/components/image-picker"
 export default function UpdateAccount() {
-  const nameRedux = useSelector((state) => state.userReducers.user?.name)
-  const [name, setText] = React.useState(nameRedux || "")
+  const user = useSelector((state) => state.userReducers.user)
+  console.log("nameRedux", user)
+  const [name, setText] = React.useState(user?.fullname || "")
+  const [avatar, setAvatar] = useState(null)
+  const [loading, setLoading] = useState(false)
+  const refSelect = useRef(null)
+  const dispatch = useDispatch()
+  const onPickFile = () => {
+    refSelect.current.show()
+  }
+  useEffect(() => {
+    if (user?.avatarUrl) {
+      setAvatar({ uri: user?.avatarUrl, isOld: true })
+    }
+  }, [user])
+  console.log("avatar_avatar", avatar)
+  const onPressSave = async () => {
+    setLoading(true)
+    const resUpdate = await updateFullName({ fullname: name })
+    if (avatar?.uri && !avatar?.isOld) {
+      const formData = new FormData()
+      const bodyImage = {
+        name: avatar.fileName || avatar.uri,
+        type: avatar.type,
+        uri: Platform.OS === "ios" ? avatar.uri.replace("file://", "") : avatar.uri,
+      }
+      formData.append("file", bodyImage)
+      const updateImage = await updateImagePatient(formData, user?.id)
+      console.log("updateImage_updateImage::", updateImage)
+    }
+    console.log("resUpdate_resUpdate", resUpdate?.data)
+    if (resUpdate?.status === 200) {
+      showToastMessage("Cập nhật thành công!", EToastType.SUCCESS)
+      dispatch(getMyProfile())
+      goBack()
+    } else {
+      showToastMessage("Cập nhật thất bại, Vui lòng thử lại!", EToastType.ERROR)
+    }
+    setLoading(false)
+  }
+
   return (
     <Screen
       safeAreaEdges={Platform.OS === "android" ? ["bottom"] : []}
@@ -22,18 +66,16 @@ export default function UpdateAccount() {
     >
       <Header leftIcon="arrow_left" title={"Cập nhật thông tin"} backgroundColor={colors.white} />
       <View style={{ flex: 1 }}>
-        <View
-          style={{
-            alignSelf: "center",
-
-            marginBottom: HEIGHT(spacing.xl),
-          }}
-        >
-          <Image source={R.images.avatar_docter} style={styles.doctorImage} resizeMode="cover" />
+        <Pressable onPress={onPickFile} style={styles.wrapperImage}>
+          <Image
+            source={avatar?.uri ? { uri: avatar?.uri } : R.images.avatar_patient}
+            style={styles.doctorImage}
+            resizeMode="cover"
+          />
           <View style={styles.buttonImage}>
             <Icon icon="camera" size={WIDTH(24)} />
           </View>
-        </View>
+        </Pressable>
         <Text
           size="ba"
           weight="medium"
@@ -61,13 +103,20 @@ export default function UpdateAccount() {
           mode="contained"
           disabled={name === ""}
           style={styles.button}
-          onPress={() => {
-            goBack()
-          }}
+          loading={loading}
+          onPress={onPressSave}
         >
           {translate("common.save")}
         </Button>
       </KeyboardAvoidingView>
+      <ModalImagePicker
+        ref={refSelect}
+        turnOffModal={() => {}}
+        onResult={(assets) => {
+          // setImage(asset);
+          setAvatar(assets[0])
+        }}
+      />
     </Screen>
   )
 }
@@ -99,5 +148,9 @@ const styles = StyleSheet.create({
     bottom: 0,
     right: 0,
     backgroundColor: colors.backdrop,
+  },
+  wrapperImage: {
+    alignSelf: "center",
+    marginBottom: HEIGHT(spacing.xl),
   },
 })
