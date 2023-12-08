@@ -1,7 +1,7 @@
 import { StyleSheet, View } from "react-native"
 import React, { useState } from "react"
 import { Text } from "@app/components/Text"
-import { HEIGHT, WIDTH, getWidth } from "@app/config/functions"
+import { HEIGHT, WIDTH, getWidth, handleErrorOTPFirebase } from "@app/config/functions"
 import { spacing } from "@app/theme/spacing"
 import colors from "@app/assets/colors"
 import { navigate } from "@app/navigators/navigationUtilities"
@@ -100,7 +100,9 @@ export default function VerifyPhoneNumber({ route }: IScreenParams) {
         console.log("resLogin_resLogin", body, resLogin?.data)
         setLoading(false)
       } catch (error) {
-        showToastMessage(translate("auth.verify_telephone_number_again"), EToastType.ERROR)
+        // showToastMessage(translate("auth.verify_telephone_number_again"), EToastType.ERROR)
+        handleErrorOTPFirebase(error)
+
         setError(true)
         setLoading(false)
       }

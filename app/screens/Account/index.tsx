@@ -18,6 +18,7 @@ import SocialConnect from "./Item/SocialConnect"
 import PopupConnectError from "./Item/PopupConnectError"
 import { Screen } from "@app/components/Screen"
 import { unregisterPush } from "@app/redux/actions/stringee"
+import auth from "@react-native-firebase/auth"
 
 export default function Account() {
   const [visible, setVisible] = useState(false)
@@ -37,6 +38,9 @@ export default function Account() {
         routes: [{ name: "Login" }],
       })
     }, 500)
+    auth()
+      .signOut()
+      .then(() => console.log("User signed out!"))
   }
   return (
     <Screen

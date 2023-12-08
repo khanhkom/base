@@ -1,20 +1,47 @@
 import { KeyboardAvoidingView, StyleSheet, View } from "react-native"
-import React from "react"
+import React, { useState } from "react"
 import { Header } from "@app/components/Header"
 import { Button, TextInput } from "react-native-paper"
 import { HEIGHT, WIDTH } from "@app/config/functions"
 import { spacing } from "@app/theme/spacing"
 import colors from "@app/assets/colors"
 import { navigate } from "@app/navigators/navigationUtilities"
-import { updateUserField } from "@app/redux/actions"
+import { getMyProfile, updateUserField } from "@app/redux/actions"
 import { useDispatch } from "react-redux"
 import { useSelector } from "@app/redux/reducers"
 import { translate } from "@app/i18n/translate"
+import { updateFullName } from "@app/services/api/functions/users"
+import { EToastType, showToastMessage } from "@app/utils/library"
 
 export default function ConfirmName() {
   // const [name, setText] = React.useState(nameRedux || "")
   const [name, setText] = React.useState("")
   const dispatch = useDispatch()
+  const [loading, setLoading] = useState(false)
+
+  const onPressSave = async () => {
+    setLoading(true)
+    const resUpdate = await updateFullName({ fullname: name })
+
+    console.log("resUpdate_resUpdate", resUpdate?.data)
+    if (resUpdate?.status === 200) {
+      showToastMessage("Cập nhật thành công!", EToastType.SUCCESS)
+      dispatch(getMyProfile())
+      navigate("CreatePatient", {
+        name,
+        fromRegister: true,
+      })
+      dispatch(
+        updateUserField({
+          name,
+        }),
+      )
+    } else {
+      showToastMessage("Cập nhật thất bại, Vui lòng thử lại!", EToastType.ERROR)
+    }
+    setLoading(false)
+  }
+
   return (
     <View style={styles.container}>
       <Header
@@ -43,17 +70,8 @@ export default function ConfirmName() {
           mode="contained"
           disabled={name === ""}
           style={styles.button}
-          onPress={() => {
-            navigate("CreatePatient", {
-              name,
-              fromRegister: true,
-            })
-            dispatch(
-              updateUserField({
-                name,
-              }),
-            )
-          }}
+          onPress={onPressSave}
+          loading={loading}
         >
           {translate("common.continue")}
         </Button>

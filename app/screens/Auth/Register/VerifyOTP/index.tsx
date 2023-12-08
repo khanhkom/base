@@ -61,8 +61,8 @@ export default function VerifyOTP({ route }: ScreenProps) {
   const [time, setTime] = useState(30)
   const [isBlock, setBlock] = useState(false)
   const [releaseIn, setrReleaseIn] = useState(0)
-  const [confirm, setConfirm] = useState(confirmation)
-
+  const [confirm, setConfirm] = useState(null)
+  const userFi = useRef(null)
   const dispatch = useDispatch()
   const tokenFi = useRef("")
   useEffect(() => {
@@ -90,33 +90,54 @@ export default function VerifyOTP({ route }: ScreenProps) {
       // extract the otp using regex e.g. the below regex extracts 4 digit otp from message
       const otp = /(\d{6})/g.exec(message)?.[1]
       setCode(otp)
-      _checkCode(otp)
+      _checkCode(otp, true)
       console.log("otp_otp", otp)
     })
     return () => removeListener()
   }, [])
-  function onAuthStateChanged(user) {
+  async function onAuthStateChanged(user) {
     console.log("user_user", user)
+    userFi.current = user
+    if (user && user?.phoneNumber) {
+      const idToken = await auth().currentUser.getIdToken(true)
+      const resOTP = await createSessionWithFirebase({
+        phone,
+        idtoken: idToken,
+        fcmToken: tokenFi.current,
+      })
+      if (isNeedUpdatePhone) {
+        await updatePhoneSocial({
+          phone,
+          idtoken: idToken,
+        })
+      }
+      handleUiUpdate(resOTP)
+      setLoading(false)
+    }
   }
   useEffect(() => {
     const subscriber = auth().onAuthStateChanged(onAuthStateChanged)
     return subscriber // unsubscribe on unmount
   }, [])
-
-  const _checkCode = async (codeFinal) => {
+  console.log("userFi::", userFi)
+  // Function to handle API call and data processing
+  async function handleAPICall(codeFinal, isAuto) {
     try {
       setLoading(true)
+
       const deviceId = await DeviceInfo.getUniqueId()
       const body = {
         phone,
         otp: codeFinal,
         deviceId,
       }
+
       if (tokenFi.current !== "") {
         Object.assign(body, {
           fcmToken: tokenFi.current,
         })
       }
+
       let resOTP = null
 
       if (otpMethod === OTP_TYPE.ZNS) {
@@ -138,87 +159,92 @@ export default function VerifyOTP({ route }: ScreenProps) {
           phone,
           code: codeFinal,
         }
+
         if (tokenFi.current !== "") {
           Object.assign(newBody, {
             fcmToken: tokenFi.current,
           })
         }
-        // resOTP = await verifyOTP(newBody)
-        if (resend) {
-          resOTP = await confirm.confirm(codeFinal)
-        } else {
-          resOTP = await confirmation.confirm(codeFinal)
-        }
-        console.log("333")
 
-        const idToken = await auth().currentUser.getIdToken(true)
-        resOTP = await createSessionWithFirebase({
-          phone,
-          idtoken: idToken,
-          fcmToken: tokenFi.current,
-        })
-        if (isNeedUpdatePhone) {
-          await updatePhoneSocial({
+        if (!((userFi?.current !== null && userFi?.current?.phoneNumber) || isAuto)) {
+          console.log("ZO_CONFIRM")
+          if (resend) {
+            resOTP = await confirm.confirm(codeFinal)
+          } else {
+            resOTP = await confirmation.confirm(codeFinal)
+          }
+          const idToken = await auth().currentUser.getIdToken(true)
+          resOTP = await createSessionWithFirebase({
             phone,
             idtoken: idToken,
+            fcmToken: tokenFi.current,
           })
-        }
-        console.log("resOTP_resOTP::::", resOTP, codeFinal, idToken)
-      }
-      console.log("body", body, resOTP)
-      const dataLogin = resOTP?.data
-      setLoading(false)
-      if (resOTP?.data?.accessToken) {
-        api.apisauce.setHeader("access-token", dataLogin?.accessToken)
-        save(KEYSTORAGE.LOGIN_DATA, dataLogin)
-        dispatch(getStringeeToken())
-        if (dataLogin?.isNewUser) {
-          // navigate("ConfirmName")
-          resetRoot({
-            index: 0,
-            routes: [{ name: "ConfirmName" }],
-          })
-        } else {
-          resetRoot({
-            index: 0,
-            routes: [{ name: "TabNavigator" }],
-          })
-          // navigate("TabNavigator")
-        }
-      } else {
-        setCode("")
-        if (resOTP?.status === 429) {
-          setError(true)
-          setBlock(true)
-          if (releaseIn === 0) {
-            handleBlockOTP(resOTP?.data?.releaseIn)
+
+          if (isNeedUpdatePhone) {
+            await updatePhoneSocial({
+              phone,
+              idtoken: idToken,
+            })
           }
-          showToastMessage("Bạn đã nhập sai quá nhiều lần!", EToastType.ERROR)
-          console.log("resOTP_resOTP", resOTP?.data)
         } else {
-          setError(true)
-          showToastMessage(translate("otp.incorrect_login_code"), EToastType.ERROR)
+          return
         }
-      }
-    } catch (error) {
-      const errorCodePattern = /\[([^\]]+)\]/ // Regular expression to capture the error code within square brackets
-      const match = errorCodePattern.exec(error.message)
-      if (match) {
-        const errorCode = match[1]
-        console.log("Error code:", errorCode)
-        if (errorCode === "auth/session-expired") {
-          showToastMessage("Mã đã hết hạn vui lòng gửi mã mới!", EToastType.ERROR)
-        } else {
-          showToastMessage(translate("otp.incorrect_login_code"), EToastType.ERROR)
-        }
-      } else {
-        console.log("Error code not found")
-        showToastMessage(translate("otp.incorrect_login_code"), EToastType.ERROR)
       }
 
-      setError(true)
-      setLoading(false)
+      return resOTP
+    } catch (error) {
+      console.log("Error:", error)
     }
+  }
+
+  // Function to handle UI updates and navigation
+  async function handleUiUpdate(resOTP) {
+    setLoading(false)
+
+    const dataLogin = resOTP?.data
+
+    if (resOTP?.data?.accessToken) {
+      api.apisauce.setHeader("access-token", dataLogin?.accessToken)
+      save(KEYSTORAGE.LOGIN_DATA, dataLogin)
+      dispatch(getStringeeToken())
+
+      if (dataLogin?.isNewUser) {
+        // navigate("ConfirmName")
+        resetRoot({
+          index: 0,
+          routes: [{ name: "ConfirmName" }],
+        })
+      } else {
+        resetRoot({
+          index: 0,
+          routes: [{ name: "TabNavigator" }],
+        })
+        // navigate("TabNavigator")
+      }
+    } else {
+      setCode("")
+
+      if (resOTP?.status === 429) {
+        setError(true)
+        setBlock(true)
+
+        if (releaseIn === 0) {
+          handleBlockOTP(resOTP?.data?.releaseIn)
+        }
+
+        showToastMessage("Bạn đã nhập sai quá nhiều lần!", EToastType.ERROR)
+        console.log("resOTP_resOTP", resOTP?.data)
+      } else {
+        setError(true)
+        showToastMessage(translate("otp.incorrect_login_code"), EToastType.ERROR)
+      }
+    }
+  }
+
+  // Usage:
+  const _checkCode = async (codeFinal, isAuto) => {
+    const resOTP = await handleAPICall(codeFinal, isAuto)
+    handleUiUpdate(resOTP)
   }
   const reSendCode = async () => {
     try {
@@ -312,7 +338,7 @@ export default function VerifyOTP({ route }: ScreenProps) {
           console.log("error", error)
           setCode(code)
         }}
-        onFulfill={(code) => _checkCode(code)}
+        onFulfill={(code) => _checkCode(code, false)}
         // onFulfill={(code) => {
         //   console.log("code_code", code)
         //   setError(true)

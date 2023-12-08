@@ -150,10 +150,10 @@ export const handleErrorOTPFirebase = (error) => {
     } else if (errorCode === "auth/too-many-requests") {
       showToastMessage("Yêu cầu bị giới hạn, Vui lòng thử lại sau!", EToastType.ERROR)
     } else {
-      showToastMessage("Sai mã đăng nhập", EToastType.ERROR)
+      showToastMessage(errorCode, EToastType.ERROR)
     }
   } else {
     console.log("Error code not found")
-    showToastMessage("Sai mã đăng nhập", EToastType.ERROR)
+    showToastMessage("Có lỗi xảy ra, vui lòng thử lại!", EToastType.ERROR)
   }
 }

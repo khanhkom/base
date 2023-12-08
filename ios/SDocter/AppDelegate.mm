@@ -1,5 +1,7 @@
 #import "AppDelegate.h"
 #import "RNBootSplash.h"
+#import "RNFBAppCheckModule.h" // ⬅️ ADD THIS LINE
+
 #import <Firebase.h>
 #import "Orientation.h"
 
@@ -34,6 +36,7 @@
   self.initialProps = @{};
 
   [super application:application didFinishLaunchingWithOptions:launchOptions];
+  [RNFBAppCheckModule sharedInstance]; // ⬅️ ADD THIS LINE BEFORE [FIRApp configure]
   [FIRApp configure];
    [[FBSDKApplicationDelegate sharedInstance] application:application
                        didFinishLaunchingWithOptions:launchOptions];
