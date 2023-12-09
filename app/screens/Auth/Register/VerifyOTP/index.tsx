@@ -97,8 +97,8 @@ export default function VerifyOTP({ route }: ScreenProps) {
   }, [])
   async function onAuthStateChanged(user) {
     console.log("user_user", user)
-    userFi.current = user
     if (user && user?.phoneNumber === phone) {
+      userFi.current = user
       const idToken = await auth().currentUser.getIdToken(true)
       const resOTP = await createSessionWithFirebase({
         phone,
@@ -167,7 +167,14 @@ export default function VerifyOTP({ route }: ScreenProps) {
           })
         }
 
-        if (!((userFi?.current !== null && userFi?.current?.phoneNumber) || isAuto)) {
+        if (
+          !(
+            (userFi?.current !== null &&
+              userFi?.current?.phoneNumber &&
+              userFi?.current?.phoneNumber !== phone) ||
+            isAuto
+          )
+        ) {
           console.log("ZO_CONFIRM")
           if (resend) {
             resOTP = await confirm.confirm(codeFinal)
