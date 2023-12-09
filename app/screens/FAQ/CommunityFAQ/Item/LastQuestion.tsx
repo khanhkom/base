@@ -17,7 +17,7 @@ export default function LastQuestion() {
   const isReload = useSelector((state) => state.questionReducers.isReload)
   useEffect(() => {
     async function getRecentQuestion() {
-      const body = { page: 1, perPage: 5, sortByCreatedAt: 1 }
+      const body = { page: 1, perPage: 5, sortByCreatedAt: -1 }
       setLoading(true)
       const questionRes = await getQuestionFilter(body)
       console.log("questionRes_questionRes", questionRes?.data?.items)

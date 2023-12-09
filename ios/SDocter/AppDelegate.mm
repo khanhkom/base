@@ -38,8 +38,15 @@
   [super application:application didFinishLaunchingWithOptions:launchOptions];
   [RNFBAppCheckModule sharedInstance]; // ⬅️ ADD THIS LINE BEFORE [FIRApp configure]
   [FIRApp configure];
-   [[FBSDKApplicationDelegate sharedInstance] application:application
+  [[FBSDKApplicationDelegate sharedInstance] application:application
                        didFinishLaunchingWithOptions:launchOptions];
+
+  NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+  if (![defaults boolForKey:@"notFirstRun"]) {
+    [defaults setBool:YES forKey:@"notFirstRun"];
+    [defaults synchronize];
+    [[FIRAuth auth] signOut:NULL];
+  }
   // RN BootSplash
   UIView *rootView = self.window.rootViewController.view; // react-native >= 0.71 specific
   [RNBootSplash initWithStoryboard:@"BootSplash" rootView:rootView];

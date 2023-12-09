@@ -32,6 +32,7 @@ export default function ItemComment({
   const titleName = item?.role === "patient" ? "B.n" : "B.s"
   const user = useSelector((state) => state.userReducers.user)
   const isOwner = user?.id === item?.userId
+  console.log("isOwner_isOwner::", item, isOwner, user)
   const isDelete = !!item?.deletedAt
 
   const [isLike, setIsLike] = useState(false)

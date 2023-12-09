@@ -23,6 +23,7 @@ export default function ListComment({
     const isDelete = cm?.deletedAt
     return !(isDelete && cm?.replies?.length === 0)
   })
+  console.log("listCommentFilter_listCommentFilter", listCommentFilter)
   return (
     <View>
       <FlatList
