@@ -1,4 +1,4 @@
-import { KeyboardAvoidingView, StyleSheet, View } from "react-native"
+import { KeyboardAvoidingView, Platform, StyleSheet, View } from "react-native"
 import React, { useState } from "react"
 import { Header } from "@app/components/Header"
 import { Button, TextInput } from "react-native-paper"
@@ -12,6 +12,7 @@ import { useSelector } from "@app/redux/reducers"
 import { translate } from "@app/i18n/translate"
 import { updateFullName } from "@app/services/api/functions/users"
 import { EToastType, showToastMessage } from "@app/utils/library"
+import { Screen } from "@app/components/Screen"
 
 export default function ConfirmName() {
   // const [name, setText] = React.useState(nameRedux || "")
@@ -43,7 +44,11 @@ export default function ConfirmName() {
   }
 
   return (
-    <View style={styles.container}>
+    <Screen
+      preset="auto"
+      safeAreaEdges={Platform.OS === "android" ? ["bottom"] : []}
+      contentContainerStyle={styles.container}
+    >
       <Header
         // leftIcon="arrow_left"
         title={translate("auth.name_confirmation")}
@@ -76,7 +81,7 @@ export default function ConfirmName() {
           {translate("common.continue")}
         </Button>
       </KeyboardAvoidingView>
-    </View>
+    </Screen>
   )
 }
 

@@ -3,7 +3,7 @@ import React, { useRef, useState, useEffect } from "react"
 import SmoothPinCodeInput from "react-native-smooth-pincode-input"
 import { Header } from "@app/components/Header"
 import { Text } from "@app/components/Text"
-import { HEIGHT, WIDTH, convertDuration } from "@app/config/functions"
+import { HEIGHT, WIDTH, convertDuration, handleErrorOTPFirebase } from "@app/config/functions"
 import { spacing } from "@app/theme/spacing"
 import colors from "@app/assets/colors"
 import BackgroundTimer from "react-native-background-timer"
@@ -98,7 +98,7 @@ export default function VerifyOTP({ route }: ScreenProps) {
   async function onAuthStateChanged(user) {
     console.log("user_user", user)
     userFi.current = user
-    if (user && user?.phoneNumber) {
+    if (user && user?.phoneNumber === phone) {
       const idToken = await auth().currentUser.getIdToken(true)
       const resOTP = await createSessionWithFirebase({
         phone,
@@ -111,6 +111,7 @@ export default function VerifyOTP({ route }: ScreenProps) {
           idtoken: idToken,
         })
       }
+      console.log("resOTP_resOTP", resOTP, idToken)
       handleUiUpdate(resOTP)
       setLoading(false)
     }
@@ -124,7 +125,6 @@ export default function VerifyOTP({ route }: ScreenProps) {
   async function handleAPICall(codeFinal, isAuto) {
     try {
       setLoading(true)
-
       const deviceId = await DeviceInfo.getUniqueId()
       const body = {
         phone,
@@ -154,6 +154,7 @@ export default function VerifyOTP({ route }: ScreenProps) {
           default:
             break
         }
+        handleUiUpdate(resOTP)
       } else {
         const newBody = {
           phone,
@@ -190,9 +191,9 @@ export default function VerifyOTP({ route }: ScreenProps) {
           return
         }
       }
-
-      return resOTP
     } catch (error) {
+      handleErrorOTPFirebase(error)
+      setLoading(false)
       console.log("Error:", error)
     }
   }
@@ -200,8 +201,8 @@ export default function VerifyOTP({ route }: ScreenProps) {
   // Function to handle UI updates and navigation
   async function handleUiUpdate(resOTP) {
     setLoading(false)
-
     const dataLogin = resOTP?.data
+    console.log("handleUiUpdate_handleUiUpdate")
 
     if (resOTP?.data?.accessToken) {
       api.apisauce.setHeader("access-token", dataLogin?.accessToken)
@@ -227,7 +228,6 @@ export default function VerifyOTP({ route }: ScreenProps) {
       if (resOTP?.status === 429) {
         setError(true)
         setBlock(true)
-
         if (releaseIn === 0) {
           handleBlockOTP(resOTP?.data?.releaseIn)
         }
@@ -243,8 +243,7 @@ export default function VerifyOTP({ route }: ScreenProps) {
 
   // Usage:
   const _checkCode = async (codeFinal, isAuto) => {
-    const resOTP = await handleAPICall(codeFinal, isAuto)
-    handleUiUpdate(resOTP)
+    await handleAPICall(codeFinal, isAuto)
   }
   const reSendCode = async () => {
     try {

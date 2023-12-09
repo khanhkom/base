@@ -139,21 +139,36 @@ export function convertTimeToAgo(date) {
   return convertedTime
 }
 
-export const handleErrorOTPFirebase = (error) => {
+export const handleErrorOTPFirebase = (error, message?: string) => {
   const errorCodePattern = /\[([^\]]+)\]/ // Regular expression to capture the error code within square brackets
   const match = errorCodePattern.exec(error.message)
   if (match) {
     const errorCode = match[1]
     console.log("Error code:", errorCode)
-    if (errorCode === "auth/session-expired") {
-      showToastMessage("Mã đã hết hạn vui lòng gửi mã mới!", EToastType.ERROR)
-    } else if (errorCode === "auth/too-many-requests") {
-      showToastMessage("Yêu cầu bị giới hạn, Vui lòng thử lại sau!", EToastType.ERROR)
-    } else {
-      showToastMessage(errorCode, EToastType.ERROR)
+    switch (errorCode) {
+      case "auth/session-expired":
+        showToastMessage("Mã đã hết hạn vui lòng gửi mã mới!", EToastType.ERROR)
+
+        break
+      case "auth/too-many-requests":
+        showToastMessage("Yêu cầu bị giới hạn, Vui lòng thử lại sau!", EToastType.ERROR)
+        break
+      case "auth/invalid-verification-code":
+        showToastMessage("Mã không chính xác!", EToastType.ERROR)
+        break
+
+      case "auth/missing-client-identifier":
+        showToastMessage(
+          "Thiếu thông tin xác định người dùng, Vui lòng thử lại sau!",
+          EToastType.ERROR,
+        )
+        break
+      default:
+        showToastMessage(errorCode, EToastType.ERROR)
+        break
     }
   } else {
     console.log("Error code not found")
-    showToastMessage("Có lỗi xảy ra, vui lòng thử lại!", EToastType.ERROR)
+    showToastMessage(message || "Có lỗi xảy ra, vui lòng thử lại!", EToastType.ERROR)
   }
 }

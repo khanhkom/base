@@ -274,7 +274,7 @@ const useHookLogin = (setCustomLoading?: (val: boolean) => void) => {
         showToastMessage(translate("auth.verify_telephone_number_again"), EToastType.ERROR)
       } else {
         const confirmation = await auth().signInWithPhoneNumber(`${body.phone}`)
-
+        console.log("confirmation_confirmation", confirmation)
         if (confirmation.verificationId) {
           navigate("VerifyOTP", {
             phone: body.phone,
