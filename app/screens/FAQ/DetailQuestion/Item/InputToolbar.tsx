@@ -159,7 +159,14 @@ const ItemInputToolbar = forwardRef(
                       height: props.composerHeight,
                       ...styles.textInput,
                     }}
-                    style={props.textInputStyle}
+                    style={[
+                      props.textInputStyle,
+                      styles.textInput1,
+                      Platform.OS === "ios" && {
+                        paddingTop: HEIGHT(spacing.md),
+                        paddingBottom: HEIGHT(spacing.md),
+                      },
+                    ]}
                     autoFocus={props.textInputAutoFocus}
                     value={comment}
                     enablesReturnKeyAutomatically
@@ -244,8 +251,9 @@ const styles = StyleSheet.create({
   },
   textInput: {
     paddingHorizontal: WIDTH(spacing.sm),
-    paddingVertical: HEIGHT(0),
-    height: HEIGHT(48),
+  },
+  textInput1: {
+    paddingHorizontal: WIDTH(spacing.md),
   },
   primaryStyle: {
     alignItems: "center",
