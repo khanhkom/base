@@ -92,7 +92,7 @@ const ItemInputToolbar = forwardRef(
     console.log("comment_comment", comment)
     return (
       <>
-        <ModalTagUser />
+        {/* <ModalTagUser /> */}
         <InputToolbar
           primaryStyle={styles.primaryStyle}
           renderSend={() => {
