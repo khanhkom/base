@@ -9,9 +9,16 @@ import { Card, Divider, List } from "react-native-paper"
 import { useSelector } from "@app/redux/reducers"
 export default function BaseInfor() {
   const user = useSelector((state) => state.userReducers.user)
+  const patients = useSelector((state) => state.patientReducers.patients)
+  const avatar = patients?.[0]?.avatarUrl
+
   return (
     <View style={styles.container}>
-      <Image source={R.images.avatar_patient} style={styles.doctorImage} resizeMode="cover" />
+      <Image
+        source={avatar ? { uri: avatar } : R.images.avatar_patient}
+        style={styles.doctorImage}
+        resizeMode="cover"
+      />
       <Text size="xxl" weight="semiBold" style={styles.name}>
         {user?.fullname ?? "Chưa cập nhật"}
       </Text>

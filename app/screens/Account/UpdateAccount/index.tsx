@@ -17,23 +17,30 @@ import { getMyProfile } from "@app/redux/actions"
 import { updateFullName, updateImagePatient } from "@app/services/api/functions/users"
 import { useDispatch } from "react-redux"
 import ModalImagePicker from "@app/components/image-picker"
+import { getListPatientRequest } from "@app/redux/actions/patient"
 export default function UpdateAccount() {
   const user = useSelector((state) => state.userReducers.user)
-  console.log("nameRedux", user)
+  const patients = useSelector((state) => state.patientReducers.patients)
+  console.log("nameRedux", patients)
   const [name, setText] = React.useState(user?.fullname || "")
   const [avatar, setAvatar] = useState(null)
   const [loading, setLoading] = useState(false)
   const refSelect = useRef(null)
   const dispatch = useDispatch()
+  const isEnableUpdateAvatar = patients?.length > 0
   const onPickFile = () => {
-    refSelect.current.show()
+    if (isEnableUpdateAvatar) {
+      refSelect.current.show()
+    } else {
+      showToastMessage("Vui lòng thêm hồ sơ bệnh nhân!")
+    }
   }
   useEffect(() => {
-    if (user?.avatarUrl) {
-      setAvatar({ uri: user?.avatarUrl, isOld: true })
+    if (patients?.[0]?.avatarUrl) {
+      setAvatar({ uri: patients?.[0]?.avatarUrl, isOld: true })
     }
   }, [user])
-  console.log("avatar_avatar", avatar)
+  console.log("avatar_avatar", isEnableUpdateAvatar)
   const onPressSave = async () => {
     setLoading(true)
     const resUpdate = await updateFullName({ fullname: name })
@@ -45,13 +52,14 @@ export default function UpdateAccount() {
         uri: Platform.OS === "ios" ? avatar.uri.replace("file://", "") : avatar.uri,
       }
       formData.append("file", bodyImage)
-      const updateImage = await updateImagePatient(formData, user?.id)
+      const updateImage = await updateImagePatient(formData, patients?.[0]?.id)
       console.log("updateImage_updateImage::", updateImage)
     }
     console.log("resUpdate_resUpdate", resUpdate?.data)
     if (resUpdate?.status === 200) {
       showToastMessage("Cập nhật thành công!", EToastType.SUCCESS)
       dispatch(getMyProfile())
+      dispatch(getListPatientRequest())
       goBack()
     } else {
       showToastMessage("Cập nhật thất bại, Vui lòng thử lại!", EToastType.ERROR)
@@ -66,7 +74,11 @@ export default function UpdateAccount() {
     >
       <Header leftIcon="arrow_left" title={"Cập nhật thông tin"} backgroundColor={colors.white} />
       <View style={{ flex: 1 }}>
-        <Pressable onPress={onPickFile} style={styles.wrapperImage}>
+        <Pressable
+          // disabled={!isEnableUpdateAvatar}
+          onPress={onPickFile}
+          style={styles.wrapperImage}
+        >
           <Image
             source={avatar?.uri ? { uri: avatar?.uri } : R.images.avatar_patient}
             style={styles.doctorImage}

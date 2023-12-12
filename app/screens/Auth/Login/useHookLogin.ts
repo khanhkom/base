@@ -227,7 +227,20 @@ const useHookLogin = (setCustomLoading?: (val: boolean) => void) => {
       showToastMessage(translate("common.oops_error"), EToastType.ERROR)
     }
   }
-
+  const onRequestOTP = async (type, phone) => {
+    const confirmation = await auth().signInWithPhoneNumber(`${phone}`)
+    if (confirmation.verificationId) {
+      navigate("VerifyOTP", {
+        phone,
+        otpMethod,
+        type,
+        confirmation,
+      })
+    } else {
+      setError(true)
+      showToastMessage(translate("auth.verify_telephone_number_again"), EToastType.ERROR)
+    }
+  }
   const onLoginWithSMS = async () => {
     try {
       const result = phoneNumber.replace(/^0+/, "")
@@ -235,24 +248,20 @@ const useHookLogin = (setCustomLoading?: (val: boolean) => void) => {
         phone: countryCode + result,
       }
       const checkUserFi = await checkUserFirebase(body)
-      if (!checkUserFi.data) {
+      console.log("checkUserFi_checkUserFi", checkUserFi?.status, checkUserFi?.data)
+      if (checkUserFi.status !== 201) {
         setError(true)
-        showToastMessage(translate("auth.verify_telephone_number_again"), EToastType.ERROR)
+        showToastMessage(
+          checkUserFi?.data?.message ?? translate("auth.verify_telephone_number_again"),
+          EToastType.ERROR,
+        )
       } else {
-        const confirmation = await auth().signInWithPhoneNumber(`${body.phone}`)
-        console.log("confirmation_confirmation", confirmation)
-        if (confirmation.verificationId) {
-          navigate("VerifyOTP", {
-            phone: body.phone,
-            otpMethod,
-            type: "LOGIN",
-            confirmation,
-          })
+        if (checkUserFi?.data) {
+          await onRequestOTP("LOGIN", body.phone)
         } else {
-          setError(true)
-          showToastMessage(translate("auth.verify_telephone_number_again"), EToastType.ERROR)
+          setNewUser(true)
+          showModal()
         }
-        console.log("confirmation::", confirmation.verificationId)
       }
       setLoading(false)
     } catch (error) {
@@ -269,24 +278,20 @@ const useHookLogin = (setCustomLoading?: (val: boolean) => void) => {
         phone: countryCode + result,
       }
       const checkUserFi = await checkUserFirebase(body)
-      if (!checkUserFi.data) {
+      console.log("checkUserFi::", checkUserFi?.data, checkUserFi?.status)
+      if (checkUserFi.status !== 201) {
         setError(true)
-        showToastMessage(translate("auth.verify_telephone_number_again"), EToastType.ERROR)
+        showToastMessage(
+          checkUserFi?.data?.message ?? translate("auth.verify_telephone_number_again"),
+          EToastType.ERROR,
+        )
       } else {
-        const confirmation = await auth().signInWithPhoneNumber(`${body.phone}`)
-        console.log("confirmation_confirmation", confirmation)
-        if (confirmation.verificationId) {
-          navigate("VerifyOTP", {
-            phone: body.phone,
-            otpMethod,
-            type: "REGISTER",
-            confirmation,
-          })
+        if (!checkUserFi?.data) {
+          await onRequestOTP("REGISTER", body.phone)
         } else {
-          setError(true)
-          showToastMessage(translate("auth.verify_telephone_number_again"), EToastType.ERROR)
+          setNewUser(false)
+          showModal()
         }
-        console.log("confirmation::", confirmation.verificationId)
       }
       setLoading(false)
     } catch (error) {

@@ -1,5 +1,5 @@
 import { Platform, StyleSheet, View } from "react-native"
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import { KEYSTORAGE, remove } from "@app/utils/storage"
 import { removeUserData } from "@app/redux/actions"
 import { navigate, resetRoot } from "@app/navigators/navigationUtilities"
@@ -19,11 +19,13 @@ import PopupConnectError from "./Item/PopupConnectError"
 import { Screen } from "@app/components/Screen"
 import { unregisterPush } from "@app/redux/actions/stringee"
 import auth from "@react-native-firebase/auth"
+import { useSelector } from "@app/redux/reducers"
 
 export default function Account() {
   const [visible, setVisible] = useState(false)
   const [indexSocial, setIndexSocial] = useState(0)
   const dispatch = useDispatch()
+
   const onLogout = async () => {
     await remove(KEYSTORAGE.LOGIN_DATA)
     dispatch(removeUserData())
@@ -42,6 +44,7 @@ export default function Account() {
       .signOut()
       .then(() => console.log("User signed out!"))
   }
+
   return (
     <Screen
       safeAreaEdges={Platform.OS === "android" ? ["bottom"] : []}

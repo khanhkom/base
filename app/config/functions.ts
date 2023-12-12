@@ -148,7 +148,9 @@ export const handleErrorOTPFirebase = (error, message?: string) => {
     switch (errorCode) {
       case "auth/session-expired":
         showToastMessage("Mã đã hết hạn vui lòng gửi mã mới!", EToastType.ERROR)
-
+        break
+      case "auth/code-expired":
+        showToastMessage("Mã đã hết hạn vui lòng gửi mã mới!", EToastType.ERROR)
         break
       case "auth/too-many-requests":
         showToastMessage("Yêu cầu bị giới hạn, Vui lòng thử lại sau!", EToastType.ERROR)

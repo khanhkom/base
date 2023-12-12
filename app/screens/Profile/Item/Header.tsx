@@ -10,11 +10,18 @@ import { useSelector } from "@app/redux/reducers"
 export default function Header() {
   const $containerInsets = useSafeAreaInsetsStyle(["top"])
   const user = useSelector((state) => state.userReducers.user)
-  console.log("user::", user)
+  const patients = useSelector((state) => state.patientReducers.patients)
+
+  console.log("user::", patients)
+  const avatar = patients?.[0]?.avatarUrl
   return (
     <View style={[styles.container, $containerInsets]}>
       <Image source={R.images.background_profile} style={styles.backgroundImage} />
-      <Image source={R.images.avatar_patient} style={styles.doctorImage} resizeMode="cover" />
+      <Image
+        source={avatar ? { uri: avatar } : R.images.avatar_patient}
+        style={styles.doctorImage}
+        resizeMode="cover"
+      />
       <Text
         size="xxl"
         weight="semiBold"

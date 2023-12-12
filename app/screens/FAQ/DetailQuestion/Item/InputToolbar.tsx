@@ -103,81 +103,84 @@ const ItemInputToolbar = forwardRef(
               />
             )
           }}
-          renderComposer={(props) => (
-            <View>
-              {isReply && (
-                <Text
-                  style={{ marginBottom: HEIGHT(spacing.xs), color: colors.gray_7 }}
-                  size="sm"
-                  weight="normal"
-                >
-                  Đang trả lời{" "}
-                  <Text style={{ color: colors.gray_9 }} size="sm" weight="bold">
-                    {replyComment?.userName}
-                  </Text>
+          renderComposer={(props) => {
+            console.log("props.composerHeight", props.composerHeight)
+            return (
+              <View>
+                {isReply && (
                   <Text
-                    onPress={onReplyCancel}
-                    style={{ color: colors.gray_7 }}
+                    style={{ marginBottom: HEIGHT(spacing.xs), color: colors.gray_7 }}
                     size="sm"
-                    weight="medium"
+                    weight="normal"
                   >
-                    {" "}
-                    Hủy
+                    Đang trả lời{" "}
+                    <Text style={{ color: colors.gray_9 }} size="sm" weight="bold">
+                      {replyComment?.userName}
+                    </Text>
+                    <Text
+                      onPress={onReplyCancel}
+                      style={{ color: colors.gray_7 }}
+                      size="sm"
+                      weight="medium"
+                    >
+                      {" "}
+                      Hủy
+                    </Text>
                   </Text>
-                </Text>
-              )}
-              <View style={styles.wrapperIcon}>
-                <MentionInput
-                  // 1.1. Copying all the properties from original `Composer`
-                  // https://github.com/FaridSafi/react-native-gifted-chat/blob/master/src/Composer.tsx#L106
-                  inputRef={input}
-                  accessible
-                  accessibilityLabel={props.placeholder}
-                  placeholder={props.placeholder}
-                  placeholderTextColor={props.placeholderTextColor}
-                  editable={!props.disableComposer}
-                  onLayout={(e) => {
-                    if (props.onInputSizeChanged) {
-                      props.onInputSizeChanged({
-                        width: e.nativeEvent.layout.width,
-                        // 1.3. Add magical +17  to height to fix content staying at a single line
-                        height: e.nativeEvent.layout.height + 17,
-                      })
-                    }
-                  }}
-                  onChange={setComment}
-                  containerStyle={{
-                    height: props.composerHeight,
-                    ...styles.textInput,
-                  }}
-                  style={props.textInputStyle}
-                  autoFocus={props.textInputAutoFocus}
-                  value={comment}
-                  enablesReturnKeyAutomatically
-                  underlineColorAndroid={"transparent"}
-                  keyboardAppearance={props.keyboardAppearance}
-                  // 2. Add your desired part types
-                  partTypes={[
-                    {
-                      trigger: "@",
-                      // 4.1. Avoid direct usage of a functional component with hooks
-                      // https://github.com/dabakovich/react-native-controlled-mentions/issues/44#issuecomment-808016858
-                      renderSuggestions: (p) =>
-                        renderSuggestions({
-                          suggest: p,
-                          suggestions: suggestion,
-                        }),
-                      textStyle: { fontWeight: "bold" },
-                      isInsertSpaceAfterMention: true,
-                      // getPlainString: (val) => {
-                      //   console.log("getPlainString::", val)
-                      // },
-                    },
-                  ]}
-                />
+                )}
+                <View style={styles.wrapperIcon}>
+                  <MentionInput
+                    // 1.1. Copying all the properties from original `Composer`
+                    // https://github.com/FaridSafi/react-native-gifted-chat/blob/master/src/Composer.tsx#L106
+                    inputRef={input}
+                    accessible
+                    accessibilityLabel={props.placeholder}
+                    placeholder={props.placeholder}
+                    placeholderTextColor={props.placeholderTextColor}
+                    editable={!props.disableComposer}
+                    onLayout={(e) => {
+                      if (props.onInputSizeChanged) {
+                        props.onInputSizeChanged({
+                          width: e.nativeEvent.layout.width,
+                          // 1.3. Add magical +17  to height to fix content staying at a single line
+                          height: e.nativeEvent.layout.height + 17,
+                        })
+                      }
+                    }}
+                    onChange={setComment}
+                    containerStyle={{
+                      height: props.composerHeight,
+                      ...styles.textInput,
+                    }}
+                    style={props.textInputStyle}
+                    autoFocus={props.textInputAutoFocus}
+                    value={comment}
+                    enablesReturnKeyAutomatically
+                    underlineColorAndroid={"transparent"}
+                    keyboardAppearance={props.keyboardAppearance}
+                    // 2. Add your desired part types
+                    partTypes={[
+                      {
+                        trigger: "@",
+                        // 4.1. Avoid direct usage of a functional component with hooks
+                        // https://github.com/dabakovich/react-native-controlled-mentions/issues/44#issuecomment-808016858
+                        renderSuggestions: (p) =>
+                          renderSuggestions({
+                            suggest: p,
+                            suggestions: suggestion,
+                          }),
+                        textStyle: { fontWeight: "bold" },
+                        isInsertSpaceAfterMention: true,
+                        // getPlainString: (val) => {
+                        //   console.log("getPlainString::", val)
+                        // },
+                      },
+                    ]}
+                  />
+                </View>
               </View>
-            </View>
-          )}
+            )
+          }}
           // renderComposer={() => {
           //   return (
           //     <View>
@@ -233,6 +236,7 @@ const styles = StyleSheet.create({
   textInput: {
     paddingHorizontal: WIDTH(spacing.sm),
     paddingVertical: HEIGHT(0),
+    height: HEIGHT(48),
   },
   primaryStyle: {
     alignItems: "center",

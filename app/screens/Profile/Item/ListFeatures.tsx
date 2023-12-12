@@ -75,6 +75,9 @@ export default function ListFeatures() {
       case TYPE_FEATURES.PATIENT_PROFILE:
         navigate("PatientProfile")
         break
+      case TYPE_FEATURES.FAQ:
+        navigate("FrequentlyFAQ")
+        break
 
       default:
         break
