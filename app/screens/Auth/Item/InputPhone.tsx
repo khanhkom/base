@@ -177,7 +177,6 @@ const styles = StyleSheet.create({
     padding: 0,
     color: colors.gray_9,
     width: WIDTH(238),
-    paddingVertical: HEIGHT(spacing.sm),
   },
   wrapperInput: {
     alignItems: "center",
@@ -185,5 +184,6 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     borderWidth: 1,
     flexDirection: "row",
+    paddingVertical: HEIGHT(spacing.sm),
   },
 })
