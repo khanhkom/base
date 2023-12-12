@@ -1,4 +1,11 @@
-import { StyleSheet, TextInput, TouchableOpacity, View } from "react-native"
+import {
+  KeyboardAvoidingView,
+  Platform,
+  StyleSheet,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native"
 import React, { forwardRef, useImperativeHandle, useState, Ref, useRef, useEffect } from "react"
 import { GiftedChat, InputToolbar } from "react-native-gifted-chat"
 import { Icon } from "@app/components/Icon"
@@ -181,6 +188,7 @@ const ItemInputToolbar = forwardRef(
               </View>
             )
           }}
+
           // renderComposer={() => {
           //   return (
           //     <View>
@@ -220,6 +228,7 @@ const ItemInputToolbar = forwardRef(
           //   )
           // }}
         />
+        {Platform.OS === "ios" && <KeyboardAvoidingView behavior="padding" />}
       </>
     )
   },
