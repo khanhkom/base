@@ -13,6 +13,7 @@ import { MessageToast } from "@app/config/constants"
 import { useSelector } from "@app/redux/reducers"
 import { toggedLikeComment } from "@app/services/api/functions/question"
 import { renderTextComment } from "./ItemTextComment"
+import ImageView from "react-native-image-viewing"
 export default function ItemComment({
   item,
   questionId,
@@ -26,6 +27,7 @@ export default function ItemComment({
 
   const [isLike, setIsLike] = useState(false)
   const [likeList, setLikeList] = useState<ILikeQuestion[]>([])
+  const [visible, setIsVisible] = useState(false)
   useEffect(() => {
     const isLikeTemp = (item?.likes ?? []).some((item) => item.userId === user?.id)
     setLikeList(item?.likes ?? [])
@@ -73,9 +75,11 @@ export default function ItemComment({
             {titleName} {item?.userName}
           </Text>
           {renderTextComment(item?.content)}
-          {/* <Text size="ba" weight="normal" style={{ color: colors.gray_7 }}>
-            {item?.content}
-          </Text> */}
+          {item?.commentFileUrl && item?.commentFileUrl !== "" && (
+            <Pressable onPress={() => setIsVisible(true)}>
+              <Image source={{ uri: item?.commentFileUrl }} style={styles.image} />
+            </Pressable>
+          )}
         </View>
       </View>
       <View style={styles.bottomView}>
@@ -86,6 +90,12 @@ export default function ItemComment({
           <Icon icon={isLike ? "heart_active" : "heart_comment"} size={WIDTH(16)} />
         </Pressable>
       </View>
+      <ImageView
+        images={[{ uri: item?.commentFileUrl }]}
+        imageIndex={0}
+        visible={visible}
+        onRequestClose={() => setIsVisible(false)}
+      />
     </View>
   )
 }
@@ -121,5 +131,11 @@ const styles = StyleSheet.create({
     paddingVertical: HEIGHT(spacing.xs),
     paddingHorizontal: WIDTH(spacing.sm),
     width: WIDTH(250),
+  },
+  image: {
+    width: WIDTH(200),
+    height: WIDTH(180),
+    borderRadius: WIDTH(8),
+    marginTop: WIDTH(spacing.xs),
   },
 })

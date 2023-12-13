@@ -45,6 +45,7 @@ export interface ICommentData {
   userId: string
   role: "patient" | "doctor"
   content: string
+  commentFileUrl?: string
   deletedAt?: boolean
   deletedBy?: boolean
 
@@ -70,6 +71,7 @@ export interface IReplyComment {
   tags: string[] // Assuming the type of tags is an array of strings
   userId: string
   userName: string
+  commentFileUrl?: string
 }
 
 export interface ILikeQuestion {

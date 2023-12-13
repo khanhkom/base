@@ -1,6 +1,8 @@
 import {
+  Image,
   KeyboardAvoidingView,
   Platform,
+  Pressable,
   StyleSheet,
   TextInput,
   TouchableOpacity,
@@ -18,6 +20,9 @@ import { MentionInput, MentionSuggestionsProps, parseValue } from "react-native-
 
 import ModalTagUser from "./ModalTagUser"
 import AvatarDefault from "@app/components/avatar-default"
+import { IconButton } from "react-native-paper"
+import ModalImagePicker from "@app/components/image-picker"
+import { Asset } from "react-native-image-picker"
 
 //
 // 3. Implement your `renderSuggestions` component
@@ -70,7 +75,7 @@ const renderSuggestions = ({
 }
 //
 interface ItemProps {
-  onSend: (comment: string) => void
+  onSend: (comment: string, listImage: Asset[]) => void
   replyComment: ICommentData
   onReplyCancel: () => void
   listUser: IUserTag[]
@@ -78,6 +83,8 @@ interface ItemProps {
 const ItemInputToolbar = forwardRef(
   ({ onSend, replyComment, onReplyCancel, listUser }: ItemProps, ref: Ref<TextInput>) => {
     const [comment, setComment] = useState("")
+    const [listImage, setListImage] = useState([])
+
     const isCommented = comment.trim() !== ""
     const input = useRef<TextInput>()
     const isReply = !!replyComment?._id
@@ -89,7 +96,19 @@ const ItemInputToolbar = forwardRef(
         name: user?.userName,
       }
     })
-    console.log("comment_comment", comment)
+
+    const refSelect = useRef(null)
+
+    const onPickFile = () => {
+      refSelect.current.show()
+    }
+    const onDeleteImage = (index) => {
+      const newArray = [...listImage] // Create a copy of the current array
+      newArray.splice(index, 1) // Remove the item at index i
+      setListImage(newArray) // Update the state with the new array
+    }
+    console.log("comment_comment", listImage)
+    const hasImage = listImage.length > 0
     return (
       <>
         {/* <ModalTagUser /> */}
@@ -101,12 +120,23 @@ const ItemInputToolbar = forwardRef(
                 icon="send"
                 size={WIDTH(28)}
                 onPress={() => {
-                  onSend(comment)
+                  onSend(comment, listImage)
                   setComment("")
+                  setListImage([])
                 }}
                 disabled={!isCommented}
                 style={{ marginTop: isReply ? HEIGHT(spacing.lg) : 0 }}
                 color={isCommented ? colors.primary_8 : colors.gray_4}
+              />
+            )
+          }}
+          renderActions={() => {
+            return (
+              <Icon
+                icon={"take_photo"}
+                onPress={onPickFile}
+                size={WIDTH(24)}
+                style={{ marginRight: WIDTH(spacing.sm) }}
               />
             )
           }}
@@ -195,7 +225,23 @@ const ItemInputToolbar = forwardRef(
               </View>
             )
           }}
-
+          renderAccessory={() => {
+            if (listImage?.length === 0) return null
+            return (
+              <View style={styles.wrapperImage}>
+                <Image source={{ uri: listImage[0].uri }} style={styles.image} />
+                <Pressable
+                  style={styles.icClose}
+                  onPress={() => {
+                    onDeleteImage(0)
+                  }}
+                >
+                  <Icon icon="close_circle" size={WIDTH(24)} />
+                </Pressable>
+              </View>
+            )
+          }}
+          accessoryStyle={{ height: !hasImage ? 0 : WIDTH(120) }}
           // renderComposer={() => {
           //   return (
           //     <View>
@@ -236,6 +282,16 @@ const ItemInputToolbar = forwardRef(
           // }}
         />
         {Platform.OS === "ios" && <KeyboardAvoidingView behavior="padding" />}
+        <ModalImagePicker
+          ref={refSelect}
+          turnOffModal={() => {}}
+          onResult={(assets) => {
+            // setImage(asset);
+            // const newList = [...listImage, ...assets]
+            const newList = [...assets]
+            setListImage(newList)
+          }}
+        />
       </>
     )
   },
@@ -245,13 +301,11 @@ ItemInputToolbar.displayName = "ItemInputToolbar"
 export default ItemInputToolbar
 const styles = StyleSheet.create({
   wrapperIcon: {
-    width: WIDTH(303),
+    width: WIDTH(280),
     backgroundColor: colors.gray_2,
     borderRadius: 100,
   },
-  textInput: {
-    paddingHorizontal: WIDTH(spacing.sm),
-  },
+  textInput: {},
   textInput1: {
     paddingHorizontal: WIDTH(spacing.md),
   },
@@ -280,5 +334,21 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingVertical: HEIGHT(spacing.sm),
     paddingHorizontal: WIDTH(spacing.sm),
+  },
+  wrapperImage: {
+    height: WIDTH(100),
+    width: WIDTH(120),
+    marginHorizontal: WIDTH(spacing.sm),
+  },
+  image: {
+    height: WIDTH(100),
+    width: WIDTH(100),
+    marginHorizontal: WIDTH(spacing.sm),
+    borderRadius: WIDTH(12),
+  },
+  icClose: {
+    position: "absolute",
+    right: WIDTH(12),
+    top: HEIGHT(6),
   },
 })

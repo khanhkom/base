@@ -69,6 +69,7 @@ const QUESTION = {
   MOST_SPECIAL_LIST_QUESTION: "questions/mostSpecialist",
   LIKE_QUESTION: "questions/",
   LIKE_COMMENT: "questions/",
+  LOAD_COMMENT: "questions/",
 }
 const NOTIFICATION = {
   GET_NOTIFICATION: "notification",

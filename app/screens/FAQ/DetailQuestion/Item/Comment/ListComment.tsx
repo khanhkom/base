@@ -1,5 +1,5 @@
-import { FlatList, StyleSheet, Text, View } from "react-native"
-import React from "react"
+import { ActivityIndicator, FlatList, StyleSheet, Text, View } from "react-native"
+import React, { useRef } from "react"
 import ItemComment from "./ItemComment"
 import { HEIGHT } from "@app/config/functions"
 import colors from "@app/assets/colors"
@@ -12,30 +12,49 @@ export default function ListComment({
   onReply,
   onDeleteComment,
   onCommentPress,
+  renderHeaderComponent,
+  isLoading,
+  loadMore,
 }: {
   detail: IQuestion
   comments: ICommentData[]
   onReply: (comment: ICommentData) => void
   onCommentPress: () => void
   onDeleteComment: (commentId: string) => void
+  renderHeaderComponent: () => JSX.Element
+  isLoading: boolean
+  loadMore: () => void
 }) {
   const listCommentFilter = comments?.filter((cm) => {
     const isDelete = cm?.deletedAt
     return !(isDelete && cm?.replies?.length === 0)
   })
-  console.log("listCommentFilter_listCommentFilter", listCommentFilter)
+  const hasScrolled = useRef(false)
+  // console.log("listCommentFilter_listCommentFilter", listCommentFilter)
   return (
     <View>
       <FlatList
         data={listCommentFilter}
-        ListHeaderComponent={() => (
-          <ItemAction
-            questionId={detail?.id}
-            like={detail?.likes ?? []}
-            onCommentPress={onCommentPress}
-            comment={listCommentFilter?.length ?? 0}
-          />
-        )}
+        onEndReached={() => {
+          if (!hasScrolled.current) return
+          loadMore()
+          console.log("onEndReached::")
+        }}
+        onScroll={() => (hasScrolled.current = true)}
+        onEndReachedThreshold={0.5}
+        ListHeaderComponent={() => {
+          return (
+            <>
+              {renderHeaderComponent()}
+              <ItemAction
+                questionId={detail?.id}
+                like={detail?.likes ?? []}
+                onCommentPress={onCommentPress}
+                comment={listCommentFilter?.length ?? 0}
+              />
+            </>
+          )
+        }}
         renderItem={({ item, index }) => {
           return (
             <ItemComment
@@ -46,7 +65,11 @@ export default function ListComment({
             />
           )
         }}
-        style={{ paddingBottom: HEIGHT(100), backgroundColor: colors.white }}
+        ListFooterComponent={() => {
+          if (isLoading) return <ActivityIndicator />
+          return null
+        }}
+        contentContainerStyle={{ paddingBottom: HEIGHT(200), backgroundColor: colors.white }}
       />
     </View>
   )

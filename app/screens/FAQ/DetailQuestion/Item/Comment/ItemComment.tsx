@@ -14,6 +14,7 @@ import { toggedLikeComment } from "@app/services/api/functions/question"
 import { EToastType, showToastMessage } from "@app/utils/library"
 import { MessageToast } from "@app/config/constants"
 import { renderTextComment } from "./ItemTextComment"
+import ImageView from "react-native-image-viewing"
 
 type ItemCommentProps = {
   item: ICommentData
@@ -32,7 +33,9 @@ export default function ItemComment({
   const titleName = item?.role === "patient" ? "B.n" : "B.s"
   const user = useSelector((state) => state.userReducers.user)
   const isOwner = user?.id === item?.userId
-  console.log("isOwner_isOwner::", item, isOwner, user)
+  const [visible, setIsVisible] = useState(false)
+
+  // console.log("isOwner_isOwner::", item, isOwner, user)
   const isDelete = !!item?.deletedAt
 
   const [isLike, setIsLike] = useState(false)
@@ -93,11 +96,10 @@ export default function ItemComment({
             {titleName} {item?.userName}
           </Text>
           {renderTextComment(item?.content)}
-          {/* <Text size="ba" weight="normal" style={{ color: colors.gray_7 }}>
-            {item?.content}
-          </Text> */}
-          {item?.avatarUrl && item?.avatarUrl !== "" && (
-            <Image source={R.images.avatar_docter} style={styles.image} />
+          {item?.commentFileUrl && item?.commentFileUrl !== "" && (
+            <Pressable onPress={() => setIsVisible(true)}>
+              <Image source={{ uri: item?.commentFileUrl }} style={styles.image} />
+            </Pressable>
           )}
         </View>
       </Pressable>
@@ -127,6 +129,12 @@ export default function ItemComment({
           }}
         />
       )}
+      <ImageView
+        images={[{ uri: item?.commentFileUrl }]}
+        imageIndex={0}
+        visible={visible}
+        onRequestClose={() => setIsVisible(false)}
+      />
     </View>
   )
 }

@@ -1,4 +1,4 @@
-import { StyleSheet, View, Image, ScrollView, Keyboard } from "react-native"
+import { StyleSheet, View, Image, ScrollView, Keyboard, Platform } from "react-native"
 import React, { useEffect, useRef, useState } from "react"
 import { Header } from "@app/components/Header"
 import colors from "@app/assets/colors"
@@ -23,6 +23,8 @@ import { EToastType, showToastMessage } from "@app/utils/library"
 import { mentionRegEx } from "react-native-controlled-mentions"
 import { STATUS_QUESTION } from "@app/config/constants"
 import ItemHeadStatus from "./Item/ItemHeadStatus"
+import useHookApiComment from "./useHookCommetApi"
+import { Asset } from "react-native-image-picker"
 
 interface IScreenParams {
   route: {
@@ -34,38 +36,42 @@ interface IScreenParams {
 
 export default function DetailQuestion({ route }: IScreenParams) {
   const [detail, setDetail] = useState<IQuestion>(null)
-  const [comments, setComments] = useState<ICommentData[]>(null)
+  // const [comments, setComments] = useState<ICommentData[]>(null)
   const [replyComment, setReplyComment] = useState<ICommentData>(null)
+
   const refScrollView = useRef(null)
   const refInput = useRef(null)
   const [loading, setLoading] = useState(true)
   const id = route?.params?.id
-  console.log("id:::", detail)
+  const { comments, isLoading, loadNewComment, loadMore } = useHookApiComment(id)
   useEffect(() => {
     async function getDetailQues() {
       setLoading(true)
       const question = await getDeatilQuestion(id)
-      console.log("question::", question?.data)
       if (question?.status === 200) {
         setDetail(question?.data ?? null)
-        setComments(question?.data?.comments ?? [])
+        // setComments(question?.data?.comments ?? [])
       }
       setLoading(false)
     }
     getDetailQues()
   }, [])
+
   const isWaiting = !detail?.isAnswered
-  console.log("detail_detail::", detail)
+  console.log("detail_detail::", route.params.id)
   // const isAnsewered = detail?.status === EStatusQuestion.ANSWERED
-  const onCommentPost = async (comment: string) => {
+  const onCommentPost = async (comment: string, listImage?: Asset[]) => {
     const body = {
       content: comment,
     }
+    const formData = new FormData()
+    formData.append("content", comment)
     const isReplyComment = replyComment?._id
     if (isReplyComment) {
       Object.assign(body, {
         replyToId: replyComment?._id,
       })
+      formData.append("replyToId", replyComment?._id)
     }
     const listUser = detail?.listUser ?? []
     const mentions = comment.match(mentionRegEx)
@@ -85,19 +91,33 @@ export default function DetailQuestion({ route }: IScreenParams) {
         Object.assign(body, {
           tags,
         })
+        // formData.append("tags", tags)
+        formData.append("tags", JSON.stringify(tags))
       }
-      console.log("mentions_mentions", mentions, tags)
+      // console.log("mentions_mentions", mentions, tags)
     }
+    if (listImage.length > 0) {
+      listImage.map((item) => {
+        const bodyImage = {
+          name: item.fileName || item.uri,
+          type: item.type,
+          uri: Platform.OS === "ios" ? item.uri.replace("file://", "") : item.uri,
+        }
+        formData.append("commentFiles", bodyImage)
+      })
+    }
+    console.log("formData_formData", formData)
+    // const commentRes = await createCommentQuestion(id, body)
+    const commentRes = await createCommentQuestion(id, formData)
 
-    const commentRes = await createCommentQuestion(id, body)
     console.log("commentRes_commentRes", commentRes)
     if (commentRes?.status === 201) {
-      const question = await getDeatilQuestion(id)
-      setComments(question?.data?.comments)
+      // loadCommentByPageAPI()
+      loadNewComment()
       if (!isReplyComment) {
-        setTimeout(() => {
-          refScrollView?.current?.scrollToEnd?.({ animated: true })
-        }, 200)
+        // setTimeout(() => {
+        //   refScrollView?.current?.scrollToEnd?.({ animated: true })
+        // }, 200)
       } else {
         setReplyComment(null)
       }
@@ -120,58 +140,74 @@ export default function DetailQuestion({ route }: IScreenParams) {
   const onDeleteComment = async (commentId: string) => {
     const commentRes = await deleteCommentQuestion(id, commentId)
     if (commentRes?.status === 200) {
-      const question = await getDeatilQuestion(id)
-      setComments(question?.data?.comments)
+      // const question = await getDeatilQuestion(id)
+      // setComments(question?.data?.comments)
+      // loadCommentByPageAPI()
+      loadNewComment()
       showToastMessage("Xóa thành công!", EToastType.SUCCESS)
     } else {
       showToastMessage("Có lỗi xảy ra vui lòng thử lại!", EToastType.ERROR)
     }
   }
+  const ItemQuestionInfo = () => {
+    return (
+      <View style={styles.body}>
+        <Text size="xl" weight="semiBold" style={{ color: colors.gray_9 }}>
+          {detail?.title}
+        </Text>
+        <Text
+          size="ba"
+          weight="normal"
+          style={{ color: colors.gray_9, marginTop: HEIGHT(spacing.xs) }}
+        >
+          {detail?.content}
+        </Text>
+        <FileAttachment data={detail?.patientFiles ?? []} />
+        <ItemSpecialList data={detail?.specialist ?? []} />
+      </View>
+    )
+  }
   if (loading) {
     return <LoadingScreen />
+  }
+  if (!detail?.isAnswered) {
+    return (
+      <View style={styles.container}>
+        <Header leftIcon="arrow_left" title={"Câu hỏi"} backgroundColor={colors.white} />
+        {isWaiting && <ItemHeadStatus status={detail?.status} />}
+        <ItemQuestionInfo />
+      </View>
+    )
   }
   return (
     <View style={styles.container}>
       <Header leftIcon="arrow_left" title={"Câu hỏi"} backgroundColor={colors.white} />
-      <ScrollView ref={refScrollView}>
-        {isWaiting && <ItemHeadStatus status={detail?.status} />}
-
-        <View style={styles.body}>
-          <Text size="xl" weight="semiBold" style={{ color: colors.gray_9 }}>
-            {detail?.title}
-          </Text>
-          <Text
-            size="ba"
-            weight="normal"
-            style={{ color: colors.gray_9, marginTop: HEIGHT(spacing.xs) }}
-          >
-            {detail?.content}
-          </Text>
-          <FileAttachment data={detail?.patientFiles ?? []} />
-          <ItemSpecialList data={detail?.specialist ?? []} />
-        </View>
-        {detail?.isAnswered && (
-          <View>
-            <ItemAnswer item={detail} />
-            <ListComment
-              detail={detail}
-              comments={comments}
-              onReply={onReplyPress}
-              onCommentPress={onCommentPress}
-              onDeleteComment={onDeleteComment}
-            />
-          </View>
-        )}
-      </ScrollView>
-      {detail?.isAnswered && (
-        <ItemInputToolbar
-          replyComment={replyComment}
-          ref={refInput}
-          onSend={onCommentPost}
-          onReplyCancel={onReplyCancel}
-          listUser={detail?.listUser ?? []}
+      <View>
+        <ListComment
+          renderHeaderComponent={() => {
+            return (
+              <View>
+                <ItemQuestionInfo />
+                <ItemAnswer item={detail} />
+              </View>
+            )
+          }}
+          isLoading={isLoading}
+          loadMore={loadMore}
+          detail={detail}
+          comments={comments}
+          onReply={onReplyPress}
+          onCommentPress={onCommentPress}
+          onDeleteComment={onDeleteComment}
         />
-      )}
+      </View>
+      <ItemInputToolbar
+        replyComment={replyComment}
+        ref={refInput}
+        onSend={onCommentPost}
+        onReplyCancel={onReplyCancel}
+        listUser={detail?.listUser ?? []}
+      />
     </View>
   )
 }
@@ -184,12 +220,5 @@ const styles = StyleSheet.create({
   body: {
     paddingHorizontal: WIDTH(spacing.md),
     backgroundColor: colors.white,
-  },
-  head: {
-    backgroundColor: colors.orange_0,
-    paddingHorizontal: WIDTH(spacing.sm),
-    paddingVertical: HEIGHT(spacing.sm),
-    flexDirection: "row",
-    marginBottom: HEIGHT(spacing.sm),
   },
 })

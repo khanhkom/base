@@ -1,7 +1,8 @@
 import URL from "@app/services/api/url"
 import { api } from "../api"
 import { ApiResponse } from "apisauce"
-import { IQuestion, ISpecialistMost, UpdateComment } from "@app/interface/question"
+import { ICommentData, IQuestion, ISpecialistMost, UpdateComment } from "@app/interface/question"
+import { ApiResponseByPage } from "@app/interface/common"
 
 export const createQuestion = (question) =>
   api.apisauce
@@ -61,5 +62,14 @@ export const toggedLikeComment = (
 ): Promise<ApiResponse<{ likes: string[] }>> =>
   api.apisauce
     .patch(`${URL.LIKE_QUESTION}${questionId}/likeToggle/${commentId}`)
+    .then((res) => res)
+    .catch((err) => err)
+
+export const loadCommentQuestionByPage = (
+  id: string,
+  body: { page: number; perPage: number },
+): Promise<ApiResponse<ApiResponseByPage<ICommentData>>> =>
+  api.apisauce
+    .get(`${URL.LOAD_COMMENT}${id}/comment`, body)
     .then((res) => res)
     .catch((err) => err)
