@@ -29,18 +29,16 @@ export default function ItemQuestion({ item }: ItemProps) {
         style={{ paddingBottom: 0 }}
         title={() => {
           return (
-            <View>
-              <Text size="ba" weight="medium" style={{ color: colors.gray_9 }}>
-                {item?.title}
-              </Text>
-            </View>
+            <Text size="ba" weight="medium" style={{ color: colors.gray_9 }}>
+              {item?.title}
+            </Text>
           )
         }}
       />
-      <Text size="xs" weight="normal" style={styles.textTime}>
-        {moment(item?.createdAt).format("HH:mm:ss, DD/MM/YYYY")}
+      <Text size="sm" weight="normal" style={styles.textTime}>
+        {moment(item?.createdAt).format("DD/MM/YYYY")}
       </Text>
-      {isAnswered && (
+      {/* {isAnswered && (
         <>
           <Divider style={{ marginVertical: HEIGHT(10), marginLeft: WIDTH(spacing.sm) }} />
           <Text
@@ -51,7 +49,7 @@ export default function ItemQuestion({ item }: ItemProps) {
             Trả lời:<Text style={{ color: colors.gray_9 }}> Bác sĩ {item?.doctorName}</Text>
           </Text>
         </>
-      )}
+      )} */}
     </Card>
   )
 }

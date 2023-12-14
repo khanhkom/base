@@ -69,6 +69,7 @@ export default function ListComment({
           if (isLoading) return <ActivityIndicator />
           return null
         }}
+        keyExtractor={(item, index) => index.toString()}
         contentContainerStyle={{ paddingBottom: HEIGHT(200), backgroundColor: colors.white }}
       />
     </View>

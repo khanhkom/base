@@ -1,5 +1,5 @@
-import { StyleSheet, View, Image, Pressable } from "react-native"
-import React, { useEffect, useState } from "react"
+import { StyleSheet, View, Image, Pressable, Alert } from "react-native"
+import React, { useEffect, useRef, useState } from "react"
 import { HEIGHT, WIDTH } from "@app/config/functions"
 import { spacing } from "@app/theme/spacing"
 import colors from "@app/assets/colors"
@@ -14,12 +14,16 @@ import { useSelector } from "@app/redux/reducers"
 import { toggedLikeComment } from "@app/services/api/functions/question"
 import { renderTextComment } from "./ItemTextComment"
 import ImageView from "react-native-image-viewing"
+import ModalDeleteComment from "./ModalDeleteComment"
+import FastImage from "react-native-fast-image"
 export default function ItemComment({
   item,
   questionId,
+  onDeleteComment,
 }: {
   item: IReplyComment
   questionId: string
+  onDeleteComment: (id: string) => void
 }) {
   const hasAvatar = item?.avatarUrl && item?.avatarUrl !== ""
   const titleName = item?.role === "patient" ? "B.n" : "B.s"
@@ -28,6 +32,7 @@ export default function ItemComment({
   const [isLike, setIsLike] = useState(false)
   const [likeList, setLikeList] = useState<ILikeQuestion[]>([])
   const [visible, setIsVisible] = useState(false)
+  const refDel = useRef(null)
   useEffect(() => {
     const isLikeTemp = (item?.likes ?? []).some((item) => item.userId === user?.id)
     setLikeList(item?.likes ?? [])
@@ -61,10 +66,15 @@ export default function ItemComment({
       setLikeList(newLikeList)
     }
   }
+  const isDelete = !!item?.deletedAt
+  const isOwner = user?.id === item?.userId
 
+  const onDeleteHandle = () => {
+    refDel?.current?.show()
+  }
   return (
     <View style={styles.container}>
-      <View style={styles.item}>
+      <Pressable disabled={!isOwner || isDelete} onLongPress={onDeleteHandle} style={styles.item}>
         {hasAvatar ? (
           <Image source={{ uri: item?.avatarUrl }} style={styles.avatar} />
         ) : (
@@ -77,11 +87,11 @@ export default function ItemComment({
           {renderTextComment(item?.content)}
           {item?.commentFileUrl && item?.commentFileUrl !== "" && (
             <Pressable onPress={() => setIsVisible(true)}>
-              <Image source={{ uri: item?.commentFileUrl }} style={styles.image} />
+              <FastImage source={{ uri: item?.commentFileUrl }} style={styles.image} />
             </Pressable>
           )}
         </View>
-      </View>
+      </Pressable>
       <View style={styles.bottomView}>
         <Pressable onPress={onPressLike} style={styles.heart}>
           <Text size="ba" weight="normal" style={{ color: colors.gray_7, marginRight: WIDTH(4) }}>
@@ -95,6 +105,13 @@ export default function ItemComment({
         imageIndex={0}
         visible={visible}
         onRequestClose={() => setIsVisible(false)}
+      />
+      <ModalDeleteComment
+        onPress={() => {
+          refDel?.current?.hide()
+          onDeleteComment(item._id)
+        }}
+        ref={refDel}
       />
     </View>
   )

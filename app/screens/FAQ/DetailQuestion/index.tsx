@@ -42,6 +42,7 @@ export default function DetailQuestion({ route }: IScreenParams) {
   const refScrollView = useRef(null)
   const refInput = useRef(null)
   const [loading, setLoading] = useState(true)
+  const [loadingCmt, setLoadingComment] = useState(false)
   const id = route?.params?.id
   const { comments, isLoading, loadNewComment, loadMore } = useHookApiComment(id)
   useEffect(() => {
@@ -61,6 +62,7 @@ export default function DetailQuestion({ route }: IScreenParams) {
   console.log("detail_detail::", route.params.id)
   // const isAnsewered = detail?.status === EStatusQuestion.ANSWERED
   const onCommentPost = async (comment: string, listImage?: Asset[]) => {
+    setLoadingComment(true)
     const body = {
       content: comment,
     }
@@ -106,10 +108,8 @@ export default function DetailQuestion({ route }: IScreenParams) {
         formData.append("commentFiles", bodyImage)
       })
     }
-    console.log("formData_formData", formData)
-    // const commentRes = await createCommentQuestion(id, body)
     const commentRes = await createCommentQuestion(id, formData)
-
+    setLoadingComment(false)
     console.log("commentRes_commentRes", commentRes)
     if (commentRes?.status === 201) {
       // loadCommentByPageAPI()
@@ -207,6 +207,7 @@ export default function DetailQuestion({ route }: IScreenParams) {
         onSend={onCommentPost}
         onReplyCancel={onReplyCancel}
         listUser={detail?.listUser ?? []}
+        loading={loadingCmt}
       />
     </View>
   )

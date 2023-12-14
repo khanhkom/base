@@ -72,6 +72,7 @@ export interface IReplyComment {
   userId: string
   userName: string
   commentFileUrl?: string
+  deletedAt?: string
 }
 
 export interface ILikeQuestion {

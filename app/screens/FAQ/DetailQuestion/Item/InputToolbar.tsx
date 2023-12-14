@@ -20,7 +20,7 @@ import { MentionInput, MentionSuggestionsProps, parseValue } from "react-native-
 
 import ModalTagUser from "./ModalTagUser"
 import AvatarDefault from "@app/components/avatar-default"
-import { IconButton } from "react-native-paper"
+import { ActivityIndicator, IconButton } from "react-native-paper"
 import ModalImagePicker from "@app/components/image-picker"
 import { Asset } from "react-native-image-picker"
 
@@ -79,9 +79,10 @@ interface ItemProps {
   replyComment: ICommentData
   onReplyCancel: () => void
   listUser: IUserTag[]
+  loading: boolean
 }
 const ItemInputToolbar = forwardRef(
-  ({ onSend, replyComment, onReplyCancel, listUser }: ItemProps, ref: Ref<TextInput>) => {
+  ({ onSend, replyComment, onReplyCancel, listUser, loading }: ItemProps, ref: Ref<TextInput>) => {
     const [comment, setComment] = useState("")
     const [listImage, setListImage] = useState([])
 
@@ -115,6 +116,16 @@ const ItemInputToolbar = forwardRef(
         <InputToolbar
           primaryStyle={styles.primaryStyle}
           renderSend={() => {
+            if (loading) {
+              return (
+                <ActivityIndicator
+                  size="small"
+                  style={{
+                    width: WIDTH(28),
+                  }}
+                />
+              )
+            }
             return (
               <Icon
                 icon="send"

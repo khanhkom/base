@@ -10,7 +10,8 @@ import { getListSpecialListRequest } from "@app/redux/actions/actionDoctor"
 import usCallApiAlgoliaByIndex from "@app/screens/SearchHome/TabResults/Item/usCallApiAlgoliaByIndex"
 import { HEIGHT } from "@app/config/functions"
 import RefreshList from "@app/components/refresh-list"
-
+import ItemEmpty from "@app/components/ItemEmpty"
+import R from "@app/assets"
 export default function FrequentlyFAQ() {
   const filterData = useRef({
     specialist: "",
@@ -18,6 +19,7 @@ export default function FrequentlyFAQ() {
   const dispatch = useDispatch()
   const [isFiltered, setFiltered] = useState(false)
   const [keyword, setKeyword] = useState("")
+  const [searchText, setSearchText] = useState("")
 
   // eslint-disable-next-line camelcase
   const refModal = useRef(null)
@@ -27,10 +29,27 @@ export default function FrequentlyFAQ() {
     onHeaderRefresh,
     refreshState,
     loading: loadingList,
-  } = usCallApiAlgoliaByIndex(keyword, "faqs")
+  } = usCallApiAlgoliaByIndex(searchText, "faqs")
 
-  console.log("listData_listData::", listData)
+  console.log("listData_listData::", loadingList)
+  useEffect(() => {
+    let typingTimeout
 
+    const handleSearch = () => {
+      // Execute search logic here
+      console.log("Search for:", searchText)
+      setSearchText(keyword)
+    }
+    console.log("searchText", searchText)
+    if (keyword !== searchText) {
+      clearTimeout(typingTimeout)
+      typingTimeout = setTimeout(handleSearch, 300)
+    }
+
+    return () => {
+      clearTimeout(typingTimeout)
+    }
+  }, [keyword])
   useEffect(() => {
     dispatch(getListSpecialListRequest())
   }, [])
@@ -83,6 +102,17 @@ export default function FrequentlyFAQ() {
         refreshState={refreshState}
         renderItem={(item, index) => {
           return <ItemQuestion item={item} />
+        }}
+        ListEmptyComponent={() => {
+          return (
+            <ItemEmpty
+              sourceImage={R.images.empty_chat}
+              title="Không tìm thấy kết quả phù hợp"
+              style={{
+                marginTop: HEIGHT(230),
+              }}
+            />
+          )
         }}
       />
       <ModalFilter

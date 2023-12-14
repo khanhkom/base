@@ -45,12 +45,12 @@ const useHookApiComment = (id: string) => {
       const body = { page, perPage: 10 }
       setIsLoading(true)
       const resComment = await loadCommentQuestionByPage(id, body)
-
+      console.log("body__:::", body)
       const resCommentItems = resComment?.data?.items ?? []
       //   const isLimitData = resComment?.data?.headers?.["x-next-page"] === 0
       const isLimitData = resCommentItems?.length === 0
 
-      console.log("AAAAAAAAAAA", resComment?.data)
+      // console.log("AAAAAAAAAAA", resComment)
       setReached(isLimitData)
       if (resCommentItems.length > 0) {
         if (page === 1) {
@@ -58,7 +58,7 @@ const useHookApiComment = (id: string) => {
           setComments(newComment)
         } else {
           const newComment = groupCommentsWithReplies([...comments, ...resCommentItems])
-          setComments((prevData) => [...prevData, ...newComment])
+          setComments([...newComment])
         }
       }
       setIsLoading(false)
@@ -66,7 +66,7 @@ const useHookApiComment = (id: string) => {
   }
   // reload comment when have new comment
   const loadNewComment = async () => {
-    const body = { page, perPage: page * 10 }
+    const body = { page: 1, perPage: page * 10 }
     setIsLoading(true)
     const resComment = await loadCommentQuestionByPage(id, body)
 
@@ -74,7 +74,7 @@ const useHookApiComment = (id: string) => {
     //   const isLimitData = resComment?.data?.headers?.["x-next-page"] === 0
     const isLimitData = resCommentItems?.length === 0
 
-    console.log("AAAAAAAAAAA", resComment?.data)
+    // console.log("AAAAAAAAAAA", resComment?.data)
     setReached(isLimitData)
     if (resCommentItems.length > 0) {
       const newComment = groupCommentsWithReplies([...resCommentItems])

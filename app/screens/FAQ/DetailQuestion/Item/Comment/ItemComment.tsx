@@ -1,5 +1,5 @@
 import { StyleSheet, View, Image, FlatList, Pressable, Alert } from "react-native"
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useRef, useState } from "react"
 import { HEIGHT, WIDTH } from "@app/config/functions"
 import { spacing } from "@app/theme/spacing"
 import colors from "@app/assets/colors"
@@ -15,6 +15,8 @@ import { EToastType, showToastMessage } from "@app/utils/library"
 import { MessageToast } from "@app/config/constants"
 import { renderTextComment } from "./ItemTextComment"
 import ImageView from "react-native-image-viewing"
+import ModalDeleteComment from "./ModalDeleteComment"
+import FastImage from "react-native-fast-image"
 
 type ItemCommentProps = {
   item: ICommentData
@@ -34,7 +36,7 @@ export default function ItemComment({
   const user = useSelector((state) => state.userReducers.user)
   const isOwner = user?.id === item?.userId
   const [visible, setIsVisible] = useState(false)
-
+  const refDel = useRef(null)
   // console.log("isOwner_isOwner::", item, isOwner, user)
   const isDelete = !!item?.deletedAt
 
@@ -74,14 +76,15 @@ export default function ItemComment({
     }
   }
   const onDeleteHandle = () => {
-    Alert.alert("Xóa comment", "Bạn muốn xóa comment?", [
-      {
-        text: "Hủy",
-        onPress: () => console.log("Cancel Pressed"),
-        style: "cancel",
-      },
-      { text: "Xóa", onPress: () => onDeleteComment(item._id) },
-    ])
+    refDel?.current?.show()
+    // Alert.alert("Xóa comment", "Bạn muốn xóa comment?", [
+    //   {
+    //     text: "Hủy",
+    //     onPress: () => console.log("Cancel Pressed"),
+    //     style: "cancel",
+    //   },
+    //   { text: "Xóa", onPress: () => onDeleteComment(item._id) },
+    // ])
   }
   return (
     <View style={styles.container}>
@@ -98,7 +101,7 @@ export default function ItemComment({
           {renderTextComment(item?.content)}
           {item?.commentFileUrl && item?.commentFileUrl !== "" && (
             <Pressable onPress={() => setIsVisible(true)}>
-              <Image source={{ uri: item?.commentFileUrl }} style={styles.image} />
+              <FastImage source={{ uri: item?.commentFileUrl }} style={styles.image} />
             </Pressable>
           )}
         </View>
@@ -125,7 +128,9 @@ export default function ItemComment({
         <FlatList
           data={item?.replies}
           renderItem={({ item, index }) => {
-            return <ItemReply questionId={questionId} item={item} />
+            return (
+              <ItemReply questionId={questionId} item={item} onDeleteComment={onDeleteComment} />
+            )
           }}
         />
       )}
@@ -134,6 +139,13 @@ export default function ItemComment({
         imageIndex={0}
         visible={visible}
         onRequestClose={() => setIsVisible(false)}
+      />
+      <ModalDeleteComment
+        onPress={() => {
+          refDel?.current?.hide()
+          onDeleteComment(item._id)
+        }}
+        ref={refDel}
       />
     </View>
   )
