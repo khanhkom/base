@@ -17,7 +17,8 @@ export default function Header({ keyword, setKeyword, onSubmitSearch }) {
         onChangeText={setKeyword}
         style={styles.textInput}
         placeholder="Tìm kiếm"
-        onEndEditing={onSubmitSearch}
+        onSubmitEditing={onSubmitSearch}
+        autoFocus={true}
       />
       {keyword !== "" && (
         <Icon onPress={() => setKeyword("")} icon="x_close" size={WIDTH(16)} style={styles.close} />

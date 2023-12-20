@@ -8,8 +8,11 @@ import { Card, Divider, List } from "react-native-paper"
 import R from "@app/assets"
 import RefreshList from "@app/components/refresh-list"
 import ItemPlaceholder from "@app/screens/SearchHome/TabResults/Item/ItemPlaceholder"
-import usCallApiAlgoliaByIndex from "@app/screens/SearchHome/TabResults/Item/usCallApiAlgoliaByIndex"
 import { navigate } from "@app/navigators/navigationUtilities"
+import useHookSearchFAQ from "../useHookSearchFAQ"
+import { IQuestion } from "@app/interface/question"
+import moment from "moment"
+import ItemEmpty from "@app/components/ItemEmpty"
 
 export default function FAQ({ keyword }) {
   console.log("keyword::", keyword)
@@ -19,7 +22,7 @@ export default function FAQ({ keyword }) {
     onHeaderRefresh,
     refreshState,
     loading: loadingList,
-  } = usCallApiAlgoliaByIndex(keyword, "faqs")
+  } = useHookSearchFAQ(keyword)
   if (loadingList) {
     return (
       <View>
@@ -39,12 +42,20 @@ export default function FAQ({ keyword }) {
         onHeaderRefresh={onHeaderRefresh}
         showsVerticalScrollIndicator={false}
         refreshState={refreshState}
-        renderItem={(item, index) => {
+        ListEmptyComponent={() => (
+          <ItemEmpty
+            title="Không tìm thấy kết quả phù hợp"
+            sourceImage={R.images.empty_chat}
+            style={{ marginTop: HEIGHT(100) }}
+          />
+        )}
+        renderItem={(item: IQuestion, index) => {
+          const isAnswered = item?.isAnswered
           return (
             <Card
               mode="contained"
               style={styles.item}
-              onPress={() => navigate("DetailFrequentlyQuestion", { data: item })}
+              onPress={() => navigate("DetailQuestion", { id: item?.id })}
             >
               <List.Item
                 left={() => {
@@ -55,23 +66,31 @@ export default function FAQ({ keyword }) {
                   return (
                     <View>
                       <Text size="ba" weight="medium" style={{ color: colors.gray_9 }}>
-                        {item?.patientQuestion}
+                        {item?.title}
                       </Text>
                     </View>
                   )
                 }}
               />
               <Text size="xs" weight="normal" style={styles.textTime}>
-                18:00:00, 01/01/2023
+                {moment(item?.createdAt).format("DD/MM/YYYY")}
               </Text>
-              <Divider style={{ marginVertical: HEIGHT(10), marginLeft: WIDTH(spacing.sm) }} />
-              <Text
-                size="ba"
-                weight="normal"
-                style={{ color: colors.gray_6, marginLeft: WIDTH(spacing.sm) }}
-              >
-                Trả lời:<Text style={{ color: colors.gray_9 }}> Bác sĩ Nguyễn Ngọc Anh</Text>
-              </Text>
+              {isAnswered && (
+                <>
+                  <Divider style={{ marginVertical: HEIGHT(10), marginLeft: WIDTH(spacing.sm) }} />
+                  <Text
+                    size="ba"
+                    weight="normal"
+                    style={{ color: colors.gray_6, marginLeft: WIDTH(spacing.sm) }}
+                  >
+                    Trả lời:
+                    <Text style={{ color: colors.gray_9 }}>
+                      {" "}
+                      Bác sĩ {item?.doctorName ?? "S Doctor"}
+                    </Text>
+                  </Text>
+                </>
+              )}
             </Card>
           )
         }}

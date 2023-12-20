@@ -72,7 +72,7 @@ export default function SendQuestion({ route }: IScreenParams) {
           <Text size="sm" weight="normal" style={{ color: colors.gray_9 }}>
             {desciption.length}
             <Text size="sm" weight="normal" style={{ color: colors.gray_6 }}>
-              /1000
+              /1000 ký tự
             </Text>
           </Text>
         </View>
@@ -81,6 +81,7 @@ export default function SendQuestion({ route }: IScreenParams) {
           value={desciption}
           multiline
           onChangeText={setDesciption}
+          maxLength={1000}
           placeholder={"Nhập mô tả"}
           containerStyle={{ marginTop: HEIGHT(spacing.md) }}
         ></TextField>

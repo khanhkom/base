@@ -93,6 +93,7 @@ export default function DetailQuestion({ route }: IScreenParams) {
         Object.assign(body, {
           tags,
         })
+        console.log("tags_tags", tags)
         // formData.append("tags", tags)
         formData.append("tags", JSON.stringify(tags))
       }

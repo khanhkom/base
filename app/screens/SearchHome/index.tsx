@@ -5,8 +5,6 @@ import colors from "@app/assets/colors"
 import ItemRecent from "./Item/ItemRecent"
 import ItemSuggest from "./Item/ItemSuggest"
 import TabResult from "./TabResults/TabResult"
-import { searchClient } from "@app/utils/algolia"
-import { useSearchBox, useInfiniteHits } from "react-instantsearch-core"
 
 const STATUS_SEARCH = {
   recent: 0,

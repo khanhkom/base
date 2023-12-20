@@ -18,6 +18,7 @@ export default function SearchFAQ() {
   const [keyword, setKeyword] = useState("")
   const [historySearch, setHistorySearch] = useState([])
   const [searchStatus, setSearchStatus] = useState(STATUS_SEARCH.recent)
+  const [searchText, setSearchText] = useState("")
 
   // const searchStatus = keyword === "" ? STATUS_SEARCH.recent : STATUS_SEARCH.suggest
   const hanldeChangeText = (text: string) => {
@@ -27,7 +28,7 @@ export default function SearchFAQ() {
     }
   }
   const saveSearchHistory = async () => {
-    if (!historySearch.includes(keyword)) {
+    if (!historySearch.includes(keyword) && keyword?.trim() !== "") {
       const newHis = [...historySearch, keyword]
       setHistorySearch(newHis)
       await save(KEYSTORAGE.FAQ_SEARCH_HISTORY, newHis)
@@ -39,9 +40,11 @@ export default function SearchFAQ() {
     await save(KEYSTORAGE.FAQ_SEARCH_HISTORY, newHis)
   }
   const onPressItemRecent = (item: string) => {
+    console.log("item", item)
     setKeyword(item)
     setSearchStatus(STATUS_SEARCH.result)
   }
+
   useEffect(() => {
     async function getHistorySearch() {
       const history = await load(KEYSTORAGE.FAQ_SEARCH_HISTORY)
@@ -52,9 +55,25 @@ export default function SearchFAQ() {
     getHistorySearch()
   }, [])
   const onSubmitSearch = () => {
+    console.log("onSubmitSearch")
     setSearchStatus(STATUS_SEARCH.result)
     saveSearchHistory()
   }
+  useEffect(() => {
+    let typingTimeout
+
+    const handleSearch = () => {
+      setSearchText(keyword)
+    }
+    if (keyword !== searchText) {
+      clearTimeout(typingTimeout)
+      typingTimeout = setTimeout(handleSearch, 300)
+    }
+
+    return () => {
+      clearTimeout(typingTimeout)
+    }
+  }, [keyword])
   return (
     <View style={styles.container}>
       <Header keyword={keyword} setKeyword={hanldeChangeText} onSubmitSearch={onSubmitSearch} />
@@ -65,8 +84,8 @@ export default function SearchFAQ() {
           onPressItem={onPressItemRecent}
         />
       )}
-      {searchStatus === STATUS_SEARCH.suggest && <ItemSuggest keyword={keyword} />}
-      {searchStatus === STATUS_SEARCH.result && <TabResult keyword={keyword} />}
+      {/* {searchStatus === STATUS_SEARCH.suggest && <ItemSuggest keyword={keyword} />} */}
+      {searchStatus !== STATUS_SEARCH.recent && <TabResult keyword={searchText} />}
     </View>
   )
 }
