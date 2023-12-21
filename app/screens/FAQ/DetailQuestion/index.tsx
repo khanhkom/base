@@ -94,8 +94,11 @@ export default function DetailQuestion({ route }: IScreenParams) {
           tags,
         })
         console.log("tags_tags", tags)
+        tags.forEach((tag, index) => {
+          formData.append(`tags[${index}][userId]`, tag.userId)
+          formData.append(`tags[${index}][role]`, tag.role)
+        })
         // formData.append("tags", tags)
-        formData.append("tags", JSON.stringify(tags))
       }
       // console.log("mentions_mentions", mentions, tags)
     }
