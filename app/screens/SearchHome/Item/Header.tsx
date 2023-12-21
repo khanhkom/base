@@ -44,6 +44,7 @@ const styles = StyleSheet.create({
     marginLeft: WIDTH(spacing.sm),
     marginTop: HEIGHT(spacing.xs),
     paddingHorizontal: WIDTH(spacing.sm),
+    minHeight:HEIGHT(44),
     color: colors.gray_9,
   },
   close: {

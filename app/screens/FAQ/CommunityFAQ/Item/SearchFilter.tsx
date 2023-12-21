@@ -29,6 +29,11 @@ export default function SearchFilter({ onPressFilter, onChangeText, value }: Ite
       >
         <Searchbar
           onLayout={onLayout}
+          onPressIn={
+            () => {
+              navigate("SearchFAQ")
+            }
+          }
           icon={R.images.search_normal}
           iconColor={colors.primary_3}
           style={[styles.searchContainer, { width: WIDTH(243) }]}

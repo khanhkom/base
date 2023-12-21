@@ -128,6 +128,7 @@ const styles = StyleSheet.create({
   },
   textInput: {
     paddingHorizontal: WIDTH(spacing.sm),
+    minHeight:HEIGHT(44)
   },
   primaryStyle: {
     alignItems: "center",

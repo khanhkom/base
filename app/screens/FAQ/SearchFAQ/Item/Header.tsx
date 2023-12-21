@@ -44,6 +44,7 @@ const styles = StyleSheet.create({
     marginTop: HEIGHT(spacing.xs),
     paddingHorizontal: WIDTH(spacing.sm),
     color: colors.gray_9,
+    minHeight:HEIGHT(44)
   },
   close: {
     position: "absolute",

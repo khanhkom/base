@@ -115,6 +115,7 @@ const ItemInputToolbar = forwardRef(
         {/* <ModalTagUser /> */}
         <InputToolbar
           primaryStyle={styles.primaryStyle}
+          // containerStyle={{position:'absolute', bottom:500}}
           renderSend={() => {
             if (loading) {
               return (
@@ -152,7 +153,6 @@ const ItemInputToolbar = forwardRef(
             )
           }}
           renderComposer={(props) => {
-            console.log("props.composerHeight", props.composerHeight)
             return (
               <View>
                 {isReply && (
@@ -292,7 +292,7 @@ const ItemInputToolbar = forwardRef(
           //   )
           // }}
         />
-        {Platform.OS === "ios" && <KeyboardAvoidingView behavior="padding" />}
+        {Platform.OS === "ios" && <KeyboardAvoidingView behavior='padding'  />}
         <ModalImagePicker
           ref={refSelect}
           turnOffModal={() => {}}

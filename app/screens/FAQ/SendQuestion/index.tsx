@@ -13,6 +13,7 @@ import { Text } from "@app/components/Text"
 import { EToastType, showToastMessage } from "@app/utils/library"
 import { createQuestion } from "@app/services/api/functions/question"
 import { LoadingOpacity } from "@app/components/loading/LoadingOpacity"
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view"
 
 interface IScreenParams {
   route: {
@@ -57,13 +58,15 @@ export default function SendQuestion({ route }: IScreenParams) {
   return (
     <View style={styles.container}>
       <Header leftIcon="arrow_left" title={"Đặt câu hỏi"} backgroundColor={colors.white} />
-      <ScrollView style={styles.body}>
+      <KeyboardAwareScrollView style={styles.body}>
         <ItemNote />
         <TextField
           label={"Câu hỏi"}
-          style={{ color: colors.gray_9, minHeight: HEIGHT(80) }}
+          style={{ color: colors.gray_9, minHeight: HEIGHT(80),textAlignVertical:'top'}}
           value={question}
+          multiline
           onChangeText={setQuestion}
+          textAlignVertical="top"
           placeholder={"Nhập câu hỏi"}
           containerStyle={{ marginTop: HEIGHT(spacing.md) }}
         ></TextField>
@@ -87,7 +90,7 @@ export default function SendQuestion({ route }: IScreenParams) {
         ></TextField>
         <FileAttachment listImage={listImage} setListImage={setListImage} />
         <View style={{ height: HEIGHT(120) }} />
-      </ScrollView>
+      </KeyboardAwareScrollView>
       <View style={styles.buttonWrapper}>
         <Button loading={loading} mode="contained" style={styles.button} onPress={onSendQuestion}>
           Đặt câu hỏi

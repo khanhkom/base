@@ -33,6 +33,9 @@ export default function HeaderHome() {
           onClearIconPress={() => setKeyword("")}
           value={keyword}
           editable={false}
+          onPressIn={()=>{
+          navigate("SearchHome")
+          }}
           icon={R.images.search_normal}
           style={styles.searchBar}
           iconColor={colors.white}

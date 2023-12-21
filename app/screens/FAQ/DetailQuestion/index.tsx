@@ -186,7 +186,7 @@ export default function DetailQuestion({ route }: IScreenParams) {
   return (
     <View style={styles.container}>
       <Header leftIcon="arrow_left" title={"Câu hỏi"} backgroundColor={colors.white} />
-      <View>
+      <View style={{flex:1}}>
         <ListComment
           renderHeaderComponent={() => {
             return (
