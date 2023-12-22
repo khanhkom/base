@@ -131,81 +131,10 @@ const useHookCall = (callId, isIncoming, from, to, fromName) => {
       RNNotificationCall.removeEventListener("endCall")
     }
   }, [call2, isInited])
-  // handle ios
-
-  useEffect(() => {
-    async function getDataActionCallKit() {
-      const actionFromCallKit = await storage.loadString(storage.KEYSTORAGE.ACTION_FROM_CALLKIT)
-      console.log("ActionFromCallKit IOS:::", actionFromCallKit)
-      if (
-        Platform.OS === "ios" &&
-        call2?.current &&
-        actionFromCallKit !== ActionFromCallKit.NONE &&
-        actionFromCallKit
-      ) {
-        if (actionFromCallKit === ActionFromCallKit.ANSWER) {
-          answerCall(false)
-          await storage.saveString(storage.KEYSTORAGE.ACTION_FROM_CALLKIT, ActionFromCallKit.NONE)
-        }
-        if (actionFromCallKit === ActionFromCallKit.REJECT) {
-          endPress(false)
-          await storage.saveString(storage.KEYSTORAGE.ACTION_FROM_CALLKIT, ActionFromCallKit.NONE)
-        }
-      }
-    }
-    if (isInited) {
-      getDataActionCallKit()
-    }
-  }, [call2, isInited, callId])
-  // handle call ios when app background
-  useEffect(() => {
-    console.log("isInited_isInited", isInited)
-    if (isInited && Platform.OS === "ios") {
-      RNCallKeep.addEventListener("answerCall", async (data) => {
-        RNCallKeep.backToForeground()
-        const { callUUID, payload } = data
-        // answerCall(true)
-        await storage.saveString(storage.KEYSTORAGE.ACTION_FROM_CALLKIT, ActionFromCallKit.NONE)
-        console.log("press answer____", callUUID)
-      })
-      RNCallKeep.addEventListener("endCall", async (data) => {
-        const { callUUID, endAction, payload } = data
-        endPress(false)
-        console.log("press endCall IOS_____", callUUID)
-      })
-
-      RNCallKeep.addEventListener("didActivateAudioSession", async () => {
-        answerCall(true)
-        console.log("didActivateAudioSession IOS__________")
-      })
-      RNCallKeep.addEventListener("didDisplayIncomingCall", async (data) => {
-        const { callUUID, endAction, payload } = data
-        setCallUUID(callUUID)
-        console.log("didActivateAudioSession IOS__________")
-      })
-    }
-    return () => {
-      RNCallKeep.removeEventListener("answerCall")
-      RNCallKeep.removeEventListener("endCall")
-    }
-  }, [call2, isInited, callId])
-
   ///
 
   const callDidChangeSignalingState = ({ callId, code, reason, sipCode, sipReason }) => {
-    console.log(
-      "callDidChangeSignalingState " +
-        "\ncallId-" +
-        callId +
-        "\ncode-" +
-        code +
-        "\nreason-" +
-        reason +
-        "\nsipCode-" +
-        sipCode +
-        "\nsipReason-" +
-        sipReason,
-    )
+    console.log("callDidChangeSignalingState ")
     setStatus(reason)
     setSignalingState(code)
 
@@ -251,7 +180,6 @@ const useHookCall = (callId, isIncoming, from, to, fromName) => {
     switch (code) {
       case 0:
         if (signalingState === 2 && status !== "started") {
-          console.log("ZOOOOOOOO_DAY_1")
           Vibration.cancel()
           InCallManager.stopRingback()
           startCall()
@@ -272,13 +200,6 @@ const useHookCall = (callId, isIncoming, from, to, fromName) => {
     setReceivedRemoteStream(true)
     MediaManager.stopMusicBackground()
     InCallManager.stopRingback()
-    // InCallManager.stop()
-
-    //   if (receivedRemoteStream) {
-    //   setReceivedRemoteStream(false)
-    // } else {
-    //   setReceivedRemoteStream(true)
-    // }
   }
 
   const callDidReceiveCallInfo = ({ callId, data }) => {
