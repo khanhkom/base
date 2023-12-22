@@ -1,6 +1,6 @@
 /* eslint-disable react-native/no-unused-styles */
 import { Icon } from "@app/components/Icon"
-import React, { Component, useEffect, useState } from "react"
+import React, { Component, useEffect, useRef, useState } from "react"
 import {
   StyleSheet,
   View,
@@ -29,6 +29,7 @@ import useHookCall from "./useHookCall"
 import R from "@app/assets"
 import { Screen } from "@app/components/Screen"
 import { IOrderHistory } from "@app/interface/order"
+import ModalCallSetting from "./Item/ModalCallSetting"
 interface ScreenProps {
   route: {
     params: {
@@ -53,6 +54,7 @@ const CallScreen = ({ route }: ScreenProps) => {
   const params = route.params
   const { isVideoCall, isIncoming, detailOrder, callId, clientId, from, to, fromAlias } = params
   const [permissionGranted, setPermissionGranted] = useState(PERMISSION_CALL.NONE)
+  const refCallSetting = useRef(null)
   const requestPermission = () => {
     PermissionsAndroid.requestMultiple([
       PermissionsAndroid.PERMISSIONS.CAMERA,
@@ -123,7 +125,9 @@ const CallScreen = ({ route }: ScreenProps) => {
     >
       <Header
         title="Cuộc gọi"
-        backgroundColor={colors.primary_8}
+        backgroundColor={colors.transparent}
+        style={{ zIndex: 100 }}
+        containerStyle={{ zIndex: 100 }}
         leftIcon="arrow_left"
         onLeftPress={() => {
           endPress(!showAnswerBtn)
@@ -131,6 +135,11 @@ const CallScreen = ({ route }: ScreenProps) => {
         }}
         leftIconColor={colors.white}
         titleStyle={{ color: colors.white }}
+        rightIcon="more"
+        onRightPress={() => {
+          refCallSetting?.current?.show()
+        }}
+        rightIconColor={colors.white}
       />
       {isVideoCall && callIdNew !== "" && receivedRemoteStream && (
         <View style={styles.wrapperRemoteView}>
@@ -228,6 +237,7 @@ const CallScreen = ({ route }: ScreenProps) => {
           onAudioDeviceChange: callDidAudioDeviceChange, ///only available on android
         }}
       />
+      <ModalCallSetting ref={refCallSetting} />
     </Screen>
   )
 }
@@ -269,7 +279,7 @@ const styles = StyleSheet.create({
   wrapperUserTarget: {
     position: "absolute",
     right: WIDTH(spacing.md),
-    top: HEIGHT(spacing.xl),
+    top: HEIGHT(78),
   },
   iconSwith: {
     width: WIDTH(36),

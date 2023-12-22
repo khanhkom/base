@@ -31,46 +31,48 @@ const useHookCall = (callId, isIncoming, from, to, fromName) => {
   }, [])
 
   useEffect(() => {
-    if (call2.current) {
-      if (isIncoming) {
-        call2.current.initAnswer(callId, (status, code, message) => {
-          console.log("initAnswer " + message)
-          setInited(status)
+    async function makeCall() {
+      if (call2.current) {
+        if (isIncoming) {
+          call2.current.initAnswer(callId, (status, code, message) => {
+            console.log("initAnswer " + message)
+            setInited(status)
 
-          if (Platform.OS === "android") {
-            // InCallManager.startRingtone("incallmanager_ringtone.mp3") // or _DEFAULT_ or system filename with extension
-            // Define the waveform pattern
-            const pattern = [0, 500, 200, 500]
-            // Vibrate with the waveform pattern
-            Vibration.vibrate(pattern, true)
-          }
-          // MediaManager.playMusicBackGround("messenger_ringtone.mp3", true)
-        })
-      } else {
-        const callParams = JSON.stringify({
-          from: from,
-          to: to,
-          isVideoCall: true,
-          videoResolution: "NORMAL",
-          customData: JSON.stringify({ fullname: fromName }),
-        })
-        console.log("ZZZZZZZZ", callParams)
-        InCallManager.start({ media: "video" }) // or _DEFAULT_ or _DTMF_
-        MediaManager.playMusicBackGround("incallmanager_ringback.mp3", true)
+            if (Platform.OS === "android") {
+              // InCallManager.startRingtone("incallmanager_ringtone.mp3") // or _DEFAULT_ or system filename with extension
+              // Define the waveform pattern
+              const pattern = [0, 500, 200, 500]
+              // Vibrate with the waveform pattern
+              Vibration.vibrate(pattern, true)
+            }
+            // MediaManager.playMusicBackGround("messenger_ringtone.mp3", true)
+          })
+        } else {
+          await InCallManager.start({ media: "video" }) // or _DEFAULT_ or _DTMF_
+          const callParams = JSON.stringify({
+            from: from,
+            to: to,
+            isVideoCall: true,
+            videoResolution: "NORMAL",
+            customData: JSON.stringify({ fullname: fromName }),
+          })
+          MediaManager.playMusicBackGround("incallmanager_ringback.mp3", true)
 
-        call2.current.makeCall(callParams, (status, code, message, callId) => {
-          console.log(
-            "status-" + status + " code-" + code + " message-" + message + " callId-" + callId,
-          )
-          // InCallManager.start({ media: "video" }) // audio/video, default: audio
-          if (status) {
-            setCallIdNew(callId)
-          } else {
-            Alert.alert("Make call fail: " + message)
-          }
-        })
+          call2.current.makeCall(callParams, (status, code, message, callId) => {
+            console.log(
+              "status-" + status + " code-" + code + " message-" + message + " callId-" + callId,
+            )
+            // InCallManager.start({ media: "video" }) // audio/video, default: audio
+            if (status) {
+              setCallIdNew(callId)
+            } else {
+              Alert.alert("Make call fail: " + message)
+            }
+          })
+        }
       }
     }
+    makeCall()
   }, [call2])
   // handle call kit
 
@@ -111,7 +113,6 @@ const useHookCall = (callId, isIncoming, from, to, fromName) => {
   }, [call2, isInited])
   // handle call android when app background
   useEffect(() => {
-    console.log("isInited_isInited", isInited)
     if (isInited && Platform.OS === "android") {
       RNNotificationCall.addEventListener("answer", async (data) => {
         RNNotificationCall.backToApp()
@@ -148,8 +149,6 @@ const useHookCall = (callId, isIncoming, from, to, fromName) => {
       case 2:
         // Answered
         if (mediaState === 0 && status !== "started") {
-          console.log("ZOOOOOOOO_DAY")
-
           Vibration.cancel()
           startCall()
         }

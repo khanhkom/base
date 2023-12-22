@@ -2,6 +2,7 @@ const colors = {
   primary: "#183E9F",
   primary_2: "#BAC5E2",
   primary_3: "#A3B2D9",
+  transparent: "transparent",
 
   primary_8: "#183E9F",
   primary_9: "#143485",
