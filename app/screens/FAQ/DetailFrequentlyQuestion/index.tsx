@@ -36,7 +36,7 @@ export default function DetailFrequentlyQuestion({ route }: IScreenParams) {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: colors.gray_1,
+    backgroundColor: colors.white,
     flex: 1,
   },
   body: {

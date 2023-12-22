@@ -12,6 +12,7 @@ import { HEIGHT } from "@app/config/functions"
 import RefreshList from "@app/components/refresh-list"
 import ItemEmpty from "@app/components/ItemEmpty"
 import R from "@app/assets"
+import ItemPlaceholder from "@app/components/ItemPlaceholder"
 export default function FrequentlyFAQ() {
   const dispatch = useDispatch()
   const [isFiltered, setFiltered] = useState(false)
@@ -82,30 +83,37 @@ export default function FrequentlyFAQ() {
           refModal?.current?.show()
         }}
       />
-
-      <RefreshList
-        data={listData}
-        contentContainerStyle={{ paddingBottom: HEIGHT(32) }}
-        loading={loadingList}
-        onFooterRefresh={onFooterRefresh}
-        onHeaderRefresh={onHeaderRefresh}
-        showsVerticalScrollIndicator={false}
-        refreshState={refreshState}
-        renderItem={(item, index) => {
-          return <ItemQuestion item={item} />
-        }}
-        ListEmptyComponent={() => {
-          return (
-            <ItemEmpty
-              sourceImage={R.images.empty_chat}
-              title="Không tìm thấy kết quả phù hợp"
-              style={{
-                marginTop: HEIGHT(230),
-              }}
-            />
-          )
-        }}
-      />
+      {loadingList ? (
+        <View>
+          <ItemPlaceholder />
+          <ItemPlaceholder />
+          <ItemPlaceholder />
+        </View>
+      ) : (
+        <RefreshList
+          data={listData}
+          contentContainerStyle={{ paddingBottom: HEIGHT(32) }}
+          loading={loadingList}
+          onFooterRefresh={onFooterRefresh}
+          onHeaderRefresh={onHeaderRefresh}
+          showsVerticalScrollIndicator={false}
+          refreshState={refreshState}
+          renderItem={(item, index) => {
+            return <ItemQuestion item={item} />
+          }}
+          ListEmptyComponent={() => {
+            return (
+              <ItemEmpty
+                sourceImage={R.images.empty_chat}
+                title="Không tìm thấy kết quả phù hợp"
+                style={{
+                  marginTop: HEIGHT(230),
+                }}
+              />
+            )
+          }}
+        />
+      )}
       <ModalFilter onApply={onApplyFilter} filterData={facetFilters} ref={refModal} />
     </View>
   )
