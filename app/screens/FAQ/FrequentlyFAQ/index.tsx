@@ -1,5 +1,5 @@
 import { FlatList, Keyboard, StyleSheet, View } from "react-native"
-import React, { useEffect, useRef, useState } from "react"
+import React, { useEffect, useMemo, useRef, useState } from "react"
 import { Header } from "@app/components/index"
 import colors from "@app/assets/colors"
 import SearchFilter from "@app/components/SearchFilter"
@@ -13,15 +13,16 @@ import RefreshList from "@app/components/refresh-list"
 import ItemEmpty from "@app/components/ItemEmpty"
 import R from "@app/assets"
 export default function FrequentlyFAQ() {
-  const filterData = useRef({
-    specialist: "",
-  })
   const dispatch = useDispatch()
   const [isFiltered, setFiltered] = useState(false)
   const [keyword, setKeyword] = useState("")
   const [searchText, setSearchText] = useState("")
+  const [facetFilters, setFacetFilters] = useState([])
 
   // eslint-disable-next-line camelcase
+  const facetFiltersMap = useMemo(() => {
+    return facetFilters?.map((it) => `specialistCode:${it?.specialistCode}`)
+  }, [facetFilters])
   const refModal = useRef(null)
   const {
     listData,
@@ -29,9 +30,9 @@ export default function FrequentlyFAQ() {
     onHeaderRefresh,
     refreshState,
     loading: loadingList,
-  } = usCallApiAlgoliaByIndex(searchText, "faqs")
+  } = usCallApiAlgoliaByIndex(searchText, "faqs", facetFiltersMap)
 
-  console.log("listData_listData::", loadingList)
+  console.log("listData_listData::", facetFiltersMap)
   useEffect(() => {
     let typingTimeout
 
@@ -55,25 +56,15 @@ export default function FrequentlyFAQ() {
   }, [])
 
   const onApplyFilter = (dataFilter) => {
-    filterData.current = dataFilter
-    const params = {
-      search: keyword,
-      page: 1,
-      perPage: 20,
-    }
-    if (dataFilter?.specialist !== "") {
+    setFacetFilters(dataFilter)
+    console.log("dataFilter", dataFilter)
+    if (dataFilter?.length > 0) {
       setFiltered(true)
     } else {
       setFiltered(false)
     }
-
-    if (filterData.current?.specialist !== "") {
-      Object.assign(params, {
-        specialist: filterData.current?.specialist,
-      })
-    }
   }
-
+  console.log("listData", facetFilters)
   return (
     <View style={styles.container}>
       <Header
@@ -115,12 +106,7 @@ export default function FrequentlyFAQ() {
           )
         }}
       />
-      <ModalFilter
-        speciallist={[]}
-        onApply={onApplyFilter}
-        filterData={filterData.current}
-        ref={refModal}
-      />
+      <ModalFilter onApply={onApplyFilter} filterData={facetFilters} ref={refModal} />
     </View>
   )
 }

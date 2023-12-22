@@ -14,24 +14,23 @@ import { translate } from "@app/i18n/translate"
 
 interface IFilter {
   specialist: string
-  gender: string
-  sortByRatings: number
 }
 type Props = {
   onPress?: () => void
-  onApply?: (val: IFilter) => void
-  speciallist?: ISpecialList
-  filterData: IFilter
+  onApply?: (
+    val: {
+      specialist: string
+    }[],
+  ) => void
+  filterData: {
+    specialist: string
+  }[]
 }
 
 const ModalFilter = forwardRef((props: Props, ref) => {
   const { filterData, onApply } = props
   const [visible, setVisible] = useState(false)
-  const [filterDataTemp, setFilterDataTemp] = useState({
-    specialist: "",
-    gender: "",
-    sortByRatings: 0,
-  })
+  const [filterDataTemp, setFilterDataTemp] = useState([])
   const specialList = useSelector((state) => state.doctorReducers.listSpecialList)
 
   const hide = () => {
@@ -41,11 +40,7 @@ const ModalFilter = forwardRef((props: Props, ref) => {
     setFilterDataTemp(filterData)
   }, [visible])
   const onReset = () => {
-    setFilterDataTemp({
-      specialist: "",
-      gender: "",
-      sortByRatings: 0,
-    })
+    setFilterDataTemp([])
   }
   const onHandlApply = () => {
     hide()
@@ -87,12 +82,9 @@ const ModalFilter = forwardRef((props: Props, ref) => {
               <Toggle
                 variant="radio"
                 label={translate("common.all")}
-                value={filterDataTemp.specialist === ""}
+                value={filterDataTemp.length === 0}
                 onPress={() => {
-                  setFilterDataTemp({
-                    ...filterDataTemp,
-                    specialist: "",
-                  })
+                  setFilterDataTemp([])
                 }}
                 containerStyle={{ marginTop: HEIGHT(12) }}
               />
@@ -103,13 +95,14 @@ const ModalFilter = forwardRef((props: Props, ref) => {
                     variant="radio"
                     label={itemm?.name}
                     onPress={() => {
-                      setFilterDataTemp({
-                        ...filterDataTemp,
-                        specialist: itemm?.code,
-                      })
+                      setFilterDataTemp([
+                        {
+                          specialistCode: itemm?.code,
+                        },
+                      ])
                     }}
-                    value={filterDataTemp?.specialist === itemm?.code}
-                    containerStyle={{ marginTop: HEIGHT(12) }}
+                    value={filterDataTemp?.[0]?.specialistCode === itemm?.code}
+                    containerStyle={{ marginTop: HEIGHT(16) }}
                   />
                 )
               })}

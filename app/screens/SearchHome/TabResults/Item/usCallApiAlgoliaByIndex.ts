@@ -17,10 +17,14 @@ interface IReponseData {
   total?: number
 }
 const limit = 10
-const usCallApiAlgoliaByIndex = (keyword: string, indexName: string) => {
+const usCallApiAlgoliaByIndex = (
+  keyword: string,
+  indexName: string,
+  facetFilters: string[] = [],
+) => {
   const indexSearch = searchClient.initIndex(indexName)
 
-  const [listData, setListData] = useState<Array<QuestionAnswer[]>>([])
+  const [listData, setListData] = useState<Array<QuestionAnswer>>([])
   const [refreshState, setRefreshState] = useState<number>(RefreshState.Idle)
   const [pageList, setPageList] = useState<number>(0)
   const [pagingRes, setPagingRes] = useState<IReponseData>({})
@@ -49,7 +53,7 @@ const usCallApiAlgoliaByIndex = (keyword: string, indexName: string) => {
   useEffect(() => {
     onHeaderRefresh()
     setIsLimited(false)
-  }, [keyword])
+  }, [keyword, facetFilters])
 
   async function getList(isLoadMore = false, page = pageList) {
     if (isLoadMore && isLimited) return
@@ -60,11 +64,14 @@ const usCallApiAlgoliaByIndex = (keyword: string, indexName: string) => {
     const body = {
       page: page,
       hitsPerPage: limit,
+      facetFilters,
+      // facetFilters: ["specialist:Khoa nội"],
     }
+    console.log("body_body", body)
     isLoadMore
       ? setRefreshState(RefreshState.FooterRefreshing)
       : setRefreshState(RefreshState.HeaderRefreshing)
-    console.log("BODY", body)
+    console.log("BODY_BODY", body)
     try {
       const response = await indexSearch.search(keyword, body)
       if (response?.hits) {

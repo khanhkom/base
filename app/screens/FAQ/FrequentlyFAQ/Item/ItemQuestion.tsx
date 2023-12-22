@@ -40,9 +40,9 @@ export default function ItemQuestion({ item }: { item: QuestionAnswer }) {
           )
         }}
       />
-      {/* <Text size="sm" weight="normal" style={styles.textTime}>
-        Chuyên khoa: Tai Mũi Họng
-      </Text> */}
+      <Text size="sm" weight="normal" style={styles.textTime}>
+        Chuyên khoa: {item?.specialist}
+      </Text>
     </Card>
   )
 }
