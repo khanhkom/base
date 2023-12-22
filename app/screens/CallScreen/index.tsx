@@ -126,7 +126,6 @@ const CallScreen = ({ route }: ScreenProps) => {
       <Header
         title="Cuộc gọi"
         backgroundColor={colors.transparent}
-        style={{ zIndex: 100 }}
         containerStyle={{ zIndex: 100 }}
         leftIcon="arrow_left"
         onLeftPress={() => {
@@ -135,7 +134,7 @@ const CallScreen = ({ route }: ScreenProps) => {
         }}
         leftIconColor={colors.white}
         titleStyle={{ color: colors.white }}
-        rightIcon="more"
+        rightIcon={Platform.OS === "android" ? "more" : null}
         onRightPress={() => {
           refCallSetting?.current?.show()
         }}
