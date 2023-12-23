@@ -8,6 +8,7 @@ import InCallManager from "react-native-incall-manager"
 import * as storage from "@app/utils/storage"
 import UUIDGenerator from "react-native-uuid-generator"
 import { request, check, PERMISSIONS, RESULTS, requestMultiple } from "react-native-permissions"
+import { handleShowNotification } from "../notification/NotificationHelpers"
 
 export async function displayIncomingCall() {
   const callkitId = await UUIDGenerator.getRandomUUID()
@@ -49,7 +50,8 @@ export async function displayNotification(fullname) {
 export async function onMessageReceived(message) {
   try {
     console.log("notification", message)
-    if (message?.data?.data) {
+    const isNotificationCall = message?.data?.data
+    if (isNotificationCall) {
       const data = JSON.parse(message.data.data)
       const callStatus = data?.callStatus
       const from = data?.from?.number
@@ -123,6 +125,8 @@ export async function onMessageReceived(message) {
           notifee.cancelAllNotifications()
           break
       }
+    } else {
+      handleShowNotification(message)
     }
   } catch (error) {
     console.log("NOTI_ERROR::", error)

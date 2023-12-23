@@ -63,6 +63,7 @@ import SearchFAQ from "@app/screens/FAQ/SearchFAQ"
 import FrequentlyFAQ from "@app/screens/FAQ/FrequentlyFAQ"
 import DetailFrequentlyQuestion from "@app/screens/FAQ/DetailFrequentlyQuestion"
 import messaging from "@react-native-firebase/messaging"
+import { handlePressOpenNotification } from "@app/utils/notification/NotificationHelpers"
 
 export type AppStackParamList = {
   TabNavigator: undefined
@@ -259,6 +260,7 @@ export const AppNavigator = observer(function AppNavigator(props: NavigationProp
       // navigation.navigate(remoteMessage.data.type);
     })
     messaging().onNotificationOpenedApp((remoteMessage) => {
+      handlePressOpenNotification(remoteMessage)
       console.log(
         "Notification caused app to open from background state:",
         remoteMessage.notification,
@@ -271,6 +273,9 @@ export const AppNavigator = observer(function AppNavigator(props: NavigationProp
       .getInitialNotification()
       .then((remoteMessage) => {
         if (remoteMessage) {
+          setTimeout(() => {
+            handlePressOpenNotification(remoteMessage)
+          }, 5000)
           console.log(
             "Notification caused app to open from quit state:",
             remoteMessage.notification,

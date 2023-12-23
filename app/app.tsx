@@ -36,10 +36,15 @@ import codePush from "react-native-code-push"
 import NoInternetComponent from "./components/no-internet"
 import { onMessageReceived } from "./utils/stringee/PushNotification"
 import CallEventHandle from "./utils/stringee/CallEventHandle"
+import {
+  NotificationChannel,
+  createNotificationChannelUtils,
+} from "./utils/notification/HandleCreateChannel"
 
 const sagaMiddleware = createSagaMiddleware()
 const store = createStore(rootReducers, applyMiddleware(sagaMiddleware))
 sagaMiddleware.run(rootSaga)
+createNotificationChannelUtils(NotificationChannel.GENERAL)
 
 // Web linking configuration
 const prefix = Linking.createURL("/")
