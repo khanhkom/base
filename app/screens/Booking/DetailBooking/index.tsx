@@ -22,7 +22,9 @@ export default function DetailBooking({ route }) {
   const [visible, setIsVisible] = useState(false)
   const [imageIndex, setImageIndex] = useState(0)
   const clientId = useSelector((state) => state.stringeeReducers.clientId)
-
+  // useEffect(() => {
+  //   stopNotiInCall()
+  // }, [])
   if (loading) return <LoadingScreen />
   return (
     <Screen

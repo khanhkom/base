@@ -29,23 +29,32 @@ export const registerForegroundService = async () => {
   })
 }
 export const handlePressOpenNotification = (notification: NotificationData) => {
-  const { data } = notification
-  const actionType = notification?.data?.actionType
-  console.log("handlePressOpenNotification::", notification, actionType)
-  switch (actionType) {
-    case "open_question":
-      navigate("DetailQuestion", { id: data.id })
-      break
-    case "open_order":
-      navigate("DetailBooking", { id: data.id })
-      break
-    // Add more cases for other action types and corresponding screens
-    default:
-      if (Platform.OS === "android") {
-        RNNotificationCall.backToApp()
-      }
-      // Handle default case if needed
-      break
+  try {
+    const { data } = notification
+    const actionType = notification?.data?.actionType
+    console.log("handlePressOpenNotification::", notification, actionType)
+    switch (actionType) {
+      case "open_question":
+        navigate("DetailQuestion", { id: data.id })
+        break
+      case "open_order":
+        navigate("DetailBooking", { id: data.id })
+        break
+      case "open_call":
+        if (Platform.OS === "android") {
+          RNNotificationCall.backToApp()
+        }
+        break
+      // Add more cases for other action types and corresponding screens
+      default:
+        if (Platform.OS === "android") {
+          RNNotificationCall.backToApp()
+        }
+        // Handle default case if needed
+        break
+    }
+  } catch (error) {
+    console.warn("handlePressOpenNotification::", error)
   }
 }
 export const handleShowNotification = async (notification: NotificationData) => {

@@ -43,7 +43,7 @@ RNCallKeep.setup({
   },
 })
 messaging().setBackgroundMessageHandler(async (notification) => {
-  onMessageReceived(notification, true)
+  onMessageReceived(notification)
 })
 AppRegistry.registerHeadlessTask(
   "RNCallKeepBackgroundMessage",

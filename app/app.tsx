@@ -80,16 +80,19 @@ interface AppProps {
 
 messaging().onMessage(onMessageReceived)
 notifee.onForegroundEvent((event) => {
-  console.log("event_event", event)
+  console.log("event_event", event?.detail?.notification)
   if (event.type === EventType.PRESS) {
     handlePressOpenNotification(event?.detail?.notification)
   }
 })
 notifee.onBackgroundEvent((event) => {
-  console.log("event_event", event)
+  console.log("event_event", event?.detail?.notification)
   if (event.type === EventType.PRESS) {
     handlePressOpenNotification(event?.detail?.notification)
   }
+  return new Promise(() => {
+    // Example task subscriber
+  })
 })
 function App(props: AppProps) {
   const { hideSplashScreen } = props

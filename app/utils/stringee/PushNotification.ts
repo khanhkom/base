@@ -49,7 +49,7 @@ export async function displayNotification(fullname) {
 
 export async function onMessageReceived(message) {
   try {
-    console.log("notification", message)
+    console.log("notification::", message)
     const isNotificationCall = message?.data?.data
     if (isNotificationCall) {
       const data = JSON.parse(message.data.data)
