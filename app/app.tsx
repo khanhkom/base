@@ -40,6 +40,9 @@ import {
   NotificationChannel,
   createNotificationChannelUtils,
 } from "./utils/notification/HandleCreateChannel"
+import { navigate } from "@app/navigators/navigationUtilities"
+import notifee, { EventType } from "@notifee/react-native"
+import { handlePressOpenNotification } from "./utils/notification/NotificationHelpers"
 
 const sagaMiddleware = createSagaMiddleware()
 const store = createStore(rootReducers, applyMiddleware(sagaMiddleware))
@@ -76,6 +79,12 @@ interface AppProps {
  */
 
 messaging().onMessage(onMessageReceived)
+notifee.onForegroundEvent((event) => {
+  console.log("event_event", event)
+  if (event.type === EventType.PRESS) {
+    handlePressOpenNotification(event?.detail?.notification)
+  }
+})
 function App(props: AppProps) {
   const { hideSplashScreen } = props
   const {

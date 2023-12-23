@@ -1,5 +1,7 @@
 import { navigate } from "@app/navigators/navigationUtilities"
 import notifee, { AndroidImportance, AndroidVisibility } from "@notifee/react-native"
+import { NotificationChannel } from "./HandleCreateChannel"
+import { AppState } from "react-native"
 
 interface NotificationData {
   collapseKey?: string
@@ -21,7 +23,7 @@ interface NotificationData {
 export const handlePressOpenNotification = (notification: NotificationData) => {
   const { data } = notification
   const actionType = notification?.data?.actionType
-  console.log("handlePressOpenNotification::", notification)
+  console.log("handlePressOpenNotification::", actionType)
   switch (actionType) {
     case "open_question":
       navigate("DetailQuestion", { id: data.id })
@@ -36,13 +38,17 @@ export const handlePressOpenNotification = (notification: NotificationData) => {
   }
 }
 export const handleShowNotification = async (notification: NotificationData) => {
-  console.log("handleShowNotification:::")
+  console.log("handleShowNotification:::", notification)
   const notificationNew = {
     title: notification?.notification?.title,
     body: notification?.notification?.body,
     data: notification?.data,
+    android: {
+      channelId: NotificationChannel.GENERAL,
+    },
   }
-
+  if (AppState.currentState === "active") {
+    await notifee.displayNotification(notificationNew)
+  }
   // Display the notification
-  //   await notifee.displayNotification(notificationNew)
 }
