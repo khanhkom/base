@@ -4,10 +4,11 @@ import MediaManager from "@app/utils/MediaManager"
 import React, { useState, useEffect, useRef } from "react"
 import { Alert, Platform, Vibration } from "react-native"
 import RNCallKeep, { AudioRoute } from "react-native-callkeep"
-import notifee from "@notifee/react-native"
+import notifee, { AndroidColor } from "@notifee/react-native"
 import * as storage from "@app/utils/storage"
 import { ActionFromCallKit } from "@app/context/themeContext"
 import InCallManager from "react-native-incall-manager"
+import { handleShowNotiInCall, stopNotiInCall } from "@app/utils/notification/NotificationHelpers"
 
 const useHookCall = (callId, isIncoming, from, to, fromName) => {
   const [status, setStatus] = useState("")
@@ -148,6 +149,8 @@ const useHookCall = (callId, isIncoming, from, to, fromName) => {
         break
       case 2:
         // Answered
+        console.log("Answered::", mediaState, status)
+        handleShowNotiInCall()
         if (mediaState === 0 && status !== "started") {
           Vibration.cancel()
           startCall()
@@ -160,6 +163,7 @@ const useHookCall = (callId, isIncoming, from, to, fromName) => {
       case 4:
         // Ended
         dismissCallingView()
+        stopNotiInCall()
         break
     }
   }
@@ -314,7 +318,11 @@ const useHookCall = (callId, isIncoming, from, to, fromName) => {
     }
   }
   useEffect(() => {
-    return () => InCallManager.stop()
+    return () => {
+      console.log("STOP")
+      stopNotiInCall()
+      InCallManager.stop()
+    }
   }, [])
   const dismissCallingView = async () => {
     RNCallKeep.endAllCalls()

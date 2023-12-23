@@ -1,5 +1,5 @@
 import { StyleSheet, View, FlatList, Platform } from "react-native"
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import colors from "@app/assets/colors"
 import { Header, Icon, Screen, Text } from "@app/components/index"
 import ItemBookInformation from "./Item/ItemBookInformation"
@@ -14,6 +14,7 @@ import { STATUS_ORDER } from "@app/interface/order"
 import { useSelector } from "@app/redux/reducers"
 import ImageView from "react-native-image-viewing"
 import { translate } from "@app/i18n/translate"
+import { handleShowNotiInCall, stopNotiInCall } from "@app/utils/notification/NotificationHelpers"
 export default function DetailBooking({ route }) {
   const id = route?.params?.id
   const { detailOrder, loading, returnDataByField, getDetailOrderApi, updateDataCreateOrder } =
@@ -21,10 +22,11 @@ export default function DetailBooking({ route }) {
   const [visible, setIsVisible] = useState(false)
   const [imageIndex, setImageIndex] = useState(0)
   const clientId = useSelector((state) => state.stringeeReducers.clientId)
+
   if (loading) return <LoadingScreen />
   return (
     <Screen
-      safeAreaEdges={Platform.OS === "android" ?["bottom"]:[]}
+      safeAreaEdges={Platform.OS === "android" ? ["bottom"] : []}
       contentContainerStyle={styles.container}
     >
       <Header

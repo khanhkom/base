@@ -11,7 +11,9 @@ import messaging from "@react-native-firebase/messaging"
 import * as storage from "./app/utils/storage"
 import { ActionFromCallKit } from "./app/context/themeContext.ts"
 import { onMessageReceived } from "./app/utils/stringee/PushNotification.ts"
+import { registerForegroundService } from "./app/utils/notification/NotificationHelpers.ts"
 console.log("awake_app::::")
+registerForegroundService()
 
 RNCallKeep.addEventListener("answerCall", async () => {
   // this.answerCall()

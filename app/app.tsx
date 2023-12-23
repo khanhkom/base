@@ -38,9 +38,9 @@ import { onMessageReceived } from "./utils/stringee/PushNotification"
 import CallEventHandle from "./utils/stringee/CallEventHandle"
 import {
   NotificationChannel,
+  createNotificationChannelDefault,
   createNotificationChannelUtils,
 } from "./utils/notification/HandleCreateChannel"
-import { navigate } from "@app/navigators/navigationUtilities"
 import notifee, { EventType } from "@notifee/react-native"
 import { handlePressOpenNotification } from "./utils/notification/NotificationHelpers"
 
@@ -48,7 +48,7 @@ const sagaMiddleware = createSagaMiddleware()
 const store = createStore(rootReducers, applyMiddleware(sagaMiddleware))
 sagaMiddleware.run(rootSaga)
 createNotificationChannelUtils(NotificationChannel.GENERAL)
-
+createNotificationChannelDefault()
 // Web linking configuration
 const prefix = Linking.createURL("/")
 const config = {
@@ -80,6 +80,12 @@ interface AppProps {
 
 messaging().onMessage(onMessageReceived)
 notifee.onForegroundEvent((event) => {
+  console.log("event_event", event)
+  if (event.type === EventType.PRESS) {
+    handlePressOpenNotification(event?.detail?.notification)
+  }
+})
+notifee.onBackgroundEvent((event) => {
   console.log("event_event", event)
   if (event.type === EventType.PRESS) {
     handlePressOpenNotification(event?.detail?.notification)

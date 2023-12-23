@@ -1,7 +1,8 @@
 import { navigate } from "@app/navigators/navigationUtilities"
-import notifee, { AndroidImportance, AndroidVisibility } from "@notifee/react-native"
+import notifee, { AndroidColor, AndroidImportance, AndroidVisibility } from "@notifee/react-native"
 import { NotificationChannel } from "./HandleCreateChannel"
-import { AppState } from "react-native"
+import { AppState, Platform } from "react-native"
+import RNNotificationCall from "react-native-full-screen-notification-incoming-call"
 
 interface NotificationData {
   collapseKey?: string
@@ -20,10 +21,17 @@ interface NotificationData {
   sentTime: number
   ttl: number
 }
+export const registerForegroundService = async () => {
+  notifee.registerForegroundService(() => {
+    return new Promise(() => {
+      // Example task subscriber
+    })
+  })
+}
 export const handlePressOpenNotification = (notification: NotificationData) => {
   const { data } = notification
   const actionType = notification?.data?.actionType
-  console.log("handlePressOpenNotification::", actionType)
+  console.log("handlePressOpenNotification::", notification, actionType)
   switch (actionType) {
     case "open_question":
       navigate("DetailQuestion", { id: data.id })
@@ -33,6 +41,9 @@ export const handlePressOpenNotification = (notification: NotificationData) => {
       break
     // Add more cases for other action types and corresponding screens
     default:
+      if (Platform.OS === "android") {
+        RNNotificationCall.backToApp()
+      }
       // Handle default case if needed
       break
   }
@@ -51,4 +62,28 @@ export const handleShowNotification = async (notification: NotificationData) => 
     await notifee.displayNotification(notificationNew)
   }
   // Display the notification
+}
+
+export const handleShowNotiInCall = async () => {
+  try {
+    if (Platform.OS === "ios") return
+    await notifee.displayNotification({
+      title: "Bác sĩ",
+      body: "Nhấn để quay trở lại cuộc gọi",
+      data: {
+        actionType: "open_call",
+      },
+      android: {
+        channelId: NotificationChannel.INCALL,
+        asForegroundService: true,
+        color: AndroidColor.GREEN,
+        colorized: true,
+      },
+    })
+  } catch (error) {
+    console.warn("error::", error)
+  }
+}
+export const stopNotiInCall = async () => {
+  await notifee.stopForegroundService()
 }

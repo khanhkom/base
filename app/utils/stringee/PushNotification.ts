@@ -60,7 +60,6 @@ export async function onMessageReceived(message) {
 
       console.log("data: " + callStatus, AppState.currentState)
       const isShowNotification = AppState.currentState !== "active"
-      const channelId = await createNotificationChannel()
       // const channelId = "sdocterpatient"
 
       // console.log("channelId_channelId", channelId)

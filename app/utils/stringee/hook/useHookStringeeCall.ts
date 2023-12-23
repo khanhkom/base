@@ -23,8 +23,9 @@ const useHookCallKitIOS = (updateClientId) => {
   const [androidPushToken, setAndroidPushToken] = useState("")
   const [syncCall, setSyncCall] = useState(null)
   const [permissionGranted, setPermissionGranted] = useState(false)
-  const [isIncoming, setIsIncoming] = useState(false)
+  // const [isIncoming, setIsIncoming] = useState(false)
 
+  const isIncoming = useRef(false)
   const [fakeCallIds, setFakeCallIds] = useState([])
   const [allSyncCalls, setAllSyncCalls] = useState([])
   const [callState, setCallState] = useState("")
@@ -279,7 +280,8 @@ const useHookCallKitIOS = (updateClientId) => {
 
     setUserId(userId)
     setCallState("Incoming Call")
-    setIsIncoming(true)
+    // setIsIncoming(true)
+    isIncoming.current = true
     // Chua show callkit thi show
     if (syncCall == null) {
       console.log("Call + Show new call kit")
@@ -592,7 +594,7 @@ const useHookCallKitIOS = (updateClientId) => {
     console.log("didHandleOnAnotherDevice " + callId + "***" + code + "***" + description)
     setStatus(description)
     // Cuoc goi da duoc answer, reject hoặc end thi can dismiss view
-    if (code !== 1 && isIncoming) {
+    if (code !== 1 && isIncoming?.current) {
       dismissCallingView()
     }
   }
@@ -740,7 +742,7 @@ const useHookCallKitIOS = (updateClientId) => {
     callState,
     answeredCall,
     answerCallAction,
-    isIncoming,
+    isIncoming: isIncoming?.current,
     setSyncCall,
     clientId,
     from,

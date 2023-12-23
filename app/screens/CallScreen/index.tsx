@@ -30,6 +30,7 @@ import R from "@app/assets"
 import { Screen } from "@app/components/Screen"
 import { IOrderHistory } from "@app/interface/order"
 import ModalCallSetting from "./Item/ModalCallSetting"
+import { stopNotiInCall } from "@app/utils/notification/NotificationHelpers"
 interface ScreenProps {
   route: {
     params: {
