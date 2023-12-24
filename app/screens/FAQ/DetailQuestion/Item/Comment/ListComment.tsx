@@ -1,5 +1,5 @@
 import { ActivityIndicator, FlatList, StyleSheet, Text, View } from "react-native"
-import React, { useRef } from "react"
+import React, { LegacyRef, Ref, useRef } from "react"
 import ItemComment from "./ItemComment"
 import { HEIGHT } from "@app/config/functions"
 import colors from "@app/assets/colors"
@@ -15,6 +15,7 @@ export default function ListComment({
   renderHeaderComponent,
   isLoading,
   loadMore,
+  refScrollView,
 }: {
   detail: IQuestion
   comments: ICommentData[]
@@ -24,6 +25,7 @@ export default function ListComment({
   renderHeaderComponent: () => JSX.Element
   isLoading: boolean
   loadMore: () => void
+  refScrollView: LegacyRef<FlatList>
 }) {
   const listCommentFilter = comments?.filter((cm) => {
     const isDelete = cm?.deletedAt
@@ -40,6 +42,7 @@ export default function ListComment({
           loadMore()
           console.log("onEndReached::")
         }}
+        ref={refScrollView}
         onScroll={() => (hasScrolled.current = true)}
         onEndReachedThreshold={0.5}
         ListHeaderComponent={() => {

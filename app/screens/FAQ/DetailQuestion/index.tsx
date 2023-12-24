@@ -40,12 +40,11 @@ export default function DetailQuestion({ route }: IScreenParams) {
   // const [comments, setComments] = useState<ICommentData[]>(null)
   const [replyComment, setReplyComment] = useState<ICommentData>(null)
 
-  const refScrollView = useRef(null)
   const refInput = useRef(null)
   const [loading, setLoading] = useState(true)
   const [loadingCmt, setLoadingComment] = useState(false)
   const id = route?.params?.id
-  const { comments, isLoading, loadNewComment, loadMore } = useHookApiComment(id)
+  const { comments, isLoading, loadNewComment, loadMore, refScrollView } = useHookApiComment(id)
   useEffect(() => {
     async function getDetailQues() {
       setLoading(true)
@@ -216,6 +215,7 @@ export default function DetailQuestion({ route }: IScreenParams) {
           onReply={onReplyPress}
           onCommentPress={onCommentPress}
           onDeleteComment={onDeleteComment}
+          refScrollView={refScrollView}
         />
       </View>
       <ItemInputToolbar

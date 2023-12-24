@@ -1,6 +1,6 @@
 import { ICommentData } from "@app/interface/question"
 import { loadCommentQuestionByPage } from "@app/services/api/functions/question"
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useRef, useState } from "react"
 
 const groupCommentsWithReplies = (comments) => {
   const groupedComments = []
@@ -32,6 +32,7 @@ const useHookApiComment = (id: string) => {
   const [page, setPage] = useState(1)
   const [isLoading, setIsLoading] = useState(false)
   const [isReached, setReached] = useState(false)
+  const refScrollView = useRef(null)
 
   useEffect(() => {
     if (page === 1) {
@@ -81,6 +82,7 @@ const useHookApiComment = (id: string) => {
       setComments(newComment)
     }
     setIsLoading(false)
+    refScrollView.current?.scrollToEnd({ animated: true })
   }
   const loadMore = () => {
     console.log("isReached", isReached)
@@ -88,6 +90,14 @@ const useHookApiComment = (id: string) => {
       setPage((prevPage) => prevPage + 1)
     }
   }
-  return { comments, isLoading, loadMore, loadCommentByPageAPI, setPage, loadNewComment }
+  return {
+    comments,
+    isLoading,
+    loadMore,
+    loadCommentByPageAPI,
+    setPage,
+    loadNewComment,
+    refScrollView,
+  }
 }
 export default useHookApiComment
