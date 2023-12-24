@@ -10,6 +10,7 @@ import IMAGES_CHAT from "./images/chat"
 import IMAGE_SEARCH from "./images/search"
 import IMAGE_ORDER from "./images/order"
 import IMAGE_FAQ from "./images/faq"
+import IMAGE_SPECIALIST from "./images/specialist"
 
 const IMAGE = {
   ...AUTH_IMAGE,
@@ -24,5 +25,6 @@ const IMAGE = {
   ...IMAGE_SEARCH,
   ...IMAGE_ORDER,
   ...IMAGE_FAQ,
+  ...IMAGE_SPECIALIST,
 }
 export default IMAGE

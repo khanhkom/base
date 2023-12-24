@@ -30,6 +30,7 @@ interface IScreenParams {
   route: {
     params: {
       id: string
+      isMine?: boolean
     }
   }
 }
@@ -62,6 +63,7 @@ export default function DetailQuestion({ route }: IScreenParams) {
   console.log("detail_detail::", route.params.id)
   // const isAnsewered = detail?.status === EStatusQuestion.ANSWERED
   const onCommentPost = async (comment: string, listImage?: Asset[]) => {
+    Keyboard.dismiss()
     setLoadingComment(true)
     const body = {
       content: comment,
@@ -171,13 +173,19 @@ export default function DetailQuestion({ route }: IScreenParams) {
       </View>
     )
   }
+  const isMine = route?.params?.isMine
+  console.log("ok::", route?.params)
   if (loading) {
     return <LoadingScreen />
   }
   if (!detail?.isAnswered) {
     return (
       <View style={styles.container}>
-        <Header leftIcon="arrow_left" title={"Câu hỏi"} backgroundColor={colors.white} />
+        <Header
+          leftIcon="arrow_left"
+          title={isMine ? "Câu hỏi của tôi " : "Câu hỏi"}
+          backgroundColor={colors.white}
+        />
         {isWaiting && <ItemHeadStatus status={detail?.status} />}
         <ItemQuestionInfo />
       </View>
@@ -185,8 +193,13 @@ export default function DetailQuestion({ route }: IScreenParams) {
   }
   return (
     <View style={styles.container}>
-      <Header leftIcon="arrow_left" title={"Câu hỏi"} backgroundColor={colors.white} />
-      <View style={{flex:1}}>
+      <Header
+        leftIcon="arrow_left"
+        title={isMine ? "Câu hỏi của tôi " : "Câu hỏi"}
+        backgroundColor={colors.white}
+        rightIcon="message_notif"
+      />
+      <View style={{ flex: 1 }}>
         <ListComment
           renderHeaderComponent={() => {
             return (

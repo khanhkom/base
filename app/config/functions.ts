@@ -2,8 +2,9 @@ import { Dimensions } from "react-native"
 import { initialWindowMetrics } from "react-native-safe-area-context"
 import moment from "moment"
 import { EToastType, showToastMessage } from "@app/utils/library"
+import { LIST_SPECIALIST_ICON } from "./constants"
 // const moment = require("moment")
-
+import R from "@app/assets"
 const { width, height } = Dimensions.get("window")
 const deviceHeight = height - (initialWindowMetrics?.insets.top ?? 0)
 export const responsiveHeight = (h: number): number => height * (h / 100)
@@ -173,4 +174,9 @@ export const handleErrorOTPFirebase = (error, message?: string) => {
     console.log("Error code not found")
     showToastMessage(message || "Có lỗi xảy ra, vui lòng thử lại!", EToastType.ERROR)
   }
+}
+
+export const getIconSpecialist = (code: number) => {
+  const special = LIST_SPECIALIST_ICON.find((it) => it.code === code)
+  return special?.icon ?? R.images.ic_mat
 }

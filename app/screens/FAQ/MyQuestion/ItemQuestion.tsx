@@ -20,6 +20,7 @@ export default function ItemQuestion({ item }: ItemProps) {
       onPress={() => {
         navigate("DetailQuestion", {
           id: item.id,
+          isMine: true,
         })
       }}
       mode="contained"
@@ -40,8 +41,8 @@ export default function ItemQuestion({ item }: ItemProps) {
           )
         }}
       />
-      <Text size="xs" weight="normal" style={styles.textTime}>
-        {moment(item?.createdAt).format("HH:mm:ss, DD/MM/YYYY")}
+      <Text size="sm" weight="normal" style={styles.textTime}>
+        {moment(item?.createdAt).format("DD/MM/YYYY")}
       </Text>
       {isAnswered ? (
         <>
@@ -51,7 +52,11 @@ export default function ItemQuestion({ item }: ItemProps) {
             weight="normal"
             style={{ color: colors.gray_6, marginLeft: WIDTH(spacing.sm) }}
           >
-            Trả lời:<Text style={{ color: colors.gray_9 }}> Bác sĩ {item?.doctorName}</Text>
+            Trả lời:
+            <Text size="ba" weight="normal" style={{ color: colors.gray_9 }}>
+              {" "}
+              Bác sĩ {item?.doctorName}
+            </Text>
           </Text>
         </>
       ) : (

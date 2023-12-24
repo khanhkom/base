@@ -4,7 +4,7 @@ import colors from "@app/assets/colors"
 import { Header, Icon } from "@app/components/index"
 import { List } from "react-native-paper"
 import R from "@app/assets"
-import { HEIGHT, WIDTH } from "@app/config/functions"
+import { HEIGHT, WIDTH, getIconSpecialist } from "@app/config/functions"
 import { spacing } from "@app/theme/spacing"
 import { goBack, navigate } from "@app/navigators/navigationUtilities"
 import { useDispatch } from "react-redux"
@@ -38,6 +38,7 @@ export default function SelectSpecialist({ route }: ScreenProps) {
       <FlatList
         data={specialList}
         renderItem={({ item }) => {
+          const icon = getIconSpecialist(item?.code)
           return (
             <List.Item
               title={item.name}
@@ -54,9 +55,7 @@ export default function SelectSpecialist({ route }: ScreenProps) {
                 }
               }}
               left={() => {
-                return (
-                  <Image source={R.images.features_1} style={styles.icon} resizeMode="contain" />
-                )
+                return <Image source={icon} style={styles.icon} resizeMode="contain" />
               }}
               right={() => {
                 return (

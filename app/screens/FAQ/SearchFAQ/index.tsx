@@ -64,6 +64,7 @@ export default function SearchFAQ() {
 
     const handleSearch = () => {
       setSearchText(keyword)
+      saveSearchHistory()
     }
     if (keyword !== searchText) {
       clearTimeout(typingTimeout)

@@ -79,3 +79,16 @@ export const STATUS_QUESTION_KEY = {
   VERIFIED: "VERIFIED",
   CANCELLED: "CANCELLED",
 }
+
+export const LIST_SPECIALIST_ICON = [
+  { code: 7, icon: R.images.ic_tamly, name: "Khoa tâm lý" },
+  { code: 8, icon: R.images.ic_mat, name: "Khoa mắt" },
+  { code: 3, icon: R.images.ic_ranghammat, name: "Khoa răng hàm mặt" },
+  { code: 1, icon: R.images.ic_nhi, name: "Khoa nhi" },
+  { code: 2, icon: R.images.ic_taimuihong, name: "Khoa tai mũi họng" },
+  { code: 5, icon: R.images.ic_tieuhoa, name: "Khoa tiêu hóa" },
+  { code: 4, icon: R.images.ic_dalieu, name: "Khoa da liễu" },
+  { code: 6, icon: R.images.ic_san, name: "Khoa sản" },
+  { code: 9, icon: R.images.ic_nhi, name: "Khoa nam - phụ" },
+  { code: 10, icon: R.images.ic_nhi, name: "Khoa nội" },
+]

@@ -181,6 +181,7 @@ export const iconRegistry = {
   heart_active: require("./icons/heart_active.png"),
   comment: require("./icons/comment.png"),
   danger: require("./icons/danger.png"),
+  message_notif: require("./icons/message-notif.png"),
 }
 const $imageStyle: ImageStyle = {
   resizeMode: "contain",

@@ -37,6 +37,7 @@ export function useCallApiMyQuestion() {
       page: page,
       perPage: limit,
       isMine: true,
+      sortByCreatedAt: -1,
     }
 
     isLoadMore
