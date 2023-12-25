@@ -21,8 +21,8 @@ import { Header } from "@app/components/Header"
 import { goBack } from "@app/navigators/navigationUtilities"
 import R from "@app/assets"
 import { Screen } from "@app/components/Screen"
-import Toolbar from "@app/screens/CallVideo/Item/Toolbar"
-import BottomButton from "@app/screens/CallVideo/Item/BottomButton"
+import Toolbar from "@app/screens/CallScreen/Item/Toolbar"
+import BottomButton from "@app/screens/CallScreen/Item/BottomButton"
 import ItemUserTarget from "@app/screens/CallScreen/Item/ItemUserTarget"
 interface ScreenProps {
   hasLocalStream: boolean

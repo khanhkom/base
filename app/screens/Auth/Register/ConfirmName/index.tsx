@@ -8,7 +8,6 @@ import colors from "@app/assets/colors"
 import { navigate } from "@app/navigators/navigationUtilities"
 import { getMyProfile, updateUserField } from "@app/redux/actions"
 import { useDispatch } from "react-redux"
-import { useSelector } from "@app/redux/reducers"
 import { translate } from "@app/i18n/translate"
 import { updateFullName } from "@app/services/api/functions/users"
 import { EToastType, showToastMessage } from "@app/utils/library"
@@ -49,17 +48,12 @@ export default function ConfirmName() {
       safeAreaEdges={Platform.OS === "android" ? ["bottom"] : []}
       contentContainerStyle={styles.container}
     >
-      <Header
-        // leftIcon="arrow_left"
-        title={translate("auth.name_confirmation")}
-        backgroundColor={colors.white}
-      />
+      <Header title={translate("auth.name_confirmation")} backgroundColor={colors.white} />
       <View style={{ flex: 1 }}>
         <TextInput
           placeholderTextColor={colors.gray_5}
           placeholder={translate("auth.enter_full_name")}
           mode="outlined"
-          // label="Nhập họ và tên"
           value={name}
           style={{
             marginHorizontal: WIDTH(spacing.md),

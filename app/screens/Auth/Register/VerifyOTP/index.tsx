@@ -14,17 +14,13 @@ import { getStringeeToken } from "@app/redux/actions/stringee"
 import { useDispatch } from "react-redux"
 import {
   createSessionWithFirebase,
-  getOtp,
   getOtpLogin,
   getOtpRegister,
   getOtpSocial,
-  getOtpV2,
   updatePhoneSocial,
-  verifyOTP,
   verifyOTPLogin,
   verifyOTPRegister,
   verifyOTPSocial,
-  verifyOTPV2,
 } from "@app/services/api/functions/users"
 import { LoadingOpacity } from "@app/components/loading/LoadingOpacity"
 import { EToastType, showToastMessage } from "@app/utils/library"
@@ -121,7 +117,7 @@ export default function VerifyOTP({ route }: ScreenProps) {
     return subscriber // unsubscribe on unmount
   }, [])
   console.log("userFi::", userFi)
-  // Function to handle API call and data processing
+  // Function to handle API call verify OTP
   async function handleAPICall(codeFinal, isAuto) {
     try {
       setLoading(true)
@@ -156,6 +152,7 @@ export default function VerifyOTP({ route }: ScreenProps) {
         }
         handleUiUpdate(resOTP)
       } else {
+        // if OTP type === firebase
         const newBody = {
           phone,
           code: codeFinal,
@@ -210,7 +207,7 @@ export default function VerifyOTP({ route }: ScreenProps) {
     setLoading(false)
     const dataLogin = resOTP?.data
     console.log("handleUiUpdate_handleUiUpdate")
-
+    // if verify code success
     if (resOTP?.data?.accessToken) {
       api.apisauce.setHeader("access-token", dataLogin?.accessToken)
       save(KEYSTORAGE.LOGIN_DATA, dataLogin)
@@ -238,7 +235,6 @@ export default function VerifyOTP({ route }: ScreenProps) {
         if (releaseIn === 0) {
           handleBlockOTP(resOTP?.data?.releaseIn)
         }
-
         showToastMessage("Bạn đã nhập sai quá nhiều lần!", EToastType.ERROR)
         console.log("resOTP_resOTP", resOTP?.data)
       } else {
@@ -252,6 +248,7 @@ export default function VerifyOTP({ route }: ScreenProps) {
   const _checkCode = async (codeFinal, isAuto) => {
     await handleAPICall(codeFinal, isAuto)
   }
+
   const reSendCode = async () => {
     try {
       const deviceId = await DeviceInfo.getUniqueId()
@@ -262,7 +259,6 @@ export default function VerifyOTP({ route }: ScreenProps) {
       }
       setLoading(true)
       setCode("")
-      // const resLogin = await getOtpV2(body)
       let resLogin = null
       if (otpMethod !== 0) {
         const confirmation = await auth().signInWithPhoneNumber(`${body.phone}`)
@@ -337,7 +333,6 @@ export default function VerifyOTP({ route }: ScreenProps) {
         autoFocus
         ref={pinInput}
         mask="﹡"
-        // placeholder="•"
         placeholder={<View style={styles.dot_placeholder} />}
         value={code}
         onTextChange={(code) => {
@@ -345,10 +340,6 @@ export default function VerifyOTP({ route }: ScreenProps) {
           setCode(code)
         }}
         onFulfill={(code) => _checkCode(code, false)}
-        // onFulfill={(code) => {
-        //   console.log("code_code", code)
-        //   setError(true)
-        // }}
         cellSize={WIDTH(48)}
         codeLength={6}
         cellStyle={styles.cellStyle}

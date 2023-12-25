@@ -35,7 +35,6 @@ import SelectPatientRecord from "@app/screens/Booking/MakeBooking/SelectPatientR
 import SelectSpecialist from "@app/screens/Booking/MakeBooking/SelectSpecialist"
 import DocterReviews from "@app/screens/Docter/DocterReviews"
 import DetailBooking from "@app/screens/Booking/DetailBooking"
-import CallVideo from "@app/screens/CallVideo"
 import RatingDocter from "@app/screens/Docter/RatingDocter"
 import CancelBooking from "@app/screens/Booking/CancelBooking"
 import ExaminationResults from "@app/screens/Patient/ExaminationResults"
@@ -102,7 +101,6 @@ export type AppStackParamList = {
 
   DocterReviews: undefined
   DetailBooking: undefined
-  CallVideo: undefined
   RatingDocter: undefined
   CancelBooking: undefined
 
@@ -207,7 +205,6 @@ const AppStack = observer(function AppStack() {
 
       <Stack.Screen name="DocterReviews" component={DocterReviews} />
       <Stack.Screen name="DetailBooking" component={DetailBooking} />
-      <Stack.Screen name="CallVideo" component={CallVideo} />
       <Stack.Screen name="RatingDocter" component={RatingDocter} />
       <Stack.Screen name="CancelBooking" component={CancelBooking} />
       <Stack.Screen name="ExaminationResults" component={ExaminationResults} />
