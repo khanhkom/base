@@ -32,9 +32,15 @@ export default function ListComment({
     return !(isDelete && cm?.replies?.length === 0)
   })
   const hasScrolled = useRef(false)
+  console.log("listCommentFilter__", listCommentFilter?.length)
   // console.log("listCommentFilter_listCommentFilter", listCommentFilter)
+
   return (
-    <View>
+    <View
+      style={{
+        paddingBottom: HEIGHT(80),
+      }}
+    >
       <FlatList
         data={listCommentFilter}
         onEndReached={() => {
@@ -45,6 +51,7 @@ export default function ListComment({
         ref={refScrollView}
         onScroll={() => (hasScrolled.current = true)}
         onEndReachedThreshold={0.5}
+        maxToRenderPerBatch={20}
         ListHeaderComponent={() => {
           return (
             <>
@@ -68,12 +75,15 @@ export default function ListComment({
             />
           )
         }}
+        onContentSizeChange={() => {
+          // refScrollView.current?.scrollToEnd({ animated: true })
+        }}
         ListFooterComponent={() => {
           if (isLoading) return <ActivityIndicator />
           return null
         }}
         keyExtractor={(item, index) => index.toString()}
-        contentContainerStyle={{ paddingBottom: HEIGHT(200), backgroundColor: colors.white }}
+        contentContainerStyle={{ backgroundColor: colors.white }}
       />
     </View>
   )

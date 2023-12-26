@@ -82,7 +82,9 @@ const useHookApiComment = (id: string) => {
       setComments(newComment)
     }
     setIsLoading(false)
-    refScrollView.current?.scrollToEnd({ animated: true })
+    setTimeout(() => {
+      refScrollView.current?.scrollToEnd({ animated: true })
+    }, 300)
   }
   const loadMore = () => {
     console.log("isReached", isReached)
