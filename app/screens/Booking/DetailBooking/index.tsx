@@ -14,8 +14,17 @@ import { STATUS_ORDER } from "@app/interface/order"
 import { useSelector } from "@app/redux/reducers"
 import ImageView from "react-native-image-viewing"
 import { translate } from "@app/i18n/translate"
-import { handleShowNotiInCall, stopNotiInCall } from "@app/utils/notification/NotificationHelpers"
-export default function DetailBooking({ route }) {
+interface IScreenProps {
+  route: {
+    params: {
+      id: string
+
+      // reload history booking
+      reloadData?: () => void
+    }
+  }
+}
+export default function DetailBooking({ route }: IScreenProps) {
   const id = route?.params?.id
   const { detailOrder, loading, returnDataByField, getDetailOrderApi, updateDataCreateOrder } =
     useHookDetailBooking(id)
@@ -95,6 +104,7 @@ export default function DetailBooking({ route }) {
         userId={detailOrder?.patient?.userId}
         to={detailOrder?.doctor?.userId}
         detailOrder={detailOrder}
+        reloadHistory={route?.params?.reloadData}
       />
     </Screen>
   )

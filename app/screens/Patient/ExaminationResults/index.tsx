@@ -15,6 +15,7 @@ export default function ExaminationHistory() {
   useEffect(() => {
     getAllResulsCall()
   }, [])
+  console.log("listResults::", listResults)
   if (loading) return <LoadingScreen />
   return (
     <View style={styles.container}>
@@ -23,14 +24,7 @@ export default function ExaminationHistory() {
       <FlatList
         data={listResults}
         renderItem={({ item, index }) => {
-          return (
-            <ItemHistory
-              index={index}
-              onPress={() => {
-                navigate("DetailExamination")
-              }}
-            />
-          )
+          return <ItemHistory item={item} index={index} />
         }}
         ListEmptyComponent={() => (
           <ItemEmpty style={{ marginTop: HEIGHT(100) }} title={translate("result.empty_result")} />

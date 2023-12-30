@@ -36,6 +36,7 @@ export interface ISpecialList {
   name: string
   code: string
   value?: string
+  iconUrl?: string
 }
 export interface IDoctorCalendar {
   timeRange: {

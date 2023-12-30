@@ -8,18 +8,22 @@ import { HEIGHT } from "@app/config/functions"
 import { spacing } from "@app/theme/spacing"
 import ModalFilter from "./Item/ModalFilter"
 import { getListDocter } from "@app/services/api/functions/docter"
-import { ISpecialList } from "@app/interface/docter"
+import { IDocter, ISpecialList } from "@app/interface/docter"
 import ItemEmpty from "@app/components/ItemEmpty"
 import { goBack, navigate } from "@app/navigators/navigationUtilities"
 import { useDispatch } from "react-redux"
-import { resetOrderInfor, updateDocterCreateOrder } from "@app/redux/actions/actionOrder"
+import {
+  resetOrderInfor,
+  updateDocterCreateOrder,
+  updateSpecialListOrder,
+} from "@app/redux/actions/actionOrder"
 import { translate } from "@app/i18n/translate"
 
 interface ScreenProps {
   route: {
     params: {
-      speciallist: ISpecialList
-      preScreen?: string | "SelectSpecialist"
+      specialist: ISpecialList
+      preScreen?: string | "SelectSpecialist" | "CompleteBooking" | "Home" | "BookNow"
     }
   }
 }
@@ -47,7 +51,18 @@ export default function SearchDocter({ route }: ScreenProps) {
   useEffect(() => {
     bounceToSearch()
   }, [keyword])
-
+  // if select special list before must set filter
+  useEffect(() => {
+    const preScreen = route?.params?.preScreen
+    if (preScreen === "SelectSpecialist" || preScreen === "CompleteBooking") {
+      filterData.current.specialist = route?.params?.specialist?.code
+      setFiltered(true)
+    }
+    if (preScreen === "Home") {
+      filterData.current.sortByRatings = -1
+      setFiltered(true)
+    }
+  }, [])
   function bounceToSearch() {
     clearTimeout(timerId)
 
@@ -61,7 +76,7 @@ export default function SearchDocter({ route }: ScreenProps) {
     const params = {
       search: keyword,
       page: 1,
-      perPage: 20,
+      perPage: 100,
     }
     if (
       dataFilter?.gender !== "" ||
@@ -96,13 +111,17 @@ export default function SearchDocter({ route }: ScreenProps) {
     })
   }
   const dispatch = useDispatch()
-  const onPressBook = (item) => {
+  const onPressBook = (item: IDocter) => {
     dispatch(updateDocterCreateOrder(item))
 
     if (route?.params?.preScreen === "SelectSpecialist") {
       navigate("SelectCalendar")
-    } else if (route?.params?.preScreen) {
+    } else if (route?.params?.preScreen === "CompleteBooking") {
       goBack()
+    } else if (route?.params?.preScreen === "BookNow" || route?.params?.preScreen === "Home") {
+      dispatch(resetOrderInfor())
+      dispatch(updateSpecialListOrder(item?.specialist?.[0]))
+      navigate("SelectCalendar")
     } else {
       // reset data when user back to this screen
       navigate("SelectCalendar")

@@ -23,6 +23,10 @@ export const LIST_SPECIALIST = [
   },
   {
     title: translate("history.verified"),
+    status: STATUS_ORDER.created,
+  },
+  {
+    title: "Sẵn sàng khám",
     status: STATUS_ORDER.verified,
   },
   {

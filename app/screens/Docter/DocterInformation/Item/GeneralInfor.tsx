@@ -8,6 +8,7 @@ import { spacing } from "@app/theme/spacing"
 import { Card } from "react-native-paper"
 import { IDocter } from "@app/interface/docter"
 import { translate } from "@app/i18n/translate"
+import AvatarDoctor from "@app/components/AvatarDoctor"
 export default function GeneralInfor({ data }: { data: IDocter }) {
   return (
     <Card
@@ -16,11 +17,8 @@ export default function GeneralInfor({ data }: { data: IDocter }) {
       contentStyle={{ flexDirection: "row" }}
       onPress={() => {}}
     >
-      <Image
-        source={data?.avatarUrl ? { uri: data?.avatarUrl } : R.images.avatar_docter_rec}
-        style={styles.avatar}
-        resizeMode='contain'
-      />
+      <AvatarDoctor avatarUrl={data?.avatarUrl} style={styles.avatar} resizeMode="contain" />
+
       <View>
         <Text weight="medium" size="md" style={styles.textName}>
           {translate("doctor.doctor")} {data?.name}
@@ -65,6 +63,7 @@ const styles = StyleSheet.create({
     height: HEIGHT(120),
     alignSelf: "center",
     marginRight: WIDTH(spacing.sm),
+    borderRadius: WIDTH(12),
   },
   textName: {
     color: colors.gray_9,

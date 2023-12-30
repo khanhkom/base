@@ -119,6 +119,7 @@ const useHookDetailBooking = (id) => {
     )
     dispatch(updateDocterCreateOrder(detailOrder?.doctor))
   }
+  console.log("detailOrder::", detailOrder)
   const returnDataByField = (field) => {
     if (!detailOrder?.id) return ""
     switch (field) {
@@ -131,7 +132,7 @@ const useHookDetailBooking = (id) => {
           detailOrder?.timeRange?.to,
         ).format("HH:mm")}`
       case TYPE_FIELD.patientId:
-        return detailOrder?.patient?.id
+        return detailOrder?.patient?.code
       case TYPE_FIELD.patientName:
         return detailOrder?.patient?.name
       case TYPE_FIELD.docterName:

@@ -4,7 +4,9 @@ import { IBodyByPage } from "@app/interface/general"
 import { ApiResponse } from "apisauce"
 import { IDocter, IDoctorCalendar, ISpecialList } from "@app/interface/docter"
 
-export const getListDocter = (body: IBodyByPage): Promise<ApiResponse<{ items: IDocter[] }>> =>
+export const getListDocter = (
+  body: IBodyByPage & { sortByRatings?: number },
+): Promise<ApiResponse<{ items: IDocter[] }>> =>
   api.apisauce
     .get(URL.GET_DOCTER, body)
     .then((res) => res)

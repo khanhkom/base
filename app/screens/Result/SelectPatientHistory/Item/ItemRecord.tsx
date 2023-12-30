@@ -13,6 +13,8 @@ interface ItemProps {
   item: IPatient
 }
 export default function ItemRecord({ onPress, item }: ItemProps) {
+  const isMale = item?.gender === "male"
+
   return (
     <Pressable
       style={styles.item}
@@ -20,7 +22,11 @@ export default function ItemRecord({ onPress, item }: ItemProps) {
         onPress && onPress()
       }}
     >
-      <Image source={R.images.avatar_patient} style={styles.avatar} resizeMode="center" />
+      <Image
+        source={isMale ? R.images.patient_male : R.images.patient_female}
+        style={styles.avatar}
+        resizeMode="contain"
+      />
       <View>
         <Text weight="medium" size="md" style={styles.textName}>
           {item?.name}
@@ -48,8 +54,8 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
   avatar: {
-    width: WIDTH(72),
-    height: HEIGHT(72),
+    width: WIDTH(32),
+    height: HEIGHT(32),
     alignSelf: "center",
     marginRight: WIDTH(spacing.sm),
   },

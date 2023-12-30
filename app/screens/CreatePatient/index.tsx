@@ -1,4 +1,4 @@
-import { Platform, StyleSheet, View } from "react-native"
+import { Alert, Platform, StyleSheet, View } from "react-native"
 import React, { useEffect, useRef, useState } from "react"
 import { Header } from "@app/components/Header"
 import colors from "@app/assets/colors"
@@ -14,7 +14,11 @@ import { goBack, navigate } from "@app/navigators/navigationUtilities"
 import { useSelector } from "@app/redux/reducers"
 import moment from "moment"
 import { EToastType, showToastMessage } from "@app/utils/library"
-import { createPatient, updatePatient } from "@app/services/api/functions/patient"
+import {
+  createPatient,
+  deletePatientById,
+  updatePatient,
+} from "@app/services/api/functions/patient"
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view"
 import { getListPatientRequest } from "@app/redux/actions/patient"
 import { useDispatch } from "react-redux"
@@ -23,6 +27,7 @@ import * as Yup from "yup"
 import { translate } from "@app/i18n/translate"
 import useDetailPatient from "../Patient/DetailPatient/useDetailPatient"
 import { Screen } from "@app/components/Screen"
+import { LoadingOpacity } from "@app/components/loading/LoadingOpacity"
 const SignupSchema = Yup.object().shape({
   name: Yup.string().required(translate("create_patient.please_enter_fullname")),
   phone: Yup.string().required(translate("create_patient.please_enter_phone")),
@@ -40,7 +45,9 @@ interface ScreenProps {
 export default function CreatePatient({ route }: ScreenProps) {
   const user = useSelector((state) => state.userReducers.user)
   const id = route?.params?.id
+  const isEdit = route?.params?.id
   const { loading: loadingDetail, detailPatient, returnDataByField } = useDetailPatient(id)
+  const [isLoadingDelete, setLoadingDelete] = useState(false)
   const formRef = useRef()
 
   const [gender, setGender] = useState(0)
@@ -134,20 +141,42 @@ export default function CreatePatient({ route }: ScreenProps) {
       showToastMessage(translate("create_patient.create_patient_failure"), EToastType.ERROR)
     }
   }
+  const handleDeletePatient = () => {
+    Alert.alert("Xóa hồ sơ y tế", "Bạn có chắc chắn muốn xóa hồ sơ này?", [
+      { text: "Hủy", style: "cancel" },
+      { text: "Xóa", onPress: () => onDeletePatient() },
+    ])
+  }
+  const onDeletePatient = async () => {
+    try {
+      setLoadingDelete(true)
+      const resDelete = await deletePatientById(id)
+      console.log("resDelete_resDelete", resDelete)
+      showToastMessage("Xóa hồ sơ thành công!", EToastType.SUCCESS)
+      dispatch(getListPatientRequest())
+      setLoadingDelete(false)
+      goBack()
+      goBack()
+    } catch (error) {
+      showToastMessage("Xóa hồ sơ thất bại!", EToastType.ERROR)
+      setLoadingDelete(false)
+    }
+  }
   return (
     <Screen
-      safeAreaEdges={Platform.OS === "android" ?["bottom"]:[]}
+      safeAreaEdges={Platform.OS === "android" ? ["bottom"] : []}
       contentContainerStyle={styles.container}
     >
       <Header
-        title={translate("create_patient.create_new_patient")}
+        title={isEdit ? "Chỉnh sửa thông tin" : translate("create_patient.create_new_patient")}
         leftIcon="arrow_left"
         rightText={isNavigateFromRegister ? translate("common.skip") : undefined}
-        rightIconColor={colors.blue_6}
+        rightIconColor={colors.red_6}
         backgroundColor={colors.white}
+        rightIcon={isEdit ? "delete" : undefined}
         onRightPress={() => {
           if (!isNavigateFromRegister) {
-            goBack()
+            handleDeletePatient()
           } else {
             navigate("TabNavigator")
           }
@@ -303,6 +332,7 @@ export default function CreatePatient({ route }: ScreenProps) {
           {translate("common.save")}
         </Button>
       </View>
+      {isLoadingDelete && <LoadingOpacity />}
     </Screen>
   )
 }

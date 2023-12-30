@@ -16,6 +16,7 @@ interface ItemProps {
   to: string
   detailOrder: IOrderHistory
   updateDataCreateOrder?: () => void
+  reloadHistory?: () => void
 }
 export default function BottonButton({
   status,
@@ -26,6 +27,7 @@ export default function BottonButton({
   to,
   detailOrder,
   updateDataCreateOrder,
+  reloadHistory,
 }: ItemProps) {
   const onPressCall = () => {
     // console.log("AAAAAA", clientId?.current?.getId?.())
@@ -122,7 +124,14 @@ export default function BottonButton({
       <View style={styles.container}>
         <Button
           onPress={() => {
-            navigate("RatingDocter", { id, doctor: detailOrder?.doctor })
+            navigate("RatingDocter", {
+              id,
+              doctor: detailOrder?.doctor,
+              reloadData: () => {
+                getDetailOrderApi()
+                reloadHistory()
+              },
+            })
           }}
           mode="contained"
           style={styles.buttonHome}

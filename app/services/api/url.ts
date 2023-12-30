@@ -25,6 +25,7 @@ const URL_PATIENT = {
   CREATE_PATIENT: "patient",
   GET_PATIENT: "patient",
   GET_PATIENT_BY_ID: "patient/",
+  DELETE_PATIENT_BY_ID: "patient/",
   UPDATE_PATIENT: "patient/",
   GET_USER_INFO: "authentication/user",
   UPDATE_FULLNAME: "authentication/fullname",

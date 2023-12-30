@@ -37,3 +37,9 @@ export const updatePatient = (
     .put(URL.UPDATE_PATIENT + id, body)
     .then((res) => res)
     .catch((err) => err)
+
+export const deletePatientById = (id: string): Promise<ApiResponse<IPatient>> =>
+  api.apisauce
+    .delete(URL.DELETE_PATIENT_BY_ID + id)
+    .then((res) => res)
+    .catch((err) => err)

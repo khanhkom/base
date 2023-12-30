@@ -30,11 +30,7 @@ export default function SelectPatientHistory({ route }: IScreenProps) {
   if (loading)
     return (
       <View style={styles.container}>
-        <Header
-          leftIcon="arrow_left"
-          title="Chọn hồ sơ bệnh nhân"
-          backgroundColor={colors.gray_1}
-        />
+        <Header leftIcon="arrow_left" title="Kết quả khám" backgroundColor={colors.gray_1} />
         <ItemPlaceholderCommon />
         <ItemPlaceholderCommon />
         <ItemPlaceholderCommon />
@@ -42,7 +38,7 @@ export default function SelectPatientHistory({ route }: IScreenProps) {
     )
   return (
     <View style={styles.container}>
-      <Header leftIcon="arrow_left" title="Chọn hồ sơ bệnh nhân" backgroundColor={colors.gray_1} />
+      <Header leftIcon="arrow_left" title="Kết quả khám" backgroundColor={colors.gray_1} />
       <FlatList
         data={listPatients}
         renderItem={({ item, index }) => {

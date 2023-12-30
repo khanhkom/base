@@ -12,14 +12,18 @@ import { goBack, navigate } from "@app/navigators/navigationUtilities"
 import { IDocter } from "@app/interface/docter"
 import { getDetailDocter } from "@app/services/api/functions/docter"
 import { useDispatch } from "react-redux"
-import { updateDocterCreateOrder } from "@app/redux/actions/actionOrder"
+import {
+  resetOrderInfor,
+  updateDocterCreateOrder,
+  updateSpecialListOrder,
+} from "@app/redux/actions/actionOrder"
 import { translate } from "@app/i18n/translate"
 import LoadingScreen from "@app/components/loading/LoadingScreen"
 interface IScreenProps {
   route: {
     params: {
       item: IDocter
-      preScreen?: string
+      preScreen?: string | "SelectSpecialist" | "Home" | "CompleteBooking" | "BookNow"
     }
   }
 }
@@ -38,6 +42,21 @@ export default function DocterInformation({ route }: IScreenProps) {
     loadDetailDocter()
   }, [])
   const dispatch = useDispatch()
+  const onPressButtonBook = () => {
+    const preScreen = route?.params?.preScreen
+    dispatch(updateDocterCreateOrder(detailDocter))
+    if (preScreen === "CompleteBooking") {
+      goBack()
+      goBack()
+    } else if (preScreen === "BookNow" || preScreen === "Home") {
+      dispatch(resetOrderInfor())
+      dispatch(updateSpecialListOrder(detailDocter?.specialist?.[0]))
+      navigate("SelectCalendar")
+    } else {
+      dispatch(resetOrderInfor())
+      navigate("SelectCalendar")
+    }
+  }
   if (loading) return <LoadingScreen />
   return (
     <Screen
@@ -55,19 +74,7 @@ export default function DocterInformation({ route }: IScreenProps) {
         />
       </ScrollView>
       <View style={styles.buttonWrapper}>
-        <Button
-          mode="contained"
-          style={styles.button}
-          onPress={() => {
-            dispatch(updateDocterCreateOrder(detailDocter))
-            if (route?.params?.preScreen) {
-              goBack()
-              goBack()
-            } else {
-              navigate("SelectCalendar")
-            }
-          }}
-        >
+        <Button mode="contained" style={styles.button} onPress={onPressButtonBook}>
           {translate("booking.book")}
         </Button>
       </View>

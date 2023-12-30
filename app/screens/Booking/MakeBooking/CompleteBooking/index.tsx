@@ -95,6 +95,8 @@ export default function CompleteBooking({ route }: ScreenProps) {
   const verifyData = () => {
     if (specialist?.code === "") {
       showToastMessage(VALIDATE_MESSAGE[0], EToastType.ERROR)
+    } else if (!docter?.id || docter?.id === "") {
+      showToastMessage("Vui lòng chọn bác sĩ!", EToastType.ERROR)
     } else if (selectedDate === "") {
       showToastMessage(VALIDATE_MESSAGE[1], EToastType.ERROR)
     } else if (selectedTime?.time === "") {
@@ -204,6 +206,7 @@ export default function CompleteBooking({ route }: ScreenProps) {
             onPress={() =>
               navigate("SearchDocterAgain", {
                 preScreen: "CompleteBooking",
+                specialist,
               })
             }
           />

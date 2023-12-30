@@ -5,7 +5,8 @@ export interface Inotification {
   clickAction: {
     actionType: string
     data: {
-      orderId?: string
+      // orderId?: string
+      id: string
       questionId?: string
     }
     id: string

@@ -28,6 +28,7 @@ export interface IOrderHistory {
   patient: {
     id: string
     name: string
+    code: string
     userId: string
     profileId: string
     phone: string
@@ -37,6 +38,8 @@ export interface IOrderHistory {
     name: string
     userId: string
     profileId: string
+    avatarUrl: string
+    phone: string
   }
   timeRange: {
     from: string

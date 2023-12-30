@@ -7,44 +7,42 @@ import { HEIGHT, WIDTH } from "@app/config/functions"
 import { spacing } from "@app/theme/spacing"
 import { Button, Card } from "react-native-paper"
 import { navigate } from "@app/navigators/navigationUtilities"
+import { IOrderResultItem } from "@app/interface/result"
+import useHookDetailBooking from "@app/screens/Booking/DetailBooking/useHookDetailBooking"
+import moment from "moment"
 interface ItemProps {
-  onPress: () => void
   index: number
+  item: IOrderResultItem
 }
-const DATA = [
-  {
-    title: "Răng Hàm Mặt",
-    icon: R.images.features_1,
-  },
-  {
-    title: "Nhi khoa",
-    icon: R.images.features_2,
-  },
-  {
-    title: "Da liễu",
-    icon: R.images.features_3,
-  },
-]
-export default function ItemHistory({ onPress, index }: ItemProps) {
+
+export default function ItemHistory({ index, item }: ItemProps) {
+  const { detailOrder } = useHookDetailBooking(item?.orderDetail?.orderId)
+  console.log("item::", item)
   return (
     <Card
       mode="contained"
       style={styles.item}
       contentStyle={{ flexDirection: "row" }}
       onPress={() => {
-        onPress && onPress()
+        navigate("DetailExamination", {
+          id: item?.orderDetail?.orderId,
+          specialist: { value: detailOrder?.specialist?.value },
+        })
       }}
     >
-      <Image source={DATA[index].icon} style={styles.avatar} resizeMode="center" />
+      <Image source={R.images.features_1} style={styles.avatar} resizeMode="center" />
       <View>
         <Text weight="medium" size="md" style={styles.textName}>
-          B.s Nguyễn Văn B
+          B.s {detailOrder?.doctor?.name ?? ""}
         </Text>
         <Text weight="normal" size="sm" style={styles.textDes}>
-          Thời gian khám: <Text style={{ color: colors.gray_9 }}>27/02/2006</Text>
+          Thời gian khám:{" "}
+          <Text style={{ color: colors.gray_9 }}>
+            {moment(detailOrder?.timeRange?.from).format("DD/MM/YYYY")}
+          </Text>
         </Text>
         <Text weight="normal" size="sm" style={styles.textDes}>
-          Chẩn đoán: <Text style={{ color: colors.gray_9 }}>Kích ứng da do thời tiết</Text>
+          Chẩn đoán: <Text style={{ color: colors.gray_9 }}>{item?.description}</Text>
         </Text>
       </View>
     </Card>

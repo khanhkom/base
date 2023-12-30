@@ -1,4 +1,4 @@
-import { StyleSheet, View, Image } from "react-native"
+import { StyleSheet, View, Image, TouchableWithoutFeedback, Keyboard } from "react-native"
 import React, { useState } from "react"
 import { Header } from "@app/components/Header"
 import colors from "@app/assets/colors"
@@ -29,7 +29,9 @@ interface IScreenParams {
       doctor: {
         id: string
         name: string
+        avatarUrl: string
       }
+      reloadData: () => void
     }
   }
 }
@@ -38,6 +40,7 @@ export default function RatingDocter({ route }: IScreenParams) {
   const [listCriteria, setListCriteria] = useState([])
   const [loading, setLoading] = useState(false)
   const [description, setDescription] = useState("")
+  const [error, setError] = useState(false)
   const dispatch = useDispatch()
   const onPressCriteria = (index) => {
     if (listCriteria.includes(index)) {
@@ -50,7 +53,10 @@ export default function RatingDocter({ route }: IScreenParams) {
   const onSubmitRating = async () => {
     if (star === 0) {
       showToastMessage(translate("rating.please_select_star"), EToastType.ERROR)
+    } else if (description?.trim() === "") {
+      setError(true)
     } else {
+      setError(false)
       setLoading(true)
       const criteria = []
       LIST_DEFAULT_RATING.forEach((it, index) => {
@@ -65,69 +71,97 @@ export default function RatingDocter({ route }: IScreenParams) {
         score: star,
       }
       let resRating = await sendRatingOrder(body)
+      console.log("resRating::", resRating)
       dispatch(getOrderHistory())
       if (resRating.status === 201) {
         showToastMessage(translate("rating.sent_rating_success"), EToastType.SUCCESS)
         goBack()
+        route?.params?.reloadData?.()
       } else {
         showToastMessage(translate("rating.sent_rating_fail"), EToastType.ERROR)
       }
       setLoading(false)
     }
   }
+  const doctor = route?.params?.doctor
   return (
-    <View style={styles.container}>
-      <Header
-        leftIcon="arrow_left"
-        title={translate("rating.rating_doctor")}
-        backgroundColor={colors.white}
-      />
-      <Image source={R.images.avatar_docter_rec} style={styles.imageDocter} />
-      <Text size="xxl" weight="semiBold" style={styles.doctorName}>
-        {translate("doctor.doctor")} {route?.params?.doctor?.name ?? ""}
-      </Text>
-      <Text size="md" weight="medium" style={styles.textDesc}>
-        {translate("rating.do_you_satisfy")}
-      </Text>
-      <ItemTotalStar star={star} setStar={setStar} />
-      <TextField
-        placeholder={translate("rating.share_your_feel")}
-        style={{ minHeight: HEIGHT(120) }}
-        containerStyle={{ width: WIDTH(343), marginTop: HEIGHT(32) }}
-        textAlignVertical="top"
-        onChangeText={setDescription}
-        multiline
-      />
-      <Text
-        size="ba"
-        weight="medium"
-        style={{ color: colors.gray_9, marginVertical: HEIGHT(spacing.md) }}
-      >
-        {translate("rating.you_can_choose_more_option")}
-      </Text>
-      <View style={styles.flexWrap}>
-        {LIST_DEFAULT_RATING.map((item, index) => {
-          const isActive = listCriteria.includes(index)
-          return (
-            <Button
-              key={index}
-              mode="contained"
-              buttonColor={isActive ? colors.primary : colors.gray_1}
-              textColor={isActive ? colors.white : colors.gray_9}
-              onPress={() => onPressCriteria(index)}
-              style={styles.buttonReviewSuggest}
-            >
-              {item}
-            </Button>
-          )
-        })}
+    <TouchableWithoutFeedback
+      onPress={() => {
+        Keyboard.dismiss()
+      }}
+    >
+      <View style={styles.container}>
+        <Header
+          leftIcon="arrow_left"
+          title={translate("rating.rating_doctor")}
+          backgroundColor={colors.white}
+        />
+        <Image
+          source={
+            doctor?.avatarUrl !== ""
+              ? {
+                  uri: doctor?.avatarUrl,
+                }
+              : R.images.avatar_docter_rec
+          }
+          style={styles.imageDocter}
+          resizeMode="contain"
+        />
+        <Text size="xxl" weight="semiBold" style={styles.doctorName}>
+          {translate("doctor.doctor")} {doctor?.name ?? ""}
+        </Text>
+        <Text size="md" weight="normal" style={styles.textDesc}>
+          {translate("rating.do_you_satisfy")}
+        </Text>
+        <ItemTotalStar star={star} setStar={setStar} />
+        <TextField
+          placeholder={translate("rating.share_your_feel")}
+          style={{ minHeight: HEIGHT(120) }}
+          containerStyle={{ width: WIDTH(343), marginTop: HEIGHT(32) }}
+          inputWrapperStyle={error && { borderColor: colors.red_6 }}
+          textAlignVertical="top"
+          onChangeText={(text) => {
+            setDescription(text)
+            if (error) {
+              setError(false)
+            }
+          }}
+          multiline
+          require
+          helper={error && "Vui lòng nhập cảm nhận!"}
+          HelperTextProps={{ style: { color: colors.red_6 } }}
+        />
+        <Text
+          size="ba"
+          weight="medium"
+          style={{ color: colors.gray_9, marginVertical: HEIGHT(spacing.md) }}
+        >
+          {translate("rating.you_can_choose_more_option")}
+        </Text>
+        <View style={styles.flexWrap}>
+          {LIST_DEFAULT_RATING.map((item, index) => {
+            const isActive = listCriteria.includes(index)
+            return (
+              <Button
+                key={index}
+                mode="contained"
+                buttonColor={isActive ? colors.primary : colors.gray_1}
+                textColor={isActive ? colors.white : colors.gray_9}
+                onPress={() => onPressCriteria(index)}
+                style={styles.buttonReviewSuggest}
+              >
+                {item}
+              </Button>
+            )
+          })}
+        </View>
+        <View style={styles.bottomButton}>
+          <Button loading={loading} style={styles.button} mode="contained" onPress={onSubmitRating}>
+            {translate("booking.button.send_rating")}
+          </Button>
+        </View>
       </View>
-      <View style={styles.bottomButton}>
-        <Button loading={loading} style={styles.button} mode="contained" onPress={onSubmitRating}>
-          {translate("booking.button.send_rating")}
-        </Button>
-      </View>
-    </View>
+    </TouchableWithoutFeedback>
   )
 }
 

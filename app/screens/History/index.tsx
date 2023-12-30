@@ -1,5 +1,13 @@
-import { ActivityIndicator, FlatList, Platform, Pressable, StyleSheet, View } from "react-native"
-import React, { useEffect, useRef, useState } from "react"
+import {
+  ActivityIndicator,
+  FlatList,
+  Platform,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  View,
+} from "react-native"
+import React, { memo, useEffect, useRef, useState } from "react"
 import colors from "@app/assets/colors"
 import { Header } from "@app/components/Header"
 import ItemSchedule from "./Item/ItemSchedule"
@@ -203,31 +211,34 @@ export default function History() {
       }
     })()
   }, [orderHistory, pagingRes])
-  const ItemFilterHead = () => {
+  // eslint-disable-next-line react/display-name
+  const ItemFilterHead = memo(() => {
     return (
       <View style={styles.wrapperFilter}>
-        {LIST_SPECIALIST.map((item, index) => {
-          return (
-            <Pressable
-              onPress={() => {
-                setStatus(index)
-              }}
-              style={[styles.button, index !== status && { backgroundColor: colors.main_7 }]}
-              key={index}
-            >
-              <Text
-                size="ba"
-                weight="normal"
-                style={{ color: index !== status ? colors.primary_2 : colors.primary_8 }}
+        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+          {LIST_SPECIALIST.map((item, index) => {
+            return (
+              <Pressable
+                onPress={() => {
+                  setStatus(index)
+                }}
+                style={[styles.button, index !== status && { backgroundColor: colors.main_7 }]}
+                key={index}
               >
-                {item.title}
-              </Text>
-            </Pressable>
-          )
-        })}
+                <Text
+                  size="ba"
+                  weight="normal"
+                  style={{ color: index !== status ? colors.primary_2 : colors.primary_8 }}
+                >
+                  {item.title}
+                </Text>
+              </Pressable>
+            )
+          })}
+        </ScrollView>
       </View>
     )
-  }
+  })
   if (loading) {
     return (
       <View style={styles.container}>
@@ -274,7 +285,7 @@ export default function History() {
         data={listData}
         contentContainerStyle={{ paddingTop: HEIGHT(spacing.sm) }}
         renderItem={({ item, index }) => {
-          return <ItemSchedule item={item} />
+          return <ItemSchedule item={item} reloadData={onHeaderRefresh} />
         }}
         ListEmptyComponent={() => {
           return <ItemEmpty title={translate("history.empty_booking")} />
@@ -346,16 +357,16 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   wrapperFilter: {
-    flexDirection: "row",
-    justifyContent: "space-between",
     backgroundColor: colors.primary_8,
     paddingVertical: HEIGHT(spacing.sm),
     paddingHorizontal: WIDTH(spacing.md),
+    flexDirection: "row",
   },
   button: {
     paddingHorizontal: WIDTH(10),
     paddingVertical: HEIGHT(6),
     borderRadius: 30,
     backgroundColor: colors.white,
+    marginLeft: WIDTH(spacing.sm),
   },
 })

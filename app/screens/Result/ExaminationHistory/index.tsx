@@ -19,6 +19,7 @@ export default function ExaminationHistory({ route }: IScreenProps) {
   useEffect(() => {
     getAllResulsCall()
   }, [])
+  console.log("listResults::", listResults)
   if (loading) return <LoadingScreen />
   return (
     <View style={styles.container}>
@@ -27,14 +28,7 @@ export default function ExaminationHistory({ route }: IScreenProps) {
       <FlatList
         data={listResults}
         renderItem={({ item, index }) => {
-          return (
-            <ItemHistory
-              index={index}
-              onPress={() => {
-                navigate("DetailExamination", { id: item?.id, specialist: { value: "Test" } })
-              }}
-            />
-          )
+          return <ItemHistory item={item} index={index} />
         }}
         ListEmptyComponent={() => <ItemEmpty />}
         ListFooterComponent={() => <View style={{ height: 16 }} />}

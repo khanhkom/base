@@ -12,6 +12,7 @@ import moment from "moment"
 import { LIST_ICON_BY_STATUS } from "@app/config/constants"
 import { translate } from "@app/i18n/translate"
 import R from "@app/assets"
+import AvatarDoctor from "@app/components/AvatarDoctor"
 
 const ItemValue = ({ title, value }) => {
   return (
@@ -23,12 +24,13 @@ const ItemValue = ({ title, value }) => {
 
 interface ItemProps {
   item: IOrderHistory
+  reloadData: () => void
 }
-export default function ItemSchedule({ item }: ItemProps) {
+export default function ItemSchedule({ item, reloadData }: ItemProps) {
   const itemData =
     LIST_ICON_BY_STATUS.find((it) => it.status === item?.status) || LIST_ICON_BY_STATUS[0]
   const isDoneSchedule = item?.status === STATUS_ORDER.rating_processing
-
+  console.log("item::", item)
   return (
     <Card
       style={styles.card}
@@ -36,11 +38,16 @@ export default function ItemSchedule({ item }: ItemProps) {
       onPress={() => {
         navigate("DetailBooking", {
           id: item.id,
+          reloadData,
         })
       }}
     >
       <View style={styles.flexRow}>
-        <Image source={R.images.avatar_docter_rec} style={styles.avatar} resizeMode="contain" />
+        <AvatarDoctor
+          avatarUrl={item?.doctor?.avatarUrl}
+          style={styles.avatar}
+          resizeMode="contain"
+        />
         <View>
           <View>
             <Text weight="medium" size="md" style={styles.textName}>
@@ -77,7 +84,7 @@ export default function ItemSchedule({ item }: ItemProps) {
           style={styles.buttonRate}
           mode="contained"
           onPress={() => {
-            navigate("RatingDocter", { id: item?.id, doctor: item?.doctor })
+            navigate("RatingDocter", { id: item?.id, doctor: item?.doctor, reloadData })
           }}
         >
           {translate("history.rating")}
@@ -127,6 +134,7 @@ const styles = StyleSheet.create({
     height: HEIGHT(120),
     alignSelf: "center",
     marginHorizontal: WIDTH(spacing.sm),
+    borderRadius: WIDTH(12),
   },
   icStatus: {
     height: WIDTH(16),

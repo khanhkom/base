@@ -28,7 +28,7 @@ export default function ItemNotification({ item }: ItemProps) {
     switch (item?.clickAction?.actionType) {
       case "open_order":
         navigate("DetailBooking", {
-          id: item?.clickAction?.data?.orderId,
+          id: item?.clickAction?.data?.id,
         })
         break
       case "open_question":

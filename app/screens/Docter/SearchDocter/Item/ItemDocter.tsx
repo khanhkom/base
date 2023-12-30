@@ -9,6 +9,7 @@ import { Button, Card } from "react-native-paper"
 import { Icon } from "@app/components/Icon"
 import { IDocter } from "@app/interface/docter"
 import { translate } from "@app/i18n/translate"
+import AvatarDoctor from "@app/components/AvatarDoctor"
 interface ItemProps {
   item: IDocter
   onPress: () => void
@@ -17,7 +18,7 @@ interface ItemProps {
 export default function ItemDocter({ item, onPress, onPressBook }: ItemProps) {
   return (
     <Card mode="contained" style={styles.item} contentStyle={styles.contentCard} onPress={onPress}>
-      <Image source={R.images.avatar_docter_rec} style={styles.avatar} resizeMode="contain" />
+      <AvatarDoctor avatarUrl={item?.avatarUrl} style={styles.avatar} resizeMode="contain" />
       <View>
         <Text weight="medium" size="md" style={styles.textName}>
           {translate("doctor.doctor")} {item?.name}
@@ -54,6 +55,7 @@ const styles = StyleSheet.create({
     height: HEIGHT(120),
     marginRight: WIDTH(spacing.sm),
     width: WIDTH(90),
+    borderRadius: WIDTH(12),
   },
   button: {
     borderRadius: WIDTH(8),
