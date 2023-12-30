@@ -367,6 +367,6 @@ const styles = StyleSheet.create({
     paddingVertical: HEIGHT(6),
     borderRadius: 30,
     backgroundColor: colors.white,
-    marginLeft: WIDTH(spacing.sm),
+    marginRight: WIDTH(spacing.sm),
   },
 })

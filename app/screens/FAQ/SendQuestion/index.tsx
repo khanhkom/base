@@ -14,6 +14,7 @@ import { EToastType, showToastMessage } from "@app/utils/library"
 import { createQuestion } from "@app/services/api/functions/question"
 import { LoadingOpacity } from "@app/components/loading/LoadingOpacity"
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view"
+import { Screen } from "@app/components/Screen"
 
 interface IScreenParams {
   route: {
@@ -56,13 +57,16 @@ export default function SendQuestion({ route }: IScreenParams) {
     }
   }
   return (
-    <View style={styles.container}>
+    <Screen
+      safeAreaEdges={Platform.OS === "android" ? ["bottom"] : []}
+      contentContainerStyle={styles.container}
+    >
       <Header leftIcon="arrow_left" title={"Đặt câu hỏi"} backgroundColor={colors.white} />
       <KeyboardAwareScrollView style={styles.body}>
         <ItemNote />
         <TextField
           label={"Câu hỏi"}
-          style={{ color: colors.gray_9, minHeight: HEIGHT(80),textAlignVertical:'top'}}
+          style={{ color: colors.gray_9, minHeight: HEIGHT(80), textAlignVertical: "top" }}
           value={question}
           multiline
           onChangeText={setQuestion}
@@ -103,7 +107,7 @@ export default function SendQuestion({ route }: IScreenParams) {
         title="Gửi câu hỏi thành công"
         desc="Quý khách vui lòng chờ câu trả lời, tư vấn từ bác sĩ của SDoctor!"
       />
-    </View>
+    </Screen>
   )
 }
 

@@ -2,13 +2,14 @@ import {
   ActivityIndicator,
   FlatList,
   Keyboard,
+  Platform,
   RefreshControl,
   ScrollView,
   StyleSheet,
   View,
 } from "react-native"
 import React, { useEffect, useRef, useState } from "react"
-import { Header } from "@app/components/index"
+import { Header, Screen } from "@app/components/index"
 import colors from "@app/assets/colors"
 import { translate } from "@app/i18n/translate"
 import SearchFilter from "./Item/SearchFilter"
@@ -41,7 +42,11 @@ export default function CommunityFAQ({ route }: ScreenProps) {
     }, 1000)
   }
   return (
-    <View style={styles.container}>
+    <Screen
+      safeAreaEdges={Platform.OS === "android" ? ["bottom"] : []}
+      contentContainerStyle={styles.container}
+    >
+      {/* <Screen style={styles.container}> */}
       <Header
         leftIcon="arrow_left"
         title={"Hỏi đáp cộng đồng"}
@@ -74,7 +79,7 @@ export default function CommunityFAQ({ route }: ScreenProps) {
           Đặt câu hỏi
         </Button>
       </View>
-    </View>
+    </Screen>
   )
 }
 

@@ -59,7 +59,11 @@ const ItemUserRating = ({ description, criteria, createdAt, score, patient }: It
       />
       <View style={styles.flexRow}>
         <ItemTotalStar star={score} />
-        <Text size="sm" weight="medium" style={{ marginLeft: WIDTH(spacing.xxs) }}>
+        <Text
+          size="sm"
+          weight="medium"
+          style={{ marginLeft: WIDTH(spacing.xxs), width: WIDTH(260) }}
+        >
           {criteriaString}
         </Text>
       </View>

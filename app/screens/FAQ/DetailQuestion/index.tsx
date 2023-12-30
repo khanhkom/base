@@ -25,6 +25,7 @@ import { STATUS_QUESTION } from "@app/config/constants"
 import ItemHeadStatus from "./Item/ItemHeadStatus"
 import useHookApiComment from "./useHookCommetApi"
 import { Asset } from "react-native-image-picker"
+import { Screen } from "@app/components/Screen"
 
 interface IScreenParams {
   route: {
@@ -191,7 +192,10 @@ export default function DetailQuestion({ route }: IScreenParams) {
     )
   }
   return (
-    <View style={styles.container}>
+    <Screen
+      safeAreaEdges={Platform.OS === "android" ? ["bottom"] : []}
+      contentContainerStyle={styles.container}
+    >
       <Header
         leftIcon="arrow_left"
         title={isMine ? "Câu hỏi của tôi " : "Câu hỏi"}
@@ -226,7 +230,7 @@ export default function DetailQuestion({ route }: IScreenParams) {
         listUser={detail?.listUser ?? []}
         loading={loadingCmt}
       />
-    </View>
+    </Screen>
   )
 }
 

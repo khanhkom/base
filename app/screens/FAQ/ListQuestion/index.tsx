@@ -1,4 +1,4 @@
-import { StyleSheet, View, FlatList } from "react-native"
+import { StyleSheet, View, FlatList, Platform } from "react-native"
 import React, { useEffect, useState } from "react"
 import { Header } from "@app/components/Header"
 import colors from "@app/assets/colors"
@@ -9,6 +9,7 @@ import ItemEmpty from "@app/components/ItemEmpty"
 import { RefreshState } from "@app/components/refresh-list"
 import { HEIGHT } from "@app/config/functions"
 import ItemQuestion from "./ItemQuestion"
+import { Screen } from "@app/components/Screen"
 
 interface IScreenParams {
   route: {
@@ -24,7 +25,10 @@ export default function ListQuestion({ route }: IScreenParams) {
     return <LoadingScreen />
   }
   return (
-    <View style={styles.container}>
+    <Screen
+      safeAreaEdges={Platform.OS === "android" ? ["bottom"] : []}
+      contentContainerStyle={styles.container}
+    >
       <Header leftIcon="arrow_left" title={"Danh sách câu hỏi"} backgroundColor={colors.gray_1} />
       <FlatList
         data={listData}
@@ -40,7 +44,7 @@ export default function ListQuestion({ route }: IScreenParams) {
         keyExtractor={(item, index) => String(index)}
         refreshing={refreshState === RefreshState.HeaderRefreshing}
       />
-    </View>
+    </Screen>
   )
 }
 
