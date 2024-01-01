@@ -20,6 +20,7 @@ const DATA_INFO = [
   {
     title: translate("booking.code"),
     type: TYPE_INFO_RESULT.MA_PHIEU,
+    isHighLight: true,
   },
   {
     title: translate("booking.status"),
@@ -38,10 +39,17 @@ const DATA_INFO = [
     type: TYPE_INFO_RESULT.GIO_KHAM,
   },
 ]
-const ItemValue = ({ title, value }) => {
+const ItemValue = ({ title, value, isHighLight }) => {
   return (
     <Text size="ba" weight="normal" style={{ color: colors.gray_6, marginTop: HEIGHT(8) }}>
-      {title} <Text style={{ color: colors.gray_9 }}>{value}</Text>
+      {title}{" "}
+      <Text
+        size="ba"
+        weight="normal"
+        style={{ color: isHighLight ? colors.primary : colors.gray_9 }}
+      >
+        {value}
+      </Text>
     </Text>
   )
 }
@@ -80,7 +88,6 @@ export default function DetailExamination({ route }: IScreenParams) {
   const [imageIndex, setImageIndex] = useState(0)
 
   const { loading, detailResult, returnDataByField } = useHookDetailExam(id, specialist?.value)
-  console.log("detailResult::", detailResult, id)
   if (loading) return <LoadingScreen />
   return (
     <View style={styles.container}>
@@ -101,11 +108,18 @@ export default function DetailExamination({ route }: IScreenParams) {
             iconColor={colors.primary_6}
           />
           {DATA_INFO.map((item, index) => {
-            return <ItemValue key={index} title={item.title} value={returnDataByField(item.type)} />
+            return (
+              <ItemValue
+                key={index}
+                title={item.title}
+                value={returnDataByField(item.type)}
+                isHighLight={item?.isHighLight}
+              />
+            )
           })}
           <ItemHeader
             icon={"department"}
-            title={translate("result.exam_information")}
+            title={"Chẩn đoán"}
             backgroundColor={colors.red_0}
             iconColor={colors.red_5}
           />
