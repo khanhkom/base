@@ -292,7 +292,6 @@ const ItemInputToolbar = forwardRef(
           //   )
           // }}
         />
-        {Platform.OS === "ios" && <KeyboardAvoidingView behavior='padding'  />}
         <ModalImagePicker
           ref={refSelect}
           turnOffModal={() => {}}

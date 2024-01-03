@@ -37,9 +37,6 @@ export default function ListComment({
 
   return (
     <View
-      style={{
-        paddingBottom: HEIGHT(80),
-      }}
     >
       <FlatList
         data={listCommentFilter}
@@ -83,7 +80,7 @@ export default function ListComment({
           return null
         }}
         keyExtractor={(item, index) => index.toString()}
-        contentContainerStyle={{ backgroundColor: colors.white }}
+        contentContainerStyle={{ backgroundColor: colors.white,paddingBottom:HEIGHT(80) }}
       />
     </View>
   )
