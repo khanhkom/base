@@ -89,6 +89,7 @@ const useHookApiComment = (id: string) => {
     if (resCommentItems.length > 0) {
       const newComment = groupCommentsWithReplies([...resCommentItems])
       setComments(newComment)
+      setTotalComment(resComment?.data?.headers?.["x-total-count"])
     }
     setIsLoading(false)
     setTimeout(() => {
