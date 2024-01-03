@@ -15,6 +15,7 @@ import { goBack } from "@app/navigators/navigationUtilities"
 import { getOrderHistory } from "@app/redux/actions/actionOrder"
 import { useDispatch } from "react-redux"
 import { translate } from "@app/i18n/translate"
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view"
 
 const LIST_DEFAULT_RATING = [
   "Chuyên môn tốt",
@@ -90,6 +91,8 @@ export default function RatingDocter({ route }: IScreenParams) {
         Keyboard.dismiss()
       }}
     >
+      <KeyboardAwareScrollView>
+
       <View style={styles.container}>
         <Header
           leftIcon="arrow_left"
@@ -155,12 +158,14 @@ export default function RatingDocter({ route }: IScreenParams) {
             )
           })}
         </View>
+        
         <View style={styles.bottomButton}>
           <Button loading={loading} style={styles.button} mode="contained" onPress={onSubmitRating}>
             {translate("booking.button.send_rating")}
           </Button>
         </View>
       </View>
+      </KeyboardAwareScrollView>
     </TouchableWithoutFeedback>
   )
 }

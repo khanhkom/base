@@ -27,6 +27,9 @@ export default function CustomPicker({ title, placeholder, required, value, onPr
       >
         <TextField
           placeholder={placeholder}
+          onPressIn={()=>{
+          onPress()
+          }}
           placeholderTextColor={colors.gray_9}
           value={value}
           style={{ color: colors.gray_9 }}

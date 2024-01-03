@@ -1,4 +1,4 @@
-import { Platform, Pressable, StyleSheet, View } from "react-native"
+import { Platform, Pressable, StyleSheet, View,ScrollView } from "react-native"
 import React, { useEffect, useState } from "react"
 import { Header } from "@app/components/Header"
 import colors from "@app/assets/colors"
@@ -178,6 +178,7 @@ export default function CompleteBooking({ route }: ScreenProps) {
     <Screen
       safeAreaEdges={Platform.OS === "android" ? ["bottom"] : []}
       contentContainerStyle={styles.container}
+      
     >
       <Header
         title={translate("booking.select_exam_information")}
@@ -276,6 +277,7 @@ export default function CompleteBooking({ route }: ScreenProps) {
             value={patientNotes}
             onChangeText={setPatientNotes}
             placeholder={translate("booking.desc_reason")}
+            multiline
             containerStyle={{ marginTop: HEIGHT(spacing.md) }}
           ></TextField>
           {!isUpdate && <FileAttachment listImage={listImage} setListImage={setListImage} />}
