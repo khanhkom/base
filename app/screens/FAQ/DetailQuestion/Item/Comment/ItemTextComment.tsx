@@ -3,6 +3,7 @@ import { Text } from "@app/components/Text"
 import { Part, PartType, parseValue, isMentionPartType } from "react-native-controlled-mentions"
 import colors from "@app/assets/colors"
 import { Alert } from "react-native"
+import { IUserTag } from "@app/interface/question"
 
 /**
  * Part renderer
@@ -10,7 +11,7 @@ import { Alert } from "react-native"
  * @param part
  * @param index
  */
-const renderPart = (part: Part, index: number) => {
+const renderPart = (part: Part, index: number, tags: IUserTag[] = []) => {
   // Just plain text
   if (!part.partType) {
     return (
@@ -19,9 +20,12 @@ const renderPart = (part: Part, index: number) => {
       </Text>
     )
   }
-
+  console.log("part.text", part?.data?.id)
   // Mention type part
   if (isMentionPartType(part.partType)) {
+    const tagedUser = tags.find((it) => it?.userId === part?.data?.id)
+    // console.log("tagedUser::", tagedUser, tags, part?.data?.id)
+    const roleName = tagedUser?.role === "doctor" ? "B.s" : "B.n"
     return (
       <Text
         key={`${index}-${part.data?.trigger}`}
@@ -34,7 +38,7 @@ const renderPart = (part: Part, index: number) => {
         //   Alert.alert(part.data.name)
         // }}
       >
-        {part.text}
+        {roleName} {part?.text?.replace("@", "")}
       </Text>
     )
   }
@@ -61,12 +65,12 @@ const renderPart = (part: Part, index: number) => {
  * @param partTypes - the part types array that you providing to MentionInput
  */
 // export const renderValue = (value: string, partTypes: PartType[]) => {
-export const renderTextComment = (value: string) => {
+export const renderTextComment = (value: string, tags: IUserTag[]) => {
   const { parts } = parseValue(value, [
     {
       trigger: "@",
     },
   ])
 
-  return <Text>{parts.map(renderPart)}</Text>
+  return <Text>{parts.map((item, index) => renderPart(item, index, tags))}</Text>
 }

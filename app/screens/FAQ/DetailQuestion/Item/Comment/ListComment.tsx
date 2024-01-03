@@ -27,6 +27,7 @@ export default function ListComment({
   isLoading: boolean
   loadMore: () => void
   refScrollView: LegacyRef<FlatList>
+  totalComment: number
 }) {
   const listCommentFilter = comments?.filter((cm) => {
     const isDelete = cm?.deletedAt

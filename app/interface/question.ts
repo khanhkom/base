@@ -49,7 +49,7 @@ export interface ICommentData {
   deletedAt?: boolean
   deletedBy?: boolean
 
-  tags: any[] // Assuming the type of tags is an array
+  tags: IUserTag[] // Assuming the type of tags is an array
   createdAt: string
   likes: ILikeQuestion[] // Assuming the type of likes is an array
   id: string
