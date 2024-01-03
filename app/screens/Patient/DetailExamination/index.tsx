@@ -28,7 +28,7 @@ const DATA_INFO = [
     type: TYPE_INFO_RESULT.BAC_SI,
   },
   {
-    title: translate("booking.specialist"),
+    title: `${translate("booking.specialist")}:`,
     type: TYPE_INFO_RESULT.CHUYEN_KHOA,
   },
   {
@@ -78,17 +78,15 @@ interface IScreenParams {
   route: {
     params: {
       id: string
-      specialist: ISpecialList
     }
   }
 }
 export default function DetailExamination({ route }: IScreenParams) {
   const id = route.params.id
-  const specialist = route.params?.specialist
   const [visible, setIsVisible] = useState(false)
   const [imageIndex, setImageIndex] = useState(0)
 
-  const { loading, detailResult, returnDataByField } = useHookDetailExam(id, specialist?.value)
+  const { loading, detailResult, returnDataByField } = useHookDetailExam(id)
   if (loading) return <LoadingScreen />
   return (
     <Screen

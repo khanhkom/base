@@ -13,6 +13,11 @@ const groupCommentsWithReplies = (comments) => {
         ...comment,
         replies: [],
       })
+    } else if ((comment?.replies ?? []).length > 0) {
+      groupedComments.push({
+        // comment: comment.content,
+        ...comment,
+      })
     } else {
       // Find the corresponding comment and add the reply
       const parentComment = groupedComments.find(
@@ -30,6 +35,7 @@ const groupCommentsWithReplies = (comments) => {
 const useHookApiComment = (id: string) => {
   const [comments, setComments] = useState<ICommentData[]>(null)
   const [page, setPage] = useState(1)
+  const [totalComment, setTotalComment] = useState(0)
   const [isLoading, setIsLoading] = useState(false)
   const [isReached, setReached] = useState(false)
   const refScrollView = useRef(null)
@@ -57,7 +63,9 @@ const useHookApiComment = (id: string) => {
         if (page === 1) {
           const newComment = groupCommentsWithReplies([...resCommentItems])
           setComments(newComment)
+          setTotalComment(resComment?.data?.headers?.["x-total-count"])
         } else {
+          console.log("comments_length::", comments.length)
           const newComment = groupCommentsWithReplies([...comments, ...resCommentItems])
           setComments([...newComment])
         }
@@ -67,6 +75,7 @@ const useHookApiComment = (id: string) => {
   }
   // reload comment when have new comment
   const loadNewComment = async () => {
+    console.log("loadNewComment:::")
     const body = { page: 1, perPage: page * 10 }
     setIsLoading(true)
     const resComment = await loadCommentQuestionByPage(id, body)
@@ -100,6 +109,7 @@ const useHookApiComment = (id: string) => {
     setPage,
     loadNewComment,
     refScrollView,
+    totalComment,
   }
 }
 export default useHookApiComment

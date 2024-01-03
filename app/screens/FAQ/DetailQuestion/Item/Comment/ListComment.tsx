@@ -16,6 +16,7 @@ export default function ListComment({
   isLoading,
   loadMore,
   refScrollView,
+  totalComment,
 }: {
   detail: IQuestion
   comments: ICommentData[]
@@ -36,8 +37,7 @@ export default function ListComment({
   // console.log("listCommentFilter_listCommentFilter", listCommentFilter)
 
   return (
-    <View
-    >
+    <View>
       <FlatList
         data={listCommentFilter}
         onEndReached={() => {
@@ -57,7 +57,7 @@ export default function ListComment({
                 questionId={detail?.id}
                 like={detail?.likes ?? []}
                 onCommentPress={onCommentPress}
-                comment={listCommentFilter?.length ?? 0}
+                comment={totalComment}
               />
             </>
           )
@@ -80,7 +80,7 @@ export default function ListComment({
           return null
         }}
         keyExtractor={(item, index) => index.toString()}
-        contentContainerStyle={{ backgroundColor: colors.white,paddingBottom:HEIGHT(80) }}
+        contentContainerStyle={{ backgroundColor: colors.white, paddingBottom: HEIGHT(80) }}
       />
     </View>
   )

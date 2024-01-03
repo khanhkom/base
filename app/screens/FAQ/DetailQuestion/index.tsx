@@ -45,11 +45,13 @@ export default function DetailQuestion({ route }: IScreenParams) {
   const [loading, setLoading] = useState(true)
   const [loadingCmt, setLoadingComment] = useState(false)
   const id = route?.params?.id
-  const { comments, isLoading, loadNewComment, loadMore, refScrollView } = useHookApiComment(id)
+  const { comments, isLoading, loadNewComment, loadMore, refScrollView, totalComment } =
+    useHookApiComment(id)
   useEffect(() => {
     async function getDetailQues() {
       setLoading(true)
       const question = await getDeatilQuestion(id)
+      console.log("question::", question)
       if (question?.status === 200) {
         setDetail(question?.data ?? null)
         // setComments(question?.data?.comments ?? [])
@@ -220,6 +222,7 @@ export default function DetailQuestion({ route }: IScreenParams) {
           onCommentPress={onCommentPress}
           onDeleteComment={onDeleteComment}
           refScrollView={refScrollView}
+          totalComment={totalComment}
         />
       </View>
       <ItemInputToolbar

@@ -14,7 +14,14 @@ export interface IOrderResultItem {
     patientProfileId: string
     patientUserId: string
   }
+  specialistIconUrl: string
+  doctorName: string
   createdBy: string
+  timeRange: {
+    from: string
+    id: string
+    to: string
+  }
   description: string
   note: string
   fileUpload: string[]
