@@ -68,7 +68,7 @@ export interface IReplyComment {
   likes: ILikeQuestion[] // Assuming the type of likes is an array of strings
   replyToId: string
   role: string
-  tags: string[] // Assuming the type of tags is an array of strings
+  tags: IUserTag[] // Assuming the type of tags is an array of strings
   userId: string
   userName: string
   commentFileUrl?: string

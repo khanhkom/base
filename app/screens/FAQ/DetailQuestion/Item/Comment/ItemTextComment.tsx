@@ -20,7 +20,6 @@ const renderPart = (part: Part, index: number, tags: IUserTag[] = []) => {
       </Text>
     )
   }
-  console.log("part.text", part?.data?.id)
   // Mention type part
   if (isMentionPartType(part.partType)) {
     const tagedUser = tags.find((it) => it?.userId === part?.data?.id)

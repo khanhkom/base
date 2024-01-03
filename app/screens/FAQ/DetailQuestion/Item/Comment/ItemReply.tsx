@@ -84,7 +84,7 @@ export default function ItemComment({
           <Text size="ba" weight="medium" style={{ color: colors.gray_9 }}>
             {titleName} {item?.userName}
           </Text>
-          {renderTextComment(item?.content)}
+          {renderTextComment(item?.content, item?.tags)}
           {item?.commentFileUrl && item?.commentFileUrl !== "" && (
             <Pressable onPress={() => setIsVisible(true)}>
               <FastImage source={{ uri: item?.commentFileUrl }} style={styles.image} />
