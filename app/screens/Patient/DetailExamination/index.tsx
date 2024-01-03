@@ -1,4 +1,4 @@
-import { StyleSheet, View, Image, FlatList, ScrollView } from "react-native"
+import { StyleSheet, View, Image, FlatList, ScrollView, Platform } from "react-native"
 import React, { useState } from "react"
 import { Header } from "@app/components/Header"
 import colors from "@app/assets/colors"
@@ -15,6 +15,7 @@ import LoadingScreen from "@app/components/loading/LoadingScreen"
 import { ISpecialList } from "@app/interface/docter"
 import ImageView from "react-native-image-viewing"
 import { translate } from "@app/i18n/translate"
+import { Screen } from "@app/components/Screen"
 
 const DATA_INFO = [
   {
@@ -90,7 +91,10 @@ export default function DetailExamination({ route }: IScreenParams) {
   const { loading, detailResult, returnDataByField } = useHookDetailExam(id, specialist?.value)
   if (loading) return <LoadingScreen />
   return (
-    <View style={styles.container}>
+    <Screen
+      safeAreaEdges={Platform.OS === "android" ? ["bottom"] : []}
+      contentContainerStyle={styles.container}
+    >
       <Header leftIcon="arrow_left" title="Kết quả khám" backgroundColor={colors.gray_1} />
 
       <ScrollView>
@@ -154,7 +158,7 @@ export default function DetailExamination({ route }: IScreenParams) {
           />
         </View>
       </ScrollView>
-    </View>
+    </Screen>
   )
 }
 

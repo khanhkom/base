@@ -1,7 +1,7 @@
-import { StyleSheet, Image, View, FlatList } from "react-native"
+import { StyleSheet, Image, View, FlatList, Platform } from "react-native"
 import React, { useEffect } from "react"
 import colors from "@app/assets/colors"
-import { Header, Icon } from "@app/components/index"
+import { Header, Icon, Screen } from "@app/components/index"
 import { List } from "react-native-paper"
 import R from "@app/assets"
 import { HEIGHT, WIDTH, getIconSpecialist } from "@app/config/functions"
@@ -43,7 +43,10 @@ export default function SelectSpecialist({ route }: ScreenProps) {
   }
   if (loading) return <LoadingScreen />
   return (
-    <View style={styles.container}>
+    <Screen
+      safeAreaEdges={Platform.OS === "android" ? ["bottom"] : []}
+      contentContainerStyle={styles.container}
+    >
       <Header
         leftIcon="arrow_left"
         titleTx="booking.select_specialist"
@@ -51,6 +54,7 @@ export default function SelectSpecialist({ route }: ScreenProps) {
       />
       <FlatList
         data={specialList}
+        contentContainerStyle={{ paddingBottom: HEIGHT(spacing.md) }}
         renderItem={({ item }) => {
           // const icon = getIconSpecialist(item?.code)
           return (
@@ -76,7 +80,7 @@ export default function SelectSpecialist({ route }: ScreenProps) {
           )
         }}
       />
-    </View>
+    </Screen>
   )
 }
 

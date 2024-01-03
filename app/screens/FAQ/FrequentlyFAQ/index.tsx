@@ -1,6 +1,6 @@
-import { FlatList, Keyboard, StyleSheet, View } from "react-native"
+import { FlatList, Keyboard, Platform, StyleSheet, View } from "react-native"
 import React, { useEffect, useMemo, useRef, useState } from "react"
-import { Header } from "@app/components/index"
+import { Header, Screen } from "@app/components/index"
 import colors from "@app/assets/colors"
 import SearchFilter from "@app/components/SearchFilter"
 import ModalFilter from "./Item/ModalFilter"
@@ -67,7 +67,10 @@ export default function FrequentlyFAQ() {
   }
   console.log("listData", facetFilters)
   return (
-    <View style={styles.container}>
+    <Screen
+      safeAreaEdges={Platform.OS === "android" ? ["bottom"] : []}
+      contentContainerStyle={styles.container}
+    >
       <Header
         leftIcon="arrow_left"
         title={"Một số câu hỏi thường gặp"}
@@ -115,7 +118,7 @@ export default function FrequentlyFAQ() {
         />
       )}
       <ModalFilter onApply={onApplyFilter} filterData={facetFilters} ref={refModal} />
-    </View>
+    </Screen>
   )
 }
 
