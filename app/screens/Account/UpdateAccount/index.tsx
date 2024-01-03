@@ -18,6 +18,7 @@ import { updateFullName, updateImagePatient } from "@app/services/api/functions/
 import { useDispatch } from "react-redux"
 import ModalImagePicker from "@app/components/image-picker"
 import { getListPatientRequest } from "@app/redux/actions/patient"
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view"
 export default function UpdateAccount() {
   const user = useSelector((state) => state.userReducers.user)
   const patients = useSelector((state) => state.patientReducers.patients)
@@ -72,45 +73,47 @@ export default function UpdateAccount() {
       safeAreaEdges={Platform.OS === "android" ? ["bottom"] : []}
       contentContainerStyle={styles.container}
     >
-      <Header leftIcon="arrow_left" title={"Cập nhật thông tin"} backgroundColor={colors.white} />
-      <View style={{ flex: 1 }}>
-        <Pressable
-          // disabled={!isEnableUpdateAvatar}
-          onPress={onPickFile}
-          style={styles.wrapperImage}
-        >
-          <Image
-            source={avatar?.uri ? { uri: avatar?.uri } : R.images.avatar_patient}
-            style={styles.doctorImage}
-            resizeMode="cover"
+      <KeyboardAwareScrollView contentContainerStyle={styles.container}>
+        <Header leftIcon="arrow_left" title={"Cập nhật thông tin"} backgroundColor={colors.white} />
+        <View style={{ flex: 1 }}>
+          <Pressable
+            // disabled={!isEnableUpdateAvatar}
+            onPress={onPickFile}
+            style={styles.wrapperImage}
+          >
+            <Image
+              source={avatar?.uri ? { uri: avatar?.uri } : R.images.avatar_patient}
+              style={styles.doctorImage}
+              resizeMode="cover"
+            />
+            <View style={styles.buttonImage}>
+              <Icon icon="camera" size={WIDTH(24)} />
+            </View>
+          </Pressable>
+          <Text
+            size="ba"
+            weight="medium"
+            style={{ color: colors.gray_7, marginLeft: WIDTH(spacing.md) }}
+          >
+            Họ và tên<Text style={{ color: colors.red_5 }}> *</Text>
+          </Text>
+          <TextInput
+            placeholderTextColor={colors.gray_5}
+            placeholder={translate("auth.enter_full_name")}
+            mode="outlined"
+            // label="Nhập họ và tên"
+            value={name}
+            style={{
+              marginHorizontal: WIDTH(spacing.md),
+              marginTop: HEIGHT(spacing.xs),
+              backgroundColor: colors.white,
+            }}
+            outlineStyle={styles.outlineStyle}
+            onChangeText={(text) => setText(text)}
           />
-          <View style={styles.buttonImage}>
-            <Icon icon="camera" size={WIDTH(24)} />
-          </View>
-        </Pressable>
-        <Text
-          size="ba"
-          weight="medium"
-          style={{ color: colors.gray_7, marginLeft: WIDTH(spacing.md) }}
-        >
-          Họ và tên<Text style={{ color: colors.red_5 }}> *</Text>
-        </Text>
-        <TextInput
-          placeholderTextColor={colors.gray_5}
-          placeholder={translate("auth.enter_full_name")}
-          mode="outlined"
-          // label="Nhập họ và tên"
-          value={name}
-          style={{
-            marginHorizontal: WIDTH(spacing.md),
-            marginTop: HEIGHT(spacing.xs),
-            backgroundColor: colors.white,
-          }}
-          outlineStyle={styles.outlineStyle}
-          onChangeText={(text) => setText(text)}
-        />
-      </View>
-      <KeyboardAvoidingView behavior="padding">
+        </View>
+      </KeyboardAwareScrollView>
+      <KeyboardAvoidingView behavior={Platform.OS === "android" ? "padding" : null}>
         <Button
           mode="contained"
           disabled={name === ""}
