@@ -6,57 +6,24 @@ import { navigate } from "@app/navigators/navigationUtilities"
 import { spacing } from "@app/theme/spacing"
 import moment from "moment"
 import React, { useState, useCallback, useEffect } from "react"
-import { View, StyleSheet, KeyboardAvoidingView, Platform, TextInput } from "react-native"
+import { View, StyleSheet, KeyboardAvoidingView, Platform, TextInput, Keyboard } from "react-native"
 import { GiftedChat, InputToolbar } from "react-native-gifted-chat"
-const user1 = {
-  _id: 1,
-  name: "React Native",
-  avatar:
-    "https://img.freepik.com/premium-psd/psd-3d-rendering-customer-service-center-3d-icon-isolated-illustration_460336-1845.jpg",
-}
-const user2 = {
-  _id: 2,
-  name: "React Native",
-  avatar:
-    "https://img.freepik.com/premium-psd/psd-3d-rendering-customer-service-center-3d-icon-isolated-illustration_460336-1845.jpg",
-}
+import useHookDetailChat from "./useHookDetailChat"
+import { useSelector } from "@app/redux/reducers"
 
 const LIST_ACTION = ["ic_attach", "gallery", "take_photo"]
 export function DetailConversation() {
-  const [messages, setMessages] = useState([])
-
-  useEffect(() => {
-    setMessages([
-      {
-        _id: 1,
-        text: "Lorem Ipsum is simply dummy",
-        createdAt: new Date("12-12-2023"),
-        user: user1,
-      },
-      {
-        _id: 2,
-        text: "Lorem Ipsum is simply dummy text of the printing and typesetting industry",
-        createdAt: new Date(),
-        user: user1,
-      },
-      {
-        _id: 3,
-        text: "Lorem Ipsum is simply dummy",
-        createdAt: new Date(),
-        user: user2,
-      },
-      {
-        _id: 4,
-        text: "Lorem Ipsum is simply dummy",
-        createdAt: new Date(),
-        user: user2,
-      },
-    ])
-  }, [])
-
-  const onSend = useCallback((messages = []) => {
-    setMessages((previousMessages) => GiftedChat.append(previousMessages, messages))
-  }, [])
+  const { messages, sendMessage } = useHookDetailChat()
+  const user = useSelector((state) => state.userReducers.user)
+  const patients = useSelector((state) => state.patientReducers.patients)
+  const [text, setText] = useState("")
+  useEffect(() => {}, [])
+  console.log("messages::", messages)
+  const onSend = () => {
+    sendMessage(text)
+    setText("")
+    // Keyboard.dismiss
+  }
 
   return (
     <View style={styles.container}>
@@ -71,9 +38,15 @@ export function DetailConversation() {
       />
       <GiftedChat
         messages={messages}
-        onSend={(messages) => onSend(messages)}
+        onSend={(messages) => {
+          console.log("messages_sent", messages)
+        }}
         user={{
-          _id: 2,
+          ...user,
+          _id: user?.id,
+          avatar:
+            patients?.[0]?.avatarUrl ??
+            "https://img.freepik.com/premium-psd/psd-3d-rendering-customer-service-center-3d-icon-isolated-illustration_460336-1845.jpg",
         }}
         messagesContainerStyle={{ paddingBottom: HEIGHT(spacing.xl) }}
         renderInputToolbar={() => {
@@ -81,7 +54,7 @@ export function DetailConversation() {
             <InputToolbar
               primaryStyle={styles.primaryStyle}
               renderSend={() => {
-                return <Icon icon="send" size={WIDTH(28)} />
+                return <Icon onPress={onSend} icon="send" size={WIDTH(28)} />
               }}
               renderComposer={() => {
                 return (
@@ -90,6 +63,8 @@ export function DetailConversation() {
                       placeholder="Gửi tin nhắn"
                       placeholderTextColor={colors.gray_6}
                       style={styles.textInput}
+                      value={text}
+                      onChangeText={setText}
                     />
                   </View>
                 )
@@ -128,7 +103,7 @@ const styles = StyleSheet.create({
   },
   textInput: {
     paddingHorizontal: WIDTH(spacing.sm),
-    minHeight:HEIGHT(44)
+    minHeight: HEIGHT(44),
   },
   primaryStyle: {
     alignItems: "center",

@@ -180,3 +180,8 @@ export const getIconSpecialist = (code: number) => {
   const special = LIST_SPECIALIST_ICON.find((it) => it.code === code)
   return special?.icon ?? R.images.ic_mat
 }
+export const createChatId = (userIdA, userIdB) => {
+  const sortedUserIds = [userIdA, userIdB].sort()
+  const chatId = sortedUserIds.join("_")
+  return chatId
+}

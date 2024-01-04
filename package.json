@@ -44,6 +44,8 @@
     "@react-native-firebase/app": "^18.3.2",
     "@react-native-firebase/app-check": "^18.7.1",
     "@react-native-firebase/auth": "^18.6.1",
+    "@react-native-firebase/database": "^18.7.3",
+    "@react-native-firebase/firestore": "^18.7.3",
     "@react-native-firebase/messaging": "^18.3.2",
     "@react-native-google-signin/google-signin": "^10.0.1",
     "@react-navigation/bottom-tabs": "^6.3.2",

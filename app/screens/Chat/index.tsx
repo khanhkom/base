@@ -7,8 +7,10 @@ import ModalSupport from "./Item/ModalSupport"
 import colors from "@app/assets/colors"
 import ItemConversation from "./Item/ItemConversation"
 import { navigate } from "@app/navigators/navigationUtilities"
+import useHookChat from "./useHookChat"
 
 export default function ChatScreen() {
+  const { user } = useHookChat()
   const refModal = useRef(null)
   const onPress = (index) => {
     console.log(index)

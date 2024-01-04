@@ -2,10 +2,8 @@ import { FlatList, StyleSheet, Text, View } from "react-native"
 import React, { useRef, useState } from "react"
 import colors from "@app/assets/colors"
 import { navigate } from "@app/navigators/navigationUtilities"
-import ButtonChatbot from "@app/screens/Video/Item/ButtonChatbot"
-import ItemConversation from "@app/screens/Video/Item/ItemConversation"
-import ModalSupport from "@app/screens/Video/Item/ModalSupport"
-import EmptyMess from "@app/screens/Video/Item/EmptyMess"
+import ItemConversation from "@app/screens/Chat/Item/ItemConversation"
+import EmptyMess from "@app/screens/Chat/Item/EmptyMess"
 import Header from "./Item/Header"
 const STATUS_SEARCH = {
   recent: 0,

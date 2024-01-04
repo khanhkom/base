@@ -9,7 +9,7 @@ import { colors, spacing, typography } from "../theme"
 import { AppStackParamList, AppStackScreenProps } from "./AppNavigator"
 import Home from "@app/screens/Home"
 import Profile from "@app/screens/Profile"
-import Video from "@app/screens/Video"
+import Chat from "@app/screens/Chat"
 import History from "@app/screens/History"
 import { BottomNavigation } from "react-native-paper"
 import { HEIGHT } from "@app/config/functions"
@@ -17,7 +17,7 @@ import R from "@app/assets"
 export type DemoTabParamList = {
   Home: undefined
   Profile: undefined
-  Video: undefined
+  Chat: undefined
   History: undefined
 }
 
@@ -116,8 +116,8 @@ export function TabNavigator() {
       />
 
       <Tab.Screen
-        name="Video"
-        component={Video}
+        name="Chat"
+        component={Chat}
         options={{
           tabBarIcon: ({ focused }) => (
             <Icon
