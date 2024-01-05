@@ -12,7 +12,6 @@ const useHookDetailChat = () => {
   const user = useSelector((state) => state.userReducers.user)
   const patients = useSelector((state) => state.patientReducers.patients)
   const chatId = createChatId(currentUserId, targetUserId)
-  console.log("user::", messages)
 
   useEffect(() => {
     // firebase
@@ -81,6 +80,17 @@ const useHookDetailChat = () => {
       .set({
         title: `${chatId}`,
         lastMessage: text,
+        userA: {
+          id: user?.id,
+          name: "userA",
+          avatar: patients?.[0]?.avatarUrl,
+        },
+        userB: {
+          id: targetUserId,
+          name: "userB",
+          avatar:
+            "https://play-lh.googleusercontent.com/7Ak4Ye7wNUtheIvSKnVgGL_OIZWjGPZNV6TP_3XLxHC-sDHLSE45aDg41dFNmL5COA",
+        },
         timestamp: new Date().getTime(),
         user: {
           _id: user?.id,

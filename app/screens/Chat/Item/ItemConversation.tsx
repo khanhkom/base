@@ -8,9 +8,31 @@ import { spacing } from "@app/theme/spacing"
 import R from "@app/assets"
 import { Icon } from "@app/components/Icon"
 import { navigate } from "@app/navigators/navigationUtilities"
-
-export default function ItemConversation({ index }) {
+import moment from "moment"
+import { useSelector } from "@app/redux/reducers"
+interface IConversation {
+  lastMessage: string
+  timestamp: number
+  title: string
+  user: {
+    _id: string
+    name: string
+  }
+  userA: {
+    id: string
+    name: string
+    avatar: string
+  }
+  userB: {
+    id: string
+    name: string
+    avatar: string
+  }
+}
+export default function ItemConversation({ index, item }: { item: IConversation; index: number }) {
   const inActive = index === 2
+  const user = useSelector((state) => state.userReducers.user)
+  const targetUser = user?.id !== item?.userA?.id ? item?.userA : item?.userB
   return (
     <List.Item
       style={styles.item}
@@ -20,7 +42,14 @@ export default function ItemConversation({ index }) {
       left={() => {
         return (
           <View>
-            <Image source={R.images.avatar_docter} style={styles.avatar} />
+            <Image
+              source={
+                targetUser?.avatar ?? "" !== ""
+                  ? { uri: targetUser?.avatar }
+                  : R.images.avatar_docter
+              }
+              style={styles.avatar}
+            />
             <View style={[styles.status, inActive && { backgroundColor: colors.gray_3 }]} />
           </View>
         )
@@ -29,13 +58,13 @@ export default function ItemConversation({ index }) {
         return (
           <View>
             <Text size="md" weight="medium" style={{ color: colors.gray_9 }}>
-              B.s Nguyễn Văn A
+              B.s {targetUser?.name}
             </Text>
             <Text size="ba" weight="normal" style={{ color: colors.gray_9 }}>
-              Lorem Ipsum is simply dummy text of the printing and typesetting industry...
+              {item?.lastMessage}
             </Text>
             <Text size="sm" weight="normal" style={{ color: colors.gray_5, textAlign: "right" }}>
-              13:03
+              {moment(item?.timestamp).format("DD/MM/YYYY HH:mm")}
             </Text>
             <View style={styles.bagde}>
               {inActive ? (

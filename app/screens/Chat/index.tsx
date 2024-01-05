@@ -10,7 +10,7 @@ import { navigate } from "@app/navigators/navigationUtilities"
 import useHookChat from "./useHookChat"
 
 export default function ChatScreen() {
-  const { user } = useHookChat()
+  const { chats } = useHookChat()
   const refModal = useRef(null)
   const onPress = (index) => {
     console.log(index)
@@ -24,6 +24,7 @@ export default function ChatScreen() {
         break
     }
   }
+  console.log("chats_chats", chats)
   return (
     <View style={styles.container}>
       <Header
@@ -37,9 +38,9 @@ export default function ChatScreen() {
       />
 
       <FlatList
-        data={[1, 2, 3]}
+        data={chats}
         renderItem={({ item, index }) => {
-          return <ItemConversation index={index} />
+          return <ItemConversation index={index} item={item} />
         }}
         ListEmptyComponent={() => <EmptyMess />}
       />

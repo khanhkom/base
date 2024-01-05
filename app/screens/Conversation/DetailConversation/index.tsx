@@ -18,7 +18,6 @@ export function DetailConversation() {
   const patients = useSelector((state) => state.patientReducers.patients)
   const [text, setText] = useState("")
   useEffect(() => {}, [])
-  console.log("messages::", messages)
   const onSend = () => {
     sendMessage(text)
     setText("")
