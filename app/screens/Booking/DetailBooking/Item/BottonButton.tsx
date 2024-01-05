@@ -29,6 +29,7 @@ export default function BottonButton({
   updateDataCreateOrder,
   reloadHistory,
 }: ItemProps) {
+  // console.log("AAAAAAA", detailOrder?.doctor)
   const onPressCall = () => {
     // console.log("AAAAAA", clientId?.current?.getId?.())
     navigate("CallScreenHook", {
@@ -76,7 +77,7 @@ export default function BottonButton({
   }
 
   if (status === STATUS_ORDER.verified || status === STATUS_ORDER.examining)
-    if (typeTimeCall === TYPE_TIME_CALL.DA_DEN)
+    if (typeTimeCall !== TYPE_TIME_CALL.DA_DEN)
       //origin ===
       return (
         <View style={styles.container}>
@@ -84,7 +85,11 @@ export default function BottonButton({
             mode="contained"
             style={styles.buttonHome}
             textColor={colors.primary}
-            onPress={() => {}}
+            onPress={() => {
+              navigate("DetailConversation", {
+                targetUser: detailOrder?.doctor,
+              })
+            }}
           >
             {translate("booking.button.message")}
           </Button>

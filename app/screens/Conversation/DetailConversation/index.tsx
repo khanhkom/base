@@ -10,11 +10,21 @@ import { View, StyleSheet, KeyboardAvoidingView, Platform, TextInput, Keyboard }
 import { GiftedChat, InputToolbar } from "react-native-gifted-chat"
 import useHookDetailChat from "./useHookDetailChat"
 import { useSelector } from "@app/redux/reducers"
+import { IDocter } from "@app/interface/docter"
 
 const LIST_ACTION = ["ic_attach", "gallery", "take_photo"]
-export function DetailConversation() {
-  const { messages, sendMessage } = useHookDetailChat()
+interface ScreenProps {
+  route: {
+    params: {
+      targetUser: IDocter
+    }
+  }
+}
+export function DetailConversation({ route }: ScreenProps) {
+  const targetUser = route?.params?.targetUser
+  const { messages, sendMessage } = useHookDetailChat(targetUser?.userId ?? "")
   const user = useSelector((state) => state.userReducers.user)
+
   const patients = useSelector((state) => state.patientReducers.patients)
   const [text, setText] = useState("")
   useEffect(() => {}, [])

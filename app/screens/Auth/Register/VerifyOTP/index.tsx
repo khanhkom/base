@@ -150,6 +150,7 @@ export default function VerifyOTP({ route }: ScreenProps) {
           default:
             break
         }
+        console.log("resOTP_resOTP", type, resOTP)
         handleUiUpdate(resOTP)
       } else {
         // if OTP type === firebase
@@ -206,14 +207,14 @@ export default function VerifyOTP({ route }: ScreenProps) {
   async function handleUiUpdate(resOTP) {
     setLoading(false)
     const dataLogin = resOTP?.data
-    console.log("handleUiUpdate_handleUiUpdate")
     // if verify code success
     if (resOTP?.data?.accessToken) {
       api.apisauce.setHeader("access-token", dataLogin?.accessToken)
       save(KEYSTORAGE.LOGIN_DATA, dataLogin)
       dispatch(getStringeeToken())
 
-      if (dataLogin?.isNewUser) {
+      // if (dataLogin?.isNewUser) {
+      if (type === "REGISTER") {
         // navigate("ConfirmName")
         resetRoot({
           index: 0,

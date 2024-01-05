@@ -3,15 +3,15 @@ import database, { firebase } from "@react-native-firebase/database"
 import moment from "moment"
 import { useSelector } from "@app/redux/reducers"
 import { createChatId } from "@app/config/functions"
-const currentUserId = "123"
-const targetUserId = "321"
+import { IDocter } from "@app/interface/docter"
 
-const useHookDetailChat = () => {
+const useHookDetailChat = (targetUser: IDocter) => {
   const [messages, setMessages] = useState([])
   const [isLoaded, setLoaded] = useState(false)
   const user = useSelector((state) => state.userReducers.user)
+  const currentUserId = user?.id
   const patients = useSelector((state) => state.patientReducers.patients)
-  const chatId = createChatId(currentUserId, targetUserId)
+  const chatId = createChatId(currentUserId, targetUser?.userId)
 
   useEffect(() => {
     // firebase
@@ -82,7 +82,7 @@ const useHookDetailChat = () => {
         lastMessage: text,
         userA: {
           id: user?.id,
-          name: "userA",
+          name: targetUser,
           avatar: patients?.[0]?.avatarUrl,
         },
         userB: {
