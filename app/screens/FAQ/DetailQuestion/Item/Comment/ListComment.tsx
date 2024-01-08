@@ -14,9 +14,11 @@ export default function ListComment({
   onCommentPress,
   renderHeaderComponent,
   isLoading,
+  isRefreshing,
   loadMore,
   refScrollView,
   totalComment,
+  loadNewComment,
 }: {
   detail: IQuestion
   comments: ICommentData[]
@@ -25,9 +27,11 @@ export default function ListComment({
   onDeleteComment: (commentId: string) => void
   renderHeaderComponent: () => JSX.Element
   isLoading: boolean
+  isRefreshing: boolean
   loadMore: () => void
   refScrollView: LegacyRef<FlatList>
   totalComment: number
+  loadNewComment: (val: boolean) => void
 }) {
   const listCommentFilter = comments?.filter((cm) => {
     const isDelete = cm?.deletedAt
@@ -50,6 +54,8 @@ export default function ListComment({
         onScroll={() => (hasScrolled.current = true)}
         onEndReachedThreshold={0.5}
         maxToRenderPerBatch={20}
+        onRefresh={() => loadNewComment(true)}
+        refreshing={isRefreshing}
         ListHeaderComponent={() => {
           return (
             <>

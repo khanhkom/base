@@ -45,8 +45,15 @@ export default function DetailQuestion({ route }: IScreenParams) {
   const [loading, setLoading] = useState(true)
   const [loadingCmt, setLoadingComment] = useState(false)
   const id = route?.params?.id
-  const { comments, isLoading, loadNewComment, loadMore, refScrollView, totalComment } =
-    useHookApiComment(id)
+  const {
+    comments,
+    isLoading,
+    loadNewComment,
+    loadMore,
+    refScrollView,
+    totalComment,
+    isRefreshing,
+  } = useHookApiComment(id)
   useEffect(() => {
     async function getDetailQues() {
       setLoading(true)
@@ -121,7 +128,7 @@ export default function DetailQuestion({ route }: IScreenParams) {
     console.log("commentRes_commentRes", commentRes)
     if (commentRes?.status === 201) {
       // loadCommentByPageAPI()
-      loadNewComment()
+      loadNewComment(false)
       if (!isReplyComment) {
         // setTimeout(() => {
         //   refScrollView?.current?.scrollToEnd?.({ animated: true })
@@ -151,7 +158,7 @@ export default function DetailQuestion({ route }: IScreenParams) {
       // const question = await getDeatilQuestion(id)
       // setComments(question?.data?.comments)
       // loadCommentByPageAPI()
-      loadNewComment()
+      loadNewComment(false)
       showToastMessage("Xóa thành công!", EToastType.SUCCESS)
     } else {
       showToastMessage("Có lỗi xảy ra vui lòng thử lại!", EToastType.ERROR)
@@ -223,6 +230,8 @@ export default function DetailQuestion({ route }: IScreenParams) {
           onDeleteComment={onDeleteComment}
           refScrollView={refScrollView}
           totalComment={totalComment}
+          loadNewComment={loadNewComment}
+          isRefreshing={isRefreshing}
         />
       </View>
       <ItemInputToolbar

@@ -37,6 +37,7 @@ const useHookApiComment = (id: string) => {
   const [page, setPage] = useState(1)
   const [totalComment, setTotalComment] = useState(0)
   const [isLoading, setIsLoading] = useState(false)
+  const [isRefreshing, setIsRefreshing] = useState(false)
   const [isReached, setReached] = useState(false)
   const refScrollView = useRef(null)
 
@@ -74,10 +75,13 @@ const useHookApiComment = (id: string) => {
     }
   }
   // reload comment when have new comment
-  const loadNewComment = async () => {
+  const loadNewComment = async (isRefresh) => {
     console.log("loadNewComment:::")
     const body = { page: 1, perPage: page * 10 }
     setIsLoading(true)
+    if (isRefresh) {
+      setIsRefreshing(true)
+    }
     const resComment = await loadCommentQuestionByPage(id, body)
 
     const resCommentItems = resComment?.data?.items ?? []
@@ -92,9 +96,14 @@ const useHookApiComment = (id: string) => {
       setTotalComment(resComment?.data?.headers?.["x-total-count"])
     }
     setIsLoading(false)
-    setTimeout(() => {
-      refScrollView.current?.scrollToEnd({ animated: true })
-    }, 300)
+    if (isRefresh) {
+      setIsRefreshing(false)
+    }
+    if (!isRefresh) {
+      setTimeout(() => {
+        refScrollView.current?.scrollToEnd({ animated: true })
+      }, 300)
+    }
   }
   const loadMore = () => {
     console.log("isReached", isReached)
@@ -111,6 +120,7 @@ const useHookApiComment = (id: string) => {
     loadNewComment,
     refScrollView,
     totalComment,
+    isRefreshing,
   }
 }
 export default useHookApiComment

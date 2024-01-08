@@ -50,6 +50,8 @@ export default function ItemRecent({ data, onRemove, onPressItem }: ItemProps) {
             />
           )
         }}
+        contentContainerStyle={{ paddingBottom: HEIGHT(130) }}
+        showsVerticalScrollIndicator={false}
       />
     </View>
   )

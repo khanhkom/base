@@ -16,7 +16,8 @@ export default function Header({ keyword, setKeyword, onSubmitSearch }) {
         value={keyword}
         onChangeText={setKeyword}
         style={styles.textInput}
-        placeholder="Tìm kiếm"
+        placeholder="Tìm kiếm vấn đề của bạn"
+        placeholderTextColor={colors.gray_5}
         onSubmitEditing={onSubmitSearch}
         autoFocus={true}
       />
@@ -44,7 +45,7 @@ const styles = StyleSheet.create({
     marginTop: HEIGHT(spacing.xs),
     paddingHorizontal: WIDTH(spacing.sm),
     color: colors.gray_9,
-    minHeight:HEIGHT(44)
+    minHeight: HEIGHT(44),
   },
   close: {
     position: "absolute",

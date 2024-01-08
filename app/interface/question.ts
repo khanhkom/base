@@ -82,6 +82,7 @@ export interface ILikeQuestion {
 
 export interface ISpecialistMost {
   count: number
+  iconUrl: string
   specialist: ISpecialList
 }
 export interface IUserTag {

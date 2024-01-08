@@ -55,7 +55,7 @@ export default function ItemSpecialList() {
               }}
               style={[styles.item, index % 2 === 0 && { marginRight: WIDTH(spacing.sm) }]}
             >
-              <Image source={R.images.features_2} style={styles.icon} />
+              <Image source={{ uri: item?.iconUrl }} style={styles.icon} />
               <Text size="ba" weight="medium" style={styles.textName}>
                 {item?.specialist?.value ?? ""}
               </Text>
