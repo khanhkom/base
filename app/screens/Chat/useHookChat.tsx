@@ -5,6 +5,7 @@ import { useEffect, useState } from "react"
 
 const useHookChat = () => {
   const [chats, setChats] = useState([])
+  const [isLoading, setIsLoading] = useState(false)
   // const [user, setUser] = useState(null)
   const user = useSelector((state) => state.userReducers.user)
 
@@ -34,6 +35,7 @@ const useHookChat = () => {
       })
   }, [])
   useEffect(() => {
+    setIsLoading(true)
     firebase
       .app()
       .database("https://bacsivietnam-default-rtdb.asia-southeast1.firebasedatabase.app/")
@@ -48,6 +50,7 @@ const useHookChat = () => {
           const dataArray = Object.keys(data).map((key) => data[key])
           setChats(dataArray.sort((a, b) => b.id - a.id))
         }
+        setIsLoading(false)
       })
 
     firebase
@@ -64,9 +67,10 @@ const useHookChat = () => {
           const dataArray = Object.keys(data).map((key) => data[key])
           setChats(dataArray.sort((a, b) => b.id - a.id))
         }
+        setIsLoading(false)
       })
   }, [])
-  return { chats, user }
+  return { chats, user, isLoading }
 }
 
 export default useHookChat

@@ -8,9 +8,10 @@ import colors from "@app/assets/colors"
 import ItemConversation from "./Item/ItemConversation"
 import { navigate } from "@app/navigators/navigationUtilities"
 import useHookChat from "./useHookChat"
+import LoadingScreen from "@app/components/loading/LoadingScreen"
 
 export default function ChatScreen() {
-  const { chats } = useHookChat()
+  const { chats, isLoading } = useHookChat()
   const refModal = useRef(null)
   const onPress = (index) => {
     console.log(index)
@@ -25,6 +26,7 @@ export default function ChatScreen() {
     }
   }
   console.log("chats_chats", chats)
+  if (isLoading) return <LoadingScreen />
   return (
     <View style={styles.container}>
       <Header

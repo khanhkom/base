@@ -22,7 +22,7 @@ interface ScreenProps {
 }
 export function DetailConversation({ route }: ScreenProps) {
   const targetUser = route?.params?.targetUser
-  const { messages, sendMessage } = useHookDetailChat(targetUser?.userId ?? "")
+  const { messages, sendMessage } = useHookDetailChat(targetUser)
   const user = useSelector((state) => state.userReducers.user)
 
   const patients = useSelector((state) => state.patientReducers.patients)
@@ -39,7 +39,7 @@ export function DetailConversation({ route }: ScreenProps) {
       <Header
         leftIcon="arrow_left"
         backgroundColor={colors.white}
-        title="B.s Nguyễn Văn A"
+        title={`B.s ${targetUser?.name}`}
         rightIcon="view_more"
         onRightPress={() => {
           navigate("ChatProfile")

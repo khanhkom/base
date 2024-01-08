@@ -12,7 +12,7 @@ const useHookDetailChat = (targetUser: IDocter) => {
   const currentUserId = user?.id
   const patients = useSelector((state) => state.patientReducers.patients)
   const chatId = createChatId(currentUserId, targetUser?.userId)
-
+  console.log("targetUser::", targetUser, user)
   useEffect(() => {
     // firebase
     //   .app()
@@ -82,14 +82,13 @@ const useHookDetailChat = (targetUser: IDocter) => {
         lastMessage: text,
         userA: {
           id: user?.id,
-          name: targetUser,
+          name: user?.fullname,
           avatar: patients?.[0]?.avatarUrl,
         },
         userB: {
-          id: targetUserId,
-          name: "userB",
-          avatar:
-            "https://play-lh.googleusercontent.com/7Ak4Ye7wNUtheIvSKnVgGL_OIZWjGPZNV6TP_3XLxHC-sDHLSE45aDg41dFNmL5COA",
+          id: targetUser?.userId,
+          name: targetUser?.name,
+          avatar: targetUser?.avatarUrl ?? "",
         },
         timestamp: new Date().getTime(),
         user: {

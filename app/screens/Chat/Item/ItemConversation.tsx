@@ -37,7 +37,13 @@ export default function ItemConversation({ index, item }: { item: IConversation;
     <List.Item
       style={styles.item}
       onPress={() => {
-        navigate("DetailConversation")
+        navigate("DetailConversation", {
+          targetUser: {
+            ...targetUser,
+            userId: targetUser?.id,
+            avatarUrl: targetUser?.avatar,
+          },
+        })
       }}
       left={() => {
         return (
