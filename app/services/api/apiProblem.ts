@@ -1,3 +1,5 @@
+import { MessageToast } from "@app/config/constants"
+import { EToastType, showToastMessage } from "@app/utils/library"
 import { ApiResponse } from "apisauce"
 
 export type GeneralApiProblem =
@@ -71,4 +73,16 @@ export function getGeneralApiProblem(response: ApiResponse<any>): GeneralApiProb
   }
 
   return null
+}
+
+interface APIErrorResponse {
+  statusCode: number
+  timestamp: string
+  path: string
+  message: string
+  errorCode: string
+}
+
+export function handleErrorMessage(errorResponse: APIErrorResponse) {
+  showToastMessage(MessageToast.apiError, EToastType.ERROR)
 }
