@@ -22,6 +22,7 @@ export default function Header({
   isFiltered,
   onPressFilter,
 }: HeaderProps) {
+  console.log("isShowFilter::", isShowFilter)
   const $containerInsets = useSafeAreaInsetsStyle(["top"])
 
   return (

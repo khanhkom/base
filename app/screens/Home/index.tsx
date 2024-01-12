@@ -23,6 +23,7 @@ import notifee, { AuthorizationStatus } from "@notifee/react-native"
 import { translate } from "@app/i18n/translate"
 import messaging from "@react-native-firebase/messaging"
 import { getMyProfile } from "@app/redux/actions"
+import { getListSpecialListRequest } from "@app/redux/actions/actionDoctor"
 async function checkNotificationPermission() {
   const settings = await notifee.getNotificationSettings()
 
@@ -115,6 +116,7 @@ export default function HomeScreen() {
     dispatch(getStringeeToken())
     dispatch(getOrderHistory())
     dispatch(getMyProfile())
+    dispatch(getListSpecialListRequest())
   }, [])
   useEffect(() => {
     if (session?.access_token && session?.access_token !== "" && Platform.OS === "android") {
