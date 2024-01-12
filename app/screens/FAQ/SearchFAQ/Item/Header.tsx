@@ -1,4 +1,4 @@
-import { StyleSheet, View, TextInput } from "react-native"
+import { StyleSheet, View, TextInput, Pressable } from "react-native"
 import React from "react"
 import { HEIGHT, WIDTH, getWidth } from "@app/config/functions"
 import { spacing } from "@app/theme/spacing"
@@ -6,7 +6,22 @@ import colors from "@app/assets/colors"
 import { useSafeAreaInsetsStyle } from "@app/utils/useSafeAreaInsetsStyle"
 import { Icon } from "@app/components/Icon"
 import { goBack } from "@app/navigators/navigationUtilities"
-export default function Header({ keyword, setKeyword, onSubmitSearch }) {
+interface HeaderProps {
+  keyword: string
+  setKeyword: (keyword: string) => void
+  onSubmitSearch: () => void
+  isShowFilter: boolean
+  isFiltered: boolean
+  onPressFilter: () => void
+}
+export default function Header({
+  keyword,
+  setKeyword,
+  onSubmitSearch,
+  isShowFilter,
+  isFiltered,
+  onPressFilter,
+}: HeaderProps) {
   const $containerInsets = useSafeAreaInsetsStyle(["top"])
 
   return (
@@ -15,7 +30,7 @@ export default function Header({ keyword, setKeyword, onSubmitSearch }) {
       <TextInput
         value={keyword}
         onChangeText={setKeyword}
-        style={styles.textInput}
+        style={[styles.textInput, isShowFilter && { width: WIDTH(265) }]}
         placeholder="Tìm kiếm vấn đề của bạn"
         placeholderTextColor={colors.gray_5}
         onSubmitEditing={onSubmitSearch}
@@ -23,6 +38,16 @@ export default function Header({ keyword, setKeyword, onSubmitSearch }) {
       />
       {keyword !== "" && (
         <Icon onPress={() => setKeyword("")} icon="x_close" size={WIDTH(16)} style={styles.close} />
+      )}
+      {isShowFilter && (
+        <Pressable style={styles.buttonFilter} onPress={onPressFilter}>
+          <Icon icon="filter" size={WIDTH(24)} color={colors.white} />
+          {isFiltered && (
+            <View style={styles.icTicked}>
+              <Icon icon="tick_circle" size={WIDTH(16)} />
+            </View>
+          )}
+        </Pressable>
       )}
     </View>
   )
@@ -51,5 +76,17 @@ const styles = StyleSheet.create({
     position: "absolute",
     right: WIDTH(spacing.xs),
     bottom: -HEIGHT(spacing.sm),
+  },
+  buttonFilter: {
+    borderRadius: WIDTH(8),
+    marginLeft: WIDTH(spacing.sm),
+    height: WIDTH(44),
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  icTicked: {
+    position: "absolute",
+    top: 4,
+    right: -4,
   },
 })

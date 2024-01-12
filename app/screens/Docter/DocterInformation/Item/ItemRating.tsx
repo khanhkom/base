@@ -38,11 +38,17 @@ const ItemUserRating = ({ description, criteria, createdAt, score, patient }: It
       word.charAt(0).toUpperCase() + word.slice(1) + `${index === criteria.length - 1 ? "" : ", "}`
     )
   })
+  console.log("patient::", patient)
   return (
     <Card style={styles.card} mode="contained">
       <List.Item
         left={() => {
-          return <Avatar.Image source={R.images.avatar_docter} size={WIDTH(48)} />
+          return (
+            <Avatar.Image
+              source={patient?.gender === "male" ? R.images.patient_male : R.images.patient_female}
+              size={WIDTH(48)}
+            />
+          )
         }}
         title={() => {
           return (

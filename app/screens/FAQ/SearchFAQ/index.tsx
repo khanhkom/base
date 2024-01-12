@@ -1,11 +1,12 @@
-import { StyleSheet, View } from "react-native"
-import React, { useEffect, useState } from "react"
+import { Keyboard, StyleSheet, View } from "react-native"
+import React, { useEffect, useRef, useState } from "react"
 import Header from "./Item/Header"
 import colors from "@app/assets/colors"
 import ItemRecent from "./Item/ItemRecent"
 import ItemSuggest from "./Item/ItemSuggest"
 import TabResult from "./Item/FAQ"
 import { KEYSTORAGE, load, save } from "@app/utils/storage"
+import ModalFilter from "./Item/ModalFilter"
 
 const STATUS_SEARCH = {
   recent: 0,
@@ -19,6 +20,9 @@ export default function SearchFAQ() {
   const [historySearch, setHistorySearch] = useState([])
   const [searchStatus, setSearchStatus] = useState(STATUS_SEARCH.recent)
   const [searchText, setSearchText] = useState("")
+  const [isFiltered, setFiltered] = useState(false)
+  const [facetFilters, setFacetFilters] = useState(-1)
+  const refModal = useRef(null)
 
   // const searchStatus = keyword === "" ? STATUS_SEARCH.recent : STATUS_SEARCH.suggest
   const hanldeChangeText = (text: string) => {
@@ -75,9 +79,28 @@ export default function SearchFAQ() {
       clearTimeout(typingTimeout)
     }
   }, [keyword])
+  const onApplyFilter = (dataFilter) => {
+    setFacetFilters(dataFilter)
+    console.log("dataFilter", dataFilter)
+    if (dataFilter !== -1) {
+      setFiltered(true)
+    } else {
+      setFiltered(false)
+    }
+  }
   return (
     <View style={styles.container}>
-      <Header keyword={keyword} setKeyword={hanldeChangeText} onSubmitSearch={onSubmitSearch} />
+      <Header
+        keyword={keyword}
+        setKeyword={hanldeChangeText}
+        onSubmitSearch={onSubmitSearch}
+        isShowFilter={searchStatus !== STATUS_SEARCH.recent}
+        isFiltered={isFiltered}
+        onPressFilter={() => {
+          Keyboard.dismiss()
+          refModal?.current?.show()
+        }}
+      />
       {searchStatus === STATUS_SEARCH.recent && (
         <ItemRecent
           data={historySearch}
@@ -86,7 +109,10 @@ export default function SearchFAQ() {
         />
       )}
       {/* {searchStatus === STATUS_SEARCH.suggest && <ItemSuggest keyword={keyword} />} */}
-      {searchStatus !== STATUS_SEARCH.recent && <TabResult keyword={searchText} />}
+      {searchStatus !== STATUS_SEARCH.recent && (
+        <TabResult keyword={searchText} specialistCode={facetFilters} />
+      )}
+      <ModalFilter onApply={onApplyFilter} filterData={facetFilters} ref={refModal} />
     </View>
   )
 }

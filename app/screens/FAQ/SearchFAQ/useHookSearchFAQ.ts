@@ -17,7 +17,7 @@ interface IReponseData {
   total?: number
 }
 const limit = 10
-const useHookSearchFAQ = (keyword: string) => {
+const useHookSearchFAQ = (keyword: string, specialistCode: number) => {
   const [listData, setListData] = useState<IQuestion[]>([])
   const [refreshState, setRefreshState] = useState<number>(RefreshState.Idle)
   const [pageList, setPageList] = useState<number>(1)
@@ -28,7 +28,7 @@ const useHookSearchFAQ = (keyword: string) => {
   useEffect(() => {
     onHeaderRefresh()
     setIsLimited(false)
-  }, [keyword])
+  }, [keyword, specialistCode])
 
   async function getList(isLoadMore = false, page = pageList) {
     if (isLoadMore && isLimited) return
@@ -41,6 +41,11 @@ const useHookSearchFAQ = (keyword: string) => {
       perPage: limit,
       query: keyword,
       sortByCreatedAt: -1,
+    }
+    if (specialistCode !== -1) {
+      Object.assign(body, {
+        specialistCode,
+      })
     }
     isLoadMore
       ? setRefreshState(RefreshState.FooterRefreshing)

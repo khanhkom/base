@@ -7,8 +7,11 @@ import { HEIGHT, WIDTH } from "@app/config/functions"
 import { spacing } from "@app/theme/spacing"
 import { Toggle } from "@app/components/Toggle"
 import R from "@app/assets"
+import useHookAccount from "../useHookAccount"
 
 export default function SocialConnect({ setIndexSocial, setVisible }) {
+  const { linkAccountWithGoogle, linkAccountWithFacebook } = useHookAccount()
+
   return (
     <Card mode="contained" style={styles.card}>
       <Text size="md" weight="medium" style={{ color: colors.gray_9 }}>
@@ -19,8 +22,8 @@ export default function SocialConnect({ setIndexSocial, setVisible }) {
           return <Image source={R.images.ic_face} style={styles.logo} resizeMode="contain" />
         }}
         onPress={() => {
-          setIndexSocial(0)
-          setVisible(true)
+          // setIndexSocial(0)
+          // setVisible(true)
         }}
         title={() => {
           return (
@@ -41,8 +44,9 @@ export default function SocialConnect({ setIndexSocial, setVisible }) {
         }}
         style={{ paddingBottom: 0 }}
         onPress={() => {
-          setIndexSocial(1)
-          setVisible(true)
+          // setIndexSocial(1)
+          // setVisible(true)
+          linkAccountWithGoogle()
         }}
         title={() => {
           return (
@@ -52,7 +56,7 @@ export default function SocialConnect({ setIndexSocial, setVisible }) {
           )
         }}
         right={() => {
-          return <Toggle variant="switch" />
+          return <Toggle variant="switch" onPress={linkAccountWithGoogle} />
         }}
       />
     </Card>

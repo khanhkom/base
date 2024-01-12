@@ -14,15 +14,15 @@ import { IQuestion } from "@app/interface/question"
 import moment from "moment"
 import ItemEmpty from "@app/components/ItemEmpty"
 
-export default function FAQ({ keyword }) {
-  console.log("keyword::", keyword)
+export default function FAQ({ keyword, specialistCode }) {
+  console.log("keyword::", keyword, specialistCode)
   const {
     listData,
     onFooterRefresh,
     onHeaderRefresh,
     refreshState,
     loading: loadingList,
-  } = useHookSearchFAQ(keyword)
+  } = useHookSearchFAQ(keyword, specialistCode)
   if (loadingList) {
     return (
       <View>
