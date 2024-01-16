@@ -1,4 +1,4 @@
-import { Keyboard, StyleSheet, View } from "react-native"
+import { Keyboard, Platform, StyleSheet, View } from "react-native"
 import React, { useEffect, useRef, useState } from "react"
 import Header from "./Item/Header"
 import colors from "@app/assets/colors"
@@ -7,6 +7,7 @@ import ItemSuggest from "./Item/ItemSuggest"
 import TabResult from "./Item/FAQ"
 import { KEYSTORAGE, load, save } from "@app/utils/storage"
 import ModalFilter from "./Item/ModalFilter"
+import { Screen } from "@app/components/Screen"
 
 const STATUS_SEARCH = {
   recent: 0,
@@ -89,7 +90,10 @@ export default function SearchFAQ() {
     }
   }
   return (
-    <View style={styles.container}>
+    <Screen
+      safeAreaEdges={Platform.OS === "android" ? ["bottom"] : []}
+      contentContainerStyle={styles.container}
+    >
       <Header
         keyword={keyword}
         setKeyword={hanldeChangeText}
@@ -113,7 +117,7 @@ export default function SearchFAQ() {
         <TabResult keyword={searchText} specialistCode={facetFilters} />
       )}
       <ModalFilter onApply={onApplyFilter} filterData={facetFilters} ref={refModal} />
-    </View>
+    </Screen>
   )
 }
 

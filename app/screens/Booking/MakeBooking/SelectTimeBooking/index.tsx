@@ -37,6 +37,7 @@ export default function SelectTimeBooking({ route }: ScreenProps) {
     let resCal = await getDocterCalendar(docter.id, {
       date: selectedDate,
     })
+    console.log("resCal", resCal?.data?.calendar)
     setDataCalendar(resCal?.data?.calendar ?? [])
     setLoading(false)
   }

@@ -1,4 +1,11 @@
-import { Alert, PermissionsAndroid, Platform, StyleSheet } from "react-native"
+import {
+  Alert,
+  PermissionsAndroid,
+  Platform,
+  RefreshControl,
+  ScrollView,
+  StyleSheet,
+} from "react-native"
 import React, { useEffect } from "react"
 import HeaderHome from "./Item/Header"
 import { Screen } from "@app/components/Screen"
@@ -39,6 +46,17 @@ export default function HomeScreen() {
 
   const actionClient = useSelector((state) => state.stringeeReducers.actionClient)
   const dispatch = useDispatch()
+
+  const [refreshing, setRefreshing] = React.useState(false)
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true)
+    dispatch(getOrderHistory())
+    dispatch(getMyProfile())
+    setTimeout(() => {
+      setRefreshing(false)
+    }, 1000)
+  }, [])
+
   const updateClientId = (id: string) => {
     dispatch(updateStringeeClientId(id))
   }
@@ -118,7 +136,10 @@ export default function HomeScreen() {
     dispatch(getMyProfile())
     dispatch(getListSpecialListRequest())
   }, [])
+
   useEffect(() => {
+    // requestNotificationPermission()
+
     if (session?.access_token && session?.access_token !== "" && Platform.OS === "android") {
       dispatch(removeActionClient())
       client?.current?.connect(session?.access_token)
@@ -142,29 +163,31 @@ export default function HomeScreen() {
   }, [actionClient])
 
   return (
-    <Screen preset="scroll" style={styles.container}>
-      <HeaderHome onSearch={onSearch} />
-      <ItemUtilities />
-      <BannerCarousel />
-      <TopDocter />
-      <TopPackage />
-      <HotNews />
-      {Platform.OS === "android" && (
-        <StringeeClient
-          ref={client}
-          eventHandlers={{
-            onConnect: clientDidConnect,
-            onDisConnect: clientDidDisConnect,
-            onFailWithError: clientDidFailWithError,
-            onIncomingCall: clientDidIncomingCall2,
-            onIncomingCall2: clientDidIncomingCall2,
-            onRequestAccessToken: clientRequestAccessToken,
-            onCustomMessage: clientReceiveCustomMessage,
-          }}
-          // If you use a premise server, put your host and port here to connect
-          // serverAddresses={new StringeeServerAddress('host', port)}
-        />
-      )}
+    <Screen style={styles.container}>
+      <ScrollView refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
+        <HeaderHome onSearch={onSearch} />
+        <ItemUtilities />
+        <BannerCarousel />
+        <TopDocter />
+        <TopPackage />
+        <HotNews />
+        {Platform.OS === "android" && (
+          <StringeeClient
+            ref={client}
+            eventHandlers={{
+              onConnect: clientDidConnect,
+              onDisConnect: clientDidDisConnect,
+              onFailWithError: clientDidFailWithError,
+              onIncomingCall: clientDidIncomingCall2,
+              onIncomingCall2: clientDidIncomingCall2,
+              onRequestAccessToken: clientRequestAccessToken,
+              onCustomMessage: clientReceiveCustomMessage,
+            }}
+            // If you use a premise server, put your host and port here to connect
+            // serverAddresses={new StringeeServerAddress('host', port)}
+          />
+        )}
+      </ScrollView>
     </Screen>
   )
 }
