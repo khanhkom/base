@@ -92,79 +92,83 @@ export default function RatingDocter({ route }: IScreenParams) {
       }}
     >
       <KeyboardAwareScrollView>
-
-      <View style={styles.container}>
-        <Header
-          leftIcon="arrow_left"
-          title={translate("rating.rating_doctor")}
-          backgroundColor={colors.white}
-        />
-        <Image
-          source={
-            doctor?.avatarUrl !== ""
-              ? {
-                  uri: doctor?.avatarUrl,
-                }
-              : R.images.avatar_docter_rec
-          }
-          style={styles.imageDocter}
-          resizeMode="contain"
-        />
-        <Text size="xxl" weight="semiBold" style={styles.doctorName}>
-          {translate("doctor.doctor")} {doctor?.name ?? ""}
-        </Text>
-        <Text size="md" weight="normal" style={styles.textDesc}>
-          {translate("rating.do_you_satisfy")}
-        </Text>
-        <ItemTotalStar star={star} setStar={setStar} />
-        <TextField
-          placeholder={translate("rating.share_your_feel")}
-          style={{ minHeight: HEIGHT(120) }}
-          containerStyle={{ width: WIDTH(343), marginTop: HEIGHT(32) }}
-          inputWrapperStyle={error && { borderColor: colors.red_6 }}
-          textAlignVertical="top"
-          onChangeText={(text) => {
-            setDescription(text)
-            if (error) {
-              setError(false)
+        <View style={styles.container}>
+          <Header
+            leftIcon="arrow_left"
+            title={translate("rating.rating_doctor")}
+            backgroundColor={colors.white}
+          />
+          <Image
+            source={
+              doctor?.avatarUrl !== ""
+                ? {
+                    uri: doctor?.avatarUrl,
+                  }
+                : R.images.avatar_docter_rec
             }
-          }}
-          multiline
-          require
-          helper={error && "Vui lòng nhập cảm nhận!"}
-          HelperTextProps={{ style: { color: colors.red_6 } }}
-        />
-        <Text
-          size="ba"
-          weight="medium"
-          style={{ color: colors.gray_9, marginVertical: HEIGHT(spacing.md) }}
-        >
-          {translate("rating.you_can_choose_more_option")}
-        </Text>
-        <View style={styles.flexWrap}>
-          {LIST_DEFAULT_RATING.map((item, index) => {
-            const isActive = listCriteria.includes(index)
-            return (
-              <Button
-                key={index}
-                mode="contained"
-                buttonColor={isActive ? colors.primary : colors.gray_1}
-                textColor={isActive ? colors.white : colors.gray_9}
-                onPress={() => onPressCriteria(index)}
-                style={styles.buttonReviewSuggest}
-              >
-                {item}
-              </Button>
-            )
-          })}
+            style={styles.imageDocter}
+            resizeMode="contain"
+          />
+          <Text size="xxl" weight="semiBold" style={styles.doctorName}>
+            {translate("doctor.doctor")} {doctor?.name ?? ""}
+          </Text>
+          <Text size="md" weight="normal" style={styles.textDesc}>
+            {translate("rating.do_you_satisfy")}
+          </Text>
+          <ItemTotalStar star={star} setStar={setStar} />
+          <TextField
+            placeholder={translate("rating.share_your_feel")}
+            style={{ minHeight: HEIGHT(120) }}
+            containerStyle={{ width: WIDTH(343), marginTop: HEIGHT(32) }}
+            inputWrapperStyle={error && { borderColor: colors.red_6 }}
+            textAlignVertical="top"
+            onChangeText={(text) => {
+              setDescription(text)
+              if (error) {
+                setError(false)
+              }
+            }}
+            multiline
+            require
+            helper={error && "Vui lòng nhập cảm nhận!"}
+            HelperTextProps={{ style: { color: colors.red_6 } }}
+          />
+          <Text
+            size="ba"
+            weight="medium"
+            style={{ color: colors.gray_9, marginVertical: HEIGHT(spacing.md) }}
+          >
+            {translate("rating.you_can_choose_more_option")}
+          </Text>
+          <View style={styles.flexWrap}>
+            {LIST_DEFAULT_RATING.map((item, index) => {
+              const isActive = listCriteria.includes(index)
+              return (
+                <Button
+                  key={index}
+                  mode="contained"
+                  buttonColor={isActive ? colors.primary : colors.gray_1}
+                  textColor={isActive ? colors.white : colors.gray_9}
+                  onPress={() => onPressCriteria(index)}
+                  style={styles.buttonReviewSuggest}
+                >
+                  {item}
+                </Button>
+              )
+            })}
+          </View>
+
+          <View style={styles.bottomButton}>
+            <Button
+              loading={loading}
+              style={styles.button}
+              mode="contained"
+              onPress={onSubmitRating}
+            >
+              {translate("booking.button.send_rating")}
+            </Button>
+          </View>
         </View>
-        
-        <View style={styles.bottomButton}>
-          <Button loading={loading} style={styles.button} mode="contained" onPress={onSubmitRating}>
-            {translate("booking.button.send_rating")}
-          </Button>
-        </View>
-      </View>
       </KeyboardAwareScrollView>
     </TouchableWithoutFeedback>
   )

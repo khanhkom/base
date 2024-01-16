@@ -1,4 +1,11 @@
-import { KeyboardAvoidingView, Platform, StyleSheet, View } from "react-native"
+import {
+  Keyboard,
+  KeyboardAvoidingView,
+  Platform,
+  StyleSheet,
+  TouchableWithoutFeedback,
+  View,
+} from "react-native"
 import React, { useState } from "react"
 import { Header } from "@app/components/Header"
 import { Button, TextInput } from "react-native-paper"
@@ -43,39 +50,45 @@ export default function ConfirmName() {
   }
 
   return (
-    <Screen
-      preset="auto"
-      safeAreaEdges={Platform.OS === "android" ? ["bottom"] : []}
-      contentContainerStyle={styles.container}
+    <TouchableWithoutFeedback
+      onPress={() => {
+        Keyboard.dismiss()
+      }}
     >
-      <Header title={translate("auth.name_confirmation")} backgroundColor={colors.white} />
-      <View style={{ flex: 1 }}>
-        <TextInput
-          placeholderTextColor={colors.gray_5}
-          placeholder={translate("auth.enter_full_name")}
-          mode="outlined"
-          value={name}
-          style={{
-            marginHorizontal: WIDTH(spacing.md),
-            marginTop: HEIGHT(spacing.lg),
-          }}
-          autoFocus
-          outlineStyle={styles.outlineStyle}
-          onChangeText={(text) => setText(text)}
-        />
-      </View>
-      <KeyboardAvoidingView behavior="padding">
-        <Button
-          mode="contained"
-          disabled={name === ""}
-          style={styles.button}
-          onPress={onPressSave}
-          loading={loading}
-        >
-          {translate("common.continue")}
-        </Button>
-      </KeyboardAvoidingView>
-    </Screen>
+      <Screen
+        preset="auto"
+        safeAreaEdges={Platform.OS === "android" ? ["bottom"] : []}
+        contentContainerStyle={styles.container}
+      >
+        <Header title={translate("auth.name_confirmation")} backgroundColor={colors.white} />
+        <View style={{ flex: 1 }}>
+          <TextInput
+            placeholderTextColor={colors.gray_5}
+            placeholder={translate("auth.enter_full_name")}
+            mode="outlined"
+            value={name}
+            style={{
+              marginHorizontal: WIDTH(spacing.md),
+              marginTop: HEIGHT(spacing.lg),
+            }}
+            autoFocus
+            outlineStyle={styles.outlineStyle}
+            onChangeText={(text) => setText(text)}
+          />
+        </View>
+        <KeyboardAvoidingView behavior={Platform.OS === "android" ? "padding" : null}>
+          <Button
+            mode="contained"
+            disabled={name === ""}
+            style={styles.button}
+            onPress={onPressSave}
+            loading={loading}
+          >
+            {translate("common.continue")}
+          </Button>
+        </KeyboardAvoidingView>
+      </Screen>
+    </TouchableWithoutFeedback>
   )
 }
 
