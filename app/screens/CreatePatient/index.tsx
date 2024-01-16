@@ -10,7 +10,7 @@ import { TextField } from "@app/components/TextField"
 import { Toggle } from "@app/components/Toggle"
 import SelectBirthday from "./Item/SelectBirthday"
 import LocationPicker from "@app/components/LocationPicker/LocationPicker"
-import { goBack, navigate } from "@app/navigators/navigationUtilities"
+import { goBack, navigate, resetRoot } from "@app/navigators/navigationUtilities"
 import { useSelector } from "@app/redux/reducers"
 import moment from "moment"
 import { EToastType, showToastMessage } from "@app/utils/library"
@@ -120,7 +120,11 @@ export default function CreatePatient({ route }: ScreenProps) {
     if (resUpdate?.status === 201) {
       showToastMessage(translate("create_patient.create_patient_successful"))
       if (isNavigateFromRegister) {
-        navigate("TabNavigator")
+        // navigate("TabNavigator")
+        resetRoot({
+          index: 0,
+          routes: [{ name: "TabNavigator" }],
+        })
       } else {
         dispatch(getListPatientRequest())
         goBack()
@@ -178,7 +182,11 @@ export default function CreatePatient({ route }: ScreenProps) {
           if (!isNavigateFromRegister) {
             handleDeletePatient()
           } else {
-            navigate("TabNavigator")
+            // navigate("TabNavigator")
+            resetRoot({
+              index: 0,
+              routes: [{ name: "TabNavigator" }],
+            })
           }
         }}
       />
