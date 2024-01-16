@@ -281,6 +281,7 @@ const useHookCall = (callId, isIncoming, from, to, fromName) => {
     MediaManager.stopMusicBackground()
     notifee.cancelAllNotifications()
     RNCallKeep.toggleAudioRouteSpeaker(callUUID, false)
+    Vibration.cancel()
 
     call2?.current?.answer(callId, async (status, code, message) => {
       console.log("answer: " + message, status)

@@ -79,6 +79,7 @@ interface AppProps {
  */
 
 messaging().onMessage(onMessageReceived)
+
 notifee.onForegroundEvent((event) => {
   console.log("event_event", event?.detail?.notification)
   if (event.type === EventType.PRESS) {

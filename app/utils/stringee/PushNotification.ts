@@ -89,7 +89,7 @@ export async function onMessageReceived(message) {
             if (Platform.OS === "android") {
               RNCallKeep.addEventListener("showIncomingCallUi", ({ callUUID: uuid }) => {
                 displayNotification(fullName)
-                console.log("showIncomingCallUi_showIncomingCallUi", uuid)
+                console.log("showIncomingCallUi_showIncomingCallUi", uuid, isShowNotification)
               })
               RNNotificationCall.addEventListener("answer", async (data) => {
                 RNNotificationCall.backToApp()
