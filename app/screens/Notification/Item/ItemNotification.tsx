@@ -49,7 +49,8 @@ export default function ItemNotification({ item }: ItemProps) {
         return R.images.cancelOrder
       case "doctorVerifyOrder":
         return R.images.updateOrder
-
+      case "haveNewQuestionComment":
+        return R.images.ic_question
       default:
         return R.images.updateOrder
     }
