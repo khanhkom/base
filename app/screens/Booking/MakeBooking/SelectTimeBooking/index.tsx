@@ -26,20 +26,49 @@ interface ScreenProps {
   }
 }
 export default function SelectTimeBooking({ route }: ScreenProps) {
-  const [timeSelected, setTimeSelected] = useState({ id: -1 })
-  const [dataCalendar, setDataCalendar] = useState<IDoctorCalendar[]>([])
+  const [timeSelected, setTimeSelected] = useState({ id: "-1" })
+  const [dataCalendarConvert, setDataCalendarConvert] = useState<
+    { title: string; data: IDoctorCalendar[] }[]
+  >([])
   const [loading, setLoading] = useState(false)
   const docter = useSelector((state) => state.orderReducers?.docter)
   const selectedDate = useSelector((state) => state.orderReducers?.selectedDate)
   const dispatch = useDispatch()
   const getDoctorCalendarAvailable = async () => {
-    setLoading(true)
-    let resCal = await getDocterCalendar(docter.id, {
-      date: selectedDate,
-    })
-    console.log("resCal", resCal?.data?.calendar)
-    setDataCalendar(resCal?.data?.calendar ?? [])
-    setLoading(false)
+    try {
+      setLoading(true)
+      let resCal = await getDocterCalendar(docter.id, {
+        date: selectedDate,
+      })
+      console.log("resCal::", resCal?.data?.calendar)
+      const listCalendar = resCal?.data?.calendar ?? []
+      const morningList = []
+      const afternoonList = []
+      const nightList = []
+
+      listCalendar.forEach((item) => {
+        const fromTime = parseInt(item.timeRange.from.split(":")[0])
+        if (fromTime >= 0 && fromTime < 12) {
+          morningList.push(item)
+        } else if (fromTime >= 12 && fromTime < 18) {
+          afternoonList.push(item)
+        } else if (fromTime >= 18 && fromTime <= 23) {
+          nightList.push(item)
+        }
+      })
+
+      const resultList = [
+        { title: "Buổi sáng", data: morningList },
+        { title: "Buổi chiều", data: afternoonList },
+        { title: "Buổi tối", data: nightList },
+      ]
+      setDataCalendarConvert(resultList)
+      console.log("resultList::", resultList)
+      setLoading(false)
+    } catch (error) {
+      console.warn("getDoctorCalendarAvailable", error)
+      setLoading(false)
+    }
   }
   useEffect(() => {
     getDoctorCalendarAvailable()
@@ -51,13 +80,11 @@ export default function SelectTimeBooking({ route }: ScreenProps) {
     const checkDate = selectDate.getTime() > today.getTime()
     if (checkTimeHour && !checkDate) {
       return true
-    } else if (dataCalendar.length > 0) {
-      const valueFrom = dataCalendar?.find((item) => item.timeRange.from === from)
-      return valueFrom?.isOrder ?? false
     } else {
       return false
     }
   }
+  console.log("DATA_TIME", DATA_TIME)
   if (loading) return <LoadingScreen />
   return (
     <Screen
@@ -75,7 +102,7 @@ export default function SelectTimeBooking({ route }: ScreenProps) {
         styleStatus={{ width: WIDTH(220) }}
       />
       <FlatList
-        data={DATA_TIME}
+        data={dataCalendarConvert}
         renderItem={({ item }) => {
           return (
             <Card style={styles.card} mode="contained">
@@ -83,16 +110,15 @@ export default function SelectTimeBooking({ route }: ScreenProps) {
                 {item.title}
               </Text>
               <View style={styles.wrapperTime}>
-                {item.data.map((item, index) => {
-                  const isFull = checkIsFull(item?.from)
+                {(item?.data ?? []).map((item, index) => {
+                  const isFull = item?.isOrder || checkIsFull(item?.timeRange?.from)
                   return (
                     <ButtonTime
-                      onPress={() => setTimeSelected(item)}
-                      title={item.time}
+                      onPress={() => setTimeSelected(item?.timeRange)}
+                      title={`${item?.timeRange?.from} - ${item?.timeRange?.to}`}
                       isFull={isFull}
-                      status={item.status}
                       key={index}
-                      selected={timeSelected.id === item.id}
+                      selected={timeSelected.id === item?.timeRange?.id}
                     />
                   )
                 })}
@@ -112,7 +138,7 @@ export default function SelectTimeBooking({ route }: ScreenProps) {
             navigate("CompleteBooking")
           }
         }}
-        disabled={timeSelected.id === -1}
+        disabled={timeSelected.id === "-1"}
         mode="contained"
         style={{ marginBottom: HEIGHT(spacing.md), marginHorizontal: WIDTH(spacing.md) }}
       >

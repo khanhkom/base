@@ -12,18 +12,9 @@ import R from "@app/assets"
 interface ItemProps {
   item: Inotification
 }
-const DATA_ICON_NOTI = [
-  {
-    iconName: "updateOrder",
-    icon: R.images.updateOrder,
-  },
-  {
-    iconName: "updateOrder",
-    icon: R.images.haveResult,
-  },
-]
+
 export default function ItemNotification({ item }: ItemProps) {
-  console.log("item_item::", item?.clickAction)
+  console.log("item_item::", item)
   const onPressItem = () => {
     switch (item?.clickAction?.actionType) {
       case "open_order":
@@ -46,6 +37,19 @@ export default function ItemNotification({ item }: ItemProps) {
         return R.images.haveResult
       case "updateOrder":
         return R.images.updateOrder
+      case "orderSuccess":
+        return R.images.doneOrder
+      case "adminUpdateOrder":
+        return R.images.updateOrder
+      case "doExamine":
+        return R.images.icOnline
+      case "remindOrder":
+        return R.images.remindOrder
+      case "cancelOrder":
+        return R.images.cancelOrder
+      case "doctorVerifyOrder":
+        return R.images.updateOrder
+
       default:
         return R.images.updateOrder
     }

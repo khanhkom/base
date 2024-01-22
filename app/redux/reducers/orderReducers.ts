@@ -1,17 +1,17 @@
-import { IDocter } from "@app/interface/docter"
+import { IDocter, IDoctorCalendar } from "@app/interface/docter"
 import { IOrder } from "./../../interface/order"
 import moment from "moment"
 import { STATUS_DOCTER } from "@app/screens/Booking/MakeBooking/SelectTimeBooking/Data"
 import { IPatient } from "@app/interface/patient"
 const defaultState: IState = {
   selectedDate: moment(new Date()).format("YYYY-MM-DD"),
-  selectedTime: {
-    time: "10:00 - 10:15",
-    startHour: 10,
-    startMin: 0,
-    status: STATUS_DOCTER.AVAILABLE,
-    id: 0,
-  },
+  // selectedTime: {
+  //   time: "10:00 - 10:15",
+  //   startHour: 10,
+  //   startMin: 0,
+  //   id: 0,
+  // },
+  selectedTime: { from: "", to: "", id: "0" },
   docter: {
     userId: "",
     name: "",
@@ -49,13 +49,13 @@ const defaultState: IState = {
 interface IState {
   docter: IDocter
   selectedDate: ""
-  selectedTime: {
-    time: ""
-    startHour: number
-    startMin: number
-    status: STATUS_DOCTER
-    id: number
-  }
+  // selectedTime: {
+  //   time: ""
+  //   startHour: number
+  //   startMin: number
+  //   id: number
+  // }
+  selectedTime: { from: string; to: string; id: string }
   patient: IPatient
   specialist: {
     title: string

@@ -1,5 +1,5 @@
 import React, { useEffect } from "react"
-import { View, StyleSheet, ActivityIndicator } from "react-native"
+import { View, StyleSheet, ActivityIndicator, Platform } from "react-native"
 import colors from "@app/assets/colors"
 import { Header } from "@app/components/Header"
 import { HEIGHT } from "@app/config/functions"
@@ -12,6 +12,7 @@ import { FlashList } from "@shopify/flash-list"
 import ItemNotification from "./Item/ItemNotification"
 import LoadingScreen from "@app/components/loading/LoadingScreen"
 import { useHookHistory } from "./useHookHistory"
+import { Screen } from "@app/components/Screen"
 
 export default function HistoryScreen() {
   const { refreshState, listData, loading, onHeaderRefresh, onFooterRefresh } = useHookHistory()
@@ -53,7 +54,10 @@ export default function HistoryScreen() {
   }
 
   return (
-    <View style={styles.container}>
+    <Screen
+      safeAreaEdges={Platform.OS === "android" ? ["bottom"] : []}
+      contentContainerStyle={styles.container}
+    >
       <Header
         leftIcon="arrow_left"
         title={translate("notification.noti")}
@@ -77,7 +81,7 @@ export default function HistoryScreen() {
         extraData={listData}
         ListFooterComponent={renderFooter}
       />
-    </View>
+    </Screen>
   )
 }
 

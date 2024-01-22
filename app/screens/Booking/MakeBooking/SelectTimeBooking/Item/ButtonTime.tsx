@@ -7,12 +7,11 @@ import { spacing } from "@app/theme/spacing"
 import colors from "@app/assets/colors"
 interface ItemProps {
   title: string
-  status: STATUS_DOCTER
   onPress: () => void
   selected: boolean
   isFull: boolean
 }
-export default function ButtonTime({ title, status, onPress, selected, isFull }: ItemProps) {
+export default function ButtonTime({ title, onPress, selected, isFull }: ItemProps) {
   return (
     <Button
       onPress={() => {
@@ -20,7 +19,8 @@ export default function ButtonTime({ title, status, onPress, selected, isFull }:
           onPress()
         }
       }}
-      mode={status === STATUS_DOCTER.AVAILABLE && !selected ? "outlined" : "contained"}
+      // mode={status === STATUS_DOCTER.AVAILABLE && !selected ? "outlined" : "contained"}
+      mode={!selected ? "outlined" : "contained"}
       style={[
         styles.button,
         selected && { backgroundColor: colors.primary },

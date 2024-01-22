@@ -1,4 +1,4 @@
-import { Platform, Pressable, StyleSheet, View,ScrollView } from "react-native"
+import { Platform, Pressable, StyleSheet, View, ScrollView } from "react-native"
 import React, { useEffect, useState } from "react"
 import { Header } from "@app/components/Header"
 import colors from "@app/assets/colors"
@@ -61,7 +61,7 @@ export default function CompleteBooking({ route }: ScreenProps) {
   const dispatch = useDispatch()
   const isUpdate = route?.params?.type === "update"
 
-  console.log("detailOrder_detailOrder", patient, specialist)
+  console.log("detailOrder_detailOrder", selectedTime)
   useEffect(() => {
     if (detailOrder?.patientNotes) {
       setPatientNotes(detailOrder?.patientNotes)
@@ -80,15 +80,32 @@ export default function CompleteBooking({ route }: ScreenProps) {
       dispatch(updateSeletedDateOrder(moment(detailOrder?.timeRange?.from).format("YYYY-MM-DD")))
       dispatch(updateSpecialListOrder(detailOrder?.specialist))
 
-      let timeSelected
-      DATA_TIME?.forEach((item, index) => {
-        item?.data?.forEach((it, id) => {
-          if (it.from === moment(detailOrder?.timeRange?.from).format("HH:mm")) {
-            timeSelected = it
-          }
-        })
+      // let timeSelected
+      // DATA_TIME?.forEach((item, index) => {
+      //   item?.data?.forEach((it, id) => {
+      //     if (it.from === moment(detailOrder?.timeRange?.from).format("HH:mm")) {
+      //       timeSelected = it
+      //     }
+      //   })
+      // })
+
+      // dispatch(updateSelectedTimeOrder(timeSelected))
+      const fromTime = new Date(detailOrder?.timeRange?.from).toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
       })
-      dispatch(updateSelectedTimeOrder(timeSelected))
+      const toTime = new Date(detailOrder?.timeRange?.to).toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+      })
+
+      const convertedObj = {
+        from: fromTime,
+        to: toTime,
+        id: detailOrder?.timeRange?.id,
+      }
+      console.log("convertedObj", convertedObj)
+      dispatch(updateSelectedTimeOrder(convertedObj))
     }
   }, [detailOrder])
 
@@ -99,7 +116,7 @@ export default function CompleteBooking({ route }: ScreenProps) {
       showToastMessage("Vui lòng chọn bác sĩ!", EToastType.ERROR)
     } else if (selectedDate === "") {
       showToastMessage(VALIDATE_MESSAGE[1], EToastType.ERROR)
-    } else if (selectedTime?.time === "") {
+    } else if (selectedTime?.id === "0") {
       showToastMessage(VALIDATE_MESSAGE[2], EToastType.ERROR)
     } else if (patient?.id === "") {
       showToastMessage(VALIDATE_MESSAGE[3], EToastType.ERROR)
@@ -109,14 +126,26 @@ export default function CompleteBooking({ route }: ScreenProps) {
       setVisible(true)
     }
   }
+  console.log("startHour", selectedTime)
 
   const onCreateAppointment = async () => {
+    const startHour = parseInt(selectedTime?.from.split(":")[0])
+    const startMin = parseInt(selectedTime?.from.split(":")[1])
+    const endHour = parseInt(selectedTime?.to.split(":")[0])
+    const endMin = parseInt(selectedTime?.to.split(":")[1])
+    // const startDate = moment(new Date(selectedDate))
+    //   .add(selectedTime.startHour - 7, "hour")
+    //   .add(selectedTime.startMin, "minute")
+    // const endDate = moment(new Date(selectedDate))
+    //   .add(selectedTime.startHour - 7, "hour")
+    //   .add(selectedTime.startMin + 15, "minute")
     const startDate = moment(new Date(selectedDate))
-      .add(selectedTime.startHour - 7, "hour")
-      .add(selectedTime.startMin, "minute")
+      .add(startHour - 7, "hour")
+      .add(startMin, "minute")
     const endDate = moment(new Date(selectedDate))
-      .add(selectedTime.startHour - 7, "hour")
-      .add(selectedTime.startMin + 15, "minute")
+      .add(endHour - 7, "hour")
+      .add(endMin, "minute")
+
     setLoading(true)
     const timeRange = {
       from: startDate.toISOString(),
@@ -174,11 +203,11 @@ export default function CompleteBooking({ route }: ScreenProps) {
 
     setLoading(false)
   }
+  const timeExam = `${selectedTime?.from} - ${selectedTime?.to}`
   return (
     <Screen
       safeAreaEdges={Platform.OS === "android" ? ["bottom"] : []}
       contentContainerStyle={styles.container}
-      
     >
       <Header
         title={translate("booking.select_exam_information")}
@@ -247,7 +276,8 @@ export default function CompleteBooking({ route }: ScreenProps) {
               style={{ color: colors.gray_9 }}
               label={translate("booking.select_time")}
               placeholder={translate("booking.select_time")}
-              value={selectedTime?.time}
+              // value={selectedTime?.time}
+              value={timeExam}
               editable={false}
               RightAccessory={() => (
                 <Icon
@@ -298,7 +328,7 @@ export default function CompleteBooking({ route }: ScreenProps) {
       <PopupVerify
         title={translate("booking.verify_booking")}
         desc={`${translate("booking.confirm_booking")} ${docter?.name} ${translate("booking.in")} `}
-        time={`${selectedTime?.time} ${translate("booking.date")} ${moment(selectedDate).format(
+        time={`${timeExam} ${translate("booking.date")} ${moment(selectedDate).format(
           "DD/MM/YYYY",
         )}`}
         textPleaseComfirm={translate("booking.please_verify_booking_information")}

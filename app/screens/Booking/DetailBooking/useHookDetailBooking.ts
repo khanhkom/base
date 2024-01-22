@@ -100,15 +100,33 @@ const useHookDetailBooking = (id) => {
     setDetailOrder(resOrder.data)
     setLoading(false)
   }
+  console.log("AAAAAAAAAAAAA", detailOrder?.timeRange)
   const dispatch = useDispatch()
   const updateDataCreateOrder = () => {
-    let timeFrom = moment(detailOrder?.timeRange?.from).format("HH:mm")
-    DATA_TIME.map((item, index) => {
-      let itemStamp = item.data.find((it) => it.from === timeFrom)
-      if (itemStamp?.from) {
-        dispatch(updateSelectedTimeOrder(itemStamp))
-      }
+    // let timeFrom = moment(detailOrder?.timeRange?.from).format("HH:mm")
+    // DATA_TIME.map((item, index) => {
+    //   let itemStamp = item.data.find((it) => it.from === timeFrom)
+    //   if (itemStamp?.from) {
+    //     dispatch(updateSelectedTimeOrder(itemStamp))
+    //   }
+    // })
+    const fromTime = new Date(detailOrder?.timeRange?.from).toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit",
     })
+    const toTime = new Date(detailOrder?.timeRange?.to).toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit",
+    })
+
+    const convertedObj = {
+      from: fromTime,
+      to: toTime,
+      id: detailOrder?.timeRange?.id,
+    }
+    console.log("convertedObj", convertedObj)
+    dispatch(updateSelectedTimeOrder(convertedObj))
+
     dispatch(updateSeletedDateOrder(moment(detailOrder?.timeRange?.from).format("YYYY-MM-DD")))
     dispatch(updatePatientOrder(detailOrder?.patient))
     dispatch(

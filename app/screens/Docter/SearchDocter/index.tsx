@@ -1,6 +1,6 @@
-import { ActivityIndicator, FlatList, Keyboard, StyleSheet, View } from "react-native"
+import { ActivityIndicator, FlatList, Keyboard, Platform, StyleSheet, View } from "react-native"
 import React, { useEffect, useRef, useState } from "react"
-import { Header } from "@app/components/index"
+import { Header, Screen } from "@app/components/index"
 import colors from "@app/assets/colors"
 import SearchFilter from "@app/components/SearchFilter"
 import ItemDocter from "./Item/ItemDocter"
@@ -129,7 +129,10 @@ export default function SearchDocter({ route }: ScreenProps) {
     }
   }
   return (
-    <View style={styles.container}>
+    <Screen
+      safeAreaEdges={Platform.OS === "android" ? ["bottom"] : []}
+      contentContainerStyle={styles.container}
+    >
       <Header
         leftIcon="arrow_left"
         title={translate("booking.booking")}
@@ -171,7 +174,7 @@ export default function SearchDocter({ route }: ScreenProps) {
         filterData={filterData.current}
         ref={refModal}
       />
-    </View>
+    </Screen>
   )
 }
 
