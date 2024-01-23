@@ -16,3 +16,6 @@ export interface Inotification {
   icon: "updateOrder" | "haveResult"
   id: string
 }
+export const NotificationActionType = {
+  OPEN_QUESTION: "open_question",
+}

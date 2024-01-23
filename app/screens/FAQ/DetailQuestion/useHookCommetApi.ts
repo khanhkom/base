@@ -1,6 +1,8 @@
+import { NotificationActionType } from "@app/interface/notifications"
 import { ICommentData } from "@app/interface/question"
 import { loadCommentQuestionByPage } from "@app/services/api/functions/question"
 import React, { useEffect, useRef, useState } from "react"
+import messaging from "@react-native-firebase/messaging"
 
 const groupCommentsWithReplies = (comments) => {
   const groupedComments = []
@@ -74,6 +76,21 @@ const useHookApiComment = (id: string) => {
       setIsLoading(false)
     }
   }
+  // handle load new data when have notification
+  useEffect(() => {
+    messaging().onMessage((notification) => {
+      if (notification?.data?.actionType === NotificationActionType.OPEN_QUESTION) {
+        loadNewComment(false)
+      }
+      console.log("notification::", notification)
+    })
+    messaging().onNotificationOpenedApp((notification) => {
+      if (notification?.data?.actionType === NotificationActionType.OPEN_QUESTION) {
+        loadNewComment(false)
+      }
+      console.log("notification::", notification)
+    })
+  }, [])
   // reload comment when have new comment
   const loadNewComment = async (isRefresh) => {
     console.log("loadNewComment:::")
