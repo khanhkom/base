@@ -117,8 +117,8 @@ const vi = {
     dinner: "Buổi tối",
     booking_success: "Đặt lịch thành công!",
     booking_fail: "Đặt lịch thất bại!",
-    update_booking_fail: "Cập nhật lịch thành công!",
-    update_booking_success: "Cập nhật lịch thất bại!",
+    update_booking_fail: "Cập nhật lịch thất bại!",
+    update_booking_success: "Cập nhật lịch thành công!",
     please_enter_reason: "Vui lòng nhập lý do",
     provide_full_information:
       "Để việc tư vấn được tốt hơn, hãy cũng cấp đầy đủ thông tin cho bác sĩ!",

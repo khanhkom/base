@@ -177,7 +177,10 @@ export default function CompleteBooking({ route }: ScreenProps) {
         timeRange,
         patientNotes,
       }
+      console.log("body_body", body)
       resCreate = await updateOrder(route?.params?.id, body)
+      console.log("resCreate:::", resCreate)
+
       if (resCreate.status === 200) {
         dispatch(getOrderHistory())
         goBack()
