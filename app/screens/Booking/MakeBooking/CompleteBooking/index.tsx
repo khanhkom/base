@@ -1,4 +1,4 @@
-import { Platform, Pressable, StyleSheet, View, ScrollView } from "react-native"
+import { Platform, Pressable, StyleSheet, View, ScrollView, TouchableWithoutFeedback, Keyboard } from "react-native"
 import React, { useEffect, useState } from "react"
 import { Header } from "@app/components/Header"
 import colors from "@app/assets/colors"
@@ -214,7 +214,9 @@ export default function CompleteBooking({ route }: ScreenProps) {
         leftIcon="arrow_left"
         backgroundColor={colors.white}
       />
-      <KeyboardAwareScrollView>
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <KeyboardAwareScrollView
+      >
         <Card mode="contained" style={styles.note}>
           <Text weight="normal" size="ba">
             {translate("booking.provide_full_information")}
@@ -308,11 +310,13 @@ export default function CompleteBooking({ route }: ScreenProps) {
             onChangeText={setPatientNotes}
             placeholder={translate("booking.desc_reason")}
             multiline
+            scrollEnabled={false}
             containerStyle={{ marginTop: HEIGHT(spacing.md) }}
           ></TextField>
           {!isUpdate && <FileAttachment listImage={listImage} setListImage={setListImage} />}
         </View>
       </KeyboardAwareScrollView>
+      </TouchableWithoutFeedback>
       <View style={styles.bottomButton}>
         <Button
           mode="contained"
