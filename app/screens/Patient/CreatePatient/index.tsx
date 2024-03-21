@@ -190,7 +190,7 @@ export default function CreatePatient({ route }: ScreenProps) {
           }
         }}
       />
-      <KeyboardAwareScrollView contentContainerStyle={{flex:1}}>
+      <KeyboardAwareScrollView contentContainerStyle={{ flex: 1 }}>
         <Card mode="contained" style={styles.nodeCard}>
           <Text weight="normal" size="ba">
             {translate("create_patient.please_enter_information")}

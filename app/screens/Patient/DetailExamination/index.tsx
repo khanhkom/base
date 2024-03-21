@@ -16,6 +16,7 @@ import { ISpecialList } from "@app/interface/docter"
 import ImageView from "react-native-image-viewing"
 import { translate } from "@app/i18n/translate"
 import { Screen } from "@app/components/Screen"
+import { useSelector } from "@app/redux/reducers"
 
 const DATA_INFO = [
   {
@@ -24,7 +25,7 @@ const DATA_INFO = [
     isHighLight: true,
   },
   {
-    title: translate("booking.status"),
+    title: "Bác sĩ: ",
     type: TYPE_INFO_RESULT.BAC_SI,
   },
   {
