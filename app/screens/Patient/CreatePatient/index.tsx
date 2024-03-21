@@ -284,7 +284,7 @@ export default function CreatePatient({ route }: ScreenProps) {
                 placeholder={translate("create_patient.enter_email")}
                 containerStyle={{ marginTop: HEIGHT(spacing.md) }}
               ></TextField>
-              <LocationPicker
+              {/* <LocationPicker
                 value={provinces}
                 setValue={(val) => {
                   setProvinces(val)
@@ -314,7 +314,7 @@ export default function CreatePatient({ route }: ScreenProps) {
                 title={translate("create_patient.ward")}
                 placeholder={translate("create_patient.select_ward")}
                 type="wards"
-              />
+              /> */}
               <TextField
                 label={translate("create_patient.detail_address")}
                 placeholder={translate("create_patient.example_address")}
