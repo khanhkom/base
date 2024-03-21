@@ -11,7 +11,7 @@ export default function BaseInfor() {
   const user = useSelector((state) => state.userReducers.user)
   const patients = useSelector((state) => state.patientReducers.patients)
   const avatar = patients?.[0]?.avatarUrl
-
+  console.log("user::", user)
   return (
     <View style={styles.container}>
       <Image

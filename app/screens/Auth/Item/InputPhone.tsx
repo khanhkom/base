@@ -14,6 +14,9 @@ interface ItemProps {
   setCountryCode: (val: string) => void
   countryCode: string
   error: boolean
+  autoFocus?: boolean
+
+  textError?: string
 }
 export default function InputPhone({
   setPhoneNumber,
@@ -21,6 +24,8 @@ export default function InputPhone({
   setCountryCode,
   countryCode,
   error,
+  textError,
+  autoFocus,
 }: ItemProps) {
   const [show, setShow] = useState(false)
   const [focus, setFocus] = useState(false)
@@ -75,6 +80,7 @@ export default function InputPhone({
             onBlur={() => {
               setFocus(false)
             }}
+            autoFocus={autoFocus}
             value={phoneNumber}
             maxLength={inputLimit}
             onChangeText={(val) => setPhoneNumber(val)}
@@ -145,7 +151,7 @@ export default function InputPhone({
       />
       {error && (
         <Text preset="smRegular" style={{ marginTop: HEIGHT(spacing.xs), color: colors.red_5 }}>
-          {translate("auth.verify_telephone_number_again")}
+          {textError || translate("auth.verify_telephone_number_again")}
         </Text>
       )}
     </>

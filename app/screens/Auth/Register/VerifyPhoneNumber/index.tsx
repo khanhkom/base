@@ -32,6 +32,7 @@ export default function VerifyPhoneNumber({ route }: IScreenParams) {
   const [phoneNumber, setPhoneNumber] = useState("")
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(false)
+  const [errorText, setErrorText] = useState("")
   const [otpMethod, setOTPMethod] = useState(0)
   const dispatch = useDispatch()
   const { isNeedUpdatePhone } = route.params
@@ -57,7 +58,7 @@ export default function VerifyPhoneNumber({ route }: IScreenParams) {
         let resLogin = null
         if (otpMethod === OTP_TYPE.ZNS) {
           resLogin = await getOtpSocial(body)
-          console.log("resLogin_resLogin", resLogin?.data)
+          console.log("resVerify_resVerify", resLogin?.data)
           if (resLogin?.status === 201) {
             dispatch(
               updateUserField({
@@ -72,11 +73,18 @@ export default function VerifyPhoneNumber({ route }: IScreenParams) {
             })
           } else {
             const message = resLogin?.data?.message
-            if (message === "Phone not existed in system") {
-              setError(true)
-              showToastMessage("Số điện thoại đã được liên kết!", EToastType.ERROR)
+            setError(true)
+            if (message === "Phone existed in system") {
+              const msgError = "Số điện thoại đã được liên kết!"
+              setErrorText(msgError)
+              showToastMessage(msgError, EToastType.ERROR)
+            } else if (resLogin?.data?.descriptions === "Zalo account not existed") {
+              const msgError = "Tài khoản Zalo không tồn tại!"
+              setErrorText(msgError)
+              showToastMessage("Tài khoản Zalo không tồn tại!", EToastType.ERROR)
             } else {
-              setError(true)
+              const msgError = translate("auth.verify_telephone_number_again")
+              setErrorText(msgError)
               showToastMessage(translate("auth.verify_telephone_number_again"), EToastType.ERROR)
             }
           }
@@ -90,6 +98,7 @@ export default function VerifyPhoneNumber({ route }: IScreenParams) {
               otpMethod,
               type: "LOGIN",
               confirmation,
+              isNeedUpdatePhone,
             })
           } else {
             setError(true)
@@ -116,10 +125,14 @@ export default function VerifyPhoneNumber({ route }: IScreenParams) {
         <Text preset="xxxlsemibold">{translate("auth.greetings_to_you")}</Text>
         <InputPhone
           phoneNumber={phoneNumber}
-          setPhoneNumber={setPhoneNumber}
+          setPhoneNumber={(number) => {
+            setPhoneNumber(number.replace(/[^0-9]/g, ""))
+          }}
           setCountryCode={setCountryCode}
           countryCode={countryCode}
           error={error}
+          autoFocus
+          textError={errorText}
         />
         <ItemOTPMethod setOTPMethod={setOTPMethod} otpMethod={otpMethod} />
         <Button

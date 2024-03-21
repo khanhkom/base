@@ -185,6 +185,7 @@ dependencies {
     
     // RN BootSplash
     implementation("androidx.core:core-splashscreen:1.0.0")
+    implementation "androidx.lifecycle:lifecycle-viewmodel-compose:2.5.1"
 
     debugImplementation("com.facebook.flipper:flipper:${FLIPPER_VERSION}")
     debugImplementation("com.facebook.flipper:flipper-network-plugin:${FLIPPER_VERSION}") {

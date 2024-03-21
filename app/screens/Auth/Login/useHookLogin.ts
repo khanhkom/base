@@ -214,7 +214,8 @@ const useHookLogin = (setCustomLoading?: (val: boolean) => void) => {
     console.log("_hanldeLoginServer::", dataLogin)
     const isNeedUpdatePhone = dataLogin?.isNeedUpdatePhone
     if (resLogin.data.accessToken) {
-      if (resLogin.data.isNewUser || !resLogin.data?.isVerified) {
+      // if (resLogin.data.isNewUser || !resLogin.data?.isVerified) {
+      if (resLogin.data.isNeedUpdatePhone) {
         api.apisauce.setHeader("access-token", resLogin.data.accessToken)
         navigate("VerifyPhoneNumber", { isNeedUpdatePhone })
       } else {

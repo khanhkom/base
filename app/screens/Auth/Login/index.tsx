@@ -1,5 +1,5 @@
 import { Platform, StyleSheet, View } from "react-native"
-import React from "react"
+import React, { useEffect } from "react"
 import { Screen } from "@app/components/Screen"
 import HeaderLogin from "../Item/HeaderLogin"
 import { HEIGHT, WIDTH, getHeight, getWidth } from "@app/config/functions"
@@ -16,6 +16,7 @@ import { LoadingOpacity } from "@app/components/loading/LoadingOpacity"
 import ItemOTPMethod from "../Item/ItemOTPMethod"
 import { translate } from "@app/i18n/translate"
 import useHookLogin from "./useHookLogin"
+import { GoogleSignin } from "@react-native-google-signin/google-signin"
 
 export default function Login() {
   const {
@@ -36,7 +37,11 @@ export default function Login() {
     onSubmit,
     onModalConfirm,
   } = useHookLogin()
-
+  useEffect(() => {
+    try {
+      GoogleSignin.signOut()
+    } catch (error) {}
+  }, [])
   return (
     <Screen
       preset="auto"

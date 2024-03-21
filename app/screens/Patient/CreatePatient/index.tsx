@@ -25,7 +25,7 @@ import { useDispatch } from "react-redux"
 import { Formik, useFormikContext } from "formik"
 import * as Yup from "yup"
 import { translate } from "@app/i18n/translate"
-import useDetailPatient from "../Patient/DetailPatient/useDetailPatient"
+import useDetailPatient from "../DetailPatient/useDetailPatient"
 import { Screen } from "@app/components/Screen"
 import { LoadingOpacity } from "@app/components/loading/LoadingOpacity"
 const SignupSchema = Yup.object().shape({

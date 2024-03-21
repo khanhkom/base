@@ -143,3 +143,14 @@ export const updateImagePatient = (body, id) =>
     .put(`${URL.UPDATE_IMAGE}/${id}`, body)
     .then((res) => res)
     .catch((err) => err)
+
+export const updateOAuth = (body: { base: string; token: string }) =>
+  api.apisauce
+    .put(`${URL.UPDATE_OAUTH}`, body)
+    .then((res) => res)
+    .catch((err) => err)
+export const deleteOAuth = (body: { base: string }) =>
+  api.apisauce
+    .put(`${URL.DELETE_OAUTH}`, body)
+    .then((res) => res)
+    .catch((err) => err)

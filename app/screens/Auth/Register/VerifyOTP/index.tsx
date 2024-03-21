@@ -91,20 +91,23 @@ export default function VerifyOTP({ route }: ScreenProps) {
     })
     return () => removeListener()
   }, [])
+  console.log("user_user", phone, isNeedUpdatePhone)
   async function onAuthStateChanged(user) {
-    console.log("user_user", user)
     if (user && user?.phoneNumber === phone) {
       userFi.current = user
       const idToken = await auth().currentUser.getIdToken(true)
-      const resOTP = await createSessionWithFirebase({
-        phone,
-        idtoken: idToken,
-        fcmToken: tokenFi.current,
-      })
+      let resOTP = null
+      // const
       if (isNeedUpdatePhone) {
-        await updatePhoneSocial({
+        resOTP = await updatePhoneSocial({
           phone,
           idtoken: idToken,
+        })
+      } else {
+        resOTP = await createSessionWithFirebase({
+          phone,
+          idtoken: idToken,
+          fcmToken: tokenFi.current,
         })
       }
       console.log("resOTP_resOTP", resOTP, idToken)
@@ -180,16 +183,17 @@ export default function VerifyOTP({ route }: ScreenProps) {
             resOTP = await confirmation.confirm(codeFinal)
           }
           const idToken = await auth().currentUser.getIdToken(true)
-          resOTP = await createSessionWithFirebase({
-            phone,
-            idtoken: idToken,
-            fcmToken: tokenFi.current,
-          })
 
           if (isNeedUpdatePhone) {
             await updatePhoneSocial({
               phone,
               idtoken: idToken,
+            })
+          } else {
+            resOTP = await createSessionWithFirebase({
+              phone,
+              idtoken: idToken,
+              fcmToken: tokenFi.current,
             })
           }
         } else {
@@ -214,7 +218,7 @@ export default function VerifyOTP({ route }: ScreenProps) {
       dispatch(getStringeeToken())
 
       // if (dataLogin?.isNewUser) {
-      if (type === "REGISTER") {
+      if (type === "REGISTER" || isNeedUpdatePhone) {
         // navigate("ConfirmName")
         resetRoot({
           index: 0,
@@ -255,13 +259,13 @@ export default function VerifyOTP({ route }: ScreenProps) {
       const deviceId = await DeviceInfo.getUniqueId()
       const body = {
         phone,
-        otpMethod: otpMethod === 0 ? "ZNS" : "PHONE",
+        otpMethod: otpMethod === OTP_TYPE.ZNS ? "ZNS" : "PHONE",
         deviceId,
       }
       setLoading(true)
       setCode("")
       let resLogin = null
-      if (otpMethod !== 0) {
+      if (otpMethod !== OTP_TYPE.ZNS) {
         const confirmation = await auth().signInWithPhoneNumber(`${body.phone}`)
         setConfirm(confirmation)
         setResend(true)
@@ -293,7 +297,6 @@ export default function VerifyOTP({ route }: ScreenProps) {
       }
       // console.log("resLogin", resLogin)
       setTime(30)
-
       setLoading(false)
     } catch (error) {
       showToastMessage(translate("common.oops_error"), EToastType.ERROR)

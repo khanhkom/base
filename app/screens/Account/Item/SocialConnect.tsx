@@ -8,9 +8,13 @@ import { spacing } from "@app/theme/spacing"
 import { Toggle } from "@app/components/Toggle"
 import R from "@app/assets"
 import useHookAccount from "../useHookAccount"
+import { useSelector } from "@app/redux/reducers"
 
 export default function SocialConnect({ setIndexSocial, setVisible }) {
   const { linkAccountWithGoogle, linkAccountWithFacebook } = useHookAccount()
+  const user = useSelector((state) => state.userReducers.user)
+  const isLinkedGoogle = !!user?.gmail
+  const isLinkedFacebook = !!user?.fbId
 
   return (
     <Card mode="contained" style={styles.card}>
@@ -21,10 +25,7 @@ export default function SocialConnect({ setIndexSocial, setVisible }) {
         left={() => {
           return <Image source={R.images.ic_face} style={styles.logo} resizeMode="contain" />
         }}
-        onPress={() => {
-          // setIndexSocial(0)
-          // setVisible(true)
-        }}
+        onPress={linkAccountWithFacebook}
         title={() => {
           return (
             <Text size="ba" weight="normal" style={{ color: colors.gray_9 }}>
@@ -33,7 +34,9 @@ export default function SocialConnect({ setIndexSocial, setVisible }) {
           )
         }}
         right={() => {
-          return <Toggle variant="switch" />
+          return (
+            <Toggle value={isLinkedFacebook} onPress={linkAccountWithFacebook} variant="switch" />
+          )
         }}
       />
       <Divider style={{ marginHorizontal: WIDTH(spacing.md), marginLeft: WIDTH(spacing.xxl) }} />
@@ -56,7 +59,7 @@ export default function SocialConnect({ setIndexSocial, setVisible }) {
           )
         }}
         right={() => {
-          return <Toggle variant="switch" onPress={linkAccountWithGoogle} />
+          return <Toggle value={isLinkedGoogle} variant="switch" onPress={linkAccountWithGoogle} />
         }}
       />
     </Card>

@@ -11,7 +11,7 @@ export const getListOrder = (body: IBodyByPage): Promise<ApiResponse<{ items: IO
     .then((res) => res)
     .catch((err) => err)
 
-export const createOrder = (order: IOrder): Promise<ApiResponse<IDocter>> =>
+export const createOrder = (order: IOrder): Promise<ApiResponse<IOrder>> =>
   api.apisauce
     .post(URL.CREATE_ORDER, order)
     .then((res) => res)

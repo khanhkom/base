@@ -177,10 +177,7 @@ export default function CompleteBooking({ route }: ScreenProps) {
         timeRange,
         patientNotes,
       }
-      console.log("body_body", body)
       resCreate = await updateOrder(route?.params?.id, body)
-      console.log("resCreate:::", resCreate)
-
       if (resCreate.status === 200) {
         dispatch(getOrderHistory())
         goBack()
@@ -194,7 +191,7 @@ export default function CompleteBooking({ route }: ScreenProps) {
       console.log("resCreate_resCreate", resCreate, formData)
       if (resCreate.status === 201) {
         navigate("BookingSuccess", {
-          id: resCreate.data?.[0]?.id,
+          id: resCreate.data?.id,
         })
         dispatch(getOrderHistory())
         showToastMessage(translate("booking.booking_success"), EToastType.SUCCESS)

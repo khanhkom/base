@@ -11,7 +11,8 @@ const URL_LOGIN = {
   VERIFY_OTP_CREATE_V2: "pin/v2/verifyOtpForCreateAccount",
 
   GET_OTP_SOCIAL_V2: "pin/v2/generateOtpForLinkAccountWithPhone",
-  VERIFY_OTP_SOCIAL_V2: "pin/v2/verifyOtpForCreateAccount",
+  // VERIFY_OTP_SOCIAL_V2: "pin/v2/verifyOtpForCreateAccount",
+  VERIFY_OTP_SOCIAL_V2: "pin/v2/verifyOtpForLinkAccountWithPhone",
 
   VERIFY_OTP: "pin/verifyOtp",
   VERIFY_OTP_V2: "pin/v2/verifyOtpForLogin",
@@ -20,6 +21,8 @@ const URL_LOGIN = {
   CHECK_USER_FIREBASE: "authentication/checkUserFirebase",
   CREATE_SESSION_FIREBASE: "session/createSessionWithFirebase",
   UPDATE_PHONE_SOCIAL: "authentication/userUpdatePhone",
+  UPDATE_OAUTH: "session/updateOAuth",
+  DELETE_OAUTH: "authentication/deleteOAuth",
 }
 const URL_PATIENT = {
   CREATE_PATIENT: "patient",
